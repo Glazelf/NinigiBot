@@ -2,16 +2,24 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    hyperlink,
+    hideLinkEmbed
 } from "discord.js";
-import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
-export default async ({ interaction, gameName, page }) => {
+export default async ({ gameName, page }) => {
+    let messageObject = {};
     // Add quests matching game title to an array
-    let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());
-    if (questsTotal.length == 0) return sendMessage({ interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
+    const gameNameLowercase = gameName.toLowerCase(); // LowerCase once instead of inside filter, might save performance
+    let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameNameLowercase);
+    if (questsTotal.length == 0) {
+        messageObject.content = `Could not find any quests for that game. If you are certain this game exists it might be added to ${hyperlink("the quest list", hideLinkEmbed("https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/quests.json"))} in the future.`;
+
+        `${hyperlink("not supported", hideLinkEmbed("https://github.com/Glazelf/NinigiBot/issues/436"))}`
+        return messageObject;
+    };
     // Sort by difficulty
     questsTotal = questsTotal.sort(compare);
     let mhEmbed = new EmbedBuilder()
@@ -53,7 +61,8 @@ export default async ({ interaction, gameName, page }) => {
     questsButtons.addComponents([questsFirstButton, questsLeftButton, questsRightButton, questsLastButton]);
 
     mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
-    let messageObject = { embeds: [mhEmbed], components: questsButtons };
+    messageObject.embeds = [mhEmbed];
+    messageObject.components = questsButtons;
     return messageObject;
 };
 

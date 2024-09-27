@@ -8,11 +8,11 @@ import {
     time,
     TimestampStyles
 } from "discord.js";
-import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
-export default async ({ interaction, page, region }) => {
+export default async ({ page, region }) => {
+    let splatfestMessageObject = {};
     let splat3Embed = new EmbedBuilder()
         .setTitle("Splatfests")
         .setColor(globalVars.embedColor)
@@ -23,7 +23,10 @@ export default async ({ interaction, page, region }) => {
     let pageEndIndex = page * 10 - 1; // 1 --> 9, 2 --> 19, 3 --> 29, etc.
     let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
     let responseSplatfest = await axios.get(splatfestAPI);
-    if (responseSplatfest.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
+    if (responseSplatfest.status != 200) {
+        splatfestMessageObject.content = `Error occurred getting Splatfest data. Please try again later.`;
+        return splatfestMessageObject;
+    };
     let splatfestData = responseSplatfest.data[region].data.festRecords.nodes;
     let splatfestBanner = null;
     let isUpcomingOrOngoingSplatfest = false;
@@ -253,6 +256,7 @@ export default async ({ interaction, page, region }) => {
     if (page < 2) rightButton.setDisabled(true);
     splat3Embed.setImage(splatfestBanner);
     if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription(`Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n${bold("Bold")} indicates the winning team, ${italic("italics")} indicates second place.`);
-    let splatfestMessageObject = { embeds: [splat3Embed], components: splatfestButtons };
+    splatfestMessageObject.embeds = [splat3Embed];
+    splatfestMessageObject.components = splatfestButtons;
     return splatfestMessageObject;
 };

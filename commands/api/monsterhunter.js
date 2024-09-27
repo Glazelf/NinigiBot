@@ -66,8 +66,9 @@ export default async (interaction, ephemeral) => {
             break;
         // All quests from a game
         case "questlist":
-            let questsMessageObject = await getQuests({ interaction: interaction, gameName: nameInput, page: 1 });
-            return sendMessage({ interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
+            const gameInput = interaction.options.getString("game");
+            let questsMessageObject = await getQuests({ gameName: gameInput, page: 1 });
+            return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
         // Monsters
         case "monster":
             let monsterName = nameInput.toLowerCase();

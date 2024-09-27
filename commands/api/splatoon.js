@@ -402,8 +402,8 @@ export default async (interaction, ephemeral) => {
             break;
         case "splatfests":
             await interaction.deferReply({ ephemeral: ephemeral });
-            let splatfestReplyObject = await getSplatfests({ interaction: interaction, page: 1, region: inputRegion });
-            return sendMessage({ interaction: interaction, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
+            let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
+            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
         case "replay":
             await interaction.deferReply({ ephemeral: ephemeral });
             let replayCode = interaction.options.getString("code");

@@ -219,7 +219,7 @@ export default async (client, interaction) => {
                             };
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
-                            let mhQuestsMessageObject = await getMHQuests({ interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            let mhQuestsMessageObject = await getMHQuests({ gameName: mhQuestsGameName, page: mhQuestsPage });
                             embedsReturn = mhQuestsMessageObject.embeds;
                             componentsReturn = mhQuestsMessageObject.components;
                         } else if (interaction.customId.startsWith("splatfest")) {
@@ -235,7 +235,8 @@ export default async (client, interaction) => {
                                     splatfestPage = parseInt(splatfestPage) - 1;
                                     break;
                             };
-                            let splatfestMessageObject = await getSplatfests({ interaction: interaction, page: splatfestPage, region: splatfestRegion });
+                            let splatfestMessageObject = await getSplatfests({ page: splatfestPage, region: splatfestRegion });
+                            contentReturn = splatfestMessageObject.content;
                             embedsReturn = splatfestMessageObject.embeds;
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
