@@ -1,88 +1,86 @@
 import {
     InteractionContextType,
-    codeBlock,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
-    underline
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import checker from "../../util/string/checkFormat.js";
-import {
-    checkTrophyExistance,
-    createShopTrophy,
-    deleteShopTrophy
-} from "../../database/dbServices/trophy.api.js";
+import { checkTrophyExistance, createShopTrophy, deleteShopTrophy } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = true;
-    let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, ephemeral: true });
+    if (!await isOwner(interaction.client, interaction.user)) {
+        return sendMessage({ interaction, content: globalVars.lackPermsString });
+    };
 
-    let trophy_name, res, returnString;
+    let returnString;
+    const subcommand = interaction.options.getSubcommand();
+    try {
+        switch (subcommand) {
+            case "addshoptrophy":
+                returnString = await handleAddShopTrophy(interaction);
+                break;
+            case "deleteshoptrophy":
+                returnString = await handleDeleteShopTrophy(interaction);
+                break;
+            // Add other subcommands here
+            default:
+                returnString = "Invalid subcommand.";
+        };
+    } catch (error) {
+        returnString = `Error: ${error.message}`;
+    };
+
+    return sendMessage({ interaction, content: returnString, ephemeral });
+};
+
+async function handleAddShopTrophy(interaction) {
+    let error = '';
+    const trophyName = interaction.options.getString("name").trim();
+    if (!validateInput(trophyName, 25)) {
+        error += 'Invalid trophy name.\n';
+    };
+    if (await checkTrophyExistance(trophyName)) {
+        error += 'Trophy name already used.\n';
+    };
+    const trophyDesc = interaction.options.getString("description").trim();
+    if (!validateInput(trophyDesc, 1024)) {
+        error += 'Invalid trophy description.\n';
+    };
+    const trophyEmote = validateEmote(interaction.options.getString("emote").trim());
+    if (!trophyEmote) {
+        error += 'Invalid emote.\n';
+    };
+    const trophyPrice = interaction.options.getInteger("price");
+
+    if (error) throw new Error(error);
+    await createShopTrophy(trophyName, trophyDesc, trophyEmote, trophyPrice);
+    return 'Trophy added successfully.';
+};
+
+async function handleDeleteShopTrophy(interaction) {
+    const trophyName = interaction.options.getString("name").trim();
+    if (!await checkTrophyExistance(trophyName)) {
+        throw new Error('Trophy name does not exist.');
+    }
+    await deleteShopTrophy(trophyName);
+    return 'Trophy deleted successfully.';
+};
+
+function validateInput(input, maxLength) {
+    const result = checker(input, maxLength);
+    return result === "Valid";
+};
+
+function validateEmote(emote) {
     const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
     const regexpDiscord = /<a*:[a-zA-Z0-9]+:[0-9]+>/;
-
-    switch (interaction.options.getSubcommand()) {
-        case "addshoptrophy":
-            let error = '';
-            trophy_name = interaction.options.getString("name").trim();
-            switch (checker(trophy_name, 25)) {
-                case "TooShort":
-                    error += 'Name too short\n';
-                case "TooLong":
-                    error += 'Name exceeds 25 characters\n';
-                case "InvalidChars":
-                    error += 'Name has invalid characters\n';
-            };
-            res = await checkTrophyExistance(trophy_name);
-            if (res == true) error += 'Name already used\n';
-            const trophy_desc = interaction.options.getString("description").trim();
-            switch (checker(trophy_desc, 1024, false)) {
-                case "TooShort":
-                    error += 'Description too short\n';
-                case "TooLong":
-                    error += 'Description exceeds 25 characters\n';
-                case "InvalidChars":
-                    error += 'Description has invalid characters\n';
-            };
-            let trophy_emote = interaction.options.getString("emote").trim().replace(/^:+/, '').replace(/:+$/, '');
-            let parsed_emote = trophy_emote.match(regexpDiscord);
-            if (!parsed_emote) {
-                parsed_emote = trophy_emote.match(regexpUnicode)
-                if (!parsed_emote) error += 'Emote is not a valid Unicode Emoji or Discord custom emote';
-            };
-            if (parsed_emote) trophy_emote = parsed_emote[0];
-
-            const trophy_price = interaction.options.getInteger("price");
-            if (trophy_price < 1) error += 'Price cannot be lower than 1';
-
-            if (error.length > 0) {
-                let errorBlock = codeBlock("fix", error);
-                returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
-            } else {
-                await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
-                returnString = `${trophy_name} added successfully to the shop!`;
-            };
-            return sendMessage({
-                interaction: interaction,
-                content: returnString,
-                ephemeral: ephemeral
-            });
-        case "deleteshoptrophy":
-            trophy_name = interaction.options.getString("name").trim();
-            res = await deleteShopTrophy(trophy_name);
-            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
-            return sendMessage({
-                interaction: interaction,
-                content: returnString,
-                ephemeral: ephemeral
-            });
-    };
+    return emote.match(regexpDiscord) || emote.match(regexpUnicode);
 };
 
 export const guildID = config.devServerID;
