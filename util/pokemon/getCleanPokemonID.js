@@ -10,7 +10,7 @@ const formSuffixes = {
 
 export default (pokemon) => {
     let { num, name: pokemonName, types: pokemonTypes } = pokemon;
-    let pokemonID = leadingZeros(num.toString(), 3);
+    let pokemonID = leadingZeros(num.toString(), 3); // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently. This approach doesn't change 4-digit IDs.
 
     const formKey = Object.keys(formSuffixes).find(suffix => pokemonName.endsWith(suffix));
     if (formKey) {
