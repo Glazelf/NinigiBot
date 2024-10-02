@@ -170,7 +170,7 @@ export default async (interaction, ephemeral) => {
                     pokemon.name.startsWith("Terapagos-") ||
                     pokemon.name.endsWith("-Origin") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
-                let canLearnBool = DexSim.species.getMovePool(pokemon.id).has(move.id);
+                let canLearnBool = DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id);
                 if (canLearnBool) moveLearnPool.push(pokemon.name);
             };
             let moveLearnPoolString = moveLearnPool.join(", ");
