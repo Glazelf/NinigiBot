@@ -166,7 +166,10 @@ export default async (interaction, ephemeral) => {
 
             let moveLearnPool = [];
             for (const pokemon of allPokemonGen) {
-                if (isIdenticalForm(pokemon.name) || pokemon.name.startsWith("Terapagos-") || pokemon.name.endsWith("-Origin")) continue;
+                if (isIdenticalForm(pokemon.name) ||
+                    pokemon.name.startsWith("Terapagos-") ||
+                    pokemon.name.endsWith("-Origin") ||
+                    (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
                 let canLearnBool = DexSim.species.getMovePool(pokemon.id).has(move.id);
                 if (canLearnBool) moveLearnPool.push(pokemon.name);
             };
