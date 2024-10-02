@@ -14,14 +14,12 @@ export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     let embed = new EmbedBuilder();
-    let master = interaction.user;
     switch (interaction.options.getSubcommand()) {
         case "info":
-            let user = await getUser(master.id);
-            let avatar = master.displayAvatarURL(globalVars.displayAvatarSettings);
+            let user = await getUser(interaction.user.id);
+            let avatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
             if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
-                let member = await interaction.guild.members.fetch(master.id);
-                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+                if (interaction.member) avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
             };
 
             let trophy_level = 0;
@@ -53,8 +51,8 @@ export default async (interaction, ephemeral) => {
             };
             return sendMessage({ interaction: interaction, embeds: [embed], ephemeral: ephemeral });
         case "swapsprite":
-            const shinx = await getShinx(master.id);
-            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
+            const shinx = await getShinx(interaction.user.id);
+            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!` });
     };
 };
 

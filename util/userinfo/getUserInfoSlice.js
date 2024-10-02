@@ -16,16 +16,14 @@ const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
-    let member = null;
     // Find better check so userinfo can be used with userinstall
     let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
-    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+    if (interaction.member) serverAvatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new EmbedBuilder()
@@ -38,7 +36,7 @@ export default async (interaction, page, user) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`discord://-/users/${user.id}`);
     profileButtons.addComponents(profileButton);
-    if (member && !user.bot) {
+    if (interaction.member && !user.bot) {
         const previousPageButton = new ButtonBuilder()
             .setCustomId(`usf${page - 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
@@ -61,7 +59,7 @@ export default async (interaction, page, user) => {
             let birthdayParsed = parseDate(birthday);
             // Roles
             let memberRoles = null;
-            if (member) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
+            if (interaction.member) memberRoles = interaction.member.roles.cache.filter(element => element.name !== "@everyone");
             let rolesSorted = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
@@ -87,7 +85,7 @@ export default async (interaction, page, user) => {
                 if (user.bot) badgesArray.push("🤖");
                 let guildOwner = await interaction.guild?.fetchOwner();
                 if (guildOwner?.id === user.id) badgesArray.push("👑");
-                if (member && member.premiumSince > 0) {
+                if (interaction.member && interaction.member.premiumSince > 0) {
                     let boostEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == nitroBoostEmojiName);
                     if (boostEmoji) badgesArray.push(boostEmoji);
                 };
@@ -114,13 +112,13 @@ export default async (interaction, page, user) => {
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
             };
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
-            if (birthday && birthdayParsed && member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
-            if (switchCode && switchCode !== 'None' && member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
+            if (birthday && birthdayParsed && interaction.member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
+            if (switchCode && switchCode !== 'None' && interaction.member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
             profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: true }]);
-            if (member) profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
-            if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            if (interaction.member) profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(interaction.member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            if (interaction.member && interaction.member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(interaction.member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
             if (banner) profileEmbed.setImage(banner);
             profileEmbed.setFooter({ text: user.id });
             break;
