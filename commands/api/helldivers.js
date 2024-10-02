@@ -13,9 +13,9 @@ import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let api = "https://helldiverstrainingmanual.com/api/v1/";
-let liberationString = "Liberation";
-let defenseString = "Defense";
+const api = "https://helldiverstrainingmanual.com/api/v1/";
+const liberationString = "Liberation";
+const defenseString = "Defense";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");

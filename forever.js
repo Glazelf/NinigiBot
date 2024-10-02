@@ -1,11 +1,11 @@
 import forever from 'forever';
 // import forevermonitor from 'forever-monitor';
 
-// let foreverConfig = {
+// const foreverConfig = {
 //     "root": "./forever/log"
 // };
-let foreverOptions = [{
+const foreverOptions = [{
     "uid": "Ninigi",
 }];
-let child = forever.start('./bot.js', foreverOptions);
+const child = forever.start('./bot.js', foreverOptions);
 forever.startServer(child);

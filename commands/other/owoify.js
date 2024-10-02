@@ -24,7 +24,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 };
 
-let severityChoices = [
+const severityChoices = [
     { name: "1. OwO", value: "owo" },
     { name: "2. UwU", value: "uwu" },
     { name: "3. UvU", value: "uvu" }

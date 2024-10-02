@@ -16,7 +16,7 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
 export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
     let messageObject;

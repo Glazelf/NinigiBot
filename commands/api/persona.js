@@ -12,7 +12,7 @@ import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
+const personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // rarePersonaeRoyal; list of treasure Persona
 // rareCombosRoyal; ??
 // arcana2CombosRoyal; arcana fusion combos

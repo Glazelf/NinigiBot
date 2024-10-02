@@ -9,9 +9,9 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let maxMessageLength = 2000;
-let noInputString = `You need to provide a valid input.`;
-let sanitizeValues = [
+const maxMessageLength = 2000;
+const noInputString = `You need to provide a valid input.`;
+const sanitizeValues = [
     " ",
     "`",
     '"',

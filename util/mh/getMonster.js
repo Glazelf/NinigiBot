@@ -9,12 +9,12 @@ import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 
-let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
+const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+const mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
 // Game names
-let MHRise = "Monster Hunter Rise";
-let MHW = "Monster Hunter World";
-let MHGU = "Monster Hunter Generations Ultimate";
+const MHRise = "Monster Hunter Rise";
+const MHW = "Monster Hunter World";
+const MHGU = "Monster Hunter Generations Ultimate";
 
 export default async (monsterData, emojis) => {
     let gameDBName;

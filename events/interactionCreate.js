@@ -79,7 +79,7 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
     });
 });
 // Helldivers
-let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
+const apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona
 // Submodule is documented in persona command
 let skillMapRoyal, personaMapRoyal, itemMapRoyal;
