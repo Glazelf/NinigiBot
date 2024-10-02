@@ -26,7 +26,7 @@ export default async (interaction, page, user) => {
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
     let serverAvatar = avatar;
     if (member && guildDataAvailable) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-    if (serverAvatar == avatar) avatar = null;
+    if (serverAvatar == avatar) avatar = null; // Null tiny avatar if bigger avatar is identical
 
     const profileEmbed = new EmbedBuilder()
         .setColor(embedColor)
