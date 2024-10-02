@@ -78,6 +78,9 @@ export default async (interaction, ephemeral) => {
         .setLabel(shopButtonText)
         .setStyle(ButtonStyle.Link)
         .setURL(shopButtonLink);
+    const subscriptionButton = new ButtonBuilder()
+        .setStyle(ButtonStyle.Premium)
+        .setSKUId("1164974692889808999")
     const appDirectoryButton = new ButtonBuilder()
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
@@ -95,7 +98,7 @@ export default async (interaction, ephemeral) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`);
     let botButtons = new ActionRowBuilder()
-        .addComponents([shopButton, appDirectoryButton, inviteButton]);
+        .addComponents([subscriptionButton, appDirectoryButton, inviteButton]);
     return sendMessage({ interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 };
 
