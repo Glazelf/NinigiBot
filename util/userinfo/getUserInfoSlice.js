@@ -59,7 +59,7 @@ export default async (interaction, page, user) => {
             let birthdayParsed = parseDate(birthday);
             // Roles
             let memberRoles = null;
-            if (interaction.member) memberRoles = interaction.member.roles.cache.filter(element => element.name !== "@everyone");
+            if (interaction.member && guildDataAvailable) memberRoles = interaction.member.roles.cache.filter(element => element.name !== "@everyone");
             let rolesSorted = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
@@ -112,13 +112,15 @@ export default async (interaction, page, user) => {
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
             };
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
-            if (birthday && birthdayParsed && interaction.member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
-            if (switchCode && switchCode !== 'None' && interaction.member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
+            if (birthday && birthdayParsed) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
+            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
             profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: true }]);
-            if (interaction.member) profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(interaction.member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
-            if (interaction.member && interaction.member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(interaction.member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            if (interaction.member && guildDataAvailable) {
+                profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(interaction.member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+                if (interaction.member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(interaction.member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            };
             if (banner) profileEmbed.setImage(banner);
             profileEmbed.setFooter({ text: user.id });
             break;
