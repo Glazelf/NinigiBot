@@ -23,7 +23,7 @@ export default async (interaction, page, user) => {
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (interaction.member) serverAvatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
+    if (interaction.member && guildDataAvailable) serverAvatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new EmbedBuilder()

@@ -18,8 +18,8 @@ export default async (interaction, ephemeral) => {
         case "info":
             let user = await getUser(interaction.user.id);
             let avatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
-                if (interaction.member) avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (interaction.inGuild() && interaction.member && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
+                avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
             };
 
             let trophy_level = 0;
