@@ -53,10 +53,7 @@ export default async (interaction, ephemeral) => {
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-    // SKU
-    let shopButtonText = "Donate";
-    let SKUID = ""; // Without SKU ID link goes to store page
-    let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/${SKUID}`;
+
 
     let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
@@ -74,32 +71,44 @@ export default async (interaction, ephemeral) => {
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
-    const shopButton = new ButtonBuilder()
-        .setLabel(shopButtonText)
-        .setStyle(ButtonStyle.Link)
-        .setURL(shopButtonLink);
-    const subscriptionButton = new ButtonBuilder()
-        .setStyle(ButtonStyle.Premium)
-        .setSKUId("1164974692889808999")
+    //// Shop Button
+    // let shopButtonText = "Donate";
+    // let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/`;
+    // const shopButton = new ButtonBuilder()
+    //     .setLabel(shopButtonText)
+    //     .setStyle(ButtonStyle.Link)
+    //     .setURL(shopButtonLink);
+    // Row 1
     const appDirectoryButton = new ButtonBuilder()
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/application-directory/${interaction.client.user.id}`);
-    // const githubButton = new ButtonBuilder()
-    //     .setLabel("GitHub")
-    //     .setStyle(ButtonStyle.Link)
-    //     .setURL(`https://github.com/${githubURLVars}`);
-    // const supportServerButton = new ButtonBuilder()
-    //     .setLabel("Support Server")
-    //     .setStyle(ButtonStyle.Link)
-    //     .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
     const inviteButton = new ButtonBuilder()
         .setLabel("Add Bot") // "Add" over "Invite" as bots can be added to users now 
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`);
-    let botButtons = new ActionRowBuilder()
-        .addComponents([subscriptionButton, appDirectoryButton, inviteButton]);
-    return sendMessage({ interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
+    const supportServerButton = new ButtonBuilder()
+        .setLabel("Support Server")
+        .setStyle(ButtonStyle.Link)
+        .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+    const githubButton = new ButtonBuilder()
+        .setLabel("GitHub")
+        .setStyle(ButtonStyle.Link)
+        .setURL(`https://github.com/${githubURLVars}`);
+    // Row 2
+    const subscriptionButton = new ButtonBuilder()
+        .setStyle(ButtonStyle.Premium)
+        .setSKUId("1164974692889808999");
+    const donationButton = new ButtonBuilder()
+        .setStyle(ButtonStyle.Premium)
+        .setSKUId("1232804422585815071");
+    let botButtons1 = new ActionRowBuilder()
+        .addComponents([appDirectoryButton, inviteButton, supportServerButton, githubButton]);
+    let botButtons2 = new ActionRowBuilder()
+        .addComponents([subscriptionButton, donationButton]);
+    let componentRows = [botButtons1];
+    if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
+    return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows, ephemeral: ephemeral });
 };
 
 // Boolean options
