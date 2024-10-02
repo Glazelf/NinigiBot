@@ -16,14 +16,15 @@ const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
-    // Find better check so userinfo can be used with userinstall
+    let member = null;
     let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (interaction.member && guildDataAvailable) serverAvatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
+    if (member && guildDataAvailable) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new EmbedBuilder()
@@ -36,7 +37,7 @@ export default async (interaction, page, user) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`discord://-/users/${user.id}`);
     profileButtons.addComponents(profileButton);
-    if (interaction.member && !user.bot) {
+    if (member && !user.bot) {
         const previousPageButton = new ButtonBuilder()
             .setCustomId(`usf${page - 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
@@ -59,7 +60,7 @@ export default async (interaction, page, user) => {
             let birthdayParsed = parseDate(birthday);
             // Roles
             let memberRoles = null;
-            if (interaction.member && guildDataAvailable) memberRoles = interaction.member.roles.cache.filter(element => element.name !== "@everyone");
+            if (member && guildDataAvailable) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
             let rolesSorted = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
@@ -85,7 +86,7 @@ export default async (interaction, page, user) => {
                 if (user.bot) badgesArray.push("🤖");
                 let guildOwner = await interaction.guild?.fetchOwner();
                 if (guildOwner?.id === user.id) badgesArray.push("👑");
-                if (interaction.member && interaction.member.premiumSince > 0) {
+                if (member && member.premiumSince > 0) {
                     let boostEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == nitroBoostEmojiName);
                     if (boostEmoji) badgesArray.push(boostEmoji);
                 };
@@ -117,9 +118,9 @@ export default async (interaction, page, user) => {
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
             profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: true }]);
-            if (interaction.member && guildDataAvailable) {
-                profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(interaction.member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
-                if (interaction.member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(interaction.member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            if (member && guildDataAvailable) {
+                profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+                if (member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
             };
             if (banner) profileEmbed.setImage(banner);
             profileEmbed.setFooter({ text: user.id });
