@@ -13,8 +13,6 @@ import path from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
 import config from './config.json' with { type: "json" };
 
-const fsp = fs.promises;
-
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildModeration,
@@ -60,7 +58,7 @@ const client = new Client({
 });
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-await fsp.readdir("./events/").then(async (files) => {
+await fs.promises.readdir("./events/").then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
@@ -86,10 +84,10 @@ client.login(config.token);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 async function walk(dir, callback) {
-    await fsp.readdir(dir).then(async (files) => {
+    await fs.promises.readdir(dir).then(async (files) => {
         for (const file of files) {
             let filepath = path.join(dir, file);
-            await fsp.stat(filepath).then(async (stats) => {
+            await fs.promises.stat(filepath).then(async (stats) => {
                 if (stats.isDirectory()) {
                     await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
