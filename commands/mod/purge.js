@@ -9,9 +9,11 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
+import getPermissionName from "../../util/discord/getPermissionName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageMessages;
+const requiredPermissionName = getPermissionName(requiredPermission);
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
@@ -28,7 +30,7 @@ export default async (interaction, ephemeral) => {
     let userArg = interaction.options.getUser("user");
     if (userArg) user = userArg;
 
-    let deleteFailString = `An error occurred while bulk deleting. I probably lack the \`${Object.keys(PermissionFlagsBits)[parseInt(requiredPermission) - 1]}\` permission.`;
+    let deleteFailString = `An error occurred while bulk deleting. I probably lack the \`${requiredPermissionName}\` permission.`;
     let missingMessagesString = `\nSome messages were not deleted, probably because they were older than 2 weeks.`;
     // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
     if (user) {
