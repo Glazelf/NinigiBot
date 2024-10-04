@@ -145,7 +145,7 @@ export default async (monsterData, emojis) => {
     if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
-    mhEmbed.addFields([{ name: "Games (Danger):", value: gameAppearances, inline: false }]);
+    mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }]);
 
     // Second embed lets you add two images to the same embed by setting the same URL but different images
     // let secondImageEmbed = new EmbedBuilder()
