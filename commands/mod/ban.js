@@ -58,12 +58,12 @@ export default async (interaction) => {
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         let botRole = interaction.guild.members.me.roles.highest;
-        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not ban ${member.user.username} (${member.id}) because their highest role (${targetRole.name}) is higher than yours (${userRole.name}).` });
-        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${user.username} (${user.id}) because their highest role (${targetRole.name}) is higher than mine (${botRole.name}).` });
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not ban ${bold(user.username)} (${member.id}) because their highest role (${bold(targetRole.name)}) is higher than yours (${bold(userRole.name)}).` });
+        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${bold(user.username)} (${user.id}) because their highest role (${bold(targetRole.name)}) is higher than mine (${bold(botRole.name)}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
-        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${bold(member.user.username)} (${member.id}) is already banned.` });
-        banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
+        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${bold(user.username)} (${member.id}) is already banned.` });
+        banReturn = `Banned ${user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
             .then(message => banReturn += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
             .catch(e => banReturn += `Failed to send a DM to ${bold(user.username)} with the reason.`);
