@@ -384,11 +384,12 @@ export default async (interaction, ephemeral) => {
             let usageRank = 0;
             let genericDataSplitPokemon = null;
             let pokemonDataSplitLine = null;
+            const pokemonNameSearch = pokemon.name + " "; // Space is to exclude matching more popular subforms
             if (pokemon) {
-                let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
+                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonNameSearch));
                 if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
-                genericDataSplitPokemon = genericUsageResponse.data.split(pokemon.name);
+                genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
