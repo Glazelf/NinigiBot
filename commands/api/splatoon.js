@@ -57,12 +57,12 @@ const splatoon3Regions = [
 ];
 
 const star = "⭐";
-const githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
-const schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
-const splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
-const salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
-const splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
-const replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
+const githubRaw = "https://raw.githubusercontent.com/Leanny/splat3/main/";
+const schedulesAPI = "https://splatoon3.ink/data/schedules.json"; // Includes all schedules
+const splatnetAPI = "https://splatoon3.ink/data/gear.json"; // SplatNet gear data
+const salmonRunGearAPI = "https://splatoon3.ink/data/coop.json"; // Current Salmon Run gear reward
+const splatfestAPI = "https://splatoon3.ink/data/festivals.json"; // All Splatfest results
+const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/"; // Replay lookup
 
 export default async (interaction, ephemeral) => {
     // Game data
