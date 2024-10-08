@@ -408,8 +408,9 @@ export default async (interaction, ephemeral) => {
         case "replay":
             await interaction.deferReply({ ephemeral: ephemeral });
             let replayCode = interaction.options.getString("code");
-            replayCode = replayCode.replace("-", "");
-            let replayResponse = await axios.get(`${replayAPI}${replayCode.toUpperCase()}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" }  }); // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this
+            replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
+            // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
+            let replayResponse = await axios.get(`${replayAPI}${replayCode}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" } });
             if (replayResponse.status !== 200) return interaction.reply({ content: "Error occurred getting that replay. Make sure the code is correct." });
             let replayData = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
@@ -448,7 +449,8 @@ export default async (interaction, ephemeral) => {
                 .setTitle(replayMode)
                 .setThumbnail(replayData.player.weapon.image.url)
                 .setDescription(matchData)
-                .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}\nAPI: ${replayLookupGithub}` })
+                // Replace() is to add dashes for consistency with in-game GUI, slice is to remove final -
+                .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode.replace(/(.{4})/g, "$1-").slice(0, -1)}\nAPI: ${replayLookupGithub}` })
                 .addFields([
                     { name: "Player Data:", value: playerData.join("\n"), inline: false },
                     { name: `${replayData.player.headGear.name} Skills:`, value: headSkills.join("\n"), inline: true },
