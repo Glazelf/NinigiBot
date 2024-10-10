@@ -62,7 +62,7 @@ export default async (interaction, ephemeral) => {
     if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
         if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
             muteTime = null;
-            muteReturnString = `Unmuted ${user.username} (${member.id}).`;
+            muteReturnString = `Unmuted ${user.username} (${member.id}).\n`;
         };
     };
     let time = getTime();
