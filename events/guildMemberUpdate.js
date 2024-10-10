@@ -26,7 +26,6 @@ export default async (client, member, newMember) => {
                 if (newMemberFetch) newMember = newMemberFetch;
             };
             if (!newMember) return;
-            let user = await client.users.fetch(member.id);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -121,7 +120,7 @@ export default async (client, member, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${bold(user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${bold(member.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
@@ -139,10 +138,10 @@ export default async (client, member, newMember) => {
                 .setTitle(topText)
                 .setThumbnail(oldAvatar)
                 .setImage(image)
-                .setFooter({ text: user.username })
+                .setFooter({ text: member.username })
                 .setTimestamp();
             if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            updateEmbed.addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: true }]);
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 
