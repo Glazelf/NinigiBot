@@ -120,7 +120,7 @@ export default async (client, member, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${bold(member.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${bold(member.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
@@ -138,7 +138,7 @@ export default async (client, member, newMember) => {
                 .setTitle(topText)
                 .setThumbnail(oldAvatar)
                 .setImage(image)
-                .setFooter({ text: member.username })
+                .setFooter({ text: member.user.username })
                 .setTimestamp();
             if (changeText) updateEmbed.setDescription(changeText);
             updateEmbed.addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: true }]);
