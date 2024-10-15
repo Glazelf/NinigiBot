@@ -3,7 +3,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
-    time
+    time,
+    TimestampStyles
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
