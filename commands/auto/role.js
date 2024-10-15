@@ -70,7 +70,6 @@ export default async (interaction, ephemeral) => {
                     value: currentRole.id
                 };
                 if (value[1].description) roleOption.description = value[1].description;
-                console.log(roleOption)
                 rolesArray.push(roleOption);
             };
             if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: noRolesString });
