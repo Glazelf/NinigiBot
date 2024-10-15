@@ -20,8 +20,7 @@
     },
     "displayAvatarSettings": {
         "size": 512,
-        "extension": "png",
-        "dynamic": true
+        "extension": "png"
     },
     "pokemon": {
         "currentGeneration": 9
