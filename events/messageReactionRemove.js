@@ -10,7 +10,6 @@ const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 export default async (client, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
-        // Check if message reaction counts are valid and that reaction is a star
         // Check if message reaction counts are valid and that reaction is a star, different check from messageReactionAdd because reaction can be 0 here
         if (messageReaction.count == null || messageReaction.count == undefined) messageReaction = await messageReaction.fetch();
         if (!messageReaction) return;
