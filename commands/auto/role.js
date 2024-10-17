@@ -65,11 +65,12 @@ export default async (interaction, ephemeral) => {
                 } else if (ephemeral) {
                     roleOptionName = `${receiveEmote} ${roleOptionName}`;
                 };
-                rolesArray.push({
+                let roleOption = {
                     label: roleOptionName,
-                    value: currentRole.id,
-                    description: value[1].description,
-                });
+                    value: currentRole.id
+                };
+                if (value[1].description) roleOption.description = value[1].description;
+                rolesArray.push(roleOption);
             };
             if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: noRolesString });
 

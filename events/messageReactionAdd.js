@@ -11,23 +11,14 @@ export default async (client, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
-        if (!messageReaction.count) {
-            console.log(messageReaction);
-            console.log(messageReaction.count);
-            return console.log("Could not get messageReaction count");
-        };
+        if (!messageReaction.count) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
-        if (messageReaction.emoji.name !== boardEmote && !isNoStar) {
-            console.log(messageReaction.emoji.name);
-            console.log(boardEmote);
-            console.log(isNoStar);
-            return console.log("Reaction is not star or is noStar");
-        };
+        if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
         // Try to fetch message
         // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
         let targetMessage = messageReaction.message; // No fetch is a test, if this doesn't work, try fetching with { force: true }
-        if (!targetMessage) return console.log("No target message");
+        if (!targetMessage) return;
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel, starboard;
         let serverApi = await import("../database/dbServices/server.api.js");
@@ -40,11 +31,8 @@ export default async (client, messageReaction) => {
             if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
-        if (!starboard) return console.log("Starboard not enabled");
-        if (targetMessage.channel == starboard) {
-            console.log(targetMessage.channel);
-            return console.log("Message = in starboard");
-        };
+        if (!starboard) return;
+        if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         // Try to find the star requirement. If it doesn't exist, use the default

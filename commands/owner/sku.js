@@ -2,7 +2,9 @@ import {
     InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    time,
+    TimestampStyles
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
@@ -27,7 +29,8 @@ export default async (interaction, ephemeral) => {
         if (entitlementsSKU.length < 1) continue;
         for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
             let entitlementUser = await entitlement.fetchUser();
-            userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
+            let entitlementStartsAt = Math.floor(entitlement.startsTimestamp / 1000);
+            userList.push(`${entitlementUser.username} (${entitlementUser.id}) ${time(entitlementStartsAt, TimestampStyles.ShortDateTime)}`);
         };
         if (userList.length > 0) entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
     };

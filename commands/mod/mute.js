@@ -11,9 +11,11 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
+import getPermissionName from "../../util/discord/getPermissionName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
+const requiredPermissionName = getPermissionName(requiredPermission);
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
@@ -46,8 +48,10 @@ export default async (interaction, ephemeral) => {
     // Check permissions
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
-    if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to mute ${member.user.username} (${member.id}).` });
-    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the \`${Object.keys(PermissionFlagsBits)[parseInt(requiredPermission) - 1]}\` permission.` });
+    let botRole = interaction.guild.members.me.roles.highest;
+    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not mute ${bold(user.username)} because their highest role (${bold(targetRole.name)}) is higher than yours (${bold(userRole.name)}).` });
+    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${bold(user.username)} because their highest role (${bold(targetRole.name)}) is higher than mine (${bold(botRole.name)}).` });
+    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the \`${requiredPermissionName}\` permission.` });
 
     let reason = "Not specified.";
     let reasonArg = interaction.options.getString("reason");
@@ -58,7 +62,7 @@ export default async (interaction, ephemeral) => {
     if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
         if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
             muteTime = null;
-            muteReturnString = `Unmuted ${member.user.username} (${member.id}).`;
+            muteReturnString = `Unmuted ${user.username} (${member.id}).\n`;
         };
     };
     let time = getTime();

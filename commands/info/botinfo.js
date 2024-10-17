@@ -42,7 +42,7 @@ export default async (interaction, ephemeral) => {
     if (githubRepoExists) githubRepoResponse = await axios.get(githubRepoURL);
     if (githubMasterExists) githubMasterResponse = await axios.get(githubMasterURL);
     // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
-    let createdAt = Math.floor(interaction.client.user.createdAt.valueOf() / 1000);
+    let createdAt = Math.floor(interaction.client.user.createdTimestamp / 1000);
     let date = Date.now();
     let onlineSince = Math.floor((date - interaction.client.uptime) / 1000);
     let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);

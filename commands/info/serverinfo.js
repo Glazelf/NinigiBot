@@ -157,7 +157,7 @@ export default async (interaction, ephemeral) => {
     };
     serverEmbed.addFields([
         { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-        { name: "Created:", value: time(Math.floor(guild.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: false }
+        { name: "Created:", value: time(Math.floor(guild.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: false }
     ]);
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);

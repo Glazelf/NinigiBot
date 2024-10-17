@@ -13,9 +13,11 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
+import getPermissionName from "../../util/discord/getPermissionName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.BanMembers;
+const requiredPermissionName = getPermissionName(requiredPermission);
 
 export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
@@ -38,7 +40,7 @@ export default async (interaction) => {
     let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
 
     let banReturn = null;
-    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${Object.keys(PermissionFlagsBits)[parseInt(requiredPermission) - 1]}\` permission.`;
+    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
     let dmString = `You've been banned from ${bold(interaction.guild.name)} by ${bold(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = null;
@@ -55,11 +57,13 @@ export default async (interaction) => {
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to ban ${member.user.username} (${member.id}).` });
+        let botRole = interaction.guild.members.me.roles.highest;
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not ban ${bold(user.username)} (${member.id}) because their highest role (${bold(targetRole.name)}) is higher than yours (${bold(userRole.name)}).` });
+        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${bold(user.username)} (${user.id}) because their highest role (${bold(targetRole.name)}) is higher than mine (${bold(botRole.name)}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
-        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${bold(member.user.username)} (${member.id}) is already banned.` });
-        banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
+        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${bold(user.username)} (${member.id}) is already banned.` });
+        banReturn = `Banned ${user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
             .then(message => banReturn += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
             .catch(e => banReturn += `Failed to send a DM to ${bold(user.username)} with the reason.`);
