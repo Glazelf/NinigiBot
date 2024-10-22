@@ -22,7 +22,7 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Integer options
 const amountOption = new SlashCommandIntegerOption()

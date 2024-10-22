@@ -45,7 +45,7 @@ export default async (interaction) => {
     return process.exit();
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Boolean options
 const removeInteractionsOption = new SlashCommandBooleanOption()

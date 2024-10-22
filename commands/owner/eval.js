@@ -38,7 +38,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // String options
 const inputOption = new SlashCommandStringOption()

@@ -12,7 +12,7 @@ export default async (client) => {
                 let commandGuildID = null;
                 if (command.guildID) {
                     commandGuildID = command.guildID;
-                    if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.devServerID;
+                    if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.DEV_SERVER_ID;
                 };
                 await client.application.commands.create(command.commandObject, commandGuildID);
             } catch (e) {
@@ -33,7 +33,7 @@ export default async (client) => {
         // });
 
         let timestamp = getTime();
-        let devChannel = await client.channels.fetch(process.env.devChannelID);
+        let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         const startupStats = `Commands: ${client.commands.size}\nGuilds: ${client.guilds.cache.size}\nChannels: ${client.channels.cache.size}\nUsers: ${client.users.cache.size} (All stats are from cache)`;
         console.log(`${startupStats}\nConnected as ${client.user.username}. (${timestamp})`);
         return devChannel.send({ content: `Successfully connected. ${codeBlock("fix", startupStats)}` });

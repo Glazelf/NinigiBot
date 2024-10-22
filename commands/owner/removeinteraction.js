@@ -29,7 +29,7 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // String options
 const interactionNameOption = new SlashCommandStringOption()

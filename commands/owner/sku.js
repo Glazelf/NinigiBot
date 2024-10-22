@@ -37,7 +37,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Subcommands
 const infoSubcommand = new SlashCommandSubcommandBuilder()

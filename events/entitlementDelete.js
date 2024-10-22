@@ -21,7 +21,7 @@ export default async (client, entitlement) => {
         if (!member.premiumSince && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, guild);
 
         if (!user) return;
-        let log = await client.channels.fetch(process.env.devChannelID);
+        let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
 
         let SKUs = await client.application.fetchSKUs();

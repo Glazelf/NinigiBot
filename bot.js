@@ -80,7 +80,7 @@ await walk(`./commands/`);
 console.log("Loaded commands!");
 
 console.log(process.env)
-client.login(process.env.token);
+client.login(process.env.TOKEN);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 async function walk(dir, callback) {

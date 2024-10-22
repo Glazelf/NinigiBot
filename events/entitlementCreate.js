@@ -9,7 +9,7 @@ export default async (client, entitlement) => {
     try {
         let user = await client.users.fetch(entitlement.userId);
         if (!user) return;
-        let log = await client.channels.fetch(process.env.devChannelID);
+        let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
 
         let SKUs = client.application.fetchSKUs();

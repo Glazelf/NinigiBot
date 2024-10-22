@@ -7,7 +7,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, guild) => {
     try {
-        let log = await client.channels.fetch(process.env.devChannelID);
+        let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);

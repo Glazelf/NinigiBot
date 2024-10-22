@@ -30,7 +30,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, content: `Updated my avatar.` });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Attachment options
 const avatarOption = new SlashCommandAttachmentOption()

@@ -43,7 +43,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Boolea options
 const confirmOption = new SlashCommandBooleanOption()

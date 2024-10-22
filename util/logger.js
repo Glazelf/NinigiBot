@@ -68,7 +68,7 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
         // Fix cross-shard logging sometime
-        let devChannel = await client.channels.fetch(process.env.devChannelID);
+        let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (baseMessage.includes("Missing Permissions")) {
             try {
                 return interaction.reply(`I lack permissions to perform the requested action.`);

@@ -21,7 +21,7 @@ export default async (client, message) => {
         // Ignore commands in DMs
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
-            let DMChannel = await client.channels.fetch(process.env.devChannelID);
+            let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const profileButton = new ButtonBuilder()

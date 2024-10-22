@@ -30,7 +30,7 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${globalVars.currency} to ${userMention(transferTargetID)} (${transferTargetID}). They now have ${userBalance}.` });
 };
 
-export const guildID = process.env.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // String options
 const amountOption = new SlashCommandIntegerOption()

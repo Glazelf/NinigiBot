@@ -857,7 +857,7 @@ export default async (client, interaction) => {
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
                         const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
-                        let DMChannel = await client.channels.fetch(process.env.devChannelID);
+                        let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
 
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
