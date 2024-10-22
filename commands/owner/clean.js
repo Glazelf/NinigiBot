@@ -7,7 +7,6 @@ import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import { getAllUsers } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = true;
@@ -44,7 +43,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Boolea options
 const confirmOption = new SlashCommandBooleanOption()
@@ -53,6 +52,6 @@ const confirmOption = new SlashCommandBooleanOption()
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("clean")
-    .setDescription("Runs clean up routine of the database files")
+    .setDescription("Runs clean up routine of the database files.")
     .setContexts([InteractionContextType.Guild])
     .addBooleanOption(confirmOption);

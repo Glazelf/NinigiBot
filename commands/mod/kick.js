@@ -4,14 +4,17 @@ import {
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
+import getPermissionName from "../../util/discord/getPermissionName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.KickMembers;
+const requiredPermissionName = getPermissionName(requiredPermission);
 
 export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
@@ -24,11 +27,13 @@ export default async (interaction) => {
     let member = interaction.options.getMember("user");
     if (!member) return sendMessage({ interaction: interaction, content: `Please provide a member to kick.` });
 
-    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the \`${Object.keys(PermissionFlagsBits)[parseInt(requiredPermission) - 1]}\` permission.`;
+    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
     // Check permissions
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
-    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to kick ${user.username} (${user.id}).` });
+    let botRole = interaction.guild.members.me.roles.highest;
+    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not kick ${bold(user.username)} (${user.id}) because their highest role (${bold(targetRole.name)}) is higher than yours (${bold(userRole.name)}).` });
+    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not kick ${bold(user.username)} (${user.id}) because their highest role (${bold(targetRole.name)}) is higher than mine (${bold(botRole.name)}).` });
     if (!member.kickable) return sendMessage({ interaction: interaction, content: kickFailString });
 
     let reason = "Not specified.";
@@ -40,9 +45,9 @@ export default async (interaction) => {
     let reasonInfo = `-${interaction.user.username} (${time})`;
     // Kick
     let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
-    await user.send({ content: `You've been kicked from **${interaction.guild.name}** by **${interaction.user.username}** for the following reason: ${reasonCodeBlock}` })
-        .then(message => kickReturn += `Succeeded in sending a DM to **${user.username}** with the reason.`)
-        .catch(e => kickReturn += `Failed to send a DM to **${user.username}** with the reason.`);
+    await user.send({ content: `You've been kicked from ${bold(interaction.guild.name)} by ${bold(interaction.user.username)} for the following reason: ${reasonCodeBlock}` })
+        .then(message => kickReturn += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
+        .catch(e => kickReturn += `Failed to send a DM to ${bold(user.username)} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
         return sendMessage({ interaction: interaction, content: kickReturn, ephemeral: ephemeral });

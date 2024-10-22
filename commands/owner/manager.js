@@ -4,7 +4,8 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
-    SlashCommandIntegerOption
+    SlashCommandIntegerOption,
+    underline
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import checker from "../../util/string/checkFormat.js";
@@ -15,12 +16,11 @@ import {
 } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = true;
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, ephemeral: true });
 
     let trophy_name, res, returnString;
     const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
@@ -70,21 +70,21 @@ export default async (interaction, ephemeral) => {
             return sendMessage({
                 interaction: interaction,
                 content: returnString,
-                ephemeral: true
+                ephemeral: ephemeral
             });
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
-            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`;
+            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
             return sendMessage({
                 interaction: interaction,
                 content: returnString,
-                ephemeral: true
+                ephemeral: ephemeral
             });
     };
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Level and Shiny subcommands are missing on purpose
 // String options

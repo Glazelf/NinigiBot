@@ -1,7 +1,10 @@
 import {
     EmbedBuilder,
     PermissionFlagsBits,
-    AuditLogEvent
+    AuditLogEvent,
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -27,7 +30,7 @@ export default async (client, member) => {
             let kicked = false;
             let leaveEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -62,8 +65,8 @@ export default async (client, member) => {
                     .setThumbnail(avatar)
                     .setFooter({ text: member.user.username })
                     .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }])
-                    .addFields([{ name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }]);
-                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, inline: true }]);
+                    .addFields([{ name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
+                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
                 if (kicked == true) {
                     leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
                     if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);

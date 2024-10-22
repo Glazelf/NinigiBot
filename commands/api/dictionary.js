@@ -2,13 +2,14 @@ import {
     SlashCommandBuilder,
     EmbedBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    hyperlink
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let api = "https://api.dictionaryapi.dev/api/v2/";
+const api = "https://api.dictionaryapi.dev/api/v2/";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -57,7 +58,7 @@ export default async (interaction, ephemeral) => {
         let wordPhoneticsArray = wordStatus[0].phonetics.filter(phonetic => phonetic.text && phonetic.text.length > 0);
         let wordPhoneticsArrayAudio = wordPhoneticsArray.filter(phonetic => phonetic.audio && phonetic.audio.length > 0); // Prefer entries with audio available
         if (wordPhoneticsArrayAudio.length > 0) {
-            wordPhoneticString = `[${wordPhoneticsArrayAudio[0].text}](<${wordPhoneticsArrayAudio[0].audio}>)`;
+            wordPhoneticString = hyperlink(wordPhoneticsArrayAudio[0].text, wordPhoneticsArrayAudio[0].audio);
         } else if (wordPhoneticsArray.length > 0) {
             wordPhoneticString = wordPhoneticsArray[0].text;
         };
@@ -87,7 +88,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 };
 
-let wordTypeChoices = [
+const wordTypeChoices = [
     { name: "noun", value: "noun" },
     { name: "verb", value: "verb" },
     { name: "adjective", value: "adjective" }

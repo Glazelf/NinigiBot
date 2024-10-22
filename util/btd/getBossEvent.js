@@ -2,11 +2,12 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    time,
+    TimestampStyles
 } from "discord.js";
 import axios from "axios";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import iconsJSON from "../../objects/btd/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 const heroesOrdered = [
@@ -54,23 +55,24 @@ const towersOrdered = [
     "BeastHandler"
 ];
 
-export default async (elite = false) => {
+export default async ({ elite = false, emojis }) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
     if (!bossEventsResponse.data.success) return bossEventsResponse.data.error;
-    let mostRecentBossEvent = bossEventsResponse.data.body[0];
+    let bossEventSelected = bossEventsResponse.data.body.find(event => event.start < Date.now() && event.end > Date.now());
+    if (!bossEventSelected) bossEventSelected = bossEventsResponse.data.body[0];
 
-    let metadataURL = mostRecentBossEvent.metadataStandard;
-    if (elite) metadataURL = mostRecentBossEvent.metadataElite;
+    let metadataURL = bossEventSelected.metadataStandard;
+    if (elite) metadataURL = bossEventSelected.metadataElite;
     let bossEventMetadataResponse = await axios.get(metadataURL);
     if (!bossEventMetadataResponse.data.success) return bossEventMetadataResponse.data.error;
 
     let bossEventMetadata = bossEventMetadataResponse.data.body;
     let bossEventTitle = "Boss Event - ";
     if (elite) bossEventTitle += "Elite ";
-    bossEventTitle += mostRecentBossEvent.bossType.charAt(0).toUpperCase() + mostRecentBossEvent.bossType.slice(1); // Capitalize first character
+    bossEventTitle += bossEventSelected.bossType.charAt(0).toUpperCase() + bossEventSelected.bossType.slice(1); // Capitalize first character
 
     let rulesArray = [
-        `Score: ${mostRecentBossEvent.scoringType}`,
+        `Score: ${bossEventSelected.scoringType}`,
         `Map: ${bossEventMetadata.map}`,
         `Difficulty: ${bossEventMetadata.difficulty}`,
         `Lives: ${bossEventMetadata.lives}`,
@@ -81,7 +83,7 @@ export default async (elite = false) => {
     if (bossEventMetadata.removeableCostMultiplier !== 1) rulesArray.push(`Removeables Cost: ${bossEventMetadata.removeableCostMultiplier * 100}%`);
     if (bossEventMetadata._bloonModifiers.healthMultipliers.bloons !== 1) rulesArray.push(`Bloon Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.bloons * 100}%`);
     if (bossEventMetadata._bloonModifiers.speedMultiplier !== 1) rulesArray.push(`Bloon Speed: ${bossEventMetadata._bloonModifiers.speedMultiplier * 100}%`);
-    if (bossEventMetadata._bloonModifiers.healthMultipliers.moabs !== 1) rulesArray.push(`MOAB Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.moab * 100}%`);
+    if (bossEventMetadata._bloonModifiers.healthMultipliers.moabs !== 1) rulesArray.push(`MOAB Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.moabs * 100}%`);
     if (bossEventMetadata._bloonModifiers.moabSpeedMultiplier !== 1) rulesArray.push(`MOAB Speed: ${bossEventMetadata._bloonModifiers.moabSpeedMultiplier * 100}%`);
     if (bossEventMetadata._bloonModifiers.healthMultipliers.boss !== 1) rulesArray.push(`Boss Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.boss * 100}%`);
     if (bossEventMetadata._bloonModifiers.bossSpeedMultiplier !== 1) rulesArray.push(`Boss Speed: ${bossEventMetadata._bloonModifiers.bossSpeedMultiplier * 100}%`);
@@ -90,17 +92,18 @@ export default async (elite = false) => {
     if (bossEventMetadata._bloonModifiers.allRegen) rulesArray.push(`All bloons are regen.`);
     let rulesString = rulesArray.join("\n");
 
-    let bossEventDescription = `<t:${Math.floor(mostRecentBossEvent.start / 1000)}:f> to <t:${Math.floor(mostRecentBossEvent.end / 1000)}:f>\n${rulesString}`;
+    let bossEventDescription = `${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)} to ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
 
     let allowedHeroesArray = [];
     let allowedTowersArray = [];
     let bannedArray = [];
     let allHeroesAllowed = bossEventMetadata._towers.find((hero) => hero.tower == "ChosenPrimaryHero").max == 99; // This seems to be how to check if all heroes are allowed? Even when this is 99, heroes inconsistently have either a max of 0 or 1, making it hard to tell otherwise
     bossEventMetadata._towers.forEach(tower => {
-        let towerIcon = iconsJSON[tower.tower];
+        let towerIcon = emojis.find(emoji => emoji.name == `BTD6Hero${tower.tower}`);
         if (tower.tower == "ChosenPrimaryHero") return; // Skip the ChosenPrimaryHero tower
-        if (tower.isHero && towerIcon) {
-            let heroString = `${towerIcon}${tower.tower}`;
+        if (tower.isHero) {
+            let heroString = tower.tower;
+            if (towerIcon) heroString = `${towerIcon}${heroString}`;
             if (tower.max == 0 && !allHeroesAllowed) return bannedArray.push(heroString);
             return allowedHeroesArray.push(heroString);
         } else {
@@ -128,14 +131,18 @@ export default async (elite = false) => {
         .setTitle(bossEventTitle)
         .setDescription(bossEventDescription)
         .setThumbnail(bossEventMetadata.mapURL)
-        .setImage(mostRecentBossEvent.bossTypeURL)
+        .setImage(bossEventSelected.bossTypeURL)
         .addFields([
             { name: "Banned:", value: bannedString, inline: false },
             { name: "Allowed Heroes:", value: allowedHeroesString, inline: true },
             { name: "Allowed Towers:", value: allowedTowersString, inline: true },
 
         ]);
-    if (mostRecentBossEvent.end < Date.now()) bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the most recent one instead:" });
+    if (bossEventSelected.end < Date.now()) {
+        bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the most recent one instead:" });
+    } else if (bossEventSelected.start > Date.now()) {
+        bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the next one instead:" });
+    };
 
     const bossEventActionRow = new ActionRowBuilder();
     const bossEventEliteButton = new ButtonBuilder()

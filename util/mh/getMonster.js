@@ -8,28 +8,31 @@ import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import elementEmojis from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
-import ailmentEmojis from "../../objects/monsterhunter/ailmentEmojis.json" with { type: "json" };
 
-let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
+const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+const mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
 // Game names
-let MHRise = "Monster Hunter Rise";
-let MHW = "Monster Hunter World";
-let MHGU = "Monster Hunter Generations Ultimate";
+const mainlineGameNames = { // 3U and 4U are ommitted since they do not have image banner repositories
+    MHRise: "Monster Hunter Rise",
+    MHW: "Monster Hunter World",
+    MHGU: "Monster Hunter Generations Ultimate"
+};
+const spinoffGameNames = {
+    MHST: "Monster Hunter Stories",
+    MHST2: "Monster Hunter Stories 2"
+};
 
-export default async (monsterData) => {
-    let gameDBName;
+export default async (monsterData, emojis) => {
     // Get icon, description and game appearances
-    let monsterIcon;
+    let gameDBName, monsterIcon, monsterDescription, monsterDanger;
     let monsterBanner = null;
-    let monsterDescription;
-    let monsterDanger;
     let gameAppearances = "";
-    let mostRecentMainlineGame = MHRise;
-    let fallbackGame1 = MHW;
-    let fallbackGame2 = MHGU;
-    let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
+    let mostRecentMainlineGame = mainlineGameNames.MHRise;
+    let fallbackGame1 = mainlineGameNames.MHW;
+    let fallbackGame2 = mainlineGameNames.MHGU;
+    let mainlineGamesMatches = monsterData.games.filter(game => !Object.values(spinoffGameNames).includes(game.game));
+    let mostRecentMainlineGameEntry = mainlineGamesMatches[mainlineGamesMatches.length - 1];
+
     monsterData.games.forEach(game => {
         // Add to game appearances list
         gameAppearances += game.game;
@@ -42,13 +45,15 @@ export default async (monsterData) => {
         };
     });
     // If it isn't in the most recent mainline game; instead use the most recent game it's been in
-    if (!monsterIcon) monsterIcon = `${iconsRepo}${mostRecentGameEntry.image}?raw=true`;
-    if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
-    if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
+    if (mainlineGamesMatches.length > 0) {
+        if (!monsterIcon) monsterIcon = `${iconsRepo}${mostRecentMainlineGameEntry.image}?raw=true`; // OLTURA CRASHES HERE
+        if (!monsterDescription) monsterDescription = mostRecentMainlineGameEntry.info;
+        if (!monsterDanger) monsterDanger = mostRecentMainlineGameEntry.danger;
+    };
     // Get MHRise-Database image
-    let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
-    let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
-    let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
+    let isInImageDBGame = gameAppearances.includes(mainlineGameNames.MHRise) || gameAppearances.includes(mainlineGameNames.MHW) || gameAppearances.includes(mainlineGameNames.MHGU);
+    let isOnlyInGU = !gameAppearances.includes(mainlineGameNames.MHRise) && !gameAppearances.includes(mainlineGameNames.MHW) && gameAppearances.includes(mainlineGameNames.MHGU);
+    let newestGameIsWorld = !gameAppearances.includes(mainlineGameNames.MHRise) && gameAppearances.includes(mainlineGameNames.MHW);
     if (isInImageDBGame) {
         gameDBName = "MHRise";
         let gameDBBranchName = "main";
@@ -66,7 +71,7 @@ export default async (monsterData) => {
             gameDBBranchName = "gh-pages";
             monsterURLName = `${monsterURLName}_HZV`;
         };
-        if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
+        if (gameAppearances.includes(mainlineGameNames.MHRise)) monsterURLName = `${monsterURLName}_HZV`;
         monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
     };
     let monsterGameIndicator = gameDBName;
@@ -75,20 +80,24 @@ export default async (monsterData) => {
     let monsterRender = getWikiURL(monsterRenderName, mhWiki);
     let renderExists = urlExists(monsterRender);
     if (!renderExists) {
-        if (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U") {
+        if (["MHGU", "MH4U"].includes(monsterGameIndicator)) {
             // Check for 4U only renders
-            if (monsterGameIndicator == "MHGU") {
-                monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
+            for (let i = 5; i > 2; i--) {
+                if (renderExists) continue;
+                if (i == 5) { // 4U only renders
+                    monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
+                } else {
+                    monsterRender = getWikiURL(monsterRenderName, mhWiki);
+                    renderExists = urlExists(monsterRender);
+                    if (renderExists) continue;
+                    monsterRenderName = monsterRenderName.replace(`MH${i}U`, `MH${i}`);
+                };
                 monsterRender = getWikiURL(monsterRenderName, mhWiki);
                 renderExists = urlExists(monsterRender);
             };
-            if (!renderExists) {
-                monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
-                monsterRender = getWikiURL(monsterRenderName, mhWiki);
-            };
-        } else {
+        } else if (mainlineGamesMatches.length == 0) {
             // Check if there's a render 2 (seems to be for spinoff exclusive monsters, namely Oltura)
-            monsterRenderName = monsterRenderName.replace("Render_001", "Render_002");
+            monsterRenderName = monsterRenderName.replace("Render_001", "Render_002").replace(monsterGameIndicator, "MHST2");
             monsterRender = getWikiURL(monsterRenderName, mhWiki);
         };
     };
@@ -103,9 +112,9 @@ export default async (monsterData) => {
     let monsterElements = "";
     let monsterWeaknesses = "";
     let monsterAilments = "";
-    if (monsterData.elements) monsterElements = getStringFromObject(monsterData.elements, elementEmojis);
-    if (monsterData.weakness) monsterWeaknesses = getStringFromObject(monsterData.weakness, elementEmojis);
-    if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, ailmentEmojis);
+    if (monsterData.elements) monsterElements = getStringFromObject(monsterData.elements, emojis, "Element");
+    if (monsterData.weakness) monsterWeaknesses = getStringFromObject(monsterData.weakness, emojis, "Element");
+    if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, emojis, "Ailment");
 
     let buttonArray = [];
     let subSpeciesButtons = new ActionRowBuilder();
@@ -147,7 +156,7 @@ export default async (monsterData) => {
     if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
-    mhEmbed.addFields([{ name: "Games (Danger):", value: gameAppearances, inline: false }]);
+    mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }]);
 
     // Second embed lets you add two images to the same embed by setting the same URL but different images
     // let secondImageEmbed = new EmbedBuilder()
@@ -159,10 +168,18 @@ export default async (monsterData) => {
     return messageObject;
 };
 
-function getStringFromObject(object, emojis) {
+// Type is "Ailment" or "Element"
+function getStringFromObject(object, emojis, type) {
     let itemArray = [];
     object.forEach(item => {
-        let itemEmoji = emojis[item];
+        let emojiType = type;
+        let emojiName = item;
+        // Use matching elemental emojis for blights
+        if (item.endsWith("blight") && type == "Ailment") {
+            emojiType = "Element";
+            emojiName = item.replace("blight", "");
+        };
+        let itemEmoji = emojis.find(emoji => emoji.name == `MH${emojiType}${emojiName}`);
         if (itemEmoji) {
             let itemString = `${itemEmoji}${item}`;
             itemArray.push(itemString);
@@ -170,5 +187,5 @@ function getStringFromObject(object, emojis) {
             itemArray.push(item);
         };
     });
-    return itemArray.join(", ");
+    return itemArray.join("\n");
 };

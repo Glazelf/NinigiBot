@@ -17,7 +17,6 @@ import logger from "../util/logger.js";
 import sendMessage from "../util/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
 // Pokémon
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -79,7 +78,7 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
     });
 });
 // Helldivers
-let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
+const apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona
 // Submodule is documented in persona command
 let skillMapRoyal, personaMapRoyal, itemMapRoyal;
@@ -91,7 +90,6 @@ const giAPI = `https://genshin.jmp.blue/`;
 
 export default async (client, interaction) => {
     try {
-        if (interaction.user.bot) return;
         // ID split
         let customIdSplit = null;
         if (interaction.customId) customIdSplit = interaction.customId.split("|");
@@ -122,9 +120,12 @@ export default async (client, interaction) => {
             case InteractionType.MessageComponent:
                 switch (interaction.componentType) {
                     case ComponentType.Button:
+                        if (!interaction.customId || interaction.replied) return;
                         let messageObject = null;
-                        if (!interaction.customId) return;
-                        let contentReturn, embedsReturn, componentsReturn, filesReturn = null;
+                        let contentReturn = null;
+                        let embedsReturn = null;
+                        let componentsReturn = null;
+                        let filesReturn = null;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
@@ -173,7 +174,7 @@ export default async (client, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -191,7 +192,7 @@ export default async (client, interaction) => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMHMonster(monsterData);
+                            messageObject = await getMHMonster(monsterData, interaction.client.application.emojis.cache);
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -217,7 +218,7 @@ export default async (client, interaction) => {
                             };
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
-                            let mhQuestsMessageObject = await getMHQuests({ interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            let mhQuestsMessageObject = await getMHQuests({ gameName: mhQuestsGameName, page: mhQuestsPage });
                             embedsReturn = mhQuestsMessageObject.embeds;
                             componentsReturn = mhQuestsMessageObject.components;
                         } else if (interaction.customId.startsWith("splatfest")) {
@@ -233,7 +234,8 @@ export default async (client, interaction) => {
                                     splatfestPage = parseInt(splatfestPage) - 1;
                                     break;
                             };
-                            let splatfestMessageObject = await getSplatfests({ interaction: interaction, page: splatfestPage, region: splatfestRegion });
+                            let splatfestMessageObject = await getSplatfests({ page: splatfestPage, region: splatfestRegion });
+                            contentReturn = splatfestMessageObject.content;
                             embedsReturn = splatfestMessageObject.embeds;
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
@@ -350,7 +352,7 @@ export default async (client, interaction) => {
                             embedsReturn = [userinfo_page.embeds];
                             componentsReturn = [userinfo_page.components];
                         } else if (interaction.customId.startsWith("btd6BossEvent")) {
-                            let bossEventMessageObject = await getBossEvent(interaction.customId.split("|")[1] == "false");
+                            let bossEventMessageObject = await getBossEvent({ elite: interaction.customId.split("|")[1] == "false", emojis: interaction.client.application.emojis.cache });
                             if (typeof bossEventMessageObject == "string") return;
                             embedsReturn = [bossEventMessageObject.embeds];
                             componentsReturn = [bossEventMessageObject.components];
@@ -784,7 +786,7 @@ export default async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "name":
                                 let trophies = await getShopTrophies();
-                                let temp = ''
+                                let temp = '';
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
@@ -805,7 +807,7 @@ export default async (client, interaction) => {
                                         break;
                                     case "trophy":
                                         let trophies = await getShopTrophies();
-                                        let temp = ''
+                                        let temp = '';
                                         trophies.forEach(trophy => {
                                             temp = trophy.trophy_id;
                                             if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
@@ -855,7 +857,7 @@ export default async (client, interaction) => {
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
                         const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
-                        let DMChannel = await client.channels.fetch(config.devChannelID);
+                        let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
 
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)

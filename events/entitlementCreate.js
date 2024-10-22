@@ -1,13 +1,15 @@
-import { EmbedBuilder } from "discord.js";
+import {
+    EmbedBuilder,
+    bold
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
 
 export default async (client, entitlement) => {
     try {
         let user = await client.users.fetch(entitlement.userId);
         if (!user) return;
-        let log = await client.channels.fetch(config.devChannelID);
+        let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
 
         let SKUs = client.application.fetchSKUs();
@@ -17,7 +19,7 @@ export default async (client, entitlement) => {
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle("Entitlemend Started ⭐")
-            .setDescription(`${user.username} (${user.id})'s **${matchingSKU.name}** started.`)
+            .setDescription(`${user.username} (${user.id})'s ${bold(matchingSKU.name)} started.`)
             .setFooter({ text: entitlement.id })
             .setTimestamp();
         return log.send({ embeds: [entitlementEmbed] });

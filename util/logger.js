@@ -1,12 +1,15 @@
-import { codeBlock } from "discord.js";
+import {
+    codeBlock,
+    bold
+} from "discord.js";
 import getTime from "./getTime.js";
 import sendMessage from "./sendMessage.js";
 import util from "util";
-import config from "../config.json" with { type: "json" };
 
 export default async ({ exception, client, interaction = null }) => {
     // Note: interaction may be a message
     try {
+        if (!exception) return;
         let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
@@ -21,8 +24,9 @@ export default async ({ exception, client, interaction = null }) => {
         } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
             return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
         } else if (exceptionString.includes("AxiosError")) {
+            // console.log(exception);
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
-            return sendMessage({ interaction: interaction, content: "API took too long to respond. Please try again later." });
+            return sendMessage({ interaction: interaction, content: "An error occurred getting a response from the API or it did not respond.\nPlease try again later." });
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`${timestamp}: Error occurred`);
@@ -50,9 +54,9 @@ export default async ({ exception, client, interaction = null }) => {
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
-User: **${user.username}** (${user.id})
-Guild: **${interaction.guild?.name}** (${interaction.guild?.id})
-Channel: **${interaction.channel?.name}** (${interaction.channel?.id})
+User: ${bold(user.username)} (${user.id})
+Guild: ${bold(interaction.guild?.name)} (${interaction.guild?.id})
+Channel: ${bold(interaction.channel?.name)} (${interaction.channel?.id})
 Message Link: ${interaction.url}
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}
@@ -64,7 +68,7 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
         // Fix cross-shard logging sometime
-        let devChannel = await client.channels.fetch(config.devChannelID);
+        let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (baseMessage.includes("Missing Permissions")) {
             try {
                 return interaction.reply(`I lack permissions to perform the requested action.`);

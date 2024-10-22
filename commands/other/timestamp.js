@@ -2,12 +2,16 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    time,
+    TimestampStyles
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
+    let ephemeralArg = interaction.options.getBoolean("ephemeral");
+    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Date manipulation
     let currentDate = new Date();
     let targetDate = new Date();
@@ -48,18 +52,25 @@ export default async (interaction, ephemeral) => {
     if (timezone != 0) targetDate.setTime(targetDate.getTime() + (timezone * 60 * 60 * 1000)); // Add timezone difference
     let dateString = `${currentDate.getUTCDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getUTCFullYear()} at ${targetDate.getUTCHours()}:${targetDate.getUTCMinutes()} UTC`;
     if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
-    let unixTime = Math.floor(targetDate.getTime() / 1000);
+    const unixTime = Math.floor(targetDate.getTime() / 1000);
+    const shortTime = time(unixTime, TimestampStyles.ShortTime);
+    const longTime = time(unixTime, TimestampStyles.LongTime);
+    const shortDate = time(unixTime, TimestampStyles.ShortDate);
+    const longDate = time(unixTime, TimestampStyles.LongDate);
+    const shortDateTime = time(unixTime, TimestampStyles.ShortDateTime);
+    const longDateTime = time(unixTime, TimestampStyles.LongDateTime);
+    const relativeTime = time(unixTime, TimestampStyles.RelativeTime);
     const timestampEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(dateString)
         .addFields([
-            { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },
-            { name: "Long Time", value: `\`<t:${unixTime}:T>\` ➡ <t:${unixTime}:T>`, inline: false },
-            { name: "Short Date", value: `\`<t:${unixTime}:d>\` ➡ <t:${unixTime}:d>`, inline: false },
-            { name: "Long Date", value: `\`<t:${unixTime}:D>\` ➡ <t:${unixTime}:D>`, inline: false },
-            { name: "Short Date/Time", value: `\`<t:${unixTime}:f>\` ➡ <t:${unixTime}:f>`, inline: false },
-            { name: "Long Date/Time", value: `\`<t:${unixTime}:F>\` ➡ <t:${unixTime}:F>`, inline: false },
-            { name: "Relative Time", value: `\`<t:${unixTime}:R>\` ➡ <t:${unixTime}:R>`, inline: false }
+            { name: "Short Time", value: `\`${shortTime}\` ➡ ${shortTime}`, inline: false },
+            { name: "Long Time", value: `\`${longTime}\` ➡ ${longTime}`, inline: false },
+            { name: "Short Date", value: `\`${shortDate}\` ➡ ${shortDate}`, inline: false },
+            { name: "Long Date", value: `\`${longDate}\` ➡ ${longDate}`, inline: false },
+            { name: "Short Date/Time", value: `\`${shortDateTime}\` ➡ ${shortDateTime}`, inline: false },
+            { name: "Long Date/Time", value: `\`${longDateTime}\` ➡ ${longDateTime}`, inline: false },
+            { name: "Relative Time", value: `\`${relativeTime}\` ➡ ${relativeTime}`, inline: false }
         ]);
     return sendMessage({ interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 };

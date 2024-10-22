@@ -4,7 +4,8 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
+    SlashCommandSubcommandGroupBuilder,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import synthesis from "../../submodules/DQM3-db/util/synthesis.js";
@@ -17,7 +18,6 @@ import monstersJSON from "../../submodules/DQM3-db/objects/monsters.json" with {
 import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
-
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -51,7 +51,7 @@ export default async (interaction, ephemeral) => {
                     };
                 };
                 if (monsterData.traits.large) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
-                    monsterTraitsString += `**Large Traits:**\n`;
+                    monsterTraitsString += `${bold("Large Traits:")}\n`;
                     for (const [traitID, levelReq] of Object.entries(monsterData.traits.large)) {
                         if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                     };

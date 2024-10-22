@@ -7,14 +7,18 @@ import {
     ChannelType,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    time,
+    TimestampStyles,
+    hyperlink
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
-import emojis from "../../objects/discord/emojis.json" with { type: "json" };
+
+const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
@@ -39,9 +43,7 @@ export default async (interaction, ephemeral) => {
         banCount = 0;
     };
     // Check emote and sticker caps, and boosters
-    let emoteMax;
-    let stickerMax;
-    let boosterString;
+    let emoteMax, stickerMax, boosterString;
     // Variables for the above
     let emoteCapTier0 = 100;
     let emoteCapTier1 = 200;
@@ -81,7 +83,8 @@ export default async (interaction, ephemeral) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    boosterString = boosterString + emojis.NitroBoost;
+    let discordNitroEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name === nitroBoostEmojiName);
+    if (discordNitroEmoji) boosterString += discordNitroEmoji.toString(); // Shows up as just ID without explicit string conversion
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
@@ -97,7 +100,7 @@ export default async (interaction, ephemeral) => {
     if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
-    if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
+    if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
     await guild.channels.cache.forEach(async channel => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
         if (channel.type == ChannelType.GuildThread) threadCount += 1;
@@ -154,7 +157,7 @@ export default async (interaction, ephemeral) => {
     };
     serverEmbed.addFields([
         { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-        { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
+        { name: "Created:", value: time(Math.floor(guild.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: false }
     ]);
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);

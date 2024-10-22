@@ -8,7 +8,6 @@ import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     ephemeral = true;
@@ -23,7 +22,7 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Integer options
 const amountOption = new SlashCommandIntegerOption()

@@ -3,7 +3,10 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -31,12 +34,12 @@ export default async (client, member) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setFooter({ text: member.user.username })
                 .setTimestamp()
                 .addFields([
                     { name: "User:", value: `${member} (${member.id})`, inline: false },
-                    { name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }
+                    { name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }
                 ]);
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {

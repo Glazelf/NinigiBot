@@ -6,7 +6,8 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandChannelOption,
     SlashCommandIntegerOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
@@ -30,7 +31,7 @@ export default async (interaction) => {
     let channelArg = interaction.options.getChannel("channel");
     let textChannelInvalidString = null;
     if (channelArg) textChannelInvalidString = `No text can be sent to ${channelArg}'s type (${ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
-    let disableString = `Disabled ${interaction.options.getSubcommand()} functionality in **${interaction.guild.name}**.`;
+    let disableString = `Disabled ${interaction.options.getSubcommand()} functionality in ${bold(interaction.guild.name)}.`;
     let argRequiredString = "At least one argument is required for this command.";
     switch (interaction.options.getSubcommand()) {
         case "starboard":
@@ -52,7 +53,7 @@ export default async (interaction) => {
             if (oldStarboardChannel) await oldStarboardChannel.destroy();
             if (disableBool) return sendMessage({ interaction: interaction, content: disableString });
             await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
-            return sendMessage({ interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
+            return sendMessage({ interaction: interaction, content: `${channelArg} is now ${bold(interaction.guild.name)}'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
         case "log":
             if (!channelArg && !disableArg) return sendMessage({ interaction: interaction, content: argRequiredString });
             let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
@@ -111,18 +112,18 @@ export default async (interaction) => {
                 await interaction.guild.autoModerationRules.create(autoModObject);
             } catch (e) {
                 // console.log(e);
-                return sendMessage({ interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
+                return sendMessage({ interaction: interaction, content: `Failed to add AutoMod rule. Make sure ${bold(interaction.guild.name)} does not already have the maximum amount of AutoMod rules.` });
             }
-            return sendMessage({ interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
+            return sendMessage({ interaction: interaction, content: `AutoMod rules added to ${bold(interaction.guild.name)}.\nAutoMod notiications will be sent to ${channelArg}.` });
         case "personalroles":
             let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
             // Database
             if (personalRolesServerID) {
                 await personalRolesServerID.destroy();
-                return sendMessage({ interaction: interaction, content: `Personal roles can no longer be managed by users in **${interaction.guild.name}**.` });
+                return sendMessage({ interaction: interaction, content: `Personal roles can no longer be managed by users in ${bold(interaction.guild.name)}.` });
             } else {
                 await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
-                return sendMessage({ interaction: interaction, content: `Personal roles can now be managed by users in **${interaction.guild.name}**.` });
+                return sendMessage({ interaction: interaction, content: `Personal roles can now be managed by users in ${bold(interaction.guild.name)}.` });
             };
     };
 };
@@ -170,7 +171,7 @@ const personalRolesSubcommand = new SlashCommandSubcommandBuilder()
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("serversettings")
-    .setDescription("Change server settings")
+    .setDescription("Change server settings.")
     .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addSubcommand(starboardSubcommand)

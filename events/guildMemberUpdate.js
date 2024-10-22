@@ -1,7 +1,10 @@
 import {
     EmbedBuilder,
     PermissionFlagsBits,
-    AuditLogEvent
+    AuditLogEvent,
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/deletePersonalRole.js";
@@ -18,8 +21,11 @@ export default async (client, member, newMember) => {
         let botMember = member.guild.members.me;
 
         if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
-            if (newMember) newMember = await newMember.fetch({ force: true }).catch(e => { return; });
-            let user = await client.users.fetch(member.id);
+            if (newMember) {
+                let newMemberFetch = await newMember.fetch({ force: true }).catch(e => { return; });
+                if (newMemberFetch) newMember = newMemberFetch;
+            };
+            if (!newMember) return;
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -87,20 +93,20 @@ export default async (client, member, newMember) => {
                 case "nickname":
                     topText = "Nickname Changed ⚒️";
                     if (member.nickname && newMember.nickname) {
-                        changeText = `Old: **${member.nickname}**\nNew: **${newMember.nickname}**`;
+                        changeText = `Old: ${bold(member.nickname)}\nNew: ${bold(newMember.nickname)}`;
                     } else if (newMember.nickname) {
-                        changeText = `New: **${newMember.nickname}**`;
+                        changeText = `New: ${bold(newMember.nickname)}`;
                     } else {
-                        changeText = `Removed: **${member.nickname}**`;
+                        changeText = `Removed: ${bold(member.nickname)}`;
                     };
                     break;
                 case "nitroStart":
                     topText = "Started Nitro Boosting ⚒️";
-                    changeText = `**${member.guild.name}** now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                    changeText = `${bold(member.guild.name)} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                     break;
                 case "nitroEnd":
                     topText = "Stopped Nitro Boosting ⚒️";
-                    changeText = `**${member.guild.name}** will lose this Nitro Boost in 3 days.`;
+                    changeText = `${bold(member.guild.name)} will lose this Nitro Boost in 3 days.`;
                     break;
                 case "guildAvatar":
                     topText = "Updated Server Avatar ⚒️";
@@ -114,11 +120,11 @@ export default async (client, member, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for **${user.username}** were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${bold(member.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
-                    changeText = `Timed out untill <t:${Math.floor(newMember.communicationDisabledUntilTimestamp / 1000)}:F>.`;
+                    changeText = `Timed out untill ${time(Math.floor(newMember.communicationDisabledUntilTimestamp / 1000), TimestampStyles.LongDateTime)}.`;
                     break;
                 case "timeoutEnd":
                     topText = "Timeout Ended ▶️";
@@ -132,10 +138,10 @@ export default async (client, member, newMember) => {
                 .setTitle(topText)
                 .setThumbnail(oldAvatar)
                 .setImage(image)
-                .setFooter({ text: user.username })
+                .setFooter({ text: member.user.username })
                 .setTimestamp();
             if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            updateEmbed.addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: true }]);
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 

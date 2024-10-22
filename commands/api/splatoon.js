@@ -4,7 +4,11 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
+    SlashCommandSubcommandGroupBuilder,
+    ApplicationIntegrationType,
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -52,6 +56,15 @@ const splatoon3Regions = [
     { value: "AP", name: "Asia/Pacific" }
 ];
 
+const star = "⭐";
+const githubRaw = "https://raw.githubusercontent.com/Leanny/splat3/main/";
+const schedulesAPI = "https://splatoon3.ink/data/schedules.json"; // Includes all schedules
+const splatnetAPI = "https://splatoon3.ink/data/gear.json"; // SplatNet gear data
+const salmonRunGearAPI = "https://splatoon3.ink/data/coop.json"; // Current Salmon Run gear reward
+const splatfestAPI = "https://splatoon3.ink/data/festivals.json"; // All Splatfest results
+const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/"; // Replay lookup
+const replayLookupGithub = "https://github.com/samuelthomas2774/splatoon3-replay-lookup";
+
 export default async (interaction, ephemeral) => {
     // Game data
     let versionLatest = version;
@@ -69,13 +82,6 @@ export default async (interaction, ephemeral) => {
     let inputID = interaction.options.getString("name");
     let inputRegion = interaction.options.getString("region");
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
-    let star = "⭐";
-    let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
-    let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
-    let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
-    let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
-    let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
-    let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
     let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
     let splat3Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
@@ -102,7 +108,7 @@ export default async (interaction, ephemeral) => {
                 default:
                     return sendMessage({ interaction: interaction, content: clothingFailedString });
             };
-            let clothingObject = await Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
+            let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
             if (!clothingObject) return sendMessage({ interaction: interaction, content: clothingFailedString });
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
@@ -262,11 +268,11 @@ export default async (interaction, ephemeral) => {
                 let currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
                 let currentEggstraWork = responseSchedules.data.data[inputMode].teamContestSchedules.nodes[0];
                 if (currentBigRun) {
-                    currentSalmonRunEventTitle = "⚠️ Big Run ⚠️";
+                    currentSalmonRunEventTitle = `⚠️ ${bold("Big Run")} ⚠️`;
                     currentSalmonRunEvent = currentBigRun;
                 };
                 if (currentEggstraWork) {
-                    currentSalmonRunEventTitle = "🥚 Eggstra Work 🥚";
+                    currentSalmonRunEventTitle = `🥚 ${bold("Eggstra Work")} 🥚`;
                     currentSalmonRunEvent = currentEggstraWork;
                 };
             };
@@ -300,15 +306,15 @@ export default async (interaction, ephemeral) => {
                     await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
                         eventWeaponString += `- ${weapon.name}\n`;
                     });
-                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
+                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: ${time(Date.parse(currentSalmonRunEvent.startTime) / 1000, TimestampStyles.ShortDateTime)}\nEnd: ${time(Date.parse(currentSalmonRunEvent.endTime) / 1000, TimestampStyles.ShortDateTime)}\nMap: ${bold(currentSalmonRunEvent.setting.coopStage.name)}\nWeapons:\n${eventWeaponString}`);
                 };
                 await scheduleData.nodes.forEach(async (entry) => {
-                    let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
+                    let salmonRotationTime = time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortDateTime);
                     let weaponString = "";
                     await entry.setting.weapons.forEach(weapon => {
                         weaponString += `- ${weapon.name}\n`;
                     });
-                    splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, value: weaponString, inline: true }]);
+                    splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}`, value: `${entry.__splatoon3ink_king_salmonid_guess}\n${weaponString}`, inline: true }]);
                 });
                 if (currentSalmonRunEvent && Date.now() >= Date.parse(currentSalmonRunEvent.startTime)) {
                     splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
@@ -330,8 +336,8 @@ export default async (interaction, ephemeral) => {
                     splatfestScheduleDescription += team.teamName;
                     if (team.role == "DEFENSE") splatfestDefender = team.teamName;
                 });
-                splatfestScheduleDescription += `\nDuration: <t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
-                let tricolorSchedule = `<t:${Date.parse(currentFest.midtermTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                splatfestScheduleDescription += `\nDuration: ${time(Date.parse(currentFest.startTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(currentFest.endTime) / 1000, TimestampStyles.ShortDateTime)}`;
+                let tricolorSchedule = `${time(Date.parse(currentFest.midtermTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(currentFest.endTime) / 1000, TimestampStyles.ShortDateTime)}`;
                 if (splatfestDefender) tricolorSchedule += `\nDefense: Team ${splatfestDefender}`;
                 tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                 splat3Embed
@@ -343,7 +349,7 @@ export default async (interaction, ephemeral) => {
                 // Turf War, Anarchy, xBattle and SplatfestTW
                 await scheduleData.nodes.forEach(entry => {
                     entrySettings = entry[modeSettings];
-                    let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
+                    let mapEntryTimes = `${time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortTime)}-${time(Date.parse(entry.endTime) / 1000, TimestampStyles.ShortTime)}`;
                     let mapEntryTitle = mapEntryTimes;
                     if (inputMode == anarchyID) {
                         entrySettings = entrySettings[modeIndex];
@@ -367,9 +373,9 @@ export default async (interaction, ephemeral) => {
                     let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
                     let challengeTimes = "";
                     await entry.timePeriods.forEach(challengeTimePeriod => {
-                        challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
+                        challengeTimes += `- ${time(Date.parse(challengeTimePeriod.startTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(challengeTimePeriod.endTime) / 1000, TimestampStyles.ShortTime)}\n`;
                     });
-                    splat3Embed.addFields([{ name: challengeName, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
+                    splat3Embed.addFields([{ name: challengeName, value: `${bold(challengeDesc)}\n${challengeDescLong}\n${bold("Mode:")} ${challengeMode}\n${bold("Maps:")} ${challengeMaps}\n${bold("Times:")}\n${challengeTimes}`, inline: false }]);
                 })
             );
             break;
@@ -383,13 +389,13 @@ export default async (interaction, ephemeral) => {
                 .setTitle("SplatNet3 Shop")
                 .setImage(splatnetData.pickupBrand.image.url)
                 .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` })
-                .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
+                .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts ${time(Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
             await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                 let brandGearString = getGearString(brandGear, "brand");
                 splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
             });
             // Individual gear pieces
-            splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item <t:${Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000}:R>.`, inline: false }]);
+            splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item ${time(Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
             await splatnetData.limitedGears.forEach(limitedGear => {
                 let limitedGearString = getGearString(limitedGear, "limited");
                 splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
@@ -397,18 +403,19 @@ export default async (interaction, ephemeral) => {
             break;
         case "splatfests":
             await interaction.deferReply({ ephemeral: ephemeral });
-            let splatfestReplyObject = await getSplatfests({ interaction: interaction, page: 1, region: inputRegion });
-            return sendMessage({ interaction: interaction, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
+            let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
+            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
         case "replay":
             await interaction.deferReply({ ephemeral: ephemeral });
             let replayCode = interaction.options.getString("code");
-            replayCode = replayCode.replace("-", "");
-            let replayResponse = await axios.get(`${replayAPI}${replayCode.toUpperCase()}`);
+            replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
+            // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
+            let replayResponse = await axios.get(`${replayAPI}${replayCode}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" } });
             if (replayResponse.status !== 200) return interaction.reply({ content: "Error occurred getting that replay. Make sure the code is correct." });
             let replayData = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
             // Match data
-            let replayTimestamp = `Timestamp: <t:${Date.parse(replayData.playedTime) / 1000}:f>`;
+            let replayTimestamp = `Timestamp: ${time(Date.parse(replayData.playedTime) / 1000, TimestampStyles.ShortDateTime)}`;
             let replayMode = `${replayData.vsRule.name} Replay`;
             if (!replayIsTurfWar) replayMode += ` (${replayData.vsMode.name})`;
             let replayStage = `Stage: ${replayData.vsStage.name}`;
@@ -428,11 +435,11 @@ export default async (interaction, ephemeral) => {
             playerData.push(`Shoes: ${replayData.player.shoesGear.name}`);
             if (replayIsTurfWar) playerData.push(`Points: ${replayData.myTeam.result.paintPoint}`);
             // Skills
-            let headSkills = [`**${replayData.player.headGear.primaryGearPower.name}**`];
+            let headSkills = [bold(replayData.player.headGear.primaryGearPower.name)];
             replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills.push(power.name) });
-            let clothingSkills = [`**${replayData.player.clothingGear.primaryGearPower.name}**`];
+            let clothingSkills = [bold(replayData.player.clothingGear.primaryGearPower.name)];
             replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills.push(power.name) });
-            let shoesSkills = [`**${replayData.player.shoesGear.primaryGearPower.name}**`];
+            let shoesSkills = [bold(replayData.player.shoesGear.primaryGearPower.name)];
             replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills.push(power.name) });
             // Awards
             let replayAwards = [];
@@ -442,7 +449,8 @@ export default async (interaction, ephemeral) => {
                 .setTitle(replayMode)
                 .setThumbnail(replayData.player.weapon.image.url)
                 .setDescription(matchData)
-                .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` })
+                // Replace() is to add dashes for consistency with in-game GUI, slice is to remove final -
+                .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode.replace(/(.{4})/g, "$1-").slice(0, -1)}\nAPI: ${replayLookupGithub}` })
                 .addFields([
                     { name: "Player Data:", value: playerData.join("\n"), inline: false },
                     { name: `${replayData.player.headGear.name} Skills:`, value: headSkills.join("\n"), inline: true },
@@ -452,8 +460,8 @@ export default async (interaction, ephemeral) => {
             if (replayAwards.length > 0) splat3Embed.addFields([{ name: "Awards:", value: replayAwards.join("\n"), inline: false }]);
             break;
         case "splashtag-random":
-            let userTitle = interaction.member.nickname;
-            if (!userTitle) userTitle = interaction.user.username;
+            let userTitle = interaction.user.username;
+            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) userTitle = interaction.member.nickname;
 
             let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
@@ -484,7 +492,7 @@ export default async (interaction, ephemeral) => {
 
 function getGearString(gear, type) {
     let limitedGearString = "";
-    if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
+    if (type == "limited") limitedGearString += `Sale ends ${time(Date.parse(gear.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.\n`;
     limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
     let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
     let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;

@@ -5,12 +5,12 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandAttachmentOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -40,8 +40,8 @@ export default async (interaction, ephemeral) => {
     };
     if (!target) return sendMessage({ interaction: interaction, content: "I could not find a user or channel with that ID." });
     let targetFormat = null;
-    if (channelIDArg) targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
-    if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
+    if (channelIDArg) targetFormat = `${bold(target.name)} (${target.id}) in ${bold(target.guild.name)} (${target.guild.id})`;
+    if (userIDArg) targetFormat = `${bold(target.username)} (${target.id})`;
     try {
         let messageObject = { content: messageContent };
         if (attachment) messageObject["files"] = [attachment];
@@ -53,7 +53,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // String options
 const contentOption = new SlashCommandStringOption()

@@ -4,15 +4,18 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
+    SlashCommandSubcommandGroupBuilder,
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let api = "https://helldiverstrainingmanual.com/api/v1/";
-let liberationString = "Liberation";
-let defenseString = "Defense";
+const api = "https://helldiverstrainingmanual.com/api/v1/";
+const liberationString = "Liberation";
+const defenseString = "Defense";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -41,7 +44,7 @@ export default async (interaction, ephemeral) => {
                 campaignStatusString = `${liberationString} vs. ${campaignStatusPlanet.faction}`;
                 if (campaignStatusPlanet.defense == true) campaignStatusString = campaignStatusString.replace(liberationString, defenseString);
                 campaignStatusString += `\nProgress: ${Math.round(campaignStatusPlanet.percentage * 100) / 100}%\nHelldivers: ${campaignStatusPlanet.players}`;
-                if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal <t:${Math.floor(campaignStatusPlanet.expireDateTime)}:R>`;
+                if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal ${time(Math.floor(campaignStatusPlanet.expireDateTime), TimestampStyles.RelativeTime)}`;
             };
             let planetBiome = null;
             if (planetObject.biome) {
@@ -53,7 +56,7 @@ export default async (interaction, ephemeral) => {
             if (planetObject.environmentals && planetObject.environmentals.length > 0) {
                 environmentals = "";
                 planetObject.environmentals.forEach(environmental => {
-                    environmentals += `**${environmental.name}**: ${environmental.description}\n`;
+                    environmentals += `${bold(`${environmental.name}:`)} ${environmental.description}\n`;
                 });
             };
             helldiversEmbed
@@ -70,7 +73,7 @@ export default async (interaction, ephemeral) => {
                 let planetStatusString = `${liberationString} vs. ${planet.faction}`;
                 if (planet.defense == true) planetStatusString = planetStatusString.replace(liberationString, defenseString);
                 planetStatusString += `\nProgress: ${Math.round(planet.percentage * 100) / 100}%\nHelldivers: ${planet.players}`;
-                if (planet.expireDateTime) planetStatusString += `\nWithdrawal <t:${Math.floor(planet.expireDateTime)}:R>`;
+                if (planet.expireDateTime) planetStatusString += `\nWithdrawal ${time(Math.floor(planet.expireDateTime), TimestampStyles.RelativeTime)}`;
                 helldiversEmbed.addFields([{ name: `${planet.name}`, value: planetStatusString, inline: true }]);
             });
             helldiversEmbed.setTitle("Campaign Status");

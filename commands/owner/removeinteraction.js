@@ -6,7 +6,6 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -30,12 +29,12 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // String options
 const interactionNameOption = new SlashCommandStringOption()
     .setName("interaction-name")
-    .setDescription("Interaction to remove")
+    .setDescription("Interaction to remove.")
     .setRequired(true);
 const guildIDOption = new SlashCommandStringOption()
     .setName("guild-id")

@@ -36,11 +36,9 @@ export default async (client, role) => {
                 embedColor = globalVars.embedColor;
                 roleColorText = null;
             };
-            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
 
             const deleteEmbed = new EmbedBuilder()
                 .setColor(embedColor)
-                .setThumbnail(icon)
                 .setTitle(`Role Deleted ❌`)
                 .setDescription(role.name)
                 .setFooter({ text: role.id })

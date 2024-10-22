@@ -1,14 +1,14 @@
 import {
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    bold
 } from "discord.js";
 import forever from "forever";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -39,13 +39,13 @@ export default async (interaction) => {
     } catch (e) {
         console.log(e);
     };
-    console.log(`Bot killed by **${interaction.user.username}**. (${timestamp})`);
+    console.log(`Bot killed by ${bold(interaction.user.username)}. (${timestamp})`);
 
     await interaction.client.destroy();
     return process.exit();
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Boolean options
 const removeInteractionsOption = new SlashCommandBooleanOption()

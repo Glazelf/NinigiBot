@@ -2,7 +2,8 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    bold
 } from "discord.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -15,9 +16,9 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData }) => {
+export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex.gen;
@@ -66,8 +67,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Typing
     let type1 = pokemonGen.types[0];
     let type2 = pokemonGen.types[1];
-    let typeString = `${getTypeEmojis({ type: type1 })}`;
-    if (type2) typeString += `\n${getTypeEmojis({ type: type2, })}`;
+    let typeString = `${getTypeEmojis({ type: type1, emojis: emojis })}`;
+    if (type2) typeString += `\n${getTypeEmojis({ type: type2, emojis: emojis })}`;
     // Check type matchups
     let superEffectives = [];
     let resistances = [];
@@ -77,7 +78,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
-        let typeEffectString = getTypeEmojis({ type: type.name, bold: typeEmoteBold });
+        let typeEffectString = getTypeEmojis({ type: type.name, boldBool: typeEmoteBold, emojis: emojis });
         if ([2, 4].includes(effectiveness)) superEffectives.push(typeEffectString);
         if ([0.25, 0.5].includes(effectiveness)) resistances.push(typeEffectString);
         if (effectiveness == 0) immunities.push(typeEffectString);
@@ -94,11 +95,11 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let pokemonSim = DexSim.forGen(genData.dex.gen).species.get(pokemon.name);
     let heightAmerican = convertMeterFeet(pokemonSim.heightm);
     if (pokemonGen.weightkg && pokemonGen.weightkg > 0) {
-        metricsString += `**Weight:**\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
+        metricsString += `${bold("Weight:")}\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
     } else {
-        metricsString += `**Weight:**\n???`;
+        metricsString += `${bold("Weight:")}\n???`;
     };
-    if (pokemonSim.heightm) metricsString += `\n**Height:**\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
+    if (pokemonSim.heightm) metricsString += `\n${bold("Height:")}\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
     // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
     // Official art
     let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
@@ -135,23 +136,23 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let abilityString = "";
     if (pokemonGen.abilities['0']) {
         let ability0Desc = genData.abilities.get(pokemonGen.abilities[0]).shortDesc;
-        abilityString += `**${pokemonGen.abilities['0']}**: ${ability0Desc}`;
+        abilityString += `${bold(pokemonGen.abilities['0'])}: ${ability0Desc}`;
     };
     if (pokemonGen.abilities['1']) {
         let ability1Desc = genData.abilities.get(pokemonGen.abilities[1]).shortDesc;
-        abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
+        abilityString += `\n${bold(pokemon.abilities['1'])}: ${ability1Desc}`;
     };
     if (pokemonGen.abilities['H']) {
         let abilityHDesc = genData.abilities.get(pokemonGen.abilities['H']).shortDesc;
         if (pokemonGen.unreleasedHidden) {
-            abilityString += `\n**${pokemonGen.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Unreleased Hidden): ${abilityHDesc}`;
         } else {
-            abilityString += `\n**${pokemonGen.abilities['H']}** (Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Hidden): ${abilityHDesc}`;
         };
     };
     if (pokemonGen.abilities['S']) {
         let abilitySDesc = genData.abilities.get(pokemonGen.abilities['S']).shortDesc;
-        abilityString += `\n**${pokemonGen.abilities['S']}** (Special): ${abilitySDesc}`;
+        abilityString += `\n${bold(pokemonGen.abilities['S'])} (Special): ${abilitySDesc}`;
     };
     let statLevels = `(lvl50) (lvl100)`;
     let HPstats = calcHP(pokemonGen, generation);
@@ -160,30 +161,36 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let SpAstats = calcStat(pokemonGen.baseStats.spa, generation);
     let SpDstats = calcStat(pokemonGen.baseStats.spd, generation);
     let Spestats = calcStat(pokemonGen.baseStats.spe, generation);
-    let statsString = `${Dex.stats.shortNames.hp}: **${pokemonGen.baseStats.hp}** ${HPstats}\n${Dex.stats.shortNames.atk}: **${pokemonGen.baseStats.atk}** ${Atkstats}\n${Dex.stats.shortNames.def}: **${pokemonGen.baseStats.def}** ${Defstats}\n`;
+    let statsString = `${Dex.stats.shortNames.hp}: ${bold(pokemonGen.baseStats.hp)} ${HPstats}\n${Dex.stats.shortNames.atk}: ${bold(pokemonGen.baseStats.atk)} ${Atkstats}\n${Dex.stats.shortNames.def}: ${bold(pokemonGen.baseStats.def)} ${Defstats}\n`;
     // Account for gen 1 Special stat
     switch (generation) {
         case 1:
-            statsString += `${genData.stats.dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n`;
+            statsString += `${genData.stats.dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n`;
             break;
         default:
-            statsString += `${Dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n${Dex.stats.shortNames.spd}: **${pokemonGen.baseStats.spd}** ${SpDstats}\n`;
+            statsString += `${Dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n${Dex.stats.shortNames.spd}: ${bold(pokemonGen.baseStats.spd)} ${SpDstats}\n`;
             break;
     };
-    statsString += `${Dex.stats.shortNames.spe}: **${pokemonGen.baseStats.spe}** ${Spestats}\nBST: ${pokemonGen.bst}`;
+    statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
 
     let levelMoves = [];
     let levelMovesNames = [];
     let tmMoves = [];
+    let tmMovesStrings = [];
     let eggMoves = [];
     let tutorMoves = [];
     let specialMoves = [];
     let transferMoves = [];
+    let transferMovesStrings = [];
     let reminderMoves = [];
     let vcMoves = [];
+    let levelMovesString = "";
+    let eggMovesString = "";
+    let tutorMovesString = "";
+    let specialMovesString = "";
     let prevoDataMoves = Dex.species.get(pokemon.prevo);
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
-    if (learnsetBool && pokemonLearnset) {
+    if (learnsetBool && pokemonLearnset && pokemonAvailable) {
         for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
@@ -228,33 +235,30 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-    };
-    let levelMovesString = "";
-    for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
-    for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
-    let tmMovesStrings = [];
-    let tmMoveIndex = 0;
-    for (const tmMove of tmMoves) {
-        if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
-        tmMovesStrings[tmMoveIndex].push(tmMove);
-        if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
-    };
-    let eggMovesString = eggMoves.join(", ");
-    let tutorMovesString = tutorMoves.join(", ");
-    specialMoves = [...new Set(specialMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
-    let specialMovesString = specialMoves.join(", ");
-    let transferMovesStrings = [];
-    let transferMoveIndex = 0;
-    transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
-    for (const transferMove of transferMoves) {
-        if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
-        transferMovesStrings[transferMoveIndex].push(transferMove);
-        if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
+
+        for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
+        for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
+        let tmMoveIndex = 0;
+        let transferMoveIndex = 0;
+        for (const tmMove of tmMoves) {
+            if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
+            tmMovesStrings[tmMoveIndex].push(tmMove);
+            if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
+        };
+        eggMovesString = eggMoves.join(", ");
+        tutorMovesString = tutorMoves.join(", ");
+        specialMoves = [...new Set(specialMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
+        specialMovesString = specialMoves.join(", ");
+        transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
+        for (const transferMove of transferMoves) {
+            if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
+            transferMovesStrings[transferMoveIndex].push(transferMove);
+            if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
+        };
     };
     // Get relative Pokédex variables
     let previousPokemon = null;
     let nextPokemon = null;
-
     let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
     let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
     let previousPokemonID = pokemon.num - 1;
@@ -272,6 +276,12 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         .setStyle(ButtonStyle.Primary)
         .setEmoji('⬅️');
     pkmButtons.addComponents(previousPokemonButton);
+    const nextPokemonButton = new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name })
+        .setCustomId(`pkmright|${buttonAppend}`)
+        .setLabel(nextPokemon.name)
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('➡️');
+    pkmButtons.addComponents(nextPokemonButton);
     if (pokemon.name !== pokemon.baseSpecies) {
         const baseSpeciesButton = new ButtonBuilder()
             .setCustomId(`pkmbase|${buttonAppend}`)
@@ -280,12 +290,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             .setEmoji('⬇️');
         pkmButtons.addComponents(baseSpeciesButton);
     };
-    const nextPokemonButton = new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name })
-        .setCustomId(`pkmright|${buttonAppend}`)
-        .setLabel(nextPokemon.name)
-        .setStyle(ButtonStyle.Primary)
-        .setEmoji('➡️');
-    pkmButtons.addComponents(nextPokemonButton);
     if (pokemon.prevo) {
         let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
         let evoMethod = getEvoMethod(pokemon);

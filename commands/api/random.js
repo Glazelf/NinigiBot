@@ -44,7 +44,7 @@ export default async (interaction, ephemeral) => {
             let catImage = null;
             let catNameSeed = null;
             catImage = `${catAPI}/${catResponse.data._id}`;
-            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
+            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText).replace(/%20/g, " "))}`; // Double encode to escape periods and slashes. Replace first encode's spaces to show those correctly
             catNameSeed = catResponse.data._id;
             let catName = uniqueNamesGenerator({
                 dictionaries: [names],

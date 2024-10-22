@@ -1,7 +1,9 @@
 import {
+    EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    AttachmentBuilder
 } from "discord.js";
 import { PassThrough } from "stream";
 import PImage from "pureimage";
@@ -13,11 +15,10 @@ export default async (interaction, ephemeral) => {
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
     let hexInput = interaction.options.getString("hex");
-    let formattingHash = "#";
     let rgb = hexToRgb(hexInput);
-    if (hexInput.startsWith("#")) formattingHash = "";
+    if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
 
-    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
+    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters \`0-9\` and \`A-F\`.` });
 
     let imgWidth = 225;
     let imgHeight = 100;
@@ -29,7 +30,12 @@ export default async (interaction, ephemeral) => {
     const stream = new PassThrough();
     await PImage.encodePNGToStream(img, stream);
 
-    return sendMessage({ interaction: interaction, content: `Here's the color for \`${formattingHash}${hexInput}\`:`, files: stream, ephemeral: ephemeral });
+    let attachment = new AttachmentBuilder(stream, { name: "hexcolor.png" });
+    let hexColorEmbed = new EmbedBuilder()
+        .setColor(hexInput)
+        .setTitle(hexInput)
+        .setImage(`attachment://${attachment.name}`);
+    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], ephemeral: ephemeral });
 };
 
 function hexToRgb(hex) {

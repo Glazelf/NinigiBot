@@ -3,28 +3,30 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ApplicationIntegrationType
+    ApplicationIntegrationType,
+    time,
+    TimestampStyles
 } from "discord.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import badgeEmojis from "../../objects/discord/badgeEmojis.json" with { type: "json" };
-import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 const number_of_pages = 2;
+const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
-    // Find better check so userinfo can be used with userinstall
-    if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
+    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
-    let serverAvatar = null;
-    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
+    let serverAvatar = avatar;
+    if (member && guildDataAvailable) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+    if (serverAvatar == avatar) avatar = null; // Null tiny avatar if bigger avatar is identical
 
     const profileEmbed = new EmbedBuilder()
         .setColor(embedColor)
@@ -59,7 +61,7 @@ export default async (interaction, page, user) => {
             let birthdayParsed = parseDate(birthday);
             // Roles
             let memberRoles = null;
-            if (member) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
+            if (member && guildDataAvailable) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
             let rolesSorted = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
@@ -83,36 +85,44 @@ export default async (interaction, page, user) => {
             let badgesString = "";
             try {
                 if (user.bot) badgesArray.push("🤖");
-                let guildOwner = await interaction.guild.fetchOwner();
-                if (guildOwner.id === user.id) badgesArray.push("👑");
-                if (member && member.premiumSince > 0) badgesArray.push(emojis.NitroBoost);
+                let guildOwner = await interaction.guild?.fetchOwner();
+                if (guildOwner?.id === user.id) badgesArray.push("👑");
+                if (member && member.premiumSince > 0) {
+                    let boostEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == nitroBoostEmojiName);
+                    if (boostEmoji) badgesArray.push(boostEmoji);
+                };
                 if (user.flags) {
                     let userFlagsAll = user.flags.serialize();
                     let flagsArray = Object.entries(userFlagsAll);
                     let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
-                    for (const [key, value] of Object.entries(badgeEmojis)) {
-                        if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
+                    for (const key of Object.keys(userFlagsTrue)) {
+                        let badgeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `Badge${key}`);
+                        if (badgeEmoji) badgesArray.push(badgeEmoji);
                     };
                 };
                 badgesString = badgesArray.join("");
             } catch (e) {
                 // console.log(e);
             };
-            let joinRank, joinPercentage, joinRankText = null;
-            if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) {
+            let joinRank = null;
+            let joinPercentage = null;
+            let joinRankText = null;
+            if (guildDataAvailable) {
                 joinRank = await getJoinRank(user, interaction.guild);
                 joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
             };
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
-            if (birthday && birthdayParsed && member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
-            if (switchCode && switchCode !== 'None' && member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
+            if (birthday && birthdayParsed) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
+            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
-            profileEmbed.addFields([{ name: "Created:", value: `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, inline: true }]);
-            if (member) profileEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, inline: true }]);
-            if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, inline: true }]);
+            profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
+            if (member && guildDataAvailable) {
+                profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedTimestamp / 1000), TimestampStyles.RelativeTime), inline: true }]);
+                if (member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(member.premiumSinceTimestamp / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            };
             if (banner) profileEmbed.setImage(banner);
             profileEmbed.setFooter({ text: user.id });
             break;
@@ -123,7 +133,7 @@ export default async (interaction, page, user) => {
             let userBalance = `${dbBalance}${globalVars.currency}`;
             profileEmbed.addFields([
                 { name: "Balance:", value: userBalance, inline: true },
-                { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }
+                { name: "Food:", value: user_db.food.toString() + ' 🍗', inline: true }
             ]);
             let trophy_level = 0;
             let trophy_string = '';
@@ -139,7 +149,7 @@ export default async (interaction, page, user) => {
             trophy_level += trophies.length;
             if (trophy_string.length > 0) {
                 profileEmbed.addFields([
-                    { name: "Trophy Level:", value: trophy_level + ' :beginner:', inline: true },
+                    { name: "Trophy Level:", value: trophy_level + ' 🔰', inline: true },
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };

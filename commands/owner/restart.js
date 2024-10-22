@@ -2,14 +2,14 @@ import {
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = false;
@@ -26,7 +26,7 @@ export default async (interaction, ephemeral) => {
     let dbinitArg = interaction.options.getBoolean("dbinit");
     if (dbinitArg === true) dbinit = dbinitArg;
     let timestamp = getTime();
-    console.log(`Restarting for **${interaction.user.username}**. (${timestamp})`);
+    console.log(`Restarting for ${bold(interaction.user.username)}. (${timestamp})`);
     let installResult = "";
     // Run commands
     if (npmInstall) {
@@ -56,7 +56,7 @@ export default async (interaction, ephemeral) => {
     return process.exit();
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.DEV_SERVER_ID;
 
 // Boolean options
 const resetInteractionsOptions = new SlashCommandBooleanOption()

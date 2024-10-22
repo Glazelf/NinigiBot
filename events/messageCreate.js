@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
 import { addMoney } from "../database/dbServices/user.api.js";
 
 const talkedRecently = new Set();
@@ -22,7 +21,7 @@ export default async (client, message) => {
         // Ignore commands in DMs
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
-            let DMChannel = await client.channels.fetch(config.devChannelID);
+            let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const profileButton = new ButtonBuilder()
