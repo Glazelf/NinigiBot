@@ -11,7 +11,6 @@ import {
 import fs from 'fs';
 import path from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
-import config from './config.json' with { type: "json" };
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -80,7 +79,8 @@ client.commands = new Collection();
 await walk(`./commands/`);
 console.log("Loaded commands!");
 
-client.login(config.token);
+console.log(process.env)
+client.login(process.env.token);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 async function walk(dir, callback) {

@@ -5,7 +5,6 @@ import {
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/deletePersonalRole.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
 
 export default async (client, entitlement) => {
     try {
@@ -22,7 +21,7 @@ export default async (client, entitlement) => {
         if (!member.premiumSince && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, guild);
 
         if (!user) return;
-        let log = await client.channels.fetch(config.devChannelID);
+        let log = await client.channels.fetch(process.env.devChannelID);
         if (!log) return;
 
         let SKUs = await client.application.fetchSKUs();

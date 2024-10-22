@@ -9,7 +9,6 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -38,7 +37,7 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // Subcommands
 const infoSubcommand = new SlashCommandSubcommandBuilder()

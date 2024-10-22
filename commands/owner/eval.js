@@ -8,7 +8,6 @@ import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import util from "util";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = true;
@@ -27,10 +26,6 @@ export default async (interaction, ephemeral) => {
     };
     if (typeof evaled !== "string") evaled = util.inspect(evaled);
     if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
-    // Check if requested content has any matches with client config. Should avoid possible security leaks.
-    for (const [key, value] of Object.entries(config)) {
-        if (evaled.includes(value) && ephemeral == false) return sendMessage({ interaction: interaction, content: `For security reasons this content can't be returned.` });
-    };
     let returnString = codeBlock("js", clean(evaled));
     return sendMessage({ interaction: interaction, content: returnString });
 
@@ -43,7 +38,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // String options
 const inputOption = new SlashCommandStringOption()

@@ -12,7 +12,6 @@ import {
 } from "../../database/dbServices/user.api.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -31,7 +30,7 @@ export default async (interaction) => {
     return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${globalVars.currency} to ${userMention(transferTargetID)} (${transferTargetID}). They now have ${userBalance}.` });
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // String options
 const amountOption = new SlashCommandIntegerOption()

@@ -1,12 +1,11 @@
 import axios from "axios";
-import config from "../../config.json" with { type: "json" };
 
 const giphyAPI = "https://api.giphy.com/v1/gifs/random";
 
 export default async (gifTags = []) => {
     const randomTag = gifTags[Math.floor(Math.random() * gifTags.length)];
     let giphyParams = {
-        api_key: config.giphy,
+        api_key: process.env.giphy,
         rating: "g"
     };
     if (gifTags.length > 0) giphyParams.tag = randomTag;

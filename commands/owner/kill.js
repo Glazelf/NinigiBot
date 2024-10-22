@@ -9,7 +9,6 @@ import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
@@ -46,7 +45,7 @@ export default async (interaction) => {
     return process.exit();
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // Boolean options
 const removeInteractionsOption = new SlashCommandBooleanOption()

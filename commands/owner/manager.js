@@ -16,7 +16,6 @@ import {
 } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = true;
@@ -85,7 +84,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // Level and Shiny subcommands are missing on purpose
 // String options

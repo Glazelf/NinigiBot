@@ -10,7 +10,6 @@ import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     ephemeral = false;
@@ -57,7 +56,7 @@ export default async (interaction, ephemeral) => {
     return process.exit();
 };
 
-export const guildID = config.devServerID;
+export const guildID = process.env.devServerID;
 
 // Boolean options
 const resetInteractionsOptions = new SlashCommandBooleanOption()

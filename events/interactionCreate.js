@@ -17,7 +17,6 @@ import logger from "../util/logger.js";
 import sendMessage from "../util/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
 // Pokémon
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -858,7 +857,7 @@ export default async (client, interaction) => {
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
                         const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
-                        let DMChannel = await client.channels.fetch(config.devChannelID);
+                        let DMChannel = await client.channels.fetch(process.env.devChannelID);
 
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
