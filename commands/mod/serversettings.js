@@ -7,6 +7,7 @@ import {
     SlashCommandChannelOption,
     SlashCommandIntegerOption,
     SlashCommandBooleanOption,
+    AutoModerationActionType,
     bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -86,20 +87,20 @@ export default async (interaction) => {
                 },
                 actions: [
                     {
-                        type: 1,
+                        type: AutoModerationActionType.BlockMessage,
                         metadata: {
                             customMessage: `Blocked by ${interaction.client.user.username} AutoMod rule.`,
                             channel: channelArg.id
                         }
                     },
                     {
-                        type: 2,
+                        type: AutoModerationActionType.SendAlertMessage,
                         metadata: {
                             channel: channelArg.id
                         }
                     },
                     {
-                        type: 3,
+                        type: AutoModerationActionType.Timeout,
                         metadata: {
                             durationSeconds: 3600 // 1 hour
                         }
