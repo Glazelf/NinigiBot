@@ -1,8 +1,5 @@
 import {
-    SlashCommandBuilder,
-    bold,
-    escapeUnderline,
-    escapeStrikethrough
+    SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 
