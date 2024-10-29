@@ -42,6 +42,7 @@ import getBelly from "../../util/shinx/getBelly.js";
 import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction.js";
 import getRandomVisitorPosition from "../../util/shinx/getRandomVisitorPosition.js";
 import playing_reaction from "../../util/shinx/getPlayingReaction.js";
+import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const autoFeedModes = [
@@ -149,7 +150,7 @@ export default async (interaction, ephemeral) => {
                 case 'Ok':
                     let reactionFeed = getRandomEatingReaction();
                     shinx = await getShinx(master.id);
-                    returnString = `${bold(shinx.nickname)} ${reactionFeed[0]}`;
+                    returnString = `${formatName(shinx.nickname)} ${reactionFeed[0]}`;
                     canvas = Canvas.createCanvas(393, 299);
                     ctx = canvas.getContext('2d');
                     img = await Canvas.loadImage('./assets/dining.png');
@@ -229,7 +230,7 @@ export default async (interaction, ephemeral) => {
             messageFile = new AttachmentBuilder(canvas.toBuffer());
             return sendMessage({
                 interaction: interaction,
-                content: `${bold(shinx.nickname)} ${reactionPlay[0]}`,
+                content: `${formatName(shinx.nickname)} ${reactionPlay[0]}`,
                 files: messageFile,
                 ephemeral: ephemeral
             });
@@ -255,7 +256,7 @@ export default async (interaction, ephemeral) => {
 
             messageFile = new AttachmentBuilder(canvas.toBuffer());
             shinx.addExperienceAndUnfeed(50, 1);
-            return sendMessage({ interaction: interaction, content: `${bold(shinx.nickname)} ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: `${formatName(shinx.nickname)} ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
         case "nickname":
             let new_nick = interaction.options.getString("nickname");
             res = await nameShinx(master.id, new_nick);
@@ -283,7 +284,7 @@ export default async (interaction, ephemeral) => {
                     ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
                     img = await Canvas.loadImage('./assets/reactions.png');
                     ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
-                    returnString = `Nickname changed to ${bold(new_nick)}!`;
+                    returnString = `Nickname changed to ${formatName(new_nick)}!`;
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
                     break;
             };
@@ -427,7 +428,7 @@ export default async (interaction, ephemeral) => {
 
             for (let i = 0; i < 2; i++) {
                 if (shinxes[i].geass > 0) {
-                    text += addLine(`${bold("...?")}\nThe power of love remains!\n${bold(`${nicks[i]} entered geass mode!`)}`);
+                    text += addLine(`${bold("...?")}\nThe power of love remains!\n${formatName(`${nicks[i]} entered geass mode!`)}`);
                     ctx.drawImage(geasson, 52 + 35 * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#fc03c2';
@@ -439,7 +440,7 @@ export default async (interaction, ephemeral) => {
                 text = '';
                 for (let i = 0; i < 2; i++) {
                     const attackMove = shinxes[i].attack();
-                    text += addLine(`${bold(nicks[i])} used ${bold(attackMove[0])}!`);
+                    text += addLine(`${formatName(nicks[i])} used ${bold(attackMove[0])}!`);
                     const result = shinxes[(i + 1) % 2].takeDamage(attackMove);
                     if (result === true) {
                         canvas = Canvas.createCanvas(240, 130);
@@ -457,13 +458,13 @@ export default async (interaction, ephemeral) => {
                             avatar.src = avatarBuffer;
                             ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
                         };
-                        text += addLine(`${bold(nicks[(i + 1) % 2])} fainted!`);
+                        text += addLine(`${formatName(nicks[(i + 1) % 2])} fainted!`);
                         for (let h = 0; h < 2; h++) {
                             await incrementCombatAmount(trainers[h].id, i == h);
                             const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
-                            text += addLine(`${bold(nicks[h])} won ${exp[0]} exp. points!`);
+                            text += addLine(`${formatName(nicks[h])} won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
-                                text += addLine(`${bold(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
+                                text += addLine(`${formatName(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
@@ -472,7 +473,7 @@ export default async (interaction, ephemeral) => {
                         return sendMessage({ interaction: interaction, content: text, files: messageFile });
                     } else {
                         if (result === -1) {
-                            text += addLine(`${bold(nicks[i])} lost his shield by blocking a deathblow!`);
+                            text += addLine(`${formatName(nicks[i])} lost his shield by blocking a deathblow!`);
                         };
                     };
                 };
@@ -491,14 +492,14 @@ export default async (interaction, ephemeral) => {
                         prevColors[i] = color;
                     };
                     if (shinxes[i].geassMode()) {
-                        text += addLine(`${bold("...?")}\nThe power of love remains!\n${bold(`${nicks[i]} entered Geass mode!`)}`);
+                        text += addLine(`${bold("...?")}\nThe power of love remains!\n${formatName(`${nicks[i]} entered Geass mode!`)}`);
                         ctx.drawImage(geasson, 52 + 35 * i * i, 20 + 79 * i);
                         ctx.font = 'normal bolder 14px Arial';
                         ctx.fillStyle = '#fc03c2';
                         ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
                     };
                     if (shinxes[i].reduceGeass()) {
-                        text += addLine(bold(`${nicks[i]} no longer has Geass mode!`));
+                        text += addLine((`${formatName(nicks[i])} no longer has Geass mode!`));
                         ctx.drawImage(geassoff, 52 + 35 * i * i, 20 + 79 * i);
                         ctx.font = 'normal bolder 14px Arial';
                         ctx.fillStyle = '#ffffff';

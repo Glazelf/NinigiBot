@@ -2,11 +2,11 @@ import {
     EmbedBuilder,
     PermissionFlagsBits,
     AuditLogEvent,
-    bold,
     time,
     TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
+import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member) => {
@@ -30,7 +30,7 @@ export default async (client, member) => {
             let kicked = false;
             let leaveEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
+                .setDescription(`${formatName(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);

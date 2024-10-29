@@ -2,12 +2,12 @@ import {
     EmbedBuilder,
     PermissionFlagsBits,
     AuditLogEvent,
-    bold,
     time,
     TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/deletePersonalRole.js";
+import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member, newMember) => {
@@ -93,20 +93,20 @@ export default async (client, member, newMember) => {
                 case "nickname":
                     topText = "Nickname Changed ⚒️";
                     if (member.nickname && newMember.nickname) {
-                        changeText = `Old: ${bold(member.nickname)}\nNew: ${bold(newMember.nickname)}`;
+                        changeText = `Old: ${formatName(member.nickname)}\nNew: ${formatName(newMember.nickname)}`;
                     } else if (newMember.nickname) {
-                        changeText = `New: ${bold(newMember.nickname)}`;
+                        changeText = `New: ${formatName(newMember.nickname)}`;
                     } else {
-                        changeText = `Removed: ${bold(member.nickname)}`;
+                        changeText = `Removed: ${formatName(member.nickname)}`;
                     };
                     break;
                 case "nitroStart":
                     topText = "Started Nitro Boosting ⚒️";
-                    changeText = `${bold(member.guild.name)} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                    changeText = `${formatName(member.guild.name)} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                     break;
                 case "nitroEnd":
                     topText = "Stopped Nitro Boosting ⚒️";
-                    changeText = `${bold(member.guild.name)} will lose this Nitro Boost in 3 days.`;
+                    changeText = `${formatName(member.guild.name)} will lose this Nitro Boost in 3 days.`;
                     break;
                 case "guildAvatar":
                     topText = "Updated Server Avatar ⚒️";
@@ -120,7 +120,7 @@ export default async (client, member, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${bold(member.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${formatName(member.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
