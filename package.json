@@ -10,7 +10,7 @@
     "@pkmn/sim": "^0.9.21",
     "axios": "^1.7.7",
     "canvas": "^2.11.2",
-    "cron": "^3.1.7",
+    "cron": "^3.1.8",
     "discord.js": "^14.16.3",
     "discord.js-minesweeper": "^1.1.0",
     "forever": "^4.0.3",
