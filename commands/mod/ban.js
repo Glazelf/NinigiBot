@@ -39,6 +39,7 @@ export default async (interaction) => {
     let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
     let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
 
+    let executorNameFormatted = formatName(interaction.user.username);
     let banReturn = null;
     let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
@@ -50,7 +51,7 @@ export default async (interaction) => {
         // console.log(e);
         bansFetch = null;
     };
-    let executorNameFormatted = formatName(interaction.user.username);
+
     let time = getTime();
     let reasonInfo = `-${executorNameFormatted} (${time})`;
     // If member is found
