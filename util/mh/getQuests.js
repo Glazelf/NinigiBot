@@ -16,8 +16,6 @@ export default async ({ gameName, page }) => {
     let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameNameLowercase);
     if (questsTotal.length == 0) {
         messageObject.content = `Could not find any quests for that game. If you are certain this game exists it might be added to ${hyperlink("the quest list", hideLinkEmbed("https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/quests.json"))} in the future.`;
-
-        `${hyperlink("not supported", hideLinkEmbed("https://github.com/Glazelf/NinigiBot/issues/436"))}`
         return messageObject;
     };
     // Sort by difficulty
