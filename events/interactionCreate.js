@@ -567,7 +567,8 @@ export default async (client, interaction) => {
                                         break;
                                     case "quest":
                                         MHQuestsJSON.quests.forEach(quest => {
-                                            if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
+                                            let gameSubtitle = quest.game.replace("Monster Hunter", "").trim();
+                                            if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: `${quest.name} (${gameSubtitle})`, value: quest.name });
                                         });
                                         break;
                                 };
