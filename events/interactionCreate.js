@@ -368,9 +368,15 @@ export default async (client, interaction) => {
                         };
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
-                            interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                            interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn }).catch(e => {
+                                // console.log(e);
+                                return;
+                            });
                         } else {
-                            interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                            interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true }).catch(e => {
+                                // console.log(e);
+                                return;
+                            });
                         };
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
@@ -847,6 +853,7 @@ export default async (client, interaction) => {
                 // Return choices
                 return interaction.respond(choices).catch(e => {
                     // console.log(e);
+                    return;
                 });
             case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
