@@ -503,6 +503,7 @@ export default async (interaction, ephemeral) => {
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
 
+            // Card subtypes can be undefined, for example for (old) trainer cards
             let embedAuthor = cardData.supertype;
             if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
             pokemonEmbed
