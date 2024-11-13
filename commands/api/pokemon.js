@@ -479,7 +479,9 @@ export default async (interaction, ephemeral) => {
                     if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
                 });
             };
-            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
+            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}`;
+            if (cardData.artist) cardFooter += ` by ${cardData.artist}`;
+            cardFooter += "\n";
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
             if (cardData.legalities) {
                 if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
