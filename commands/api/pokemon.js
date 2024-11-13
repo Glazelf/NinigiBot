@@ -503,8 +503,10 @@ export default async (interaction, ephemeral) => {
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
 
+            let embedAuthor = cardData.supertype;
+            if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
             pokemonEmbed
-                .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
+                .setAuthor({ name: embedAuthor })
                 .setTitle(cardTitle)
                 .setImage(cardData.images.large)
                 .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
