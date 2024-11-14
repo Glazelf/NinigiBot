@@ -903,6 +903,7 @@ export default async (client, interaction) => {
                         return sendMessage({ interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
