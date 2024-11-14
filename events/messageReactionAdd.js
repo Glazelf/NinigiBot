@@ -58,7 +58,8 @@ export default async (client, messageReaction) => {
             await starMessage.edit(starboardMessage);
             // Try to pin messages with double stars
             if (messageReaction.count >= starLimit * 2) starMessage.pin().catch(e => {
-                // console.log(e); 
+                // console.log(e);
+                return;
             });
             return;
         } else {

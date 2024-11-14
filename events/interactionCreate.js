@@ -368,16 +368,21 @@ export default async (client, interaction) => {
                         };
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
-                            interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn }).catch(e => {
+                            try {
+                                await interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                            } catch (e) {
                                 // console.log(e);
                                 return;
-                            });
+                            };
                         } else {
-                            interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true }).catch(e => {
+                            try {
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                            } catch (e) {
                                 // console.log(e);
                                 return;
-                            });
+                            };
                         };
+                        return;
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             let serverApi = await import("../database/dbServices/server.api.js");
@@ -836,7 +841,7 @@ export default async (client, interaction) => {
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
                 let subcommandSuggestRandom = false;
-                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null. Couldn't get this to work properly with .catch(), though that would be cleaner.
+                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null.
                 try {
                     if (["pokemon", "monster"].includes(interaction.options.getSubcommand())) subcommandSuggestRandom = true;
                 } catch (e) {
@@ -851,10 +856,13 @@ export default async (client, interaction) => {
                 // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
                 // Return choices
-                return interaction.respond(choices).catch(e => {
+                try {
+                    await interaction.respond(choices);
+                } catch (e) {
                     // console.log(e);
                     return;
-                });
+                };
+                return;
             case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {

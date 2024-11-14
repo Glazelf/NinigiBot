@@ -97,15 +97,18 @@ export default async (interaction, ephemeral) => {
         if (!colorArg) roleColor = personalRole.color;
         if (roleColor != personalRole.color) editReturnString += `\n- Color set to \`#${roleColor}\`.`;
 
-        personalRole.edit({
-            name: interaction.user.username,
-            color: roleColor,
-            position: personalRolePosition,
-            permissions: []
-        }).catch(e => {
+        try {
+            await personalRole.edit({
+                name: interaction.user.username,
+                color: roleColor,
+                position: personalRolePosition,
+                permissions: []
+            });
+        } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: `An error occurred.` });
-        });
+        };
+
         if (iconArg && iconsAllowed && fileIsImg) {
             let roleIconSizeLimit = 256;
             if (iconSize > roleIconSizeLimit) {
