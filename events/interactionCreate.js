@@ -478,6 +478,7 @@ export default async (client, interaction) => {
                                 roleObject.forEach(role => {
                                     if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
                                 });
+                                if (focusedOption.value.length == 0 && roleIDs.length == 0) choices.push({ name: "Selfassignable roles have not been set up in this server.", value: "" });
                                 break;
                         };
                         break;
