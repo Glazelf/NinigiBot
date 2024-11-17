@@ -40,7 +40,7 @@ export default async (interaction, ephemeral) => {
     // Role help embed and logic
     let roleHelpMessage = "";
     let rolesArray = [];
-    let noRolesString = `No roles have been made selfassignable yet. Moderators can use </roleadd:978076328567926834> to add roles to this list.`; // Make ID adaptive
+    let noRolesString = `No roles have been made selfassignable yet.\nModerators can use </roleadd:978076328567926834> to add roles to this list.`; // Make ID adaptive
     let receiveEmote = "❌";
     let removeEmote = "✅";
     if (!requestRole) {
@@ -101,7 +101,13 @@ export default async (interaction, ephemeral) => {
         return sendMessage({ interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
     } else {
         let invalidRoleText = `That role does not exist or isn't selfassignable. Use </role:978075106276429864> without any argument to see a drop down menu of available roles.`; // Make ID adaptive
-        requestRole = await interaction.guild.roles.fetch(requestRole);
+        // Catch because the fetch errors out if the input is not a snowflake, in case of random string inputs.
+        try {
+            requestRole = await interaction.guild.roles.fetch(requestRole);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage({ interaction: interaction, content: invalidRoleText });
+        };
         if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ interaction: interaction, content: invalidRoleText });
         if (requestRole.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
         if (interaction.guild.members.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
