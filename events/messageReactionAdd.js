@@ -12,9 +12,11 @@ export default async (client, messageReaction) => {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) messageReaction = await messageReaction.fetch();
+        console.log("1")
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
+        console.log("2")
         if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
         // Try to fetch message
         // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
@@ -32,6 +34,7 @@ export default async (client, messageReaction) => {
             if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
+        console.log("3")
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
