@@ -44,8 +44,14 @@ export default async (client, messageReaction) => {
             return;
         } else if (messageDB) {
             // Update existing entry otherwise
-            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            let starChannel = null;
+            let starMessage = null;
+            try {
+                starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+                starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            } catch (e) {
+                return;
+            };
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit(starboardMessage);
