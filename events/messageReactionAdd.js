@@ -57,7 +57,10 @@ export default async (client, messageReaction) => {
                 starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
                 starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             } catch (e) {
-                if (starChannel && !starMessage) await sendStarboardMessage(starboardMessage, targetMessage);
+                if (starChannel && !starMessage) {
+                    await messageDB.destroy();
+                    await sendStarboardMessage(starboardMessage, targetMessage);
+                };
                 return;
             };
             if (!starMessage) return;
