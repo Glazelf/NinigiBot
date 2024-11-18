@@ -58,7 +58,10 @@ export default async (client, messageReaction) => {
                 starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             } catch (e) {
                 if (starChannel && !starMessage) {
-                    await messageDB.destroy();
+                    let oldMessageDBEntries = await serverApi.StarboardMessages.find({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+                    for await (entry of oldMessageDBEntries) {
+                        await entry.destroy();
+                    };
                     await sendStarboardMessage(starboardMessage, targetMessage);
                 };
                 return;
