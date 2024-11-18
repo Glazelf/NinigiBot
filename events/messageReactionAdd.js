@@ -12,11 +12,9 @@ export default async (client, messageReaction) => {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) messageReaction = await messageReaction.fetch();
-        console.log("1")
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
-        console.log("2")
         if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
         // Try to fetch message
         // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
@@ -34,7 +32,6 @@ export default async (client, messageReaction) => {
             if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
-        console.log("3")
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
@@ -48,14 +45,11 @@ export default async (client, messageReaction) => {
         };
         let starboardMessage = await getStarboardMessage({ messageReaction: messageReaction, targetMessage: targetMessage, boardEmote: boardEmote });
         // Check if message already existed in database (was posted to starboard) or if star amount simply changed
-        console.log("4")
         if (messageReaction.count >= starLimit && !messageDB) {
-            console.log("5")
             // Send message then push data to database
             await starboard.send(starboardMessage).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
             return;
         } else if (messageDB) {
-            console.log("6")
             // Update existing starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
@@ -69,7 +63,6 @@ export default async (client, messageReaction) => {
             });
             return;
         } else {
-            console.log("7")
             return;
         };
 
