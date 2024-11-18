@@ -59,6 +59,7 @@ export default async (client, messageReaction) => {
             } catch (e) {
                 if (starChannel && !starMessage) {
                     let oldMessageDBEntries = await serverApi.StarboardMessages.findAll({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+                    console.log(oldMessageDBEntries)
                     for await (entry of oldMessageDBEntries) {
                         await entry.destroy();
                     };
