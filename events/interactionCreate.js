@@ -913,6 +913,9 @@ export default async (client, interaction) => {
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
+                        // Prevent overriding winner by waiting to submit answer
+                        let messageDescription = interaction.message.embeds[0].data.description;
+                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", ephemeral: true });
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
