@@ -48,11 +48,14 @@ export default async (client, messageReaction) => {
         };
         let starboardMessage = await getStarboardMessage({ messageReaction: messageReaction, targetMessage: targetMessage, boardEmote: boardEmote });
         // Check if message already existed in database (was posted to starboard) or if star amount simply changed
+        console.log("4")
         if (messageReaction.count >= starLimit && !messageDB) {
+            console.log("5")
             // Send message then push data to database
             await starboard.send(starboardMessage).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
             return;
         } else if (messageDB) {
+            console.log("6")
             // Update existing starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
@@ -66,6 +69,7 @@ export default async (client, messageReaction) => {
             });
             return;
         } else {
+            console.log("7")
             return;
         };
 
