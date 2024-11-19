@@ -11,6 +11,7 @@ import {
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
+import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const api = "https://helldiverstrainingmanual.com/api/v1/";
@@ -31,7 +32,7 @@ export default async (interaction, ephemeral) => {
             let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
-            let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
+            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString(value.name == normalizeString(inputPlanet)));
             if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
             let planetIndex = planetObject[0];
             planetObject = planetObject[1];
