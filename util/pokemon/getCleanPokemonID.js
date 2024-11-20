@@ -20,7 +20,8 @@ export default (pokemon) => {
         if (formPart) pokemonID += `-${formPart.charAt(0).toLowerCase()}`;
     };
 
-    if (["Arceus", "Silvally"].includes(pokemonName.split("-")[0])) {
+    // Second check is to avoid using (bad) normal type art instead of the (good) generic art
+    if (["Arceus", "Silvally"].includes(pokemonName.split("-")[0]) && pokemonName.includes("-")) {
         pokemonID = `${pokemonID.split("-")[0]}-${pokemonTypes[0].toLowerCase()}`;
     };
 
