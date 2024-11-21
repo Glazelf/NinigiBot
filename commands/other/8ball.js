@@ -7,7 +7,17 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
+const answers = [
+    "Maybe someday",
+    "Nothing",
+    "Neither",
+    "I don't think so",
+    "No",
+    "Yes",
+    "Try asking again",
+    "Definitely",
+    "Probably not"
+];
 
 export default async (interaction, ephemeral) => {
     let input = interaction.options.getString("input");
