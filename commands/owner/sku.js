@@ -31,7 +31,7 @@ export default async (interaction, ephemeral) => {
             let entitlementStartsAt = Math.floor(entitlement.startsTimestamp / 1000);
             userList.push(`${entitlementUser.username} (${entitlementUser.id}) ${time(entitlementStartsAt, TimestampStyles.ShortDateTime)}`);
         };
-        if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${Object.keys(entitlementsSKU).length})`, value: userList.join("\n") }]);
+        if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${Object.values(entitlementsSKU).length})`, value: userList.join("\n") }]);
     };
 
     return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
