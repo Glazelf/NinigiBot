@@ -271,8 +271,11 @@ export default async (client, interaction) => {
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
-                                    const matrixCell = matrix[rowIndex][columnIndex];
-                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrixCell)); // Replace placeholder emoji with generated emoji from above
+                                    let matrixCell = null; // Only used for first button, will fail to read for subsequent buttons
+                                    if (isFirstButton) {
+                                        matrixCell = matrix[rowIndex][columnIndex];
+                                        buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrixCell)); // Replace placeholder emoji with generated emoji from above
+                                    };
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
                                     if (button.data.custom_id == interaction.customId) {
