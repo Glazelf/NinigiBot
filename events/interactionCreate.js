@@ -271,7 +271,7 @@ export default async (client, interaction) => {
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
-                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[columnIndex][rowIndex])); // Replace placeholder emoji with generated emoji from above
+                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
                                     if (button.data.custom_id == interaction.customId) {
@@ -279,7 +279,7 @@ export default async (client, interaction) => {
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
                                             matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
-                                            buttonEmoji = matrix[columnIndex][rowIndex];
+                                            buttonEmoji = matrix[rowIndex][columnIndex];
                                             if (!bannedStartingCells.includes(buttonEmoji)) {
                                                 rowIndex = 6;
                                                 columnIndex = 6;
@@ -924,9 +924,6 @@ export default async (client, interaction) => {
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
 
-                        console.log(normalizeString(pkmQuizModalGuess))
-                        console.log(normalizeString(pkmQuizCorrectAnswer))
-                        console.log(normalizeString("Flabébè"))
                         if (normalizeString(pkmQuizModalGuess) == normalizeString(pkmQuizCorrectAnswer)) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
