@@ -271,10 +271,8 @@ export default async (client, interaction) => {
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
-                                    let matrixCell = null; // Only used for first button, will fail to read for subsequent buttons
                                     if (isFirstButton) {
-                                        matrixCell = matrix[rowIndex][columnIndex];
-                                        buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrixCell)); // Replace placeholder emoji with generated emoji from above
+                                        buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
                                     };
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
@@ -283,7 +281,7 @@ export default async (client, interaction) => {
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
                                             matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
-                                            buttonEmoji = matrixCell;
+                                            buttonEmoji = matrix[rowIndex][columnIndex]; // Needs to be set like this to prevent infinite loop. Can't be centralized into a variable.
                                             if (!bannedStartingCells.includes(buttonEmoji)) {
                                                 rowIndex = 6;
                                                 columnIndex = 6;
