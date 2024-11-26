@@ -114,8 +114,20 @@ export default async (client, interaction) => {
                 if (cmd) {
                     let messageFlags = [];
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
-                    if (ephemeralDefault !== false ||
-                        (interaction.options.getBoolean("ephemeral") === true && !messageFlags.includes(MessageFlags.Ephemeral))) messageFlags.push(MessageFlags.Ephemeral);
+                    switch (interaction.options.getBoolean("ephemeral")) {
+                        case true:
+                            if (!messageFlags.includes(MessageFlags.Ephemeral)) messageFlags.push(MessageFlags.Ephemeral);
+                            break;
+                        case false:
+                            let ephemeralFlagIndex = messageFlags.indexOf(MessageFlags.Ephemeral);
+                            while (ephemeralFlagIndex !== -1) {
+                                messageFlags.splice(ephemeralFlagIndex, 1);
+                            };
+                            break;
+                        default:
+                            if (ephemeralDefault !== false) messageFlags.push(MessageFlags.Ephemeral);
+                            break;
+                    }
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
