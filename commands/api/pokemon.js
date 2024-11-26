@@ -444,6 +444,7 @@ export default async (interaction, messageFlags) => {
                     ]);
             };
             break;
+        // Who's That Pokémon quiz
         case "whosthat":
             console.log(messageFlags)
             await interaction.deferReply({ flags: messageFlags });
