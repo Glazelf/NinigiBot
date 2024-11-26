@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -8,7 +9,7 @@ export default async (interaction) => {
     let websocketPing = Math.abs(interaction.client.ws.ping);
     let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;
 
-    return sendMessage({ interaction: interaction, content: replyString });
+    return sendMessage({ interaction: interaction, content: replyString, flags: [MessageFlags.Ephemeral] });
 };
 
 export const commandObject = new SlashCommandBuilder()
