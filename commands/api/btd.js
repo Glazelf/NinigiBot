@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -16,13 +17,10 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
+    // await interaction.deferReply({ flags: messageFlags });
     let oak = interaction.options.getString("oak");
     let apiError = null;
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    // await interaction.deferReply(ephemeral);
     let btd6Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let btd6ActionRow = new ActionRowBuilder();
@@ -75,7 +73,7 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "boss-event":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
@@ -87,13 +85,13 @@ export default async (interaction, ephemeral) => {
     };
     // Handle API errors
     if (apiError) {
-        ephemeral = true; // Error reply should be ephemeral
+        messageFlags.push(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
             .setColor(globalVars.embedColorError)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
 };
 
 function getUsageListString(usageObject, emojis) {

@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandStringOption
@@ -12,7 +11,7 @@ export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply();
 
     let interactionName = interaction.options.getString("interaction-name");
     let guildID = interaction.options.getString("guild-id");

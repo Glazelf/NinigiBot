@@ -19,10 +19,8 @@ import packageJSON from "../../package.json" with { type: "json" };
 const owner = "glazelf";
 const emojiMax = 2000;
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
 
     let DiscordJSVersion = packageJSON.dependencies["discord.js"].substring(1,); // Substring is because string starts with ^
     if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
@@ -52,8 +50,6 @@ export default async (interaction, ephemeral) => {
     let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n${time(lastCommitTimestamp, TimestampStyles.RelativeTime)}`;
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
-
 
     let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
@@ -108,7 +104,7 @@ export default async (interaction, ephemeral) => {
         .addComponents([subscriptionButton, donationButton]);
     let componentRows = [botButtons1];
     if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
-    return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows, flags: messageFlags });
 };
 
 // Boolean options

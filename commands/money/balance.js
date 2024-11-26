@@ -6,11 +6,9 @@ import sendMessage from "../../util/sendMessage.js";
 import { getMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let dbBalance = await getMoney(interaction.user.id);
-    return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, flags: messageFlags });
 };
 
 // Boolean options

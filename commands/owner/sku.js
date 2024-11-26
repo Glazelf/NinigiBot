@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder,
@@ -10,7 +11,7 @@ import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
@@ -34,7 +35,7 @@ export default async (interaction, ephemeral) => {
         if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${userList.length})`, value: userList.join("\n") }]);
     };
 
-    return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: entitlementEmbed, flags: [MessageFlags.Ephemeral] });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

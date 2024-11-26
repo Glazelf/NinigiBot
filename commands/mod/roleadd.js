@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
@@ -20,8 +21,7 @@ export default async (interaction) => {
     let adminBoolUser = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
     let role = interaction.options.getRole("role");
     let description = null;

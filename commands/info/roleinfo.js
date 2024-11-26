@@ -8,9 +8,7 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let role = interaction.options.getRole("role");
     // Role visuals
     let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -44,7 +42,7 @@ export default async (interaction, ephemeral) => {
         { name: "Properties:", value: roleProperties, inline: false },
         { name: "Permissions:", value: permissionString, inline: false }
     ]);
-    return sendMessage({ interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
 };
 
 // Role options

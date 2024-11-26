@@ -7,8 +7,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction) => {
     let message = interaction.options._hoistedOptions[0].message;
     let input = message.content;
     let questionAskUser = message.author;
@@ -32,7 +31,7 @@ export default async (interaction, ephemeral) => {
 
     let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()

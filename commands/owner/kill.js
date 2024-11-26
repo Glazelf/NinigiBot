@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandBooleanOption
@@ -25,7 +24,7 @@ export default async (interaction) => {
     await sendMessage({ interaction: interaction, content: shutdownString });
 
     if (removeInteractions) {
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
         // Delete all global commands
         await interaction.client.application.commands.set([]);
         // Delete all guild commands

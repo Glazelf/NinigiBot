@@ -31,7 +31,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         pkmEmbed
             .setTitle(`Error`)
             .setDescription(`\`${pokemon.name}\` does not exist yet in generation ${generation}.\n\`${pokemon.name}\` was introduced in generation ${pokemon.gen}.`);
-        messageObject = { embeds: pkmEmbed, components: [], flags: MessageFlags.Ephemeral };
+        messageObject = { embeds: pkmEmbed, components: [], flags: [MessageFlags.Ephemeral] };
         return messageObject;
     };
     // Common settings

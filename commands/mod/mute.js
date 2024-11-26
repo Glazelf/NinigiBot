@@ -18,12 +18,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: messageFlags });
+
     let user = interaction.options.getUser("user");
     let member = await interaction.guild.members.fetch(user.id);
     if (!member) return sendMessage({ interaction: interaction, content: `Please provide a user to mute.` });
@@ -76,7 +76,7 @@ export default async (interaction, ephemeral) => {
         await user.send({ content: dmString })
             .then(message => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
             .catch(e => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);
-        return sendMessage({ interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: muteReturnString, flags: messageFlags });
     } catch (e) {
         // console.log(e);
         return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${usernameFormatted}. I probably lack permissions.` });

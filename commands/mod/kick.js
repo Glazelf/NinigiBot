@@ -20,8 +20,7 @@ export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
 
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
@@ -52,7 +51,7 @@ export default async (interaction) => {
         .catch(e => kickReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
-        return sendMessage({ interaction: interaction, content: kickReturn, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: kickReturn, flags: messageFlags });
     } catch (e) {
         return sendMessage({ interaction: interaction, content: kickFailString });
     };

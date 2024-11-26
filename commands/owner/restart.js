@@ -11,11 +11,10 @@ import runCommand from "../../util/runCommand.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
     let removeInteractions = false;
     let interactionsArg = interaction.options.getBoolean("reset-interactions");
     if (interactionsArg === true) removeInteractions = interactionsArg;

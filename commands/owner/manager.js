@@ -18,10 +18,9 @@ import {
 import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = true;
+export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: MessageFlags.Ephemeral });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: [MessageFlags.Ephemeral] });
 
     let trophy_name, res, returnString;
     const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
@@ -68,21 +67,12 @@ export default async (interaction, ephemeral) => {
                 await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
                 returnString = `${trophy_name} added successfully to the shop!`;
             };
-            return sendMessage({
-                interaction: interaction,
-                content: returnString,
-                ephemeral: ephemeral
-            });
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
             returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
-            return sendMessage({
-                interaction: interaction,
-                content: returnString,
-                ephemeral: ephemeral
-            });
     };
+    return sendMessage({ interaction: interaction, content: returnString, flags: [MessageFlags.Ephemeral] });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

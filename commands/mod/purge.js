@@ -15,13 +15,11 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ManageMessages;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: messageFlags });
 
     let returnString = "";
     let amount = interaction.options.getInteger("amount");

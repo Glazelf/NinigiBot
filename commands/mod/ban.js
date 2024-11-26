@@ -23,8 +23,7 @@ export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
 
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
@@ -73,7 +72,7 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: banReturn, flags: messageFlags });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });
@@ -86,7 +85,7 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: banReturn, flags: messageFlags });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });

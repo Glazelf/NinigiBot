@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
@@ -20,8 +21,7 @@ const requiredPermission = PermissionFlagsBits.ManageGuild;
 export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();

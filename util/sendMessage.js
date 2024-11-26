@@ -28,7 +28,7 @@ export default async ({ interaction, content = null, embeds = null, files = null
             };
         };
     };
-    messageObject['flags'] = flags;
+    messageObject['flags'] = [...new Set(flags)]; // Remove duplicates
     messageObject['allowedMentions'] = { parse: ['users', 'roles'], repliedUser: true };
     // let targetUser = interaction.options.getUser("user");
     // if (targetUser) messageObject['allowedMentions'] = { users: [targetUser.id] };
