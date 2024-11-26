@@ -52,9 +52,6 @@ export default async (interaction, ephemeral) => {
     let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n${time(lastCommitTimestamp, TimestampStyles.RelativeTime)}`;
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
-
-
     let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
