@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -85,7 +86,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(abilityFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: MessageFlags.Ephemeral });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -125,7 +126,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(itemFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: MessageFlags.Ephemeral });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -161,7 +162,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(moveFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: MessageFlags.Ephemeral });
             };
 
             let moveLearnPool = [];

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
@@ -20,7 +21,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 export default async (interaction, ephemeral) => {
     ephemeral = true;
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, ephemeral: true });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: MessageFlags.Ephemeral });
 
     let trophy_name, res, returnString;
     const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;

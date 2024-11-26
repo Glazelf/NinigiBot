@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder
@@ -26,7 +27,7 @@ export default async (interaction, ephemeral) => {
         const expirationTime = previousQuoteTime + cooldownAmount;
         if (now < expirationTime) {
             const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
-            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, ephemeral: true });
+            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, flags: MessageFlags.Ephemeral });
         };
     };
     let randomMessage = allMessages[randomNumber(0, allMessages.length - 1)];

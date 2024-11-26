@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     codeBlock,
     AttachmentBuilder,
@@ -119,7 +120,7 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({
                     interaction: interaction,
                     content: infoNoResString,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             } else {
                 embed

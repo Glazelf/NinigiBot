@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandBooleanOption
@@ -13,7 +14,7 @@ export default async (interaction, ephemeral) => {
     let confirm = false;
     let confirmArg = interaction.options.getBoolean("confirm");
     if (confirmArg === true) confirm = confirmArg;
-    if (!confirm) return sendMessage({ interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
+    if (!confirm) return sendMessage({ interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, flags: MessageFlags.Ephemeral });
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
