@@ -446,6 +446,7 @@ export default async (interaction, ephemeral) => {
                     ]);
             };
             break;
+        // Who's That Pokémon quiz
         case "whosthat":
             await interaction.deferReply({ ephemeral: ephemeral });
             let allPokemonFiltered = allPokemon.filter(pokemon =>
