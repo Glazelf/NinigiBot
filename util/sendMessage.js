@@ -1,4 +1,4 @@
-export default async ({ interaction, content = null, embeds = null, files = null, flags = null, components = null }) => {
+export default async ({ interaction, content = null, embeds = null, files = null, flags = [], components = null }) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject = {};
