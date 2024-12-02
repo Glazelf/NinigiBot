@@ -44,14 +44,7 @@ export default async (interaction) => {
     let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
-    let bansFetch = null;
-    try {
-        bansFetch = await interaction.guild.bans.fetch();
-    } catch (e) {
-        // console.log(e);
-        bansFetch = null;
-    };
-
+    let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
     let time = getTime();
     let reasonInfo = `-${executorNameFormatted} (${time})`;
     // If member is found

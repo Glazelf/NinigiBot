@@ -18,7 +18,8 @@ export default async (interaction, ephemeral) => {
     let embedColor = role.hexColor;
     if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
-    let guildMembers = await interaction.guild.members.fetch();
+    let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
+    if (!guildMembers) return;
     let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
     // Properties
     let roleProperties = "";
