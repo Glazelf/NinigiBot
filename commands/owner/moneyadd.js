@@ -10,7 +10,7 @@ import {
     getMoney,
     addMoney
 } from "../../database/dbServices/user.api.js";
-import isOwner from "../../util/perms/isOwner.js";
+import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction) => {
