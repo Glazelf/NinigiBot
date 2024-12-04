@@ -1,5 +1,5 @@
 import {
-    InteractionContextType,
+    ApplicationIntegrationType,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -70,11 +70,13 @@ export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
-    let shinx, res, time;
-    let canvas, ctx, img;
+    let shinx, res, time, canvas, ctx, img;
     let returnString = "";
     let messageFile = null;
-    let userFinder = await interaction.guild.members.fetch();
+    // Only create userFinder if guild data exists
+    let userFinder = null;
+    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
     const now = new Date();
     let master = interaction.user;
@@ -156,7 +158,8 @@ export default async (interaction, ephemeral) => {
                     img = await Canvas.loadImage('./assets/dining.png');
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/mc.png');
-                    let guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
+                    let guests = [];
+                    if (guildDataAvailable) guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
@@ -201,7 +204,8 @@ export default async (interaction, ephemeral) => {
             };
             ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
             const layout = getRandomVisitorPosition();
-            let guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+            let guests = [];
+            if (guildDataAvailable) guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
             img = await Canvas.loadImage('./assets/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
@@ -587,7 +591,6 @@ const battleSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("shinx")
     .setDescription("Interact with your Shinx.")
-    .setContexts([InteractionContextType.Guild])
     .addSubcommand(infoSubcommand)
     .addSubcommand(feedSubcommand)
     .addSubcommand(playSubcommand)
