@@ -262,7 +262,7 @@ export default async (interaction, ephemeral) => {
             shinx.addExperienceAndUnfeed(50, 1);
             return sendMessage({ interaction: interaction, content: `${formatName(shinx.nickname)} ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
         case "nickname":
-            let new_nick = interaction.options.getString("nickname");
+            let new_nick = interaction.options.getString("nickname").trim();
             res = await nameShinx(master.id, new_nick);
             messageFile = null;
             switch (res) {
