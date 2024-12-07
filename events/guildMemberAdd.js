@@ -4,11 +4,11 @@ import {
     ButtonBuilder,
     ButtonStyle,
     PermissionFlagsBits,
-    bold,
     time,
     TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
+import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member) => {
@@ -34,7 +34,7 @@ export default async (client, member) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
-                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
+                .setDescription(`${formatName(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setFooter({ text: member.user.username })
                 .setTimestamp()
                 .addFields([

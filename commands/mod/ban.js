@@ -7,13 +7,13 @@ import {
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
-    userMention,
-    bold
+    userMention
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
+import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.BanMembers;
@@ -39,34 +39,30 @@ export default async (interaction) => {
     let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
     let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
 
+    let executorNameFormatted = formatName(interaction.user.username);
     let banReturn = null;
     let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
-    let dmString = `You've been banned from ${bold(interaction.guild.name)} by ${bold(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
+    let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
-    let bansFetch = null;
-    try {
-        bansFetch = await interaction.guild.bans.fetch();
-    } catch (e) {
-        // console.log(e);
-        bansFetch = null;
-    };
+    let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
     let time = getTime();
-    let reasonInfo = `-${interaction.user.username} (${time})`;
+    let reasonInfo = `-${executorNameFormatted} (${time})`;
     // If member is found
     if (member) {
+        let usernameFormatted = formatName(user.username);
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         let botRole = interaction.guild.members.me.roles.highest;
-        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not ban ${bold(user.username)} (${member.id}) because their highest role (${bold(targetRole.name)}) is higher than yours (${bold(userRole.name)}).` });
-        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${bold(user.username)} (${user.id}) because their highest role (${bold(targetRole.name)}) is higher than mine (${bold(botRole.name)}).` });
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not ban ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than yours (${formatName(userRole.name)}).` });
+        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than mine (${formatName(botRole.name)}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
-        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${bold(user.username)} (${member.id}) is already banned.` });
+        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${usernameFormatted} (${member.id}) is already banned.` });
         banReturn = `Banned ${user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
-            .then(message => banReturn += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
-            .catch(e => banReturn += `Failed to send a DM to ${bold(user.username)} with the reason.`);
+            .then(message => banReturn += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
+            .catch(e => banReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });

@@ -64,7 +64,7 @@ export default async (interaction, ephemeral) => {
     if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
     if (moveInput) move = Dex.moves.get(moveInput);
     let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
-    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemon);
+    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemonGen);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
@@ -446,6 +446,7 @@ export default async (interaction, ephemeral) => {
                     ]);
             };
             break;
+        // Who's That Pokémon quiz
         case "whosthat":
             await interaction.deferReply({ ephemeral: ephemeral });
             let allPokemonFiltered = allPokemon.filter(pokemon =>
@@ -479,7 +480,9 @@ export default async (interaction, ephemeral) => {
                     if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
                 });
             };
-            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
+            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}`;
+            if (cardData.artist) cardFooter += ` by ${cardData.artist}`;
+            cardFooter += "\n";
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
             if (cardData.legalities) {
                 if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
@@ -503,8 +506,11 @@ export default async (interaction, ephemeral) => {
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
 
+            // Card subtypes can be undefined, for example for (old) trainer cards
+            let embedAuthor = cardData.supertype;
+            if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
             pokemonEmbed
-                .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
+                .setAuthor({ name: embedAuthor })
                 .setTitle(cardTitle)
                 .setImage(cardData.images.large)
                 .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });

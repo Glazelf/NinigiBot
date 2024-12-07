@@ -1,13 +1,13 @@
 import {
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandBooleanOption,
-    bold
+    SlashCommandBooleanOption
 } from "discord.js";
 import forever from "forever";
 import sendMessage from "../../util/sendMessage.js";
-import isOwner from "../../util/perms/isOwner.js";
+import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
+import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction) => {
@@ -39,7 +39,7 @@ export default async (interaction) => {
     } catch (e) {
         console.log(e);
     };
-    console.log(`Bot killed by ${bold(interaction.user.username)}. (${timestamp})`);
+    console.log(`Bot killed by ${formatName(interaction.user.username)}. (${timestamp})`);
 
     await interaction.client.destroy();
     return process.exit();

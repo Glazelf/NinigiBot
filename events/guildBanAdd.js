@@ -4,11 +4,12 @@ import {
     ButtonBuilder,
     ButtonStyle,
     PermissionFlagsBits,
-    AuditLogEvent,
-    bold
+    AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+
 
 export default async (client, guildBan) => {
     try {
@@ -50,7 +51,7 @@ export default async (client, guildBan) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
-                .setDescription(`${bold(guildBan.guild.name)} now has ${guildBan.guild.memberCount} members.`)
+                .setDescription(`${formatName(guildBan.guild.name)} now has ${guildBan.guild.memberCount} members.`)
                 .setFooter({ text: target.username })
                 .setTimestamp()
                 .addFields([

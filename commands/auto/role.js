@@ -8,7 +8,7 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
@@ -35,12 +35,15 @@ export default async (interaction, ephemeral) => {
     await interaction.guild.roles.cache.each(async (role) => {
         if (roleIDs.includes(role.id)) roleText.push(role);
     });
+    const commands = await interaction.client.application.commands.fetch();
     // Role sorting for role help
     roleText = roleText.sort((r, r2) => r2.position - r.position);
     // Role help embed and logic
     let roleHelpMessage = "";
     let rolesArray = [];
-    let noRolesString = `No roles have been made selfassignable yet. Moderators can use </roleadd:978076328567926834> to add roles to this list.`; // Make ID adaptive
+    const roleaddCommandName = "roleadd";
+    const roleaddCommandId = commands.find(c => c.name == roleaddCommandName)?.id;
+    let noRolesString = `No roles have been made selfassignable yet.\nModerators can use </${roleaddCommandName}:${roleaddCommandId}> to add roles to this list.`;
     let receiveEmote = "❌";
     let removeEmote = "✅";
     if (!requestRole) {
@@ -100,8 +103,16 @@ export default async (interaction, ephemeral) => {
             .setDescription(roleHelpMessage);
         return sendMessage({ interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
     } else {
-        let invalidRoleText = `That role does not exist or isn't selfassignable. Use </role:978075106276429864> without any argument to see a drop down menu of available roles.`; // Make ID adaptive
-        requestRole = await interaction.guild.roles.fetch(requestRole);
+        const roleCommandName = "role";
+        const roleCommandId = commands.find(c => c.name == roleCommandName)?.id;
+        let invalidRoleText = `That role does not exist or isn't selfassignable. Use </${roleCommandName}:${roleCommandId}> without any argument to see a drop down menu of available roles.`;
+        // Catch because the fetch errors out if the input is not a snowflake, in case of random string inputs.
+        try {
+            requestRole = await interaction.guild.roles.fetch(requestRole);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage({ interaction: interaction, content: invalidRoleText });
+        };
         if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ interaction: interaction, content: invalidRoleText });
         if (requestRole.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
         if (interaction.guild.members.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });

@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../util/perms/isAdmin.js";
+import isAdmin from "../util/discord/perms/isAdmin.js";
 
 export default async (client, message, newMessage) => {
     try {
@@ -70,7 +70,7 @@ export default async (client, message, newMessage) => {
                 .setImage(messageImage)
                 .setURL(message.url)
                 .setThumbnail(avatar)
-                .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})\nContext: ${message.url}`)
+                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})\nContext: ${message.url}`)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);

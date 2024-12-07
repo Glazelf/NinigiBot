@@ -9,6 +9,7 @@ import sendMessage from "../../util/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
+import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
@@ -33,10 +34,10 @@ export default async (interaction, ephemeral) => {
     switch (interaction.options.getSubcommand()) {
         // Specific quest
         case "quest":
-            let questName = nameInput.toLowerCase();
+            let questName = normalizeString(nameInput);
             let questData;
             questsJSON.quests.forEach(quest => {
-                if (quest.name.toLowerCase() == questName) questData = quest;
+                if (normalizeString(quest.name) == questName) questData = quest;
             });
             if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest." });
             // Format quest title
@@ -71,7 +72,7 @@ export default async (interaction, ephemeral) => {
             return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
         // Monsters
         case "monster":
-            let monsterName = nameInput.toLowerCase();
+            let monsterName = normalizeString(nameInput);
             // Get monster
             let monsterData;
             if (monsterName == "random") {
@@ -81,7 +82,7 @@ export default async (interaction, ephemeral) => {
             } else {
                 // Get named monster
                 monstersJSON.monsters.forEach(monster => {
-                    if (monster.name.toLowerCase() == monsterName) monsterData = monster;
+                    if (normalizeString(monster.name) == monsterName) monsterData = monster;
                 });
             };
             if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });

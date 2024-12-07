@@ -55,7 +55,8 @@ export default async (interaction, ephemeral) => {
         .setTitle("Quote")
         .setURL(messageURL)
         .setImage(messageImage)
-        .setFooter({ text: `Message ID: ${message.id}` });
+        .setFooter({ text: `Message ID: ${message.id}` })
+        .setTimestamp(message.createdTimestamp);
     if (message.content.length > 0) quoteEmbed.setDescription(message.content);
     previousQuoteTime = now;
     return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });

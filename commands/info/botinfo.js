@@ -12,7 +12,7 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
-import isOwner from "../../util/perms/isOwner.js";
+import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -52,9 +52,6 @@ export default async (interaction, ephemeral) => {
     let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n${time(lastCommitTimestamp, TimestampStyles.RelativeTime)}`;
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
-
-
     let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;

@@ -6,18 +6,17 @@ import {
     hyperlink,
     hideLinkEmbed
 } from "discord.js";
+import normalizeString from "../string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ gameName, page }) => {
     let messageObject = {};
     // Add quests matching game title to an array
-    const gameNameLowercase = gameName.toLowerCase(); // LowerCase once instead of inside filter, might save performance
-    let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameNameLowercase);
+    const gameNameLowercase = normalizeString(gameName); // LowerCase once instead of inside filter, might save performance
+    let questsTotal = questsJSON.quests.filter(quest => normalizeString(quest.game) == gameNameLowercase);
     if (questsTotal.length == 0) {
         messageObject.content = `Could not find any quests for that game. If you are certain this game exists it might be added to ${hyperlink("the quest list", hideLinkEmbed("https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/quests.json"))} in the future.`;
-
-        `${hyperlink("not supported", hideLinkEmbed("https://github.com/Glazelf/NinigiBot/issues/436"))}`
         return messageObject;
     };
     // Sort by difficulty

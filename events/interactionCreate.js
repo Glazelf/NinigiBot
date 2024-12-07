@@ -42,7 +42,8 @@ import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { t
 // BTD
 import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
-import Minesweeper from "discord.js-minesweeper";
+import createBoard from "../util/minesweeper/createBoard.js";
+import getMatrixString from "../util/minesweeper/getMatrixString.js";
 // Database
 import {
     getEphemeralDefault,
@@ -55,10 +56,11 @@ import {
     getBuyableShopTrophies
 } from "../database/dbServices/trophy.api.js";
 // Other util
-import isAdmin from "../util/perms/isAdmin.js";
+import isAdmin from "../util/discord/perms/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
+import normalizeString from "../util/string/normalizeString.js";
 
 // Pokémon
 const gens = new Generations(Dex);
@@ -261,7 +263,7 @@ export default async (client, interaction) => {
                             let buttonsClicked = 0;
 
                             // Check if first click, build board
-                            if (isFirstButton) matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                            if (isFirstButton) matrix = createBoard(mineRows, mineColumns, mineCount, bombEmoji);
                             for (let rowIndex = 0; rowIndex < mineRows; rowIndex++) {
                                 let actionRow = minesweeperComponentsCopy[rowIndex];
                                 const rowCopy = ActionRowBuilder.from(actionRow);
@@ -270,15 +272,17 @@ export default async (client, interaction) => {
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
-                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[columnIndex][rowIndex])); // Replace placeholder emoji with generated emoji from above
+                                    if (isFirstButton) {
+                                        buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
+                                    };
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
                                     if (button.data.custom_id == interaction.customId) {
                                         // Regenerate board if first button is a bomb or spoiler
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
-                                            matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
-                                            buttonEmoji = matrix[columnIndex][rowIndex];
+                                            matrix = createBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                                            buttonEmoji = matrix[rowIndex][columnIndex]; // Needs to be set like this to prevent infinite loop. Can't be centralized into a variable.
                                             if (!bannedStartingCells.includes(buttonEmoji)) {
                                                 rowIndex = 6;
                                                 columnIndex = 6;
@@ -320,13 +324,13 @@ export default async (client, interaction) => {
                             let currentBalance = null;
                             if (isWinState || (isLossState && mineBet > 0)) currentBalance = await getMoney(interaction.user.id);
                             if (isLossState) {
-                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
                                 if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
-                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You won! Congratulations!\n`;
                                 if (mineBet > 0) {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
@@ -368,10 +372,21 @@ export default async (client, interaction) => {
                         };
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
-                            interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                            try {
+                                await interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                            } catch (e) {
+                                // console.log(e);
+                                return;
+                            };
                         } else {
-                            interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                            try {
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                            } catch (e) {
+                                // console.log(e);
+                                return;
+                            };
                         };
+                        return;
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             let serverApi = await import("../database/dbServices/server.api.js");
@@ -467,6 +482,7 @@ export default async (client, interaction) => {
                                 roleObject.forEach(role => {
                                     if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
                                 });
+                                if (focusedOption.value.length == 0 && roleIDs.length == 0) choices.push({ name: "Selfassignable roles have not been set up in this server.", value: "" });
                                 break;
                         };
                         break;
@@ -487,7 +503,7 @@ export default async (client, interaction) => {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
                                             let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
-                                                if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
+                                                if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
                                             break;
                                         } else {
@@ -496,7 +512,7 @@ export default async (client, interaction) => {
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                                if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
+                                                if ((normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value)))
                                                     && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                             });
                                             break;
@@ -505,21 +521,21 @@ export default async (client, interaction) => {
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
                                         let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                         abilities.forEach(ability => {
-                                            if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
+                                            if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
                                         });
                                         break;
                                     case "item":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
                                         let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                         items.forEach(item => {
-                                            if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
+                                            if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
                                         break;
                                     case "cardset":
                                         pokemonCardSetsJSON.forEach(set => {
                                             const setReleaseDateSplit = set.releaseDate.split("/");
                                             const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
-                                            if (set.name.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                            if (normalizeString(set.name).includes(normalizeString(focusedOption.value))) {
                                                 valuesByDate[set.id] = setReleaseDate;
                                                 choices.push({ name: set.name, value: set.id });
                                             };
@@ -562,12 +578,13 @@ export default async (client, interaction) => {
                                 switch (interaction.options.getSubcommand()) {
                                     case "monster":
                                         MHMonstersJSON.monsters.forEach(monster => {
-                                            if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
+                                            if (normalizeString(monster.name).includes(normalizeString(focusedOption.value))) choices.push({ name: monster.name, value: monster.name });
                                         });
                                         break;
                                     case "quest":
                                         MHQuestsJSON.quests.forEach(quest => {
-                                            if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
+                                            let gameSubtitle = quest.game.replace("Monster Hunter", "").trim();
+                                            if (normalizeString(quest.name).includes(normalizeString(focusedOption.value))) choices.push({ name: `${quest.name} (${gameSubtitle})`, value: quest.name });
                                         });
                                         break;
                                 };
@@ -608,14 +625,14 @@ export default async (client, interaction) => {
                                         };
                                         let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
                                         for await (const [key, value] of Object.entries(allClothesNames)) {
-                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(value).includes(normalizeString(focusedOption.value)) &&
                                                 !key.startsWith("COP00") &&
                                                 !key.startsWith("Msn00")) choices.push({ name: value, value: key });
                                         };
                                         break;
                                     case "weapon":
                                         for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(value).includes(normalizeString(focusedOption.value)) &&
                                                 !key.endsWith("_Coop") &&
                                                 !key.endsWith("_Msn") &&
                                                 !key.endsWith("_Rival") &&
@@ -627,7 +644,7 @@ export default async (client, interaction) => {
                                         break;
                                     case "subweapon":
                                         for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
-                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(value).includes(normalizeString(focusedOption.value)) &&
                                                 !key.endsWith("_Rival") &&
                                                 !key.endsWith("_Coop") &&
                                                 !key.endsWith("_Sdodr") &&
@@ -638,7 +655,7 @@ export default async (client, interaction) => {
                                     case "special":
                                         for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
                                             // Gachihoko = Rainmaker, Splashdown is only available in singleplayer missions but is for some reason still properly included here. To avoid importing more JSONs and reading whole objects, it's excluded this way.
-                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(value).includes(normalizeString(focusedOption.value)) &&
                                                 !key.endsWith("_Coop") &&
                                                 !key.endsWith("_Mission") &&
                                                 !key.endsWith("Sdodr") &&
@@ -679,21 +696,21 @@ export default async (client, interaction) => {
                                         giResponse = await axios.get(`${giAPI}characters/`);
                                         for (const giCharacter of giResponse.data) {
                                             let giCharacterCapitalized = capitalizeString(giCharacter);
-                                            if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
+                                            if (normalizeString(giCharacterCapitalized).includes(normalizeString(focusedOption.value))) choices.push({ name: giCharacterCapitalized, value: giCharacter });
                                         };
                                         break;
                                     case "weapon":
                                         giResponse = await axios.get(`${giAPI}weapons/`);
                                         for (const giWeapon of giResponse.data) {
                                             let giWeaponCapitalized = capitalizeString(giWeapon);
-                                            if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
+                                            if (normalizeString(giWeaponCapitalized).includes(normalizeString(focusedOption.value))) choices.push({ name: giWeaponCapitalized, value: giWeapon });
                                         };
                                         break;
                                     case "artifact":
                                         giResponse = await axios.get(`${giAPI}artifacts/`);
                                         for (const giArtifact of giResponse.data) {
                                             let giArtifactCapitalized = capitalizeString(giArtifact);
-                                            if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                            if (normalizeString(giArtifactCapitalized).includes(normalizeString(focusedOption.value))) choices.push({ name: giArtifactCapitalized, value: giArtifact });
                                         };
                                         break;
                                 };
@@ -706,24 +723,24 @@ export default async (client, interaction) => {
                                 switch (interaction.options.getSubcommand()) {
                                     case "persona":
                                         for await (const [key, value] of Object.entries(personaMapRoyal)) {
-                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                                            if (normalizeString(key).includes(normalizeString(focusedOption.value))) choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "skill":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
                                                 value.element !== "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "trait":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
                                                 value.element == "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "item":
                                         for await (const [key, value] of Object.entries(itemMapRoyal)) {
-                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                            if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
                                                 !value.skillCard) choices.push({ name: key, value: key });
                                         };
                                         break;
@@ -767,7 +784,7 @@ export default async (client, interaction) => {
                         };
                         if (targetJSON) {
                             for await (const [key, value] of Object.entries(targetJSON)) {
-                                if (value.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value.name, value: key });
+                                if (normalizeString(value.name).includes(normalizeString(focusedOption.value))) choices.push({ name: value.name, value: key });
                             };
                         };
                         break;
@@ -777,7 +794,7 @@ export default async (client, interaction) => {
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);
                                 let planetsData = planetsResponse.data;
                                 for await (const [key, value] of Object.entries(planetsData)) {
-                                    if (value.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value.name, value: value.name });
+                                    if (normalizeString(value.name).includes(normalizeString(focusedOption.value))) choices.push({ name: value.name, value: value.name });
                                 };
                                 break;
                         };
@@ -789,7 +806,7 @@ export default async (client, interaction) => {
                                 let temp = '';
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
-                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                    if (normalizeString(temp).includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 });
                                 break;
                         };
@@ -810,12 +827,12 @@ export default async (client, interaction) => {
                                         let temp = '';
                                         trophies.forEach(trophy => {
                                             temp = trophy.trophy_id;
-                                            if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                            if (normalizeString(temp).includes(normalizeString(focusedOption.value))) choices.push({ name: temp, value: temp });
                                         });
                                         trophies = await getEventTrophies();
                                         trophies.forEach(trophy => {
                                             temp = trophy.trophy_id;
-                                            if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                            if (normalizeString(temp).includes(normalizeString(focusedOption.value))) choices.push({ name: temp, value: temp });
                                         });
                                         // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                         break;
@@ -829,7 +846,7 @@ export default async (client, interaction) => {
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
                 let subcommandSuggestRandom = false;
-                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null. Couldn't get this to work properly with .catch(), though that would be cleaner.
+                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null.
                 try {
                     if (["pokemon", "monster"].includes(interaction.options.getSubcommand())) subcommandSuggestRandom = true;
                 } catch (e) {
@@ -839,14 +856,18 @@ export default async (client, interaction) => {
                 if ((["pokemon", "monster"].includes(focusedOption.name) || subcommandSuggestRandom)) {
                     // Only display random suggestion if there enough other choices or value matches "random"
                     if (choices.length == 25) choices.pop();
-                    if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
+                    if (choices.length > 5 || normalizeString(focusedOption.value).includes("random")) choices.push({ name: "Random", value: "random" });
                 };
                 // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
                 // Return choices
-                return interaction.respond(choices).catch(e => {
+                try {
+                    await interaction.respond(choices);
+                } catch (e) {
                     // console.log(e);
-                });
+                    return;
+                };
+                return;
             case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
@@ -895,13 +916,18 @@ export default async (client, interaction) => {
                         return sendMessage({ interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
+                        // Prevent overriding winner by waiting to submit answer
+                        // This check works by checking if the description is filled, this is only the case if the game has finished
+                        let messageDescription = interaction.message.embeds[0].data.description;
+                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", ephemeral: true });
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
 
-                        if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
+                        if (normalizeString(pkmQuizModalGuess) == normalizeString(pkmQuizCorrectAnswer)) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
@@ -917,36 +943,4 @@ export default async (client, interaction) => {
     } catch (e) {
         logger({ exception: e, interaction: interaction });
     };
-};
-
-function createMinesweeperBoard(rows, columns, mines, bombEmoji) {
-    const minesweeper = new Minesweeper({
-        rows: rows,
-        columns: columns,
-        mines: mines,
-        emote: 'bomb',
-        returnType: 'matrix',
-    });
-    let matrix = minesweeper.start();
-    matrix.forEach(arr => {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace("|| :bomb: ||", bombEmoji).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
-        };
-    });
-    return matrix;
-};
-
-function getMatrixString(components, bombEmoji) {
-    let boardTitleString = "This was the full board:\n";
-    let matrixString = "";
-    components.forEach(actionRow => {
-        matrixString += "";
-        actionRow.components.forEach(button => {
-            let emoji = button.data.custom_id.split("-")[2];
-            // if (emoji == bombEmoji) matrixString += "\\"; // Escape emote for readability but seems to break on mobile and just display :bomb:
-            matrixString += `${emoji}`;
-        });
-        matrixString += "\n";
-    });
-    return `${boardTitleString}${matrixString}`;
 };

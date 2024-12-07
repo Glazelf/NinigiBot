@@ -6,8 +6,10 @@ import {
     ChannelType
 } from "discord.js";
 import logger from "../util/logger.js";
+import normalizeString from "../util/string/normalizeString.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import { addMoney } from "../database/dbServices/user.api.js";
+
 
 const talkedRecently = new Set();
 
@@ -37,7 +39,7 @@ export default async (client, message) => {
                 .setThumbnail(avatar)
                 .setImage(messageImage)
                 .setTimestamp()
-                .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);
+                .addFields([{ name: `Author:`, value: normalizeString(message.author.username), inline: false }]);
             if (message.content) dmEmbed.addFields([{ name: `Message Content:`, value: message.content, inline: false }]);
             dmEmbed
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };

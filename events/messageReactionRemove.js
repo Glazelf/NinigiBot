@@ -11,7 +11,7 @@ export default async (client, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message reaction counts are valid and that reaction is a star, different check from messageReactionAdd because count can be 0 here
-        if (messageReaction.count == null || messageReaction.count == undefined) messageReaction = await messageReaction.fetch();
+        if (messageReaction.count == null || messageReaction.count == undefined) messageReaction = await messageReaction.fetch().catch(e => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
@@ -44,8 +44,14 @@ export default async (client, messageReaction) => {
             return;
         } else if (messageDB) {
             // Update existing entry otherwise
-            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            let starChannel = null;
+            let starMessage = null;
+            try {
+                starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+                starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            } catch (e) {
+                return;
+            };
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit(starboardMessage);

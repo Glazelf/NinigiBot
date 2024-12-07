@@ -1,4 +1,6 @@
-import { SlashCommandBuilder } from "discord.js";
+import {
+    SlashCommandBuilder
+} from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 
 export default async (interaction) => {

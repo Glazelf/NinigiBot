@@ -7,10 +7,11 @@ import {
     SlashCommandChannelOption,
     SlashCommandIntegerOption,
     SlashCommandBooleanOption,
-    bold
+    AutoModerationActionType
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
+import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
 
@@ -30,8 +31,9 @@ export default async (interaction) => {
     if (disableArg === true) disableBool = disableArg;
     let channelArg = interaction.options.getChannel("channel");
     let textChannelInvalidString = null;
+    let guildNameFormatted = formatName(interaction.guild.name);
     if (channelArg) textChannelInvalidString = `No text can be sent to ${channelArg}'s type (${ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
-    let disableString = `Disabled ${interaction.options.getSubcommand()} functionality in ${bold(interaction.guild.name)}.`;
+    let disableString = `Disabled ${interaction.options.getSubcommand()} functionality in ${guildNameFormatted}.`;
     let argRequiredString = "At least one argument is required for this command.";
     switch (interaction.options.getSubcommand()) {
         case "starboard":
@@ -53,7 +55,7 @@ export default async (interaction) => {
             if (oldStarboardChannel) await oldStarboardChannel.destroy();
             if (disableBool) return sendMessage({ interaction: interaction, content: disableString });
             await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
-            return sendMessage({ interaction: interaction, content: `${channelArg} is now ${bold(interaction.guild.name)}'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
+            return sendMessage({ interaction: interaction, content: `${channelArg} is now ${guildNameFormatted}'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
         case "log":
             if (!channelArg && !disableArg) return sendMessage({ interaction: interaction, content: argRequiredString });
             let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
@@ -86,20 +88,20 @@ export default async (interaction) => {
                 },
                 actions: [
                     {
-                        type: 1,
+                        type: AutoModerationActionType.BlockMessage,
                         metadata: {
                             customMessage: `Blocked by ${interaction.client.user.username} AutoMod rule.`,
                             channel: channelArg.id
                         }
                     },
                     {
-                        type: 2,
+                        type: AutoModerationActionType.SendAlertMessage,
                         metadata: {
                             channel: channelArg.id
                         }
                     },
                     {
-                        type: 3,
+                        type: AutoModerationActionType.Timeout,
                         metadata: {
                             durationSeconds: 3600 // 1 hour
                         }
@@ -112,18 +114,18 @@ export default async (interaction) => {
                 await interaction.guild.autoModerationRules.create(autoModObject);
             } catch (e) {
                 // console.log(e);
-                return sendMessage({ interaction: interaction, content: `Failed to add AutoMod rule. Make sure ${bold(interaction.guild.name)} does not already have the maximum amount of AutoMod rules.` });
+                return sendMessage({ interaction: interaction, content: `Failed to add AutoMod rule. Make sure ${guildNameFormatted} does not already have the maximum amount of AutoMod rules.` });
             }
-            return sendMessage({ interaction: interaction, content: `AutoMod rules added to ${bold(interaction.guild.name)}.\nAutoMod notiications will be sent to ${channelArg}.` });
+            return sendMessage({ interaction: interaction, content: `AutoMod rules added to ${guildNameFormatted}.\nAutoMod notiications will be sent to ${channelArg}.` });
         case "personalroles":
             let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
             // Database
             if (personalRolesServerID) {
                 await personalRolesServerID.destroy();
-                return sendMessage({ interaction: interaction, content: `Personal roles can no longer be managed by users in ${bold(interaction.guild.name)}.` });
+                return sendMessage({ interaction: interaction, content: `Personal roles can no longer be managed by users in ${guildNameFormatted}.` });
             } else {
                 await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
-                return sendMessage({ interaction: interaction, content: `Personal roles can now be managed by users in ${bold(interaction.guild.name)}.` });
+                return sendMessage({ interaction: interaction, content: `Personal roles can now be managed by users in ${guildNameFormatted}.` });
             };
     };
 };

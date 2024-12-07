@@ -11,7 +11,7 @@ export default async (client, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
-        if (!messageReaction.count) messageReaction = await messageReaction.fetch();
+        if (!messageReaction.count) messageReaction = await messageReaction.fetch().catch(e => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
@@ -47,22 +47,37 @@ export default async (client, messageReaction) => {
         // Check if message already existed in database (was posted to starboard) or if star amount simply changed
         if (messageReaction.count >= starLimit && !messageDB) {
             // Send message then push data to database
-            await starboard.send(starboardMessage).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
+            await sendStarboardMessage(starboardMessage, targetMessage);
             return;
         } else if (messageDB) {
             // Update existing starboard message and database entry
-            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            let starChannel = null;
+            let starMessage = null;
+            try {
+                starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+                starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            } catch (e) {
+                if (starChannel && !starMessage) {
+                    await messageDB.destroy();
+                    await sendStarboardMessage(starboardMessage, targetMessage);
+                };
+                return;
+            };
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit(starboardMessage);
             // Try to pin messages with double stars
             if (messageReaction.count >= starLimit * 2) starMessage.pin().catch(e => {
-                // console.log(e); 
+                // console.log(e);
+                return;
             });
             return;
         } else {
             return;
+        };
+
+        async function sendStarboardMessage(starboardMessage, targetMessage) {
+            await starboard.send(starboardMessage).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
         };
 
     } catch (e) {

@@ -100,7 +100,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         metricsString += `${bold("Weight:")}\n???`;
     };
     if (pokemonSim.heightm) metricsString += `\n${bold("Height:")}\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
-    // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
+    // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-")); // Use normalizeString() if I ever uncomment this
     // Official art
     let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
     // Game render

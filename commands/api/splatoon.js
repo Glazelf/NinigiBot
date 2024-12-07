@@ -460,8 +460,8 @@ export default async (interaction, ephemeral) => {
             if (replayAwards.length > 0) splat3Embed.addFields([{ name: "Awards:", value: replayAwards.join("\n"), inline: false }]);
             break;
         case "splashtag-random":
-            let userTitle = interaction.user.username;
-            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) userTitle = interaction.member.nickname;
+            let userTitle = interaction.user.displayName;
+            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) userTitle = interaction.member.displayName;
 
             let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];

@@ -4,13 +4,13 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
-    SlashCommandAttachmentOption,
-    bold
+    SlashCommandAttachmentOption
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/deletePersonalRole.js";
+import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
@@ -20,7 +20,8 @@ export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
     let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
-    if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${bold(interaction.guild.name)}.` });
+    let guildNameFormatted = formatName(interaction.guild.name);
+    if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.` });
 
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
@@ -50,7 +51,7 @@ export default async (interaction, ephemeral) => {
     if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
     // Get Nitro Booster position
     let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
-    if (!boosterRole) return sendMessage({ interaction: interaction, content: `${bold(interaction.guild)} does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
+    if (!boosterRole) return sendMessage({ interaction: interaction, content: `${guildNameFormatted} does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
     let boosterBool = interaction.member.roles.cache.has(boosterRole.id);
     let personalRolePosition = boosterRole.position + 1;
     // Check SKU entitlement
@@ -96,15 +97,18 @@ export default async (interaction, ephemeral) => {
         if (!colorArg) roleColor = personalRole.color;
         if (roleColor != personalRole.color) editReturnString += `\n- Color set to \`#${roleColor}\`.`;
 
-        personalRole.edit({
-            name: interaction.user.username,
-            color: roleColor,
-            position: personalRolePosition,
-            permissions: []
-        }).catch(e => {
+        try {
+            await personalRole.edit({
+                name: interaction.user.username,
+                color: roleColor,
+                position: personalRolePosition,
+                permissions: []
+            });
+        } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: `An error occurred.` });
-        });
+        };
+
         if (iconArg && iconsAllowed && fileIsImg) {
             let roleIconSizeLimit = 256;
             if (iconSize > roleIconSizeLimit) {
@@ -119,7 +123,7 @@ export default async (interaction, ephemeral) => {
                 };
             };
         } else if (iconArg && !iconsAllowed) {
-            editReturnString += `-${bold(interaction.guild.name)} does not have role icons unlocked.`;
+            editReturnString += `-${guildNameFormatted} does not have role icons unlocked.`;
         };
         // Re-add role if it got removed
         if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);

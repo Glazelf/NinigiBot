@@ -1,8 +1,8 @@
 import {
-    EmbedBuilder,
-    bold
+    EmbedBuilder
 } from "discord.js";
 import logger from "../util/logger.js";
+import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, guild) => {
@@ -22,7 +22,7 @@ export default async (client, guild) => {
             .setColor(globalVars.embedColor)
             .setTitle(`Guild Left ❌`)
             .setThumbnail(icon)
-            .setDescription(`${bold(client.user.username)} is now in ${client.guilds.cache.size} servers.`)
+            .setDescription(`${formatName(client.user.username)} is now in ${client.guilds.cache.size} servers.`)
             .setFooter({ text: guild.id })
             .setTimestamp()
             .addFields([{ name: `Name:`, value: guild.name, inline: true }]);

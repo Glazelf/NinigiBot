@@ -5,7 +5,7 @@ import {
     SlashCommandStringOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isOwner from "../../util/perms/isOwner.js";
+import isOwner from "../../util/discord/perms/isOwner.js";
 import util from "util";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

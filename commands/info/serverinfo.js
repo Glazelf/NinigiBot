@@ -13,7 +13,7 @@ import {
     hyperlink
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
@@ -84,7 +84,7 @@ export default async (interaction, ephemeral) => {
         };
     };
     let discordNitroEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name === nitroBoostEmojiName);
-    if (discordNitroEmoji) boosterString += discordNitroEmoji.toString(); // Shows up as just ID without explicit string conversion
+    if (discordNitroEmoji) boosterString += ` ${discordNitroEmoji}`; // Shows up as just ID without explicit string conversion
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
@@ -130,12 +130,12 @@ export default async (interaction, ephemeral) => {
         serverButtons.addComponents(insightsButton);
     };
 
-    let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size}🤖\nChannels: ${channelCount}`;
+    let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size} 🤖\nChannels: ${channelCount}`;
     // Change "Active Threads" to "Threads" when archived threads get added
     if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
     if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
     if (banCount > 0) statsString += `\nBans: ${banCount}`;
-    if (guild.premiumSubscriptionCount > 0) statsString += `\nBoosters: ${boosterString}`;
+    if (guild.premiumSubscriptionCount > 0) statsString += `\nBoosts: ${boosterString}`;
     let assetString = `\nEmojis: ${unmanagedEmoteCount}/${emoteMax} 😳`;
     if (managedEmojis.size > 0) assetString += `\nTwitch Emojis: ${managedEmojis.size}`;
     assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
