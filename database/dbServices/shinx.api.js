@@ -63,15 +63,11 @@ export async function changeAutoFeed(id, mode) {
     return shinx.setAutoFeed(mode);
 };
 
-export async function addExperience(id, experience) {
-    let shinx = await getShinx(id, ['user_id', 'experience']);
-    const res = await shinx.addExperienceAndLevelUp(experience);
-    if (res.pre != res.post) {
-        if (hasPassedLevel(res.pre, res.post, 5)) await addEventTrophy(id, 'Bronze Trophy');
-        if (hasPassedLevel(res.pre, res.post, 15)) await addEventTrophy(id, 'Silver Trophy');
-        if (hasPassedLevel(res.pre, res.post, 30)) await addEventTrophy(id, 'Gold Trophy');
-        if (hasPassedLevel(res.pre, res.post, 50)) await addEventTrophy(id, 'Shiny Charm');
-    };
+export async function addBattleRewards(id, level) {
+    if (level > 5) await this.addEventTrophy(id, 'Bronze Trophy');
+    if (level > 15) await this.addEventTrophy(id, 'Silver Trophy');
+    if (level > 30) await this.addEventTrophy(id, 'Gold Trophy');
+    if (level > 50) await this.addEventTrophy(id, 'Shiny Charm');
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
