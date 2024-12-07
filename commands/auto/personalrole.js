@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

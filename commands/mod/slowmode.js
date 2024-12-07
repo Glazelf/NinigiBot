@@ -6,7 +6,7 @@ import {
     SlashCommandIntegerOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/perms/isAdmin.js";
+import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;

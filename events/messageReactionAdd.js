@@ -11,7 +11,7 @@ export default async (client, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
-        if (!messageReaction.count) messageReaction = await messageReaction.fetch();
+        if (!messageReaction.count) messageReaction = await messageReaction.fetch().catch(e => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);

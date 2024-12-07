@@ -43,7 +43,8 @@ import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { t
 // BTD
 import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
-import Minesweeper from "discord.js-minesweeper";
+import createBoard from "../util/minesweeper/createBoard.js";
+import getMatrixString from "../util/minesweeper/getMatrixString.js";
 // Database
 import {
     getEphemeralDefault,
@@ -56,7 +57,7 @@ import {
     getBuyableShopTrophies
 } from "../database/dbServices/trophy.api.js";
 // Other util
-import isAdmin from "../util/perms/isAdmin.js";
+import isAdmin from "../util/discord/perms/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
@@ -277,7 +278,7 @@ export default async (client, interaction) => {
                             let buttonsClicked = 0;
 
                             // Check if first click, build board
-                            if (isFirstButton) matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                            if (isFirstButton) matrix = createBoard(mineRows, mineColumns, mineCount, bombEmoji);
                             for (let rowIndex = 0; rowIndex < mineRows; rowIndex++) {
                                 let actionRow = minesweeperComponentsCopy[rowIndex];
                                 const rowCopy = ActionRowBuilder.from(actionRow);
@@ -295,7 +296,7 @@ export default async (client, interaction) => {
                                         // Regenerate board if first button is a bomb or spoiler
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
-                                            matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                                            matrix = createBoard(mineRows, mineColumns, mineCount, bombEmoji);
                                             buttonEmoji = matrix[rowIndex][columnIndex]; // Needs to be set like this to prevent infinite loop. Can't be centralized into a variable.
                                             if (!bannedStartingCells.includes(buttonEmoji)) {
                                                 rowIndex = 6;
@@ -338,13 +339,13 @@ export default async (client, interaction) => {
                             let currentBalance = null;
                             if (isWinState || (isLossState && mineBet > 0)) currentBalance = await getMoney(interaction.user.id);
                             if (isLossState) {
-                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
                                 if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
-                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You won! Congratulations!\n`;
                                 if (mineBet > 0) {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
@@ -957,36 +958,4 @@ export default async (client, interaction) => {
     } catch (e) {
         logger({ exception: e, interaction: interaction });
     };
-};
-
-function createMinesweeperBoard(rows, columns, mines, bombEmoji) {
-    const minesweeper = new Minesweeper({
-        rows: rows,
-        columns: columns,
-        mines: mines,
-        emote: 'bomb',
-        returnType: 'matrix',
-    });
-    let matrix = minesweeper.start();
-    matrix.forEach(arr => {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace("|| :bomb: ||", bombEmoji).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
-        };
-    });
-    return matrix;
-};
-
-function getMatrixString(components, bombEmoji) {
-    let boardTitleString = "This was the full board:\n";
-    let matrixString = "";
-    components.forEach(actionRow => {
-        matrixString += "";
-        actionRow.components.forEach(button => {
-            let emoji = button.data.custom_id.split("-")[2];
-            // if (emoji == bombEmoji) matrixString += "\\"; // Escape emote for readability but seems to break on mobile and just display :bomb:
-            matrixString += `${emoji}`;
-        });
-        matrixString += "\n";
-    });
-    return `${boardTitleString}${matrixString}`;
 };

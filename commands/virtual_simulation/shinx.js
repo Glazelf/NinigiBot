@@ -1,5 +1,5 @@
 import {
-    InteractionContextType,
+    ApplicationIntegrationType,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -67,11 +67,13 @@ const colors = [
 
 export default async (interaction, messageFlags) => {
     // Every subcommand here except maybe "play" should be accessible in DMs honestly but I don't feel like rewriting them significantly for now to actually allow for that
-    let shinx, res, time;
-    let canvas, ctx, img;
+    let shinx, res, time, canvas, ctx, img;
     let returnString = "";
     let messageFile = null;
-    let userFinder = await interaction.guild.members.fetch();
+    // Only create userFinder if guild data exists
+    let userFinder = null;
+    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
     const now = new Date();
     let master = interaction.user;
@@ -153,7 +155,8 @@ export default async (interaction, messageFlags) => {
                     img = await Canvas.loadImage('./assets/dining.png');
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/mc.png');
-                    let guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
+                    let guests = [];
+                    if (guildDataAvailable) guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
@@ -198,7 +201,8 @@ export default async (interaction, messageFlags) => {
             };
             ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
             const layout = getRandomVisitorPosition();
-            let guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+            let guests = [];
+            if (guildDataAvailable) guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
             img = await Canvas.loadImage('./assets/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
@@ -255,7 +259,7 @@ export default async (interaction, messageFlags) => {
             shinx.addExperienceAndUnfeed(50, 1);
             return sendMessage({ interaction: interaction, content: `${formatName(shinx.nickname)} ${conversation.quote}`, files: messageFile, flags: messageFlags });
         case "nickname":
-            let new_nick = interaction.options.getString("nickname");
+            let new_nick = interaction.options.getString("nickname").trim();
             res = await nameShinx(master.id, new_nick);
             messageFile = null;
             switch (res) {
@@ -584,7 +588,6 @@ const battleSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("shinx")
     .setDescription("Interact with your Shinx.")
-    .setContexts([InteractionContextType.Guild])
     .addSubcommand(infoSubcommand)
     .addSubcommand(feedSubcommand)
     .addSubcommand(playSubcommand)
