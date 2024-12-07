@@ -19,13 +19,12 @@ const answers = [
     "Probably not"
 ];
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let input = interaction.options.getString("input");
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+
     const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
     let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
-    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 
 // String options

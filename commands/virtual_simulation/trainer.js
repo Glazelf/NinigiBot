@@ -10,9 +10,7 @@ import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let embed = new EmbedBuilder();
     switch (interaction.options.getSubcommand()) {
         case "info":
@@ -49,7 +47,7 @@ export default async (interaction, ephemeral) => {
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };
-            return sendMessage({ interaction: interaction, embeds: [embed], ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, embeds: [embed], flags: messageFlags });
         case "swapsprite":
             const shinx = await getShinx(interaction.user.id);
             return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!` });

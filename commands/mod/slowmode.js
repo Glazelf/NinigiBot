@@ -11,9 +11,8 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
-export default async (interaction, ephemeral) => {
+export default async (interaction) => {
     let adminBool = isAdmin(interaction.member);
-    ephemeral = false;
     let slowmodeSupportedChannelTypes = [
         ChannelType.GuildText,
         ChannelType.PublicThread,
@@ -26,7 +25,7 @@ export default async (interaction, ephemeral) => {
 
     let time = interaction.options.getInteger("time");
     await interaction.channel.setRateLimitPerUser(time);
-    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.` });
 };
 
 // Integer options

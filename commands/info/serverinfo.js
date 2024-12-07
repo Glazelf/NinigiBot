@@ -20,11 +20,8 @@ import verifLevels from "../../objects/discord/verificationLevels.json" with { t
 
 const nitroBoostEmojiName = "DiscordNitroBoost";
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     let guild = interaction.guild;
     await guild.members.fetch();
     await guild.channels.fetch();
@@ -162,7 +159,7 @@ export default async (interaction, ephemeral) => {
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);
     if (banner) serverEmbed.setImage(banner);
-    return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, flags: messageFlags });
 };
 
 // Boolean options

@@ -1,4 +1,4 @@
-export default async ({ interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
+export default async ({ interaction, content = null, embeds = null, files = null, flags = [], components = null }) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject = {};
@@ -28,7 +28,7 @@ export default async ({ interaction, content = null, embeds = null, files = null
             };
         };
     };
-    messageObject['ephemeral'] = ephemeral;
+    messageObject['flags'] = [...new Set(flags)]; // Remove duplicates
     messageObject['allowedMentions'] = { parse: ['users', 'roles'], repliedUser: true };
     // let targetUser = interaction.options.getUser("user");
     // if (targetUser) messageObject['allowedMentions'] = { users: [targetUser.id] };

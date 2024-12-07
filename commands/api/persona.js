@@ -28,11 +28,8 @@ eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", 
 // Object including all skill AND trait data
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let buttonArray = [];
-
     let p5Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let nameInput = interaction.options.getString("name");
@@ -105,7 +102,7 @@ export default async (interaction, ephemeral) => {
             };
             p5Embed.setTitle(nameInput);
     };
-    return sendMessage({ interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
+    return sendMessage({ interaction: interaction, embeds: p5Embed, flags: messageFlags, components: buttonArray });
 };
 
 function getWeaknessString(string) {

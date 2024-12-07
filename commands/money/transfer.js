@@ -10,8 +10,7 @@ import {
 } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction) => {
     const currentBalance = await getMoney(interaction.user.id);
     let transferAmount = interaction.options.getInteger("amount");
     let transferTarget = interaction.options.getUser("user");
@@ -23,7 +22,7 @@ export default async (interaction, ephemeral) => {
     addMoney(interaction.user.id, -transferAmount);
     addMoney(transferTarget.id, transferAmount);
 
-    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.` });
 };
 
 // Integer options

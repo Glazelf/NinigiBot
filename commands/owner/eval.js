@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
@@ -9,12 +10,11 @@ import isOwner from "../../util/discord/perms/isOwner.js";
 import util from "util";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = true;
+export default async (interaction) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     // NEVER remove this, even for testing. Research eval() before doing so, at least.
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
     const input = interaction.options.getString("input");
     let evaled;
