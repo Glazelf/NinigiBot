@@ -64,7 +64,9 @@ export default async (interaction, ephemeral) => {
     if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
     if (moveInput) move = Dex.moves.get(moveInput);
     let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
-    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemonGen);
+    // Dex.species.get() is so that data in the object is consistent when delivered to later functions
+    // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
+    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
