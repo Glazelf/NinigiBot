@@ -925,7 +925,8 @@ export default async (client, interaction) => {
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
-                        const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+                        // Getting from dex allows aliases
+                        const pkmQuizModalGuess = Dex.species.get(interaction.fields.getTextInputValue(pkmQuizButtonID)).name;
 
                         if (normalizeString(pkmQuizModalGuess) == normalizeString(pkmQuizCorrectAnswer)) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
