@@ -5,9 +5,9 @@
   "main": "forever.js",
   "type": "module",
   "dependencies": {
-    "@pkmn/data": "^0.9.24",
-    "@pkmn/dex": "^0.9.24",
-    "@pkmn/sim": "^0.9.24",
+    "@pkmn/data": "^0.9.25",
+    "@pkmn/dex": "^0.9.25",
+    "@pkmn/sim": "^0.9.25",
     "axios": "^1.7.9",
     "canvas": "^2.11.2",
     "cron": "^3.3.0",
