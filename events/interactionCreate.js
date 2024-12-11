@@ -61,6 +61,7 @@ import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 import normalizeString from "../util/string/normalizeString.js";
+import formatName from "../util/discord/formatName.js";
 
 // Pokémon
 const gens = new Generations(Dex);
@@ -913,7 +914,8 @@ export default async (client, interaction) => {
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
-                        return sendMessage({ interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] });
+                        return sendMessage({ interaction: interaction, content: `Your message has been sent to the moderators!\nThey should get back to you soon.\nYou should have received a receipt in your DMs.` });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
