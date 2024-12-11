@@ -913,9 +913,12 @@ export default async (client, interaction) => {
                             .setDescription(modMailDescription)
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
+                        let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
-                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] });
-                        return sendMessage({ interaction: interaction, content: `Your message has been sent to the moderators!\nThey should get back to you soon.\nYou should have received a receipt in your DMs.` });
+                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
+                            .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
+                            .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
+                        return sendMessage({ interaction: interaction, content: modmailReturnString });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
