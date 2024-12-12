@@ -47,9 +47,9 @@ import getMatrixString from "../util/minesweeper/getMatrixString.js";
 // Database
 import {
     getEphemeralDefault,
-    addMoney,
     getMoney
 } from "../database/dbServices/user.api.js";
+import rewardMoney from "../util/db/rewardMoney.js";
 import {
     getShopTrophies,
     getEventTrophies,
@@ -140,7 +140,7 @@ export default async (client, interaction) => {
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
                             contentReturn = pkmQuizRevealMessageObject.content;
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
                             filesReturn = pkmQuizRevealMessageObject.files;
@@ -337,8 +337,10 @@ export default async (client, interaction) => {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
-                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.\nYour current balance is ${currentBalance + moneyPrize}${globalVars.currency}.\n${matrixString}`;
-                                addMoney(interaction.user.id, moneyPrize);
+                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.`;
+                                let rewardDataMinesweeper = await rewardMoney({ interaction: interaction, userID: interaction.user.id, reward: moneyPrize });
+                                if (rewardDataMinesweeper.isSubscriber) contentReturn += `\nYou ${rewardDataMinesweeper.rewardString}`;
+                                contentReturn += `\nYour current balance is ${currentBalance + rewardDataMinesweeper.reward}${globalVars.currency}.\n${matrixString}`;
                             } else {
                                 contentReturn = interaction.message.content;
                             };
@@ -934,7 +936,7 @@ export default async (client, interaction) => {
                         const pkmQuizModalGuess = Dex.species.get(interaction.fields.getTextInputValue(pkmQuizButtonID)).name;
 
                         if (normalizeString(pkmQuizModalGuess) == normalizeString(pkmQuizCorrectAnswer)) {
-                            let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
