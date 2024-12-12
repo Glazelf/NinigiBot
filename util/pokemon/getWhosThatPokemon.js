@@ -13,9 +13,9 @@ import { Dex as DexSim } from '@pkmn/sim';
 import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
+import rewardMoney from "../db/rewardMoney.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import rewardMoney from "../db/rewardMoney.js";
 
 // Winner = person who ended the game, either through reveal or guessing correctly
 export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => {
