@@ -9,7 +9,7 @@ import {
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import deletePersonalRole from "../../util/deletePersonalRole.js";
+import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };

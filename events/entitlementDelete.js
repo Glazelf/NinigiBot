@@ -2,7 +2,7 @@ import {
     EmbedBuilder
 } from "discord.js";
 import logger from "../util/logger.js";
-import deletePersonalRole from "../util/deletePersonalRole.js";
+import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
