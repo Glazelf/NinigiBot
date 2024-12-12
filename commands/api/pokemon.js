@@ -457,7 +457,7 @@ export default async (interaction, ephemeral) => {
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem")
             );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemonFiltered });
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allPokemonFiltered });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
