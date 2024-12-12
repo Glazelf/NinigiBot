@@ -10,6 +10,7 @@
     "sysbotLogChannelID": "771363190780854293",
     "subscriptionSKUID": "1164974692889808999",
     "currency": "💰",
+    "subscriberRewardMult": 1.1,
     "embedColor": "#219DCD",
     "embedColorError": "#FF0000",
     "lackPermsString": "You do not have the required permissions to do this.",
