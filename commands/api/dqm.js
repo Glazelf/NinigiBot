@@ -19,9 +19,7 @@ import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { typ
 import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let detailed = false;
     let detailedArg = interaction.options.getBoolean("detailed");
     if (detailedArg === true) detailed = true;
@@ -218,7 +216,7 @@ export default async (interaction, ephemeral) => {
             };
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: dqm3Embed, flags: messageFlags });
 };
 
 const monsterOptionDescription = "Specify monster by name.";

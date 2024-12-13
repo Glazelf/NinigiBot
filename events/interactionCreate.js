@@ -1,6 +1,7 @@
 // Global
 import {
     InteractionType,
+    MessageFlags,
     ComponentType,
     ActionRowBuilder,
     EmbedBuilder,
@@ -113,9 +114,23 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
+                    let messageFlags = [];
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
-                    if (ephemeralDefault === null) ephemeralDefault = true;
-                    await cmd.default(interaction, ephemeralDefault);
+                    switch (interaction.options.getBoolean("ephemeral")) {
+                        case true:
+                            if (!messageFlags.includes(MessageFlags.Ephemeral)) messageFlags.push(MessageFlags.Ephemeral);
+                            break;
+                        case false:
+                            let ephemeralFlagIndex = messageFlags.indexOf(MessageFlags.Ephemeral);
+                            while (ephemeralFlagIndex !== -1) {
+                                messageFlags.splice(ephemeralFlagIndex, 1);
+                            };
+                            break;
+                        default:
+                            if (ephemeralDefault !== false) messageFlags.push(MessageFlags.Ephemeral);
+                            break;
+                    }
+                    await cmd.default(interaction, messageFlags);
                     return;
                 } else {
                     return;
@@ -243,7 +258,7 @@ export default async (client, interaction) => {
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
+                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, flags: [MessageFlags.Ephemeral] });
 
                             let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
@@ -383,7 +398,7 @@ export default async (client, interaction) => {
                             };
                         } else {
                             try {
-                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: [MessageFlags.Ephemeral] });
                             } catch (e) {
                                 // console.log(e);
                                 return;
@@ -923,11 +938,11 @@ export default async (client, interaction) => {
                         return sendMessage({ interaction: interaction, content: modmailReturnString });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
-                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: [MessageFlags.Ephemeral] });
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
                         let messageDescription = interaction.message.embeds[0].data.description;
-                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", ephemeral: true });
+                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", flags: [MessageFlags.Ephemeral] });
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];

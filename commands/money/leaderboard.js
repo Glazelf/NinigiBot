@@ -8,10 +8,8 @@ import sendMessage from "../../util/sendMessage.js";
 import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
 
     let memberFetch = await interaction.guild.members.fetch();
     let global = false;
@@ -44,7 +42,7 @@ export default async (interaction, ephemeral) => {
             .setTitle(`Leaderboard:`)
             .setThumbnail(icon);
     };
-    return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, flags: messageFlags });
 };
 
 // Boolean options

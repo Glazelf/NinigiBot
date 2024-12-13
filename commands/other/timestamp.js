@@ -9,9 +9,7 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     // Date manipulation
     let currentDate = new Date();
     let targetDate = new Date();
@@ -72,7 +70,7 @@ export default async (interaction, ephemeral) => {
             { name: "Long Date/Time", value: `\`${longDateTime}\` ➡ ${longDateTime}`, inline: false },
             { name: "Relative Time", value: `\`${relativeTime}\` ➡ ${relativeTime}`, inline: false }
         ]);
-    return sendMessage({ interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: timestampEmbed, flags: messageFlags });
 };
 
 // Integer options

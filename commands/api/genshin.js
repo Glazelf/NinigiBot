@@ -14,10 +14,8 @@ const giAPI = `https://genshin.jmp.blue/`;
 const embedCharacterLimit = 6000;
 const descCharacterLimit = 1024;
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
 
     let response;
     let error200ReturnString = `Error occurred, make sure that your input is valid and exists.`;
@@ -104,7 +102,7 @@ export default async (interaction, ephemeral) => {
             };
             break;
     };
-    return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed, flags: messageFlags });
 };
 
 function getCharacterAttributeFields(attribute, type, embedCharacterLength) {

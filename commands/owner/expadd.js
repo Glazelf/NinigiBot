@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
@@ -10,7 +11,6 @@ import { addExperience } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction) => {
-    ephemeral = true;
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
@@ -19,7 +19,7 @@ export default async (interaction) => {
     let expArg = interaction.options.getInteger("amount");
     await addExperience(userArg.id, expArg);
     returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
-    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, flags: [MessageFlags.Ephemeral] });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;
