@@ -630,7 +630,7 @@ function mapUsageString(string, seperator) {
 
 // Set nature choices. The max is 25 and there are exactly 25 natures.
 // If Gamefreak ever adds a 26th nature this will need to be moved back into autocomplete.
-let natureChoices = [];
+const natureChoices = [];
 allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });
