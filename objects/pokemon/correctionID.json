@@ -41,5 +41,9 @@
     "wo-chien": "1001",
     "chien-pao": "1002",
     "ting-lu": "1003",
-    "chi-yu": "1004"
+    "chi-yu": "1004",
+    "ogerpon-teal-tera": "1017-tmt",
+    "ogerpon-wellspring-tera": "1017-wmt",
+    "ogerpon-hearthflame-tera": "1017-hmt",
+    "ogerpon-cornerstone-tera": "1017-cmt"
 }
