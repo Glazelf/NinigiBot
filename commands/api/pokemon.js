@@ -607,7 +607,6 @@ function isIdenticalForm(pokemonName) {
         pokemonName.startsWith("Gourgeist-") ||
         pokemonName.startsWith("Pumpkaboo-") ||
         pokemonName.startsWith("Squawkabilly-") ||
-        pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds proper images for them
         pokemonName.endsWith("-Original") || // Megearna
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
