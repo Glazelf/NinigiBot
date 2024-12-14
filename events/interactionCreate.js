@@ -132,6 +132,7 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
+                        let notOriginalUserString = `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`;
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
@@ -139,6 +140,7 @@ export default async (client, interaction) => {
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
+                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: notOriginalUserString, ephemeral: true });
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
                             let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
                             contentReturn = pkmQuizRevealMessageObject.content;
@@ -243,8 +245,7 @@ export default async (client, interaction) => {
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
-
+                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: notOriginalUserString, ephemeral: true });
                             let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
                             let bombEmoji = "💣";
