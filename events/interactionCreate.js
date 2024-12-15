@@ -44,6 +44,7 @@ import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
 import createBoard from "../util/minesweeper/createBoard.js";
 import getMatrixString from "../util/minesweeper/getMatrixString.js";
+import revealSafeTile from "../util/minesweeper/revealSafeTile.js";
 // Database
 import {
     getEphemeralDefault,
@@ -248,8 +249,8 @@ export default async (client, interaction) => {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
-                            let bombEmoji = "💣";
-                            let spoilerEmoji = "⬛";
+                            const bombEmoji = "💣";
+                            const spoilerEmoji = "⬛";
                             let matrix = null;
                             let mineRows = minesweeperComponentsCopy.length; // Count rows by counting action rows
                             let mineColumns = minesweeperComponentsCopy[0].components.length; // Count columns by counting buttons in the first row
@@ -290,10 +291,7 @@ export default async (client, interaction) => {
                                                 columnIndex = 6;
                                             };
                                         };
-                                        buttonCopy
-                                            .setStyle(ButtonStyle.Success)
-                                            .setEmoji(buttonEmoji)
-                                            .setDisabled(true);
+                                        revealSafeTile(buttonCopy, buttonEmoji);
                                         if (buttonEmoji == bombEmoji) {
                                             buttonCopy.setStyle(ButtonStyle.Danger);
                                             isLossState = true;
