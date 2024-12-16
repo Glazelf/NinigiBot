@@ -125,7 +125,7 @@ export default async (interaction, ephemeral) => {
                 };
             };
         } else if (iconArg && !iconsAllowed) {
-            editReturnString += `-${guildNameFormatted} does not have role icons unlocked.`;
+            editReturnString += `\n- ${guildNameFormatted} does not have role icons unlocked.`;
         };
         // Re-add role if it got removed
         if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
