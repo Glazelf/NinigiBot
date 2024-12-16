@@ -86,7 +86,8 @@ export default async (client, member, newMember) => {
                     let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
                     if (entitlementMatch) isSupporter = true;
                 };
-                if (serverID && roleDB && !isSupporter && !isSupporter) await deletePersonalRole(roleDB, member.guild);
+                let integrationRoleBool = newMember.roles.cache.some(role => role.tags.integrationId);
+                if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, member.guild);
             };
 
             switch (updateCase) {
