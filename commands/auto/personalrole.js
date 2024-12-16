@@ -20,7 +20,7 @@ export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
     let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
-    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags.integrationId);
+    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
     let guildNameFormatted = formatName(interaction.guild.name);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.` });
