@@ -20,7 +20,7 @@ export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
     let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
-    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
+    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
     let guildNameFormatted = formatName(interaction.guild.name);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.` });
@@ -64,8 +64,9 @@ export default async (interaction, ephemeral) => {
         if (ninigiSubscriptions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
     };
     let isEligibleForPersonalRole = (boosterBool || modBool || adminBool || botSubscriberBool || integrationRoleBool);
+    let notEligibleString = "You need to be a Nitro Booster, Twitch/YouTube subscriber or moderator to manage a personal role.";
     // Check if user is eligible to use this command
-    if (isEligibleForPersonalRole) return sendMessage({ interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
+    if (!isEligibleForPersonalRole) return sendMessage({ interaction: interaction, content: notEligibleString });
     // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
     // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
     if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
@@ -84,11 +85,11 @@ export default async (interaction, ephemeral) => {
     });
     // Might want to change checks to be more inline with role tags (assuming a mod role tag will be added someday)
     // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-    if (isEligibleForPersonalRole) return deleteRole({
+    if (!isEligibleForPersonalRole) return deleteRole({
         interaction: interaction,
         roleDB: roleDB,
         successString: "Since you can't manage a personal role anymore I cleaned up your old role.",
-        failString: "You need to be a Nitro Booster or moderator to manage a personal role."
+        failString: notEligibleString
     });
 
     if (roleDB) {
