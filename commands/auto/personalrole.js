@@ -180,9 +180,9 @@ async function deleteRole({ interaction, roleDB, successString, failString }) {
 // String options
 const colorHexOption = new SlashCommandStringOption()
     .setName("color-hex")
+    .setDescription("Specify a color.")
     .setMinLength(6)
-    .setMaxLength(6)
-    .setDescription("Specify a color.");
+    .setMaxLength(6);
 // Attachment options
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")
