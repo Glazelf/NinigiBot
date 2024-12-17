@@ -933,9 +933,10 @@ export default async (client, interaction) => {
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         // Getting from dex allows aliases
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
-                        const pkmQuizModalGuessFormatted = normalizeString(Dex.species.get(pkmQuizModalGuess).name);
+                        // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
+                        const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
 
-                        if (normalizeString(pkmQuizModalGuessFormatted) == normalizeString(pkmQuizCorrectAnswer)) {
+                        if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
