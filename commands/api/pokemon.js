@@ -455,7 +455,8 @@ export default async (interaction, ephemeral) => {
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
-                !pokemon.name.endsWith("-Totem")
+                !pokemon.name.endsWith("-Totem") &&
+                !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
             );
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allPokemonFiltered });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
@@ -598,7 +599,7 @@ function getLearnData(learnData) {
     return learnInfo;
 };
 
-// "Identical" here means having the same sillouette and learnset
+// "Identical" here means having the same sillouette, learnset and abilities
 function isIdenticalForm(pokemonName) {
     if (pokemonName.startsWith("Arceus-") ||
         pokemonName.startsWith("Silvally-") ||
