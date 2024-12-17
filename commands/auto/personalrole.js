@@ -59,7 +59,8 @@ export default async (interaction, ephemeral) => {
     let personalRolePosition = boosterRole.position + 1;
     // Check SKU entitlement
     let botSubscriberBool = false;
-    if (interaction.guild.id == globalVars.ShinxServerID && getBotSubscription(interaction, interaction.user.id)) botSubscriberBool = true;
+    let botSubscription = await getBotSubscription(interaction, interaction.user.id);
+    if (interaction.guild.id == globalVars.ShinxServerID && botSubscription) botSubscriberBool = true;
     let isEligibleForPersonalRole = (boosterBool || modBool || adminBool || botSubscriberBool || integrationRoleBool);
     let notEligibleString = "You need to be a Nitro Booster, Twitch/YouTube subscriber or moderator to manage a personal role.";
     // Check if user is eligible to use this command

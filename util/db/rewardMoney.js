@@ -8,7 +8,7 @@ export default async ({ interaction, userID, reward }) => {
     const baseReward = reward;
     const failMessageObject = { reward: reward, isSubscriber: false };
     let SKUs = await interaction.client.application.fetchSKUs();
-    let botSubscription = getBotSubscription(interaction, userID);
+    let botSubscription = await getBotSubscription(interaction, userID);
     if (!botSubscription) return failMessageObject;
     console.log(botSubscription)
     let rewardSKU = SKUs.find(SKU => SKU.id == botSubscription.skuId);
