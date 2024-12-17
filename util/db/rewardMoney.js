@@ -10,6 +10,7 @@ export default async ({ interaction, userID, reward }) => {
     let SKUs = await interaction.client.application.fetchSKUs();
     let botSubscription = getBotSubscription(interaction, userID);
     if (!botSubscription) return failMessageObject;
+    console.log(botSubscription)
     let rewardSKU = SKUs.find(SKU => SKU.id == botSubscription.skuId);
     reward = Math.floor(reward * subscriberRewardMultiplier);
     addMoney(userID, reward);
