@@ -10,10 +10,9 @@ export default async ({ interaction, userID, reward }) => {
     let SKUs = await interaction.client.application.fetchSKUs();
     let botSubscription = await getBotSubscription(interaction, userID);
     if (!botSubscription) return failMessageObject;
-    console.log(botSubscription)
     let rewardSKU = SKUs.find(SKU => SKU.id == botSubscription.skuId);
     reward = Math.floor(reward * subscriberRewardMultiplier);
     addMoney(userID, reward);
     let rewardString = `received a bonus ${reward - baseReward}${globalVars.currency} (${subscriberRewardMultiplier * 100 - 100}%) for having ${formatName(rewardSKU.name)}!`;
-    return { reward: reward, isSubscriber: isSubscriber, rewardString: rewardString };
+    return { reward: reward, isSubscriber: true, rewardString: rewardString };
 };
