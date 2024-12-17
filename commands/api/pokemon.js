@@ -51,7 +51,7 @@ export default async (interaction, ephemeral) => {
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
-    let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move = null;
+    let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
     let generation = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
