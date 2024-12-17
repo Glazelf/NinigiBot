@@ -60,7 +60,7 @@ export default async (interaction, ephemeral) => {
     let botSubscriberBool = false;
     if (interaction.guild.id == globalVars.ShinxServerID) {
         let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
-        let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == "1164974692889808999" && entitlement.userId == interaction.user.id);
+        let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == interaction.user.id);
         if (ninigiSubscriptions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
     };
     let isEligibleForPersonalRole = (boosterBool || modBool || adminBool || botSubscriberBool || integrationRoleBool);
