@@ -9,7 +9,7 @@ export default async ({ application, userID, reward }) => {
     let botSubscription = await getBotSubscription(application, userID);
     let isSubscriber = (typeof botSubscription.entitlement !== "undefined"); // Convert to boolean
     if (isSubscriber) reward = Math.floor(reward * subscriberRewardMultiplier);
-    addMoney(userID, reward);
+    await addMoney(userID, reward);
     let rewardString = `received a bonus ${reward - baseReward}${globalVars.currency} (${subscriberRewardMultiplier * 100 - 100}%) for having ${formatName(botSubscription.SKU.name)}!`;
     return { reward: reward, isSubscriber: isSubscriber, rewardString: rewardString };
 };
