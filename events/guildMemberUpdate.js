@@ -83,7 +83,7 @@ export default async (client, member, newMember) => {
                 let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
                 let isSupporter = false;
                 let botSubscription = await getBotSubscription(InteractionCollector, newMember.id);
-                if (newMember.guild.id == globalVars.ShinxServerID && botSubscription) isSupporter = true;
+                if (newMember.guild.id == globalVars.ShinxServerID && botSubscription.entitlement) isSupporter = true;
                 let integrationRoleBool = newMember.roles.cache.some(role => role.tags?.integrationId);
                 if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, member.guild);
             };
