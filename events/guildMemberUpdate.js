@@ -8,6 +8,7 @@ import {
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
+import getBotSubscription from "../util/discord/getBotSubscription.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member, newMember) => {
@@ -81,11 +82,7 @@ export default async (client, member, newMember) => {
                 let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
                 let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
                 let isSupporter = false;
-                if (newMember.guild.id == globalVars.ShinxServerID) {
-                    let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
-                    let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
-                    if (entitlementMatch) isSupporter = true;
-                };
+                if (newMember.guild.id == globalVars.ShinxServerID && getBotSubscription(InteractionCollector, newMember.id)) isSupporter = true;
                 let integrationRoleBool = newMember.roles.cache.some(role => role.tags?.integrationId);
                 if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, member.guild);
             };

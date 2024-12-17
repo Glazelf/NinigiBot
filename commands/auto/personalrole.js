@@ -11,6 +11,7 @@ import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
+import getBotSubscription from "../../util/discord/getBotSubscription.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
@@ -58,11 +59,7 @@ export default async (interaction, ephemeral) => {
     let personalRolePosition = boosterRole.position + 1;
     // Check SKU entitlement
     let botSubscriberBool = false;
-    if (interaction.guild.id == globalVars.ShinxServerID) {
-        let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
-        let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == interaction.user.id);
-        if (ninigiSubscriptions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
-    };
+    if (interaction.guild.id == globalVars.ShinxServerID && getBotSubscription(interaction, interaction.user.id)) botSubscriberBool = true;
     let isEligibleForPersonalRole = (boosterBool || modBool || adminBool || botSubscriberBool || integrationRoleBool);
     let notEligibleString = "You need to be a Nitro Booster, Twitch/YouTube subscriber or moderator to manage a personal role.";
     // Check if user is eligible to use this command

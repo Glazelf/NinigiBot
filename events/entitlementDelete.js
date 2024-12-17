@@ -11,7 +11,6 @@ export default async (client, entitlement) => {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
 
-
         let guild = await client.guilds.fetch(globalVars.ShinxServerID);
         if (!guild) return;
         let user = await client.users.fetch(entitlement.userId);
