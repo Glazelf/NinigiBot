@@ -4,10 +4,10 @@ import globalVars from "../../objects/globalVars.json" with { type: "json"}; imp
 
 const subscriberRewardMultiplier = 1.2;
 
-export default async ({ interaction, userID, reward }) => {
+export default async ({ application, userID, reward }) => {
     const baseReward = reward;
     const failMessageObject = { reward: reward, isSubscriber: false };
-    let botSubscription = await getBotSubscription(interaction, userID);
+    let botSubscription = await getBotSubscription(application, userID);
     if (!botSubscription.entitlement) return failMessageObject;
     reward = Math.floor(reward * subscriberRewardMultiplier);
     addMoney(userID, reward);

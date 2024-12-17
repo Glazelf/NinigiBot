@@ -51,7 +51,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
             // Format winning message update for correct guess
             let pkmQuizPrize = 10;
             quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}.`;
-            let rewardData = await rewardMoney({ interaction: interaction, userID: winner.id, reward: pkmQuizPrize });
+            let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: pkmQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
         quizDescription += `\nThe answer was ${bold(pokemon.name)}.`;

@@ -337,7 +337,7 @@ export default async (client, interaction) => {
                                     moneyPrize = mineWinAmount;
                                 };
                                 contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.`;
-                                let rewardDataMinesweeper = await rewardMoney({ interaction: interaction, userID: interaction.user.id, reward: moneyPrize });
+                                let rewardDataMinesweeper = await rewardMoney({ application: interaction.client.application, userID: interaction.user.id, reward: moneyPrize });
                                 if (rewardDataMinesweeper.isSubscriber) contentReturn += `\nYou ${rewardDataMinesweeper.rewardString}`;
                                 contentReturn += `\nYour current balance is ${currentBalance + rewardDataMinesweeper.reward}${globalVars.currency}.\n${matrixString}`;
                             } else {
