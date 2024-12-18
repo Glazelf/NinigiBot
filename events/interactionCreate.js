@@ -453,9 +453,9 @@ export default async (client, interaction) => {
                         let balanceTenth = Math.floor(currentBalance / 10);
                         let balanceRandom = randomNumber(1, currentBalance);
                         choices.push({ name: `10% (${balanceTenth}${globalVars.currency})`, value: balanceTenth });
-                        choices.push({ name: `Quarter (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
-                        choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
-                        choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
+                        choices.push({ name: `25% (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
+                        choices.push({ name: `50% (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
+                        choices.push({ name: `100% (${currentBalance}${globalVars.currency}}`, value: currentBalance });
                         // Only add random if there is money, due to way randomization works result can be 1 while balance is 0
                         if (currentBalance > 0) choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
                 };
