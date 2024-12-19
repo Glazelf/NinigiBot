@@ -32,7 +32,7 @@ export default async (interaction, ephemeral) => {
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
                 .setTitle(`Global Leaderboard:`);
-            if (scopeInput == "guild") leaderboardEmbed.setFooter({ text: "Server leaderboard can only be displayed if this comamnd is used in a guild that I am in." });
+            if (scopeInput == "guild") leaderboardEmbed.setFooter({ text: "Server leaderboard can only be displayed if this comamnd is used in a server that I am in." });
             break;
         case "guild":
             // Server leaderboard
