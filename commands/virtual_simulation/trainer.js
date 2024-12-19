@@ -2,10 +2,10 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
-    SlashCommandBooleanOption,
-    ApplicationIntegrationType
+    SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -18,9 +18,7 @@ export default async (interaction, ephemeral) => {
         case "info":
             let user = await getUser(interaction.user.id);
             let avatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            if (interaction.inGuild() && interaction.member && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
-                avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
-            };
+            if (isGuildDataAvailable(interaction)) avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let trophy_level = 0;
             let trophies = await user.getShopTrophies();

@@ -1,5 +1,4 @@
 import {
-    ApplicationIntegrationType,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -19,6 +18,7 @@ import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import {
     getShinx,
     getRandomShinx,
@@ -75,7 +75,7 @@ export default async (interaction, ephemeral) => {
     let messageFile = null;
     // Only create userFinder if guild data exists
     let userFinder = null;
-    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    let guildDataAvailable = isGuildDataAvailable(interaction);
     if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
     const now = new Date();
