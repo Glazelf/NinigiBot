@@ -326,7 +326,8 @@ export default async (client, interaction) => {
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
+                                // Bet doesn't need to be subtracted, this is already done when setting up the bet
+                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
