@@ -53,7 +53,8 @@ export default async (interaction, ephemeral) => {
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
-    let generation = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
+    let generationInput = interaction.options.getInteger("generation");
+    let generation = generationInput || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
@@ -451,14 +452,16 @@ export default async (interaction, ephemeral) => {
         // Who's That Pokémon quiz
         case "whosthat":
             await interaction.deferReply({ ephemeral: ephemeral });
-            let allPokemonFiltered = allPokemon.filter(pokemon =>
+            let allowedPokemonList = allPokemon;
+            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
+            allowedPokemonList = allowedPokemonList.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem") &&
                 !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
             );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allPokemonFiltered });
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
@@ -797,6 +800,7 @@ const cardSetSubcommand = new SlashCommandSubcommandBuilder()
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
+    .addIntegerOption(generationOption)
     .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()
