@@ -412,7 +412,7 @@ export default async (client, interaction) => {
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        roleSelectReturnString += `✅ You no longer have ${role}!\n`
+                                        roleSelectReturnString += `✅ You no longer have ${role}!\n`;
                                     } else {
                                         await interaction.member.roles.add(role);
                                         roleSelectReturnString += `✅ You now have ${role}!\n`;
