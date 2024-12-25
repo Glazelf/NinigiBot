@@ -17,6 +17,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const catAPI = "https://cataas.com/cat";
 const foxAPI = "https://randomfox.ca/floof/";
+const errorAPI = "An error occurred with the API. Please try again later.";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -40,7 +41,8 @@ export default async (interaction, ephemeral) => {
             let standardCatText = "Meow";
             if (!catText) catText = standardCatText;
 
-            let catResponse = await axios.get(`${catAPI}?json=true`);
+            let catResponse = await axios.get(`${catAPI}?json=true`).catch(e => { return null; });
+            if (!catResponse) return sendMessage({ interaction: interaction, content: errorAPI });
             let catImage = null;
             let catNameSeed = null;
             catImage = `${catAPI}/${catResponse.data._id}`;
@@ -101,5 +103,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("random")
     .setDescription("Various random results.")
     .addSubcommand(numberSubcommand)
-    // .addSubcommand(catSubcommand)
+    .addSubcommand(catSubcommand)
     .addSubcommand(foxSubcommand);
