@@ -101,5 +101,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("random")
     .setDescription("Various random results.")
     .addSubcommand(numberSubcommand)
-    .addSubcommand(catSubcommand)
+    // .addSubcommand(catSubcommand)
     .addSubcommand(foxSubcommand);
