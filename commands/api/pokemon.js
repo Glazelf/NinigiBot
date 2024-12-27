@@ -171,6 +171,7 @@ export default async (interaction, ephemeral) => {
             for (const pokemon of allPokemonGen) {
                 if (isIdenticalForm(pokemon.name) ||
                     pokemon.name.startsWith("Terapagos-") ||
+                    pokemon.name.startsWith("Ogerpon-") ||
                     pokemon.name.endsWith("-Origin") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
                 if (DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
