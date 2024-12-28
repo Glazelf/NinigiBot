@@ -3,7 +3,8 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    bold
+    bold,
+    inlineCode
 } from "discord.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -29,7 +30,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     if (generation < pokemon.gen) {
         pkmEmbed
             .setTitle(`Error`)
-            .setDescription(`\`${pokemon.name}\` does not exist yet in generation ${generation}.\n\`${pokemon.name}\` was introduced in generation ${pokemon.gen}.`);
+            .setDescription(`${inlineCode(pokemon.name)} does not exist yet in generation ${generation}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
         messageObject = { embeds: pkmEmbed, components: [], ephemeral: true };
         return messageObject;
     };

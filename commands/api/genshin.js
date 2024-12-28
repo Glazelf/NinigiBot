@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -71,7 +72,7 @@ export default async (interaction, ephemeral) => {
                     giEmbed.addFields(getCharacterAttributeFields(constellation, "Constellation", giEmbed.length));
                 };
             };
-            if (giEmbed.length > embedCharacterLimit - descCharacterLimit) returnString = `Embeds can only be ${embedCharacterLimit} characters long.\nIf you are missing fields they might have gone over this limit and not been added.\nTry selecting less attributes to display (\`skills\`, \`passives\`, \`constellations\`) at once.`;
+            if (giEmbed.length > embedCharacterLimit - descCharacterLimit) returnString = `Embeds can only be ${embedCharacterLimit} characters long.\nIf you are missing fields they might have gone over this limit and not been added.\nTry selecting less attributes to display (${inlineCode("skills")}, ${inlineCode("passives")}, ${inlineCode("constellations")}) at once.`;
             break;
         case "weapon":
             const giAPIWeapon = `${giAPI}weapons/${nameInput}`;

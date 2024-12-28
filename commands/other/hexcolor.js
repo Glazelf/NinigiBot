@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    AttachmentBuilder
+    AttachmentBuilder,
+    inlineCode
 } from "discord.js";
 import { PassThrough } from "stream";
 import PImage from "pureimage";
@@ -18,7 +19,7 @@ export default async (interaction, ephemeral) => {
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
 
-    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters \`0-9\` and \`A-F\`.` });
+    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.` });
 
     let imgWidth = 225;
     let imgHeight = 100;

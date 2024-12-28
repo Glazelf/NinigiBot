@@ -4,7 +4,8 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandStringOption,
-    bold
+    bold,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import {
@@ -26,7 +27,7 @@ export default async (interaction) => {
             day = leadingZeros(day, 2);
             month = leadingZeros(month, 2);
             setBirthday(interaction.user.id, day + month);
-            return sendMessage({ interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
+            return sendMessage({ interaction: interaction, content: `Updated your birthday to ${inlineCode(`${day}-${month}`)} (dd-mm).` });
         case "switch":
             let switchCodeGet = await getSwitchCode(interaction.user.id);
             let switchFC = interaction.options.getString('switch-fc');
@@ -41,12 +42,12 @@ export default async (interaction) => {
             if (!switchFC) return sendMessage({ interaction: interaction, content: invalidString });
             switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
             setSwitchCode(interaction.user.id, switchFC);
-            return sendMessage({ interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
+            return sendMessage({ interaction: interaction, content: `Updated your Nintendo Switch friend code to ${inlineCode(switchFC)}.` });
         case "ephemeraldefault":
             // let ephemeralDefaultGet = await getEphemeralDefault(interaction.user.id);
             let ephemeralDefault = interaction.options.getBoolean('ephemeral');
             setEphemeralDefault(interaction.user.id, ephemeralDefault);
-            return sendMessage({ interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
+            return sendMessage({ interaction: interaction, content: `Changed the default ephemeral argument on your commands to ${inlineCode(ephemeralDefault)}.\nNote that some commands will still be forced ephemeral or visible.` });
     };
 };
 

@@ -1,5 +1,6 @@
 import {
-    codeBlock
+    codeBlock,
+    inlineCode
 } from "discord.js";
 import util from "util";
 import getTime from "./getTime.js";
@@ -46,7 +47,7 @@ export default async ({ exception, client, interaction = null }) => {
             subCommand = interaction.options._subcommand; // Using .getSubcommand() fails on user/message commands
             if (interaction.options._hoistedOptions) { // Doesn't seem to be a cleaner way to access all options at once
                 interaction.options._hoistedOptions.forEach(option => {
-                    interactionOptions += `- \`${option.name}\`: ${option.value}\n`;
+                    interactionOptions += `- ${inlineCode(option.name)}: ${option.value}\n`;
                 });
             };
         };
@@ -66,7 +67,7 @@ Options: ${interactionOptions}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``; // Backticks are to make sure codeBlock remains closed after substring
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (baseMessage.includes("Missing Permissions")) {

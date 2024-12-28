@@ -9,7 +9,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     bold,
-    hyperlink
+    hyperlink,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -64,7 +65,7 @@ export default async (interaction, ephemeral) => {
     };
     if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
     if (moveInput) move = Dex.moves.get(moveInput);
-    let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
+    let noPokemonString = `Sorry, I could not find a Pokémon called ${inlineCode(nameInput)} in generation ${generation}.`;
     // Dex.species.get() is so that data in the object is consistent when delivered to later functions
     // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
     if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
@@ -83,7 +84,7 @@ export default async (interaction, ephemeral) => {
             // let abilityGen = genData.abilities.get(abilitySearch);
             let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
-            if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
+            if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
                 pokemonEmbed
                     .setTitle("Error")
@@ -119,7 +120,7 @@ export default async (interaction, ephemeral) => {
             let itemIsFuture = (item.gen > generation);
             let itemIsAvailable = (itemGen == undefined);
             let itemFailString = `I could not find that item in generation ${generation}.`;
-            if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
+            if (itemIsFuture) itemFailString += `\n${inlineCode(item.name)} was introduced in generation ${item.gen}.`;
             if (!itemGen) {
                 itemGen = item;
                 generationFooter = globalVars.pokemon.currentGeneration;
@@ -159,7 +160,7 @@ export default async (interaction, ephemeral) => {
             };
             let moveIsFuture = (move.gen > generation);
             let moveFailString = `I could not find that move in generation ${generation}.`;
-            if (moveIsFuture) moveFailString += `\n\`${move.name}\` was introduced in generation ${move.gen}.`;
+            if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
                 pokemonEmbed
                     .setTitle("Error")
@@ -289,7 +290,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "learn":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${nameInput}\`.` });
+            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.` });
             // Set variables
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
@@ -391,7 +392,7 @@ export default async (interaction, ephemeral) => {
             if (pokemon) {
                 const pokemonNameSearch = pokemon.name + " "; // Space is to exclude matching more popular subforms
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemonNameSearch));
-                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
+                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${inlineCode(pokemon.name)} in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");

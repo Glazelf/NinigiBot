@@ -8,7 +8,8 @@ import {
     ButtonStyle,
     ModalBuilder,
     TextInputBuilder,
-    TextInputStyle
+    TextInputStyle,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
 axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
@@ -941,7 +942,7 @@ export default async (client, interaction) => {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
-                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
+                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
                         break;
                 };

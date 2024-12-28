@@ -4,7 +4,8 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
-    SlashCommandAttachmentOption
+    SlashCommandAttachmentOption,
+    inlineCode
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -95,7 +96,7 @@ export default async (interaction, ephemeral) => {
         let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
         if (!personalRole) return createRole();
         if (!colorArg) roleColor = personalRole.color;
-        if (roleColor != personalRole.color) editReturnString += `\n- Color set to \`#${roleColor}\`.`;
+        if (roleColor != personalRole.color) editReturnString += `\n- Color set to ${inlineCode(`#${roleColor}`)}.`;
 
         try {
             await personalRole.edit({

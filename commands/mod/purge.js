@@ -4,7 +4,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -30,7 +31,7 @@ export default async (interaction, ephemeral) => {
     let userArg = interaction.options.getUser("user");
     if (userArg) user = userArg;
 
-    let deleteFailString = `An error occurred while bulk deleting. Make sure that I have the \`${requiredPermissionName}\` permission.`;
+    let deleteFailString = `An error occurred while bulk deleting. Make sure that I have the ${inlineCode(requiredPermissionName)} permission.`;
     let missingMessagesString = `\nSome messages were not deleted, probably because they were older than 2 weeks.`;
     // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
     try {

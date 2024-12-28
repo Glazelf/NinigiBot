@@ -9,7 +9,8 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption,
     SlashCommandBooleanOption,
-    bold
+    bold,
+    inlineCode
 } from "discord.js";
 import Canvas from "canvas";
 import axios from "axios";
@@ -338,7 +339,7 @@ export default async (interaction, ephemeral) => {
             let confirm = false
             let confirmArg = interaction.options.getBoolean("confirm");
             if (confirmArg === true) confirm = confirmArg;
-            if (!confirm) return sendMessage({ interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+            if (!confirm) return sendMessage({ interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the ${inlineCode("confirm")} option for this command to ${inlineCode("true")} if you're sure.` });
             shinx = await getShinx(master.id);
             let shinxNickname = shinx.nickname;
             await shinx.destroy();

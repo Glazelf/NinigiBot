@@ -3,7 +3,8 @@ import {
     EmbedBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    hyperlink
+    hyperlink,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -34,7 +35,7 @@ export default async (interaction, ephemeral) => {
         let errorEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColorError)
             .setTitle("Error")
-            .setDescription(`Word \`${inputWord}\` not found.`);
+            .setDescription(`Word ${inlineCode(inputWord)} not found.`);
         return sendMessage({ interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
     };
 

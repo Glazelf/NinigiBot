@@ -7,7 +7,8 @@ import {
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
-    userMention
+    userMention,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -41,7 +42,7 @@ export default async (interaction) => {
 
     let executorNameFormatted = formatName(interaction.user.username);
     let banReturn = null;
-    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
+    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
@@ -85,7 +86,7 @@ export default async (interaction) => {
             return sendMessage({ interaction: interaction, content: banFailString });
         };
     } else {
-        return sendMessage({ interaction: interaction, content: `You need to provide a target to ban either through the \`member\` or the \`user-id\` argument.` });
+        return sendMessage({ interaction: interaction, content: `You need to provide a target to ban either through the ${inlineCode("member")} or the ${inlineCode("user-id")} argument.` });
     };
 };
 
