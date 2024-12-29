@@ -956,8 +956,7 @@ export default async (client, interaction) => {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch(e => {
                                 // Only saw this be necessary once when edit got blocked by AutoMod, but it caused a crash so still worth catching
-                                // Replying (especially ephemerally) fails because the interaction has already "been handled"
-                                return null;
+                                return interaction.reply({ content: "You won but editing the original message failed. This might be because of AutoMod.", embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components, flags: messageFlags.add(MessageFlags.Ephemeral) })
                             });
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, flags: messageFlags });
