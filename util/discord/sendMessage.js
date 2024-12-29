@@ -1,9 +1,8 @@
 import {
-    MessageFlags,
     MessageFlagsBitField
 } from "discord.js";
 
-export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = MessageFlagsBitField }) => {
+export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject = {};
