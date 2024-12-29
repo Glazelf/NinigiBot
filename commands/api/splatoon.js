@@ -409,7 +409,7 @@ export default async (interaction, messageFlags) => {
             replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
             // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
             let replayResponse = await axios.get(`${replayAPI}${replayCode}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" } });
-            if (replayResponse.status !== 200) return interaction.reply({ content: "Error occurred getting that replay. Make sure the code is correct." });
+            if (replayResponse.status !== 200) return sendMessage({ interaction: interaction, content: "Error occurred getting that replay. Make sure the code is correct." });
             let replayData = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
             // Match data
