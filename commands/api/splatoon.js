@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -65,16 +66,13 @@ const splatfestAPI = "https://splatoon3.ink/data/festivals.json"; // All Splatfe
 const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/"; // Replay lookup
 const replayLookupGithub = "https://github.com/samuelthomas2774/splatoon3-replay-lookup";
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     // Game data
     let versionLatest = version;
     if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
     let versionSplit = versionLatest.split("").join(".");
     if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
     let versionString = `Splatoon 3 v${versionSplit}`;
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Check language
     let languageKey = interaction.options.getString("language");
     if (!languageKey) languageKey = "EUen";
@@ -231,7 +229,7 @@ export default async (interaction, ephemeral) => {
                 .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
             break;
         case "schedule":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let inputData = interaction.options.getString("mode");
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
@@ -380,7 +378,7 @@ export default async (interaction, ephemeral) => {
             );
             break;
         case "splatnet":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let responseSplatnet = await axios.get(splatnetAPI);
             if (responseSplatnet.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
             let splatnetData = responseSplatnet.data.data.gesotown;
@@ -402,11 +400,11 @@ export default async (interaction, ephemeral) => {
             });
             break;
         case "splatfests":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
-            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, flags: messageFlags });
         case "replay":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let replayCode = interaction.options.getString("code");
             replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
             // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
@@ -487,7 +485,7 @@ export default async (interaction, ephemeral) => {
                 .setFooter({ text: discriminatorRandom.toString(), iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: splat3Embed, flags: messageFlags });
 };
 
 function getGearString(gear, type) {

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
@@ -16,7 +17,7 @@ import getBotSubscription from "../../util/discord/getBotSubscription.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction) => {
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let adminBool = isAdmin(interaction.member);
@@ -27,11 +28,9 @@ export default async (interaction, ephemeral) => {
     let guildNameFormatted = formatName(interaction.guild.name);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.` });
 
+    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
+
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
-
-    ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
-
     let colorArg = interaction.options.getString('color-hex');
     let iconArg = interaction.options.getAttachment("icon");
 

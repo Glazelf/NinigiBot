@@ -1,6 +1,8 @@
 // Global
 import {
     InteractionType,
+    MessageFlags,
+    MessageFlagsBitField,
     ComponentType,
     ActionRowBuilder,
     EmbedBuilder,
@@ -115,9 +117,20 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
+                    let messageFlags = new MessageFlagsBitField;
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
-                    if (ephemeralDefault === null) ephemeralDefault = true;
-                    await cmd.default(interaction, ephemeralDefault);
+                    switch (interaction.options.getBoolean("ephemeral")) {
+                        case true:
+                            messageFlags.add(MessageFlags.Ephemeral);
+                            break;
+                        case false:
+                            messageFlags.remove(MessageFlags.Ephemeral);
+                            break;
+                        default:
+                            if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
+                            break;
+                    }
+                    await cmd.default(interaction, messageFlags);
                     return;
                 } else {
                     return;
@@ -134,7 +147,7 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
-                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, ephemeral: true };
+                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: [MessageFlags.Ephemeral] };
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
@@ -384,7 +397,7 @@ export default async (client, interaction) => {
                             };
                         } else {
                             try {
-                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: [MessageFlags.Ephemeral] });
                             } catch (e) {
                                 // console.log(e);
                                 return;
@@ -924,11 +937,11 @@ export default async (client, interaction) => {
                         return sendMessage({ interaction: interaction, content: modmailReturnString });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
-                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", ephemeral: true });
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: [MessageFlags.Ephemeral] });
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
                         let messageDescription = interaction.message.embeds[0].data.description;
-                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", ephemeral: true });
+                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", flags: [MessageFlags.Ephemeral] });
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];

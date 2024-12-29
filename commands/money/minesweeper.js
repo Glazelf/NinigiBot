@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
@@ -18,9 +19,7 @@ const minGridLength = 2;
 const maxGridLength = 5;
 const profitPerMine = 10; // 10% gain per mine on won bet
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let correctionString = "";
     let rows = 5;
     let columns = 5;
@@ -49,8 +48,8 @@ export default async (interaction, ephemeral) => {
     if (bet) {
         let minimumMinesBet = 4;
         const currentBalance = await getMoney(interaction.user.id);
-        if (mines < minimumMinesBet) return sendMessage({ interaction: interaction, content: `${correctionString}\nYou are only allowed to place bets with at least ${minimumMinesBet} mines to ensure the game does not favor luck or is too easy.`, ephemeral: true });
-        if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, ephemeral: true });
+        if (mines < minimumMinesBet) return sendMessage({ interaction: interaction, content: `${correctionString}\nYou are only allowed to place bets with at least ${minimumMinesBet} mines to ensure the game does not favor luck or is too easy.`, flags: [MessageFlags.Ephemeral] });
+        if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, flags: [MessageFlags.Ephemeral] });
         betGain = increaseByPercentageForEach(bet, mines, profitPerMine);
         addMoney(interaction.user.id, -bet);
         correctionString += `\nYou bet ${bet}${globalVars.currency}.\nIf you win you will receive ${betGain}${globalVars.currency}.`;
@@ -76,7 +75,7 @@ export default async (interaction, ephemeral) => {
     if (correctionString.length > 0) returnString += `\n${correctionString}`;
     returnString += `\nMines: ${mines}`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray, flags: messageFlags });
 };
 
 // Integer options

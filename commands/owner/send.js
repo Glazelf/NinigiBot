@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
@@ -12,12 +13,12 @@ import isOwner from "../../util/discord/perms/isOwner.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+
     // Split off command
     let messageContent = interaction.options.getString("content");
     let userIDArg = interaction.options.getString("user-id");

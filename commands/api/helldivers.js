@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -18,14 +19,11 @@ const api = "https://helldiverstrainingmanual.com/api/v1/";
 const liberationString = "Liberation";
 const defenseString = "Defense";
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
     // Can be split off to only proc on successfull data retrievals but this is cleaner for now. 
     // This command isn't popular anyways
     let campaignStatus = await axios.get(`${api}war/campaign`);
-
-    await interaction.deferReply({ ephemeral: ephemeral });
     let helldiversEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
 
@@ -85,7 +83,7 @@ export default async (interaction, ephemeral) => {
             helldiversEmbed.setTitle("Campaign Status");
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: helldiversEmbed, flags: messageFlags });
 };
 
 // String options

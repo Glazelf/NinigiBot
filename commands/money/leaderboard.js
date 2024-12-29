@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -9,10 +10,8 @@ import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     const money_db = await getUsersRankedByMoney();
     const leaderboardEmbed = new EmbedBuilder()
@@ -50,7 +49,7 @@ export default async (interaction, ephemeral) => {
                 .setThumbnail(icon);
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, flags: messageFlags });
 };
 
 const leaderboardScopeChoices = [

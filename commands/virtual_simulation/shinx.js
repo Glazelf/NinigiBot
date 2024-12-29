@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -66,11 +67,8 @@ const colors = [
     'purple'
 ];
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     // Every subcommand here except maybe "play" should be accessible in DMs honestly but I don't feel like rewriting them significantly for now to actually allow for that
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-
     let shinx, res, time, canvas, ctx, img;
     let returnString = "";
     let messageFile = null;
@@ -135,7 +133,7 @@ export default async (interaction, ephemeral) => {
                 ctx.fillRect(467, 413, 245 * exp_struct.curr_percent, 14);
             };
             messageFile = new AttachmentBuilder(canvas.toBuffer());
-            return sendMessage({ interaction: interaction, files: messageFile, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, files: messageFile, flags: messageFlags });
         case "feed":
             // let foodArg = interaction.options.getInteger("food");
             res = await feedShinx(master.id);
@@ -189,7 +187,7 @@ export default async (interaction, ephemeral) => {
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
                     break;
             };
-            return sendMessage({ interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok') });
+            return sendMessage({ interaction: interaction, content: returnString, files: messageFile, flags: messageFlags || (res != 'Ok') });
         case "play":
             shinx = await getShinx(master.id);
             canvas = Canvas.createCanvas(578, 398);
@@ -237,7 +235,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 content: `${formatName(shinx.nickname)} ${reactionPlay[0]}`,
                 files: messageFile,
-                ephemeral: ephemeral
+                flags: messageFlags
             });
         case "talk":
             shinx = await getShinx(master.id);
@@ -261,7 +259,7 @@ export default async (interaction, ephemeral) => {
 
             messageFile = new AttachmentBuilder(canvas.toBuffer());
             shinx.addExperienceAndUnfeed(50, 1);
-            return sendMessage({ interaction: interaction, content: `${formatName(shinx.nickname)} ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: `${formatName(shinx.nickname)} ${conversation.quote}`, files: messageFile, flags: messageFlags });
         case "nickname":
             let new_nick = interaction.options.getString("nickname").trim();
             res = await nameShinx(master.id, new_nick);
@@ -297,7 +295,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 content: returnString,
                 files: messageFile,
-                ephemeral: ephemeral || (res != 'Ok')
+                flags: messageFlags || (res != 'Ok')
             });
         case "shiny":
             // This command is currently broken due to missing checks to see if user has Shiny Charm and possibly broken level-up rewards
@@ -321,20 +319,20 @@ export default async (interaction, ephemeral) => {
                 returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                 messageFile = null;
             };
-            return sendMessage({ interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != true) });
+            return sendMessage({ interaction: interaction, content: returnString, files: messageFile, flags: messageFlags || (res != true) });
         case "buyfood":
             ephemeral = true;
             let amountArg = interaction.options.getInteger("amount");
             res = await buyFood(master.id, amountArg);
             returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
-            return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
+            return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags || res != true });
         case "autofeed":
             ephemeral = true;
             let modeNumber = interaction.options.getInteger("mode");
             res = await changeAutoFeed(master.id, modeNumber);
             let modeString = autoFeedModes[modeNumber].name;
             returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
-            return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
+            return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags || res != true });
         case "release":
             let confirm = false
             let confirmArg = interaction.options.getBoolean("confirm");
@@ -358,7 +356,7 @@ export default async (interaction, ephemeral) => {
                 shinxes.push(new ShinxBattle(trainers[i], shinx));
             };
             ephemeral = false;
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
             const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
             canvas = Canvas.createCanvas(240, 71);

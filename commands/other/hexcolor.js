@@ -11,10 +11,7 @@ import PImage from "pureimage";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-
+export default async (interaction, messageFlags) => {
     let hexInput = interaction.options.getString("hex");
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
@@ -36,7 +33,7 @@ export default async (interaction, ephemeral) => {
         .setColor(hexInput)
         .setTitle(hexInput)
         .setImage(`attachment://${attachment.name}`);
-    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], flags: messageFlags });
 };
 
 function hexToRgb(hex) {

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     codeBlock,
     AttachmentBuilder,
@@ -20,16 +21,14 @@ import {
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let trophy_name = interaction.options.getString("name");
     let messageFile = null;
-    let res;
     let embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let returnString = '';
-    let canvas, ctx, img, shinx;
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    let canvas, ctx, img, shinx, res;
+
     let master = interaction.user;
     let trophies;
     const commands = await interaction.client.application.commands.fetch();
@@ -60,7 +59,7 @@ export default async (interaction, ephemeral) => {
             return sendMessage({
                 interaction: interaction,
                 embeds: [embed],
-                ephemeral: ephemeral
+                flags: messageFlags
             });
         case "buy":
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
@@ -96,7 +95,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 content: returnString,
                 files: messageFile,
-                ephemeral: ephemeral || (res != 'Ok')
+                flags: messageFlags || (res != 'Ok')
             });
         case "list":
             let trophy_slice = await getTrophyEmbedSlice(0);
@@ -104,7 +103,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 embeds: [trophy_slice.embed],
                 components: trophy_slice.components,
-                ephemeral: ephemeral,
+                flags: messageFlags,
             });
         case "info":
             res = await getShopTrophyWithName(trophy_name);
@@ -119,7 +118,7 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({
                     interaction: interaction,
                     content: infoNoResString,
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 });
             } else {
                 embed
@@ -134,7 +133,7 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({
                     interaction: interaction,
                     embeds: [embed],
-                    ephemeral: ephemeral
+                    flags: messageFlags
                 });
             };
     };

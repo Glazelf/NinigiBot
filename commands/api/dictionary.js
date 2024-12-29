@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     SlashCommandBuilder,
     EmbedBuilder,
     SlashCommandStringOption,
@@ -12,10 +13,8 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const api = "https://api.dictionaryapi.dev/api/v2/";
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
@@ -36,7 +35,7 @@ export default async (interaction, ephemeral) => {
             .setColor(globalVars.embedColorError)
             .setTitle("Error")
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
-        return sendMessage({ interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: errorEmbed, flags: messageFlags });
     };
 
     let wordMeaning;
@@ -86,7 +85,7 @@ export default async (interaction, ephemeral) => {
         .setTitle(`${wordStatusTitle}, ${wordType}`)
         .setURL(wordSourceUrls[0]);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
-    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, flags: messageFlags });
 };
 
 const wordTypeChoices = [

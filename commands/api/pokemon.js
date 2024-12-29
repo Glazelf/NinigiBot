@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -35,10 +36,7 @@ const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
 
-export default async (interaction, ephemeral) => {
-    // Command settings
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     // Bools
     let learnsetBool = false;
     let shinyBool = false;
@@ -89,7 +87,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(abilityFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -129,7 +127,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(itemFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -165,7 +163,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(moveFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
             };
 
             let moveLearnPool = [];
@@ -330,7 +328,7 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed.setTitle(learnAuthor);
             break;
         case "usage":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let formatInput = interaction.options.getString("format");
             // There's a LOT of inconsistencies between the format names in Showdown and https://www.smogon.com/stats/
             if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
@@ -453,7 +451,7 @@ export default async (interaction, ephemeral) => {
             break;
         // Who's That Pokémon quiz
         case "whosthat":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let allowedPokemonList = allPokemon;
             if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
             allowedPokemonList = allowedPokemonList.filter(pokemon =>
@@ -565,7 +563,7 @@ export default async (interaction, ephemeral) => {
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, flags: messageFlags });
 };
 
 function getLearnData(learnData) {

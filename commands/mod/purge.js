@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
@@ -16,14 +17,11 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ManageMessages;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    let resultMessage = await interaction.deferReply({ ephemeral: ephemeral, fetchReply: true });
-
+    let resultMessage = await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral), fetchReply: true });
     let returnString = "";
     let amount = interaction.options.getInteger("amount");
     // Get users

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     ContextMenuCommandBuilder,
     ApplicationCommandType,
     ActionRowBuilder,
@@ -7,15 +8,14 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction) => {
     let message = interaction.options._hoistedOptions[0].message;
     let input = message.content;
     let questionAskUser = message.author;
     // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
     if (interaction) message = interaction;
 
-    if (input.length < 1) return sendMessage({ interaction: interaction, content: "You can only use this on messages that contain text." });
+    if (input.length < 1) return sendMessage({ interaction: interaction, content: "You can only use this on messages that contain text.", flags: [MessageFlags.Ephemeral] });
 
     let question = input.normalize("NFD");
     let googleLink = `https://www.google.com/search?q=${encodeURIComponent(question)}`;
@@ -32,7 +32,7 @@ export default async (interaction, ephemeral) => {
 
     let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -19,10 +20,7 @@ const catAPI = "https://cataas.com/cat";
 const foxAPI = "https://randomfox.ca/floof/";
 const errorAPI = "An error occurred with the API. Please try again later.";
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-
+export default async (interaction, messageFlags) => {
     let randomEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
@@ -36,7 +34,7 @@ export default async (interaction, ephemeral) => {
                 .setFooter({ text: `Min: ${lowNumber}\nMax: ${highNumber}` });
             break;
         case "cat":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let catText = interaction.options.getString("caption");
             let standardCatText = "Meow";
             if (!catText) catText = standardCatText;
@@ -57,12 +55,12 @@ export default async (interaction, ephemeral) => {
                 .setFooter({ text: `"${catText}" -${catName}` });
             break;
         case "fox":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let foxResponse = await axios.get(foxAPI);
             randomEmbed.setImage(foxResponse.data.image);
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: randomEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: randomEmbed, flags: messageFlags });
 };
 
 // String options
