@@ -84,7 +84,7 @@ export default async (interaction, messageFlags) => {
     };
     // Handle API errors
     if (apiError) {
-        messageFlags.push(MessageFlags.Ephemeral);
+        messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
             .setColor(globalVars.embedColorError)
