@@ -1,4 +1,10 @@
-export default async ({ interaction, content = null, embeds = null, files = null, flags = [], components = null }) => {
+import {
+    MessageFlags,
+    MessageFlagsBitField
+} from "discord.js";
+
+// Flags is null instead of empty MessageFlagsBitField to differentiate between passing nothing (ephemeral) and purposefully passing no ephemeral flag
+export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = null }) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject = {};
@@ -28,7 +34,11 @@ export default async ({ interaction, content = null, embeds = null, files = null
             };
         };
     };
-    messageObject['flags'] = [...new Set(flags)]; // Remove duplicates
+    if (!flags) {
+        flags = new MessageFlagsBitField;
+        flags.add(MessageFlags.Ephemeral);
+    };
+    messageObject['flags'] = flags;
     messageObject['allowedMentions'] = { parse: ['users', 'roles'], repliedUser: true };
     // let targetUser = interaction.options.getUser("user");
     // if (targetUser) messageObject['allowedMentions'] = { users: [targetUser.id] };
