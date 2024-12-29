@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -16,7 +17,7 @@ const embedCharacterLimit = 6000;
 const descCharacterLimit = 1024;
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ flags: messageFlags });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let response;
     let error200ReturnString = `Error occurred, make sure that your input is valid and exists.`;

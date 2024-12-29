@@ -18,7 +18,6 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
 export default async (interaction, messageFlags) => {
-    // await interaction.deferReply({ flags: messageFlags });
     let oak = interaction.options.getString("oak");
     let apiError = null;
     let btd6Embed = new EmbedBuilder()
@@ -73,7 +72,7 @@ export default async (interaction, messageFlags) => {
                 ]);
             break;
         case "boss-event":
-            await interaction.deferReply({ flags: messageFlags });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;

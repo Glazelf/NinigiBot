@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -19,12 +20,10 @@ const liberationString = "Liberation";
 const defenseString = "Defense";
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ flags: messageFlags });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
     // Can be split off to only proc on successfull data retrievals but this is cleaner for now. 
     // This command isn't popular anyways
     let campaignStatus = await axios.get(`${api}war/campaign`);
-
-    await interaction.deferReply({ flags: messageFlags });
     let helldiversEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
 

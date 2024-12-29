@@ -328,7 +328,7 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed.setTitle(learnAuthor);
             break;
         case "usage":
-            await interaction.deferReply({ flags: messageFlags });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let formatInput = interaction.options.getString("format");
             // There's a LOT of inconsistencies between the format names in Showdown and https://www.smogon.com/stats/
             if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
@@ -451,7 +451,7 @@ export default async (interaction, messageFlags) => {
             break;
         // Who's That Pokémon quiz
         case "whosthat":
-            await interaction.deferReply({ flags: messageFlags });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let allowedPokemonList = allPokemon;
             if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
             allowedPokemonList = allowedPokemonList.filter(pokemon =>

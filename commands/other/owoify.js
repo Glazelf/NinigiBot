@@ -1,8 +1,9 @@
 import {
-    codeBlock,
+    MessageFlags,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    codeBlock
 } from "discord.js";
 import owoify from "owoify-js";
 import sendMessage from "../../util/sendMessage.js";
@@ -10,7 +11,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
     // TODO: Sanitize input somehow
-    await interaction.deferReply({ flags: messageFlags });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let input = interaction.options.getString("input");
     let severity = interaction.options.getString("severity");

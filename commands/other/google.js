@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     ContextMenuCommandBuilder,
     ApplicationCommandType,
     ActionRowBuilder,
@@ -14,7 +15,7 @@ export default async (interaction) => {
     // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
     if (interaction) message = interaction;
 
-    if (input.length < 1) return sendMessage({ interaction: interaction, content: "You can only use this on messages that contain text." });
+    if (input.length < 1) return sendMessage({ interaction: interaction, content: "You can only use this on messages that contain text.", flags: [MessageFlags.Ephemeral] });
 
     let question = input.normalize("NFD");
     let googleLink = `https://www.google.com/search?q=${encodeURIComponent(question)}`;

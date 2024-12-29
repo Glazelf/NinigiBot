@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -355,7 +356,7 @@ export default async (interaction, messageFlags) => {
                 shinxes.push(new ShinxBattle(trainers[i], shinx));
             };
             ephemeral = false;
-            await interaction.deferReply({ flags: messageFlags });
+            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
             const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
             canvas = Canvas.createCanvas(240, 71);

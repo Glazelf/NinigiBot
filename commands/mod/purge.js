@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
@@ -20,7 +21,7 @@ export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    let resultMessage = await interaction.deferReply({ flags: messageFlags, fetchReply: true });
+    let resultMessage = await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral), fetchReply: true });
     let returnString = "";
     let amount = interaction.options.getInteger("amount");
     // Get users

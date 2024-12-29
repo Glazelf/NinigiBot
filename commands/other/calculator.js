@@ -1,8 +1,9 @@
 import {
-    codeBlock,
+    MessageFlags,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
+    codeBlock,
     hyperlink,
     hideLinkEmbed
 } from "discord.js";
@@ -27,7 +28,7 @@ const sanitizeValues = [
 ];
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ flags: messageFlags });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let input = interaction.options.getString("input");
     // Sanitize input

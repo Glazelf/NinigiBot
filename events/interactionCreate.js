@@ -2,6 +2,7 @@
 import {
     InteractionType,
     MessageFlags,
+    MessageFlagsBitField,
     ComponentType,
     ActionRowBuilder,
     EmbedBuilder,
@@ -116,20 +117,17 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
-                    let messageFlags = [];
+                    let messageFlags = new MessageFlagsBitField;
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                     switch (interaction.options.getBoolean("ephemeral")) {
                         case true:
-                            if (!messageFlags.includes(MessageFlags.Ephemeral)) messageFlags.push(MessageFlags.Ephemeral);
+                            messageFlags.add(MessageFlags.Ephemeral);
                             break;
                         case false:
-                            let ephemeralFlagIndex = messageFlags.indexOf(MessageFlags.Ephemeral);
-                            while (ephemeralFlagIndex !== -1) {
-                                messageFlags.splice(ephemeralFlagIndex, 1);
-                            };
+                            messageFlags.remove(MessageFlags.Ephemeral);
                             break;
                         default:
-                            if (ephemeralDefault !== false) messageFlags.push(MessageFlags.Ephemeral);
+                            if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     }
                     await cmd.default(interaction, messageFlags);
