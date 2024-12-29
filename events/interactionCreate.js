@@ -954,7 +954,9 @@ export default async (client, interaction) => {
 
                         if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
-                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
+                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch(e => {
+                                return sendMessage({ interaction: interaction, content: "You won but editing the original message failed.", embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components, flags: messageFlags.add(MessageFlags.Ephemeral) })
+                            })
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, flags: messageFlags });
                         };
