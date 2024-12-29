@@ -1,7 +1,8 @@
 import {
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandStringOption
+    SlashCommandStringOption,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
@@ -18,15 +19,15 @@ export default async (interaction) => {
 
     let commands = await interaction.client.application.commands.fetch();
     let command = commands.find(c => c.name === interactionName);
-    if (!command) return sendMessage({ interaction: interaction, content: `Command \`${interactionName}\` not found.` });
+    if (!command) return sendMessage({ interaction: interaction, content: `Command ${inlineCode(interactionName)} not found.` });
 
     try {
         await interaction.client.application.commands.delete(command.id, guildID);
     } catch (e) {
         // console.log();
-        return sendMessage({ interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
+        return sendMessage({ interaction: interaction, content: `Failed to delete ${inlineCode(interactionName)}.` });
     };
-    return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
+    return sendMessage({ interaction: interaction, content: `Deleted interaction ${inlineCode(interactionName)}.` });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

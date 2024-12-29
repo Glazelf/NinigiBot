@@ -4,7 +4,8 @@ import {
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -28,7 +29,7 @@ export default async (interaction) => {
     let usernameFormatted = formatName(user.username);
     let executorNameFormatted = formatName(interaction.user.username);
 
-    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
+    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     // Check permissions
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;

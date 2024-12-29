@@ -9,7 +9,8 @@ import {
     ButtonStyle,
     ModalBuilder,
     TextInputBuilder,
-    TextInputStyle
+    TextInputStyle,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
 axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
@@ -45,12 +46,13 @@ import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
 import createBoard from "../util/minesweeper/createBoard.js";
 import getMatrixString from "../util/minesweeper/getMatrixString.js";
+import revealSafeTile from "../util/minesweeper/revealSafeTile.js";
 // Database
 import {
     getEphemeralDefault,
-    addMoney,
     getMoney
 } from "../database/dbServices/user.api.js";
+import rewardMoney from "../util/db/rewardMoney.js";
 import {
     getShopTrophies,
     getEventTrophies,
@@ -62,6 +64,7 @@ import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 import normalizeString from "../util/string/normalizeString.js";
+import formatName from "../util/discord/formatName.js";
 
 // Pokémon
 const gens = new Generations(Dex);
@@ -146,6 +149,7 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
+                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: [MessageFlags.Ephemeral] };
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
@@ -153,8 +157,9 @@ export default async (client, interaction) => {
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
+                            if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
                             contentReturn = pkmQuizRevealMessageObject.content;
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
                             filesReturn = pkmQuizRevealMessageObject.files;
@@ -257,12 +262,11 @@ export default async (client, interaction) => {
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, flags: [MessageFlags.Ephemeral] });
-
+                            if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
-                            let bombEmoji = "💣";
-                            let spoilerEmoji = "⬛";
+                            const bombEmoji = "💣";
+                            const spoilerEmoji = "⬛";
                             let matrix = null;
                             let mineRows = minesweeperComponentsCopy.length; // Count rows by counting action rows
                             let mineColumns = minesweeperComponentsCopy[0].components.length; // Count columns by counting buttons in the first row
@@ -303,10 +307,7 @@ export default async (client, interaction) => {
                                                 columnIndex = 6;
                                             };
                                         };
-                                        buttonCopy
-                                            .setStyle(ButtonStyle.Success)
-                                            .setEmoji(buttonEmoji)
-                                            .setDisabled(true);
+                                        revealSafeTile(buttonCopy, buttonEmoji);
                                         if (buttonEmoji == bombEmoji) {
                                             buttonCopy.setStyle(ButtonStyle.Danger);
                                             isLossState = true;
@@ -341,7 +342,8 @@ export default async (client, interaction) => {
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
+                                // Bet doesn't need to be subtracted, this is already done when setting up the bet
+                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
@@ -351,8 +353,10 @@ export default async (client, interaction) => {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
-                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.\nYour current balance is ${currentBalance + moneyPrize}${globalVars.currency}.\n${matrixString}`;
-                                addMoney(interaction.user.id, moneyPrize);
+                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.`;
+                                let rewardDataMinesweeper = await rewardMoney({ application: interaction.client.application, userID: interaction.user.id, reward: moneyPrize });
+                                if (rewardDataMinesweeper.isSubscriber) contentReturn += `\nYou ${rewardDataMinesweeper.rewardString}`;
+                                contentReturn += `\nYour current balance is ${currentBalance + rewardDataMinesweeper.reward}${globalVars.currency}.\n${matrixString}`;
                             } else {
                                 contentReturn = interaction.message.content;
                             };
@@ -424,7 +428,7 @@ export default async (client, interaction) => {
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        roleSelectReturnString += `✅ You no longer have ${role}!\n`
+                                        roleSelectReturnString += `✅ You no longer have ${role}!\n`;
                                     } else {
                                         await interaction.member.roles.add(role);
                                         roleSelectReturnString += `✅ You now have ${role}!\n`;
@@ -465,10 +469,10 @@ export default async (client, interaction) => {
                         let balanceQuarter = Math.floor(currentBalance / 4);
                         let balanceTenth = Math.floor(currentBalance / 10);
                         let balanceRandom = randomNumber(1, currentBalance);
-                        choices.push({ name: `10% (${balanceTenth}${globalVars.currency})`, value: balanceTenth });
-                        choices.push({ name: `Quarter (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
-                        choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
-                        choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
+                        if (balanceTenth > 0) choices.push({ name: `10% (${balanceTenth}${globalVars.currency})`, value: balanceTenth });
+                        if (balanceQuarter > 0) choices.push({ name: `25% (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
+                        if (balanceHalf > 0) choices.push({ name: `50% (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
+                        if (balanceHalf > 0) choices.push({ name: `100% (${currentBalance}${globalVars.currency}}`, value: currentBalance });
                         // Only add random if there is money, due to way randomization works result can be 1 while balance is 0
                         if (currentBalance > 0) choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
                 };
@@ -927,8 +931,12 @@ export default async (client, interaction) => {
                             .setDescription(modMailDescription)
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
+                        let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
-                        return sendMessage({ interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
+                            .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
+                            .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
+                        return sendMessage({ interaction: interaction, content: modmailReturnString });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: [MessageFlags.Ephemeral] });
@@ -940,13 +948,16 @@ export default async (client, interaction) => {
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
+                        // Getting from dex allows aliases
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+                        // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
+                        const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
 
-                        if (normalizeString(pkmQuizModalGuess) == normalizeString(pkmQuizCorrectAnswer)) {
-                            let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                        if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
-                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
+                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
                         break;
                 };

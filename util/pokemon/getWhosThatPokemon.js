@@ -13,12 +13,12 @@ import { Dex as DexSim } from '@pkmn/sim';
 import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
-import { addMoney } from "../../database/dbServices/user.api.js";
+import rewardMoney from "../db/rewardMoney.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 // Winner = person who ended the game, either through reveal or guessing correctly
-export default async ({ pokemonList, winner, pokemon, reveal }) => {
+export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => {
     let messageObject = {};
     let pokemonButtons = new ActionRowBuilder();
     let doesRenderExist = false;
@@ -50,10 +50,11 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         } else {
             // Format winning message update for correct guess
             let pkmQuizPrize = 10;
-            quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
-            addMoney(winner.id, pkmQuizPrize);
+            quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}.`;
+            let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: pkmQuizPrize });
+            if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
-        quizDescription += `\nThe answer was ${bold(pokemon.name)}!`;
+        quizDescription += `\nThe answer was ${bold(pokemon.name)}.`;
         messageObject.files = [];
         messageObject.components = [];
     } else {

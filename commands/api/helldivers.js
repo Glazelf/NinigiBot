@@ -20,7 +20,11 @@ const defenseString = "Defense";
 
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
-    let campaignStatus = null;
+    // Can be split off to only proc on successfull data retrievals but this is cleaner for now. 
+    // This command isn't popular anyways
+    let campaignStatus = await axios.get(`${api}war/campaign`);
+
+    await interaction.deferReply({ flags: messageFlags });
     let helldiversEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
 
@@ -29,13 +33,12 @@ export default async (interaction, messageFlags) => {
             let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
-            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString(value.name == normalizeString(inputPlanet)));
+            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString(value.name) == normalizeString(inputPlanet));
             if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
             let planetIndex = planetObject[0];
             planetObject = planetObject[1];
             let planetSector = `${planetObject.sector} Sector`;
             // Campaign status data is of all planets, so always requested and then checked if requested planet is in the data
-            campaignStatus = await axios.get(`${api}war/campaign`);
             let campaignStatusPlanet = campaignStatus.data.find(planet => planet.planetIndex == planetIndex);
             let campaignStatusString = "";
             if (campaignStatusPlanet) {
@@ -63,7 +66,6 @@ export default async (interaction, messageFlags) => {
             if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
             break;
         case "campaign":
-            campaignStatus = await axios.get(`${api}war/campaign`);
             campaignStatus = campaignStatus.data;
             await campaignStatus.forEach(async planet => {
                 let planetStatusTitle = planet.name;
@@ -72,7 +74,12 @@ export default async (interaction, messageFlags) => {
                 if (planet.defense == true) planetStatusString = planetStatusString.replace(liberationString, defenseString);
                 planetStatusString += `\nProgress: ${Math.round(planet.percentage * 100) / 100}%\nHelldivers: ${planet.players}`;
                 if (planet.expireDateTime) planetStatusString += `\nWithdrawal ${time(Math.floor(planet.expireDateTime), TimestampStyles.RelativeTime)}`;
-                helldiversEmbed.addFields([{ name: `${planet.name}`, value: planetStatusString, inline: true }]);
+                // Only add field if there are no fields or fields are under 25
+                if (!helldiversEmbed.data.fields || helldiversEmbed.data.fields.length < 25) {
+                    helldiversEmbed.addFields([{ name: `${planet.name}`, value: planetStatusString, inline: true }]);
+                } else {
+                    helldiversEmbed.setFooter({ text: "More planets are currently available but could not fit in this embed." });
+                };
             });
             helldiversEmbed.setTitle("Campaign Status");
             break;

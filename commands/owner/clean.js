@@ -2,7 +2,8 @@ import {
     MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
@@ -13,7 +14,7 @@ export default async (interaction) => {
     let confirm = false;
     let confirmArg = interaction.options.getBoolean("confirm");
     if (confirmArg === true) confirm = confirmArg;
-    if (!confirm) return sendMessage({ interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, flags: [MessageFlags.Ephemeral] });
+    if (!confirm) return sendMessage({ interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the ${inlineCode("confirm")} option for this command to ${inlineCode("true")} if you're sure.`, flags: [MessageFlags.Ephemeral] });
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 

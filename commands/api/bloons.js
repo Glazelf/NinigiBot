@@ -126,13 +126,13 @@ const bossEventSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("See current boss event.")
     .addBooleanOption(ephemeralOption);
 // Subcommand groups
-const btd6SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
-    .setName("6")
-    .setDescription("BTD6")
+const td6SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("td6")
+    .setDescription("Shows Bloons Tower Defense 6 data.")
     .addSubcommand(userSubcommand)
     .addSubcommand(bossEventSubcommand);
 // Final command
 export const commandObject = new SlashCommandBuilder()
-    .setName("btd")
-    .setDescription("Shows Bloons Tower Defense data.")
-    .addSubcommandGroup(btd6SubcommandGroup);
+    .setName("bloons")
+    .setDescription("Shows Bloons data.")
+    .addSubcommandGroup(td6SubcommandGroup);

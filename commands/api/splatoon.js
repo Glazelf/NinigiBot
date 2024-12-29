@@ -5,7 +5,6 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
-    ApplicationIntegrationType,
     bold,
     time,
     TimestampStyles
@@ -15,6 +14,7 @@ import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/math/randomNumber.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
 import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
@@ -458,7 +458,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "splashtag-random":
             let userTitle = interaction.user.displayName;
-            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) userTitle = interaction.member.displayName;
+            if (isGuildDataAvailable(interaction)) userTitle = interaction.member.displayName;
 
             let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];

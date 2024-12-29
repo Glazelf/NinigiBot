@@ -8,8 +8,10 @@ import {
 import logger from "../util/logger.js";
 import normalizeString from "../util/string/normalizeString.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import { addMoney } from "../database/dbServices/user.api.js";
-
+import {
+    getMoney,
+    addMoney
+} from "../database/dbServices/user.api.js";
 
 const talkedRecently = new Set();
 
@@ -53,11 +55,16 @@ export default async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-                addMoney(message.member.id, 1);
-                talkedRecently.add(message.member.id);
-                setTimeout(() => {
-                    if (message.member) talkedRecently.delete(message.member.id);
-                }, 60000);
+                const currentBalance = await getMoney(message.member.id);
+                // Cap money earned from just talking to avoid leaderboard creep from people who don't interact with the bot
+                // Avoid using return in case more logic needs to be added below currency addition
+                if (currentBalance <= 1000) {
+                    addMoney(message.member.id, 1);
+                    talkedRecently.add(message.member.id);
+                    setTimeout(() => {
+                        if (message.member) talkedRecently.delete(message.member.id);
+                    }, 60000);
+                };
             };
         };
         return;

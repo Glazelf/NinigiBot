@@ -4,7 +4,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -19,8 +20,7 @@ export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-    await interaction.deferReply({ flags: messageFlags });
-
+    let resultMessage = await interaction.deferReply({ flags: messageFlags, fetchReply: true });
     let returnString = "";
     let amount = interaction.options.getInteger("amount");
     // Get users
@@ -28,39 +28,34 @@ export default async (interaction, messageFlags) => {
     let userArg = interaction.options.getUser("user");
     if (userArg) user = userArg;
 
-    let deleteFailString = `An error occurred while bulk deleting. I probably lack the \`${requiredPermissionName}\` permission.`;
+    let deleteFailString = `An error occurred while bulk deleting. Make sure that I have the ${inlineCode(requiredPermissionName)} permission.`;
     let missingMessagesString = `\nSome messages were not deleted, probably because they were older than 2 weeks.`;
     // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
-    if (user) {
-        try {
-            let messagesAll = await interaction.channel.messages.fetch({ limit: amount });
-            let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
-            let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
+    try {
+        let messagesAll = await interaction.channel.messages.fetch({ limit: amount });
+        if (user) {
+            let messagesFilteredUser = await messagesAll.filter(message => message.author.id == user.id && message.id !== resultMessage.id);
+            let messages = Object.values(Object.fromEntries(messagesFilteredUser)).slice(0, amount);
             await interaction.channel.bulkDelete(messages, [true])
                 .then(messagesDeleted => {
                     returnString = `Deleted ${messagesDeleted.size} messages from ${formatName(user.username)} within the last ${amount} messages.`;
                     if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                    sendMessage({ interaction: interaction, content: returnString });
+                    return sendMessage({ interaction: interaction, content: returnString });
                 });
             return;
-        } catch (e) {
-            // console.log(e);
-            return sendMessage({ interaction: interaction, content: deleteFailString });
-        };
-    } else {
-        try {
-            let messages = await interaction.channel.messages.fetch({ limit: amount });
-            await interaction.channel.bulkDelete(messages, [true])
+        } else {
+            let messagesFiltered = await messagesAll.filter(message => message.id !== resultMessage.id);
+            await interaction.channel.bulkDelete(messagesFiltered, [true])
                 .then(messagesDeleted => {
                     returnString = `Deleted ${messagesDeleted.size} messages.`;
                     if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                    sendMessage({ interaction: interaction, content: returnString });
+                    return sendMessage({ interaction: interaction, content: returnString });
                 });
             return;
-        } catch (e) {
-            // console.log(e);
-            return interaction.channel.send({ content: deleteFailString });
         };
+    } catch (e) {
+        // console.log(e);
+        return sendMessage({ interaction: interaction, content: deleteFailString });
     };
 };
 

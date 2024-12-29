@@ -3,12 +3,12 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ApplicationIntegrationType,
     time,
     TimestampStyles
 } from "discord.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
+import isGuildDataAvailable from "../discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const number_of_pages = 2;
@@ -17,7 +17,7 @@ const nitroBoostEmojiName = "DiscordNitroBoost";
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
-    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    let guildDataAvailable = isGuildDataAvailable(interaction);
     if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;

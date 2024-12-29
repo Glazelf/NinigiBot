@@ -79,15 +79,16 @@ export default async ({ elite = false, emojis }) => {
         `Starting Cash: ${bossEventMetadata.startingCash}`,
         `Max Paragons: ${bossEventMetadata.maxParagons}`
     ];
-    if (bossEventMetadata.abilityCooldownReductionMultiplier !== 1) rulesArray.push(`Ability Cooldowns: ${bossEventMetadata.abilityCooldownReductionMultiplier * 100}%`);
-    if (bossEventMetadata.removeableCostMultiplier !== 1) rulesArray.push(`Removeables Cost: ${bossEventMetadata.removeableCostMultiplier * 100}%`);
-    if (bossEventMetadata._bloonModifiers.healthMultipliers.bloons !== 1) rulesArray.push(`Bloon Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.bloons * 100}%`);
-    if (bossEventMetadata._bloonModifiers.speedMultiplier !== 1) rulesArray.push(`Bloon Speed: ${bossEventMetadata._bloonModifiers.speedMultiplier * 100}%`);
-    if (bossEventMetadata._bloonModifiers.healthMultipliers.moabs !== 1) rulesArray.push(`MOAB Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.moabs * 100}%`);
-    if (bossEventMetadata._bloonModifiers.moabSpeedMultiplier !== 1) rulesArray.push(`MOAB Speed: ${bossEventMetadata._bloonModifiers.moabSpeedMultiplier * 100}%`);
-    if (bossEventMetadata._bloonModifiers.healthMultipliers.boss !== 1) rulesArray.push(`Boss Health: ${bossEventMetadata._bloonModifiers.healthMultipliers.boss * 100}%`);
-    if (bossEventMetadata._bloonModifiers.bossSpeedMultiplier !== 1) rulesArray.push(`Boss Speed: ${bossEventMetadata._bloonModifiers.bossSpeedMultiplier * 100}%`);
-    if (bossEventMetadata._bloonModifiers.regrowRateMultiplier !== 1) rulesArray.push(`Regrow Rate: ${bossEventMetadata._bloonModifiers.regrowRateMultiplier * 100}%`);
+    // Math.round() is to avoid JS floating point errors
+    if (bossEventMetadata.abilityCooldownReductionMultiplier !== 1) rulesArray.push(`Ability Cooldowns: ${Math.round(bossEventMetadata.abilityCooldownReductionMultiplier * 100)}%`);
+    if (bossEventMetadata.removeableCostMultiplier !== 1) rulesArray.push(`Removeables Cost: ${Math.round(bossEventMetadata.removeableCostMultiplier * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.healthMultipliers.bloons !== 1) rulesArray.push(`Bloon Health: ${Math.round(bossEventMetadata._bloonModifiers.healthMultipliers.bloons * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.speedMultiplier !== 1) rulesArray.push(`Bloon Speed: ${Math.round(bossEventMetadata._bloonModifiers.speedMultiplier * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.healthMultipliers.moabs !== 1) rulesArray.push(`MOAB Health: ${Math.round(bossEventMetadata._bloonModifiers.healthMultipliers.moabs * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.moabSpeedMultiplier !== 1) rulesArray.push(`MOAB Speed: ${Math.round(bossEventMetadata._bloonModifiers.moabSpeedMultiplier * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.healthMultipliers.boss !== 1) rulesArray.push(`Boss Health: ${Math.round(bossEventMetadata._bloonModifiers.healthMultipliers.boss * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.bossSpeedMultiplier !== 1) rulesArray.push(`Boss Speed: ${Math.round(bossEventMetadata._bloonModifiers.bossSpeedMultiplier * 100)}%`);
+    if (bossEventMetadata._bloonModifiers.regrowRateMultiplier !== 1) rulesArray.push(`Regrow Rate: ${Math.round(bossEventMetadata._bloonModifiers.regrowRateMultiplier * 100)}%`);
     if (bossEventMetadata._bloonModifiers.allCamo) rulesArray.push(`All bloons are camo.`);
     if (bossEventMetadata._bloonModifiers.allRegen) rulesArray.push(`All bloons are regen.`);
     let rulesString = rulesArray.join("\n");

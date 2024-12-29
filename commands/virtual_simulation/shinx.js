@@ -1,5 +1,4 @@
 import {
-    ApplicationIntegrationType,
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -10,7 +9,8 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption,
     SlashCommandBooleanOption,
-    bold
+    bold,
+    inlineCode
 } from "discord.js";
 import Canvas from "canvas";
 import axios from "axios";
@@ -19,6 +19,7 @@ import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import {
     getShinx,
     getRandomShinx,
@@ -72,7 +73,7 @@ export default async (interaction, messageFlags) => {
     let messageFile = null;
     // Only create userFinder if guild data exists
     let userFinder = null;
-    let guildDataAvailable = (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
+    let guildDataAvailable = isGuildDataAvailable(interaction);
     if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
     const now = new Date();
@@ -335,7 +336,7 @@ export default async (interaction, messageFlags) => {
             let confirm = false
             let confirmArg = interaction.options.getBoolean("confirm");
             if (confirmArg === true) confirm = confirmArg;
-            if (!confirm) return sendMessage({ interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+            if (!confirm) return sendMessage({ interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the ${inlineCode("confirm")} option for this command to ${inlineCode("true")} if you're sure.` });
             shinx = await getShinx(master.id);
             let shinxNickname = shinx.nickname;
             await shinx.destroy();

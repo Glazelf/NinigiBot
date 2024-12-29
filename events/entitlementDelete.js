@@ -2,7 +2,7 @@ import {
     EmbedBuilder
 } from "discord.js";
 import logger from "../util/logger.js";
-import deletePersonalRole from "../util/deletePersonalRole.js";
+import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -10,7 +10,6 @@ export default async (client, entitlement) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-
 
         let guild = await client.guilds.fetch(globalVars.ShinxServerID);
         if (!guild) return;
