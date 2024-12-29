@@ -56,9 +56,6 @@ export default async (interaction, page, user) => {
     let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            let switchCode = user_db.swcode;
-            let birthday = user_db.birthday;
-            let birthdayParsed = parseDate(birthday);
             // Roles
             let memberRoles = null;
             if (member && guildDataAvailable) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
@@ -114,8 +111,6 @@ export default async (interaction, page, user) => {
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
             };
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
-            if (birthday && birthdayParsed) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
-            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
             profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
@@ -127,6 +122,11 @@ export default async (interaction, page, user) => {
             profileEmbed.setFooter({ text: user.id });
             break;
         case 1:
+            let birthday = user_db.birthday;
+            let birthdayParsed = parseDate(birthday);
+            if (birthday && birthdayParsed) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
+            let switchCode = user_db.swcode;
+            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
@@ -150,7 +150,7 @@ export default async (interaction, page, user) => {
             if (trophy_string.length > 0) {
                 profileEmbed.addFields([
                     { name: "Trophy Level:", value: trophy_level + ' 🔰', inline: true },
-                    { name: "Trophies:", value: trophy_string, inline: true }
+                    { name: "Trophies:", value: trophy_string, inline: false }
                 ]);
             };
             break;
