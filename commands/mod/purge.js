@@ -38,7 +38,6 @@ export default async (interaction, ephemeral) => {
         let messagesAll = await interaction.channel.messages.fetch({ limit: amount });
         if (user) {
             let messagesFilteredUser = await messagesAll.filter(message => message.author.id == user.id && message.id !== resultMessage.id);
-            console.log(messagesFiltered)
             let messages = Object.values(Object.fromEntries(messagesFilteredUser)).slice(0, amount);
             await interaction.channel.bulkDelete(messages, [true])
                 .then(messagesDeleted => {
