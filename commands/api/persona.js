@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -38,7 +39,7 @@ export default async (interaction, messageFlags) => {
         case "persona":
             // TODO: use calculator to calc paths to fuse this monster
             let personaObject = personaMapRoyal[nameInput];
-            if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.` });
+            if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let personaWikiName = nameInput.replace(/ /g, "_");
             if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
             let personaImageFile = `${personaWikiName}_P5R.jpg`;
@@ -68,7 +69,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "skill":
             let skillObject = skillMapRoyal[nameInput];
-            if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
+            if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let skillPersonas = "";
             if (skillObject.unique) {
                 skillPersonas += `${skillObject.unique}: Unique\n`;
@@ -85,7 +86,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "trait":
             let traitObject = skillMapRoyal[nameInput];
-            if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
+            if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let traitPersonas = Object.keys(traitObject.personas).join("\n");
             p5Embed
                 .setTitle(nameInput)
@@ -94,7 +95,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "item":
             let itemObject = itemMapRoyal[nameInput];
-            if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
+            if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             if (itemObject.type && itemObject.description) {
                 p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
             } else if (itemObject.skillCard) {
@@ -102,7 +103,7 @@ export default async (interaction, messageFlags) => {
             };
             p5Embed.setTitle(nameInput);
     };
-    return sendMessage({ interaction: interaction, embeds: p5Embed, flags: messageFlags, components: buttonArray });
+    return sendMessage({ interaction: interaction, embeds: p5Embed, components: buttonArray, flags: messageFlags });
 };
 
 function getWeaknessString(string) {

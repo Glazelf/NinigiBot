@@ -18,10 +18,11 @@ import textChannelTypes from "../../objects/discord/textChannelTypes.json" with 
 
 const requiredPermission = PermissionFlagsBits.ManageGuild;
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();

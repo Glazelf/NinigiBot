@@ -65,13 +65,16 @@ export default async (interaction, messageFlags) => {
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
                 case 'NoTrophy':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `${bold(trophy_name)} isn't available.`;
                     if (trophyCommandId) returnString += `\nTip: check today's stock with </${commandObject.name} stock:${trophyCommandId}>.`;
                     break;
                 case 'HasTrophy':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `You already have ${bold(trophy_name)}!`;
                     break;
                 case 'NoMoney':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `Not enough money for ${bold(trophy_name)}.`;
                     break;
                 case 'Ok':
@@ -95,7 +98,7 @@ export default async (interaction, messageFlags) => {
                 interaction: interaction,
                 content: returnString,
                 files: messageFile,
-                flags: messageFlags || (res != 'Ok')
+                flags: messageFlags
             });
         case "list":
             let trophy_slice = await getTrophyEmbedSlice(0);
@@ -118,7 +121,7 @@ export default async (interaction, messageFlags) => {
                 return sendMessage({
                     interaction: interaction,
                     content: infoNoResString,
-                    flags: [MessageFlags.Ephemeral]
+                    flags: messageFlags.add(MessageFlags.Ephemeral)
                 });
             } else {
                 embed

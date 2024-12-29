@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
@@ -20,9 +21,9 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.BanMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     await interaction.deferReply();
 

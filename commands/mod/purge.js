@@ -19,7 +19,7 @@ const requiredPermissionName = getPermissionName(requiredPermission);
 
 export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let resultMessage = await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral), fetchReply: true });
     let returnString = "";

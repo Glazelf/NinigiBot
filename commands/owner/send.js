@@ -15,7 +15,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 

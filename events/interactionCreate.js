@@ -97,6 +97,7 @@ const giAPI = `https://genshin.jmp.blue/`;
 
 export default async (client, interaction) => {
     try {
+        let messageFlags = new MessageFlagsBitField;
         // ID split
         let customIdSplit = null;
         if (interaction.customId) customIdSplit = interaction.customId.split("|");
@@ -117,7 +118,7 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
-                    let messageFlags = new MessageFlagsBitField;
+
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                     switch (interaction.options.getBoolean("ephemeral")) {
                         case true:
@@ -147,7 +148,7 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
-                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: [MessageFlags.Ephemeral] };
+                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: messageFlags.add(MessageFlags.Ephemeral) };
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
@@ -397,7 +398,7 @@ export default async (client, interaction) => {
                             };
                         } else {
                             try {
-                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: [MessageFlags.Ephemeral] });
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: messageFlags.add(MessageFlags.Ephemeral) });
                             } catch (e) {
                                 // console.log(e);
                                 return;
@@ -414,7 +415,7 @@ export default async (client, interaction) => {
                                 const roleArrayItem = await interaction.guild.roles.fetch(value);
                                 rolesArray.push(roleArrayItem);
                             };
-                            if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: `None of the selected roles are valid.` });
+                            if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: `None of the selected roles are valid.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
                             let adminBool = isAdmin(interaction.guild.members.me);
 
                             let roleSelectReturnString = "Role toggling results:\n";
@@ -435,7 +436,7 @@ export default async (client, interaction) => {
                                     roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
                                 };
                             };
-                            return sendMessage({ interaction: interaction, content: roleSelectReturnString });
+                            return sendMessage({ interaction: interaction, content: roleSelectReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         } else {
                             // Other select menus
                             return;
@@ -910,7 +911,7 @@ export default async (client, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
-                        return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.` });
+                        return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
@@ -934,15 +935,15 @@ export default async (client, interaction) => {
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
-                        return sendMessage({ interaction: interaction, content: modmailReturnString });
+                        return sendMessage({ interaction: interaction, content: modmailReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case pkmQuizModalId:
-                        let pkmQuizGuessResultEphemeral = false;
-                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: [MessageFlags.Ephemeral] });
+                        messageFlags.remove(MessageFlags.Ephemeral);
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: messageFlags.add(MessageFlags.Ephemeral) });
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
                         let messageDescription = interaction.message.embeds[0].data.description;
-                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", flags: [MessageFlags.Ephemeral] });
-                        if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
+                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
@@ -955,7 +956,7 @@ export default async (client, interaction) => {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
-                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, ephemeral: pkmQuizGuessResultEphemeral });
+                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, flags: messageFlags });
                         };
                         break;
                 };

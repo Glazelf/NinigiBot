@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -48,7 +49,7 @@ export default async (interaction, messageFlags) => {
             return sendMessage({ interaction: interaction, embeds: [embed], flags: messageFlags });
         case "swapsprite":
             const shinx = await getShinx(interaction.user.id);
-            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!` });
+            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     };
 };
 

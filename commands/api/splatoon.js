@@ -91,7 +91,7 @@ export default async (interaction, messageFlags) => {
             inputIDSplit.pop(); // Remove added clothing type
             inputID = inputIDSplit.join("_"); // Restore original ID
             // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it
-            let clothingFailedString = `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`;
+            let clothingFailedMessageObject = { interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) };
             let selectedClothesJSON = null;
             switch (clothingType) {
                 case "Head":
@@ -104,10 +104,10 @@ export default async (interaction, messageFlags) => {
                     selectedClothesJSON = GearInfoShoesJSON;
                     break;
                 default:
-                    return sendMessage({ interaction: interaction, content: clothingFailedString });
+                    return sendMessage(clothingFailedMessageObject);
             };
             let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
-            if (!clothingObject) return sendMessage({ interaction: interaction, content: clothingFailedString });
+            if (!clothingObject) return sendMessage(clothingFailedMessageObject);
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
 
@@ -137,8 +137,8 @@ export default async (interaction, messageFlags) => {
                 ]);
             break;
         case "weapon":
-            let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
-            if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
+            let weaponObject = Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
+            if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let weaponAuthor = languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID];
             if (!weaponAuthor) weaponAuthor = inputID;
@@ -148,7 +148,7 @@ export default async (interaction, messageFlags) => {
             let subID = weaponObject.SubWeapon.split("/");
             subID = subID[subID.length - 1].split(".")[0];
 
-            await weaponObject.UIParam.forEach(stat => {
+            weaponObject.UIParam.forEach(stat => {
                 weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
             });
             let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}`;
@@ -184,7 +184,7 @@ export default async (interaction, messageFlags) => {
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSubID) return true;
             });
-            if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.` });
+            if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSubweaponMatchesNames = "";
             subweaponMatches.forEach(subweapon => {
                 allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
@@ -210,7 +210,7 @@ export default async (interaction, messageFlags) => {
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSpecialID) return true;
             });
-            if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.` });
+            if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSpecialWeaponMatchesNames = "";
             specialWeaponMatches.forEach(specialWeaponEntry => {
                 allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialWeaponEntry.__RowId]} (${specialWeaponEntry.SpecialPoint}p)\n`;

@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
@@ -11,9 +12,9 @@ import runCommand from "../../util/runCommand.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
     await interaction.deferReply();
     let removeInteractions = false;
     let interactionsArg = interaction.options.getBoolean("reset-interactions");

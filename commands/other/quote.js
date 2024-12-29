@@ -16,7 +16,7 @@ for (const [key, value] of Object.entries(quotes)) {
     value.forEach(messageID => allMessages.push({ channelID: key, messageID: messageID }));
 };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let quoteEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     // Set cooldown
@@ -26,7 +26,7 @@ export default async (interaction) => {
         const expirationTime = previousQuoteTime + cooldownAmount;
         if (now < expirationTime) {
             const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
-            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, flags: [MessageFlags.Ephemeral] });
+            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
         };
     };
     let randomMessage = allMessages[randomNumber(0, allMessages.length - 1)];
@@ -42,7 +42,7 @@ export default async (interaction) => {
             .setURL(messageURL)
             .setColor(globalVars.embedColorError)
             .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
-        return sendMessage({ interaction: interaction, embeds: quoteEmbed });
+        return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
     };
 
     let messageImage = null;
@@ -59,7 +59,7 @@ export default async (interaction) => {
         .setTimestamp(message.createdTimestamp);
     if (message.content.length > 0) quoteEmbed.setDescription(message.content);
     previousQuoteTime = now;
-    return sendMessage({ interaction: interaction, embeds: quoteEmbed });
+    return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.remove(MessageFlags.Ephemeral) });
 };
 
 export const guildID = globalVars.ShinxServerID;

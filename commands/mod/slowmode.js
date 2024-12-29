@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
@@ -11,7 +12,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     let slowmodeSupportedChannelTypes = [
         ChannelType.GuildText,
@@ -20,12 +21,12 @@ export default async (interaction) => {
         ChannelType.GuildStageVoice,
         ChannelType.GuildVoice
     ];
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.` });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let time = interaction.options.getInteger("time");
     await interaction.channel.setRateLimitPerUser(time);
-    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.` });
+    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, flags: messageFlags.remove(MessageFlags.Ephemeral) });
 };
 
 // Integer options

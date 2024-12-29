@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -16,7 +17,7 @@ export default async (interaction, messageFlags) => {
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
 
-    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.` });
+    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let imgWidth = 225;
     let imgHeight = 100;

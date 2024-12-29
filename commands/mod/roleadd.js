@@ -14,14 +14,15 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ManageRoles;
 const selectDescriptionCharacterLimit = 50;
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let adminBoolBot = isAdmin(interaction.guild.members.me);
     let adminBoolUser = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
+    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let role = interaction.options.getRole("role");
     let description = null;

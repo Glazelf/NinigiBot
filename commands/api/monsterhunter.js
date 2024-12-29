@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -36,7 +37,7 @@ export default async (interaction, messageFlags) => {
             questsJSON.quests.forEach(quest => {
                 if (normalizeString(quest.name) == questName) questData = quest;
             });
-            if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest." });
+            if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Format quest title
             let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
             if (questData.isKey) questTitle += ` 🔑`;
@@ -82,12 +83,12 @@ export default async (interaction, messageFlags) => {
                     if (normalizeString(monster.name) == monsterName) monsterData = monster;
                 });
             };
-            if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });
+            if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster.", flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let messageObject = await getMonster(monsterData, interaction.client.application.emojis.cache);
             return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, flags: messageFlags })
     };
-    return sendMessage({ interaction: interaction, embeds: mhEmbed, flags: messageFlags, components: buttonArray });
+    return sendMessage({ interaction: interaction, embeds: mhEmbed, components: buttonArray, flags: messageFlags });
 };
 
 const gameChoices = [

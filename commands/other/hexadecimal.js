@@ -1,10 +1,11 @@
 import {
-    codeBlock,
+    MessageFlags,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    codeBlock
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import leadingZeros from "../../util/leadingZeros.js";
@@ -28,7 +29,7 @@ export default async (interaction, messageFlags) => {
                 let returnString = codeBlock("js", hexInt.toString())
                 return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
             } catch (e) {
-                return sendMessage({ interaction: interaction, content: "An error occurred trying to convert to decimal. Make sure your input is a valid hex." });
+                return sendMessage({ interaction: interaction, content: "An error occurred trying to convert to decimal. Make sure your input is a valid hex.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
     };
 };

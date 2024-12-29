@@ -20,7 +20,7 @@ export default async (interaction, messageFlags) => {
     let inputOwOified = owoify.default(input, severity);
     let returnString = codeBlock("fix", inputOwOified);
 
-    return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
+    return sendMessage({ interaction: interaction, content: returnString });
 };
 
 const severityChoices = [

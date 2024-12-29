@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -32,7 +31,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         pkmEmbed
             .setTitle(`Error`)
             .setDescription(`${inlineCode(pokemon.name)} does not exist yet in generation ${generation}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
-        messageObject = { embeds: pkmEmbed, components: [], flags: [MessageFlags.Ephemeral] };
+        messageObject = { embeds: pkmEmbed, components: [] };
         return messageObject;
     };
     // Common settings

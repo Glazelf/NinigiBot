@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandUserOption
@@ -10,19 +11,19 @@ import {
 } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     const currentBalance = await getMoney(interaction.user.id);
     let transferAmount = interaction.options.getInteger("amount");
     let transferTarget = interaction.options.getUser("user");
     let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-    if (transferTarget == interaction.user) return sendMessage({ interaction: interaction, content: `You can't transfer money to yourself.` });
-    if (transferAmount > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${userBalance}.` });
+    if (transferTarget == interaction.user) return sendMessage({ interaction: interaction, content: `You can't transfer money to yourself.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (transferAmount > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${userBalance}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     addMoney(interaction.user.id, -transferAmount);
     addMoney(transferTarget.id, transferAmount);
 
-    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.` });
+    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, flags: messageFlags.remove(MessageFlags.Ephemeral) });
 };
 
 // Integer options

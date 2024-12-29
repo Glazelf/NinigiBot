@@ -87,7 +87,7 @@ export default async (interaction, messageFlags) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(abilityFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -127,7 +127,7 @@ export default async (interaction, messageFlags) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(itemFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -163,7 +163,7 @@ export default async (interaction, messageFlags) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(moveFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: [MessageFlags.Ephemeral] });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let moveLearnPool = [];
@@ -222,7 +222,7 @@ export default async (interaction, messageFlags) => {
         // Natures
         case "nature":
             let nature = Dex.natures.get(nameInput);
-            if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.` });
+            if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let boosted = Dex.stats.names[nature.plus];
             let lowered = Dex.stats.names[nature.minus];
@@ -240,7 +240,7 @@ export default async (interaction, messageFlags) => {
         case "format":
             let formatSearch = interaction.options.getString("format");
             let format = DexSim.formats.get(formatSearch);
-            if (!format || !format.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+            if (!format || !format.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a format by that name.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             if (format.threads) {
                 format.threads.forEach(thread => {
@@ -287,8 +287,8 @@ export default async (interaction, messageFlags) => {
             if (format.restricted && format.restricted.length > 0) pokemonEmbed.addFields([{ name: "Restricted type:", value: format.restricted.join(", "), inline: false }]);
             break;
         case "learn":
-            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.` });
+            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Set variables
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
@@ -470,13 +470,13 @@ export default async (interaction, messageFlags) => {
         case "card":
             const cardInput = interaction.options.getString("card");
             const cardSetId = cardInput.split("-")[0];
-            const cardFailString = "Could not find that card. Please make sure to pick a card from the autocomplete options.";
+            const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) };
             const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
-            if (!cardSetJSON) return sendMessage({ interaction: interaction, content: cardFailString });
+            if (!cardSetJSON) return sendMessage(cardFailMessageObject);
             const cardData = cardSetJSON.default.find(element => element.id == cardInput);
-            if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
+            if (!cardData) return sendMessage(cardFailMessageObject);
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
             let cardTitle = cardData.name; // Space for fomatting with emojis below
             if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
@@ -527,7 +527,7 @@ export default async (interaction, messageFlags) => {
             const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
-            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options." });
+            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             let setFooter = `${setData.releaseDate}\n`;
             if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
             let setDescription = "";
@@ -543,7 +543,7 @@ export default async (interaction, messageFlags) => {
             break;
         // Pokémon
         case "pokemon":
-            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
+            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, emojis: interaction.client.application.emojis.cache });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;

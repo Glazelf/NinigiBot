@@ -1,14 +1,15 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     ContextMenuCommandBuilder,
-    ApplicationCommandType,
-    ApplicationIntegrationType
+    ApplicationCommandType
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
     // Get avatars
