@@ -17,7 +17,7 @@ export default async (interaction, messageFlags) => {
     let serverAvatar = null;
     if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
     if (isGuildDataAvailable(interaction) && member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-    if (!avatar && !serverAvatar) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have an avatar.` });
+    if (!avatar && !serverAvatar) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have an avatar.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     if (!serverAvatar) {
         serverAvatar = avatar;
         avatar = null;
@@ -27,7 +27,7 @@ export default async (interaction, messageFlags) => {
         .setThumbnail(avatar)
         .setTitle(`${user.username}'s avatar(s):`)
         .setImage(serverAvatar);
-    return sendMessage({ interaction: interaction, embeds: avatarEmbed });
+    return sendMessage({ interaction: interaction, embeds: avatarEmbed, flags: messageFlags });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()
