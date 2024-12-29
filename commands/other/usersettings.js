@@ -7,7 +7,7 @@ import {
     bold,
     inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import {
     setBirthday,
     getSwitchCode,

@@ -6,7 +6,7 @@ import {
     codeBlock
 } from "discord.js";
 import owoify from "owoify-js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {

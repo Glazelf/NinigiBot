@@ -11,7 +11,7 @@ import {
     TimestampStyles
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

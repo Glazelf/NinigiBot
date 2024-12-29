@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 import Canvas from "canvas";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";

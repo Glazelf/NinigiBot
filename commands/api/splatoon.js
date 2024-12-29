@@ -12,7 +12,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";

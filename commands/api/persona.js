@@ -7,7 +7,7 @@ import {
     SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import fs from "fs";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

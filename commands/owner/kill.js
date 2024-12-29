@@ -4,7 +4,7 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import forever from "forever";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import formatName from "../../util/discord/formatName.js";

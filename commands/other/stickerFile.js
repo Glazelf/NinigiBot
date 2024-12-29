@@ -3,7 +3,7 @@ import {
     ApplicationCommandType,
     hyperlink
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 
 const noStickerString = `This only works for messages with stickers attached.`;
 

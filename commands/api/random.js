@@ -12,7 +12,7 @@ import {
     uniqueNamesGenerator,
     names
 } from 'unique-names-generator'; // Random name generator that can be seeded
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

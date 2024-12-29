@@ -6,7 +6,7 @@ import {
     ActionRowBuilder,
     SlashCommandBuilder
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 
 const modal = new ModalBuilder()
     .setCustomId('modMailModal')

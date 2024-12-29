@@ -5,7 +5,7 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

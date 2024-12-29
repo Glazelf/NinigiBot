@@ -11,7 +11,7 @@ import {
     hyperlink
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getBossEvent from "../../util/btd/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

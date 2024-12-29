@@ -10,7 +10,7 @@ import {
     bold
 } from "discord.js";
 import Canvas from "canvas";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import {
     getFullBuyableShopTrophies,

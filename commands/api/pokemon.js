@@ -17,7 +17,7 @@ import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
 import getTypeEmojis from "../../util/pokemon/getTypeEmojis.js";

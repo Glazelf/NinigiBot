@@ -12,7 +12,7 @@ import {
     TimestampStyles,
     hyperlink
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };

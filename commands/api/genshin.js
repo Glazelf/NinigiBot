@@ -8,7 +8,7 @@ import {
     inlineCode
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

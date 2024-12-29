@@ -2,7 +2,7 @@ import {
     SlashCommandBooleanOption,
     SlashCommandBuilder
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import { getMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

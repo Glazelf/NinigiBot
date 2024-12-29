@@ -8,7 +8,7 @@ import {
     SlashCommandUserOption,
     inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
 import formatName from "../../util/discord/formatName.js";

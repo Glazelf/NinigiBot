@@ -5,7 +5,7 @@ import {
     SlashCommandBooleanOption,
     inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import { getAllUsers } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

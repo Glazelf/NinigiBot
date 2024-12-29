@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import util from "util";
 import getTime from "./getTime.js";
-import sendMessage from "./sendMessage.js";
+import sendMessage from "./discord/sendMessage.js";
 import formatName from "./discord/formatName.js";
 
 export default async ({ exception, client, interaction = null }) => {

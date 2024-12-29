@@ -2,7 +2,7 @@ import {
     ContextMenuCommandBuilder,
     ApplicationCommandType
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
 
 export default async (interaction) => {

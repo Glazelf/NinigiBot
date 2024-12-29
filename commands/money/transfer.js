@@ -3,7 +3,7 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import {
     getMoney,
     addMoney

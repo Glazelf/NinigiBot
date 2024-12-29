@@ -8,7 +8,7 @@ import {
     SlashCommandIntegerOption,
     underline
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import checker from "../../util/string/checkFormat.js";
 import {
     checkTrophyExistance,

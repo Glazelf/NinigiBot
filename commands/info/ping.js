@@ -2,7 +2,7 @@ import {
     MessageFlags,
     SlashCommandBuilder
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 
 export default async (interaction) => {
     let commandPing = Math.abs(Date.now() - interaction.createdTimestamp);

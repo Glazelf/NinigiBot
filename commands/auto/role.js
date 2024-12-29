@@ -8,7 +8,7 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

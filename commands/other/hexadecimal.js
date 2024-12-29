@@ -6,7 +6,7 @@ import {
     SlashCommandIntegerOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import leadingZeros from "../../util/leadingZeros.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

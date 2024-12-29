@@ -5,7 +5,7 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

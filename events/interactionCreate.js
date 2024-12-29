@@ -17,7 +17,7 @@ import axios from "axios";
 axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
 import fs from "fs";
 import logger from "../util/logger.js";
-import sendMessage from "../util/sendMessage.js";
+import sendMessage from "../util/discord/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 // Pokémon
@@ -129,7 +129,7 @@ export default async (client, interaction) => {
                         default:
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
-                    }
+                    };
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {

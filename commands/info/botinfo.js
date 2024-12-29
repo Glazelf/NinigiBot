@@ -10,7 +10,7 @@ import {
     TimestampStyles,
     hyperlink
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
 import isOwner from "../../util/discord/perms/isOwner.js";

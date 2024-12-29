@@ -4,7 +4,7 @@ import {
     ApplicationCommandType,
     ApplicationIntegrationType
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

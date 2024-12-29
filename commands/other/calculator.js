@@ -7,7 +7,7 @@ import {
     hyperlink,
     hideLinkEmbed
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const maxMessageLength = 2000;
