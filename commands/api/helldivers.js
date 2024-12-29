@@ -83,7 +83,7 @@ export default async (interaction, messageFlags) => {
             helldiversEmbed.setTitle("Campaign Status");
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: helldiversEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: helldiversEmbed });
 };
 
 // String options

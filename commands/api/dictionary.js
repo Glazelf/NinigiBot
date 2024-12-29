@@ -35,7 +35,7 @@ export default async (interaction, messageFlags) => {
             .setColor(globalVars.embedColorError)
             .setTitle("Error")
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
-        return sendMessage({ interaction: interaction, embeds: errorEmbed, flags: messageFlags });
+        return sendMessage({ interaction: interaction, embeds: errorEmbed });
     };
 
     let wordMeaning;
@@ -85,7 +85,7 @@ export default async (interaction, messageFlags) => {
         .setTitle(`${wordStatusTitle}, ${wordType}`)
         .setURL(wordSourceUrls[0]);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
-    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed });
 };
 
 const wordTypeChoices = [

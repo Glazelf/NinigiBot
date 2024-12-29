@@ -85,7 +85,7 @@ export default async (interaction, messageFlags) => {
 
             let returnString = `Choose roles to toggle:`;
             if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
-            return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects, flags: messageFlags });
+            return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects });
         };
         // Help menu
         for (let i = 0; i < roleText.length; i++) {
@@ -99,7 +99,7 @@ export default async (interaction, messageFlags) => {
             .setColor(globalVars.embedColor)
             .setTitle(`Available roles:`)
             .setDescription(roleHelpMessage);
-        return sendMessage({ interaction: interaction, embeds: rolesHelp, flags: messageFlags });
+        return sendMessage({ interaction: interaction, embeds: rolesHelp });
     } else {
         const roleCommandName = "role";
         const roleCommandId = commands.find(c => c.name == roleCommandName)?.id;

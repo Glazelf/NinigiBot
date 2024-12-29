@@ -78,7 +78,7 @@ export default async (interaction, messageFlags) => {
         await user.send({ content: dmString })
             .then(message => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
             .catch(e => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);
-        return sendMessage({ interaction: interaction, content: muteReturnString, flags: messageFlags });
+        return sendMessage({ interaction: interaction, content: muteReturnString });
     } catch (e) {
         // console.log(e);
         return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${usernameFormatted}. I probably lack permissions.` });

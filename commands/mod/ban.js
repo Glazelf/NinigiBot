@@ -66,7 +66,7 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, flags: messageFlags });
+            return sendMessage({ interaction: interaction, content: banReturn });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });
@@ -79,7 +79,7 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, flags: messageFlags });
+            return sendMessage({ interaction: interaction, content: banReturn });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });

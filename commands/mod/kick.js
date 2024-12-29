@@ -52,7 +52,7 @@ export default async (interaction) => {
         .catch(e => kickReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
-        return sendMessage({ interaction: interaction, content: kickReturn, flags: messageFlags });
+        return sendMessage({ interaction: interaction, content: kickReturn });
     } catch (e) {
         return sendMessage({ interaction: interaction, content: kickFailString });
     };

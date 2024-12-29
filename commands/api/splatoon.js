@@ -402,7 +402,7 @@ export default async (interaction, messageFlags) => {
         case "splatfests":
             await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
-            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, flags: messageFlags });
+            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components });
         case "replay":
             await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
             let replayCode = interaction.options.getString("code");
