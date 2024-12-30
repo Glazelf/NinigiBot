@@ -1,5 +1,6 @@
 import {
     MessageFlags,
+    MessageFlagsBitField,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -91,7 +92,8 @@ export default async (interaction, messageFlags) => {
             inputIDSplit.pop(); // Remove added clothing type
             inputID = inputIDSplit.join("_"); // Restore original ID
             // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it
-            let clothingFailedMessageObject = { interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) };
+            let clothingFailedMessageFlags = new MessageFlagsBitField(messageFlags);
+            let clothingFailedMessageObject = { interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`, flags: clothingFailedMessageFlags.add(MessageFlags.Ephemeral) };
             let selectedClothesJSON = null;
             switch (clothingType) {
                 case "Head":

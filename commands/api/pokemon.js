@@ -1,5 +1,6 @@
 import {
     MessageFlags,
+    MessageFlagsBitField,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -11,7 +12,7 @@ import {
     SlashCommandSubcommandBuilder,
     bold,
     hyperlink,
-    inlineCode
+    inlineCode,
 } from "discord.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -470,7 +471,8 @@ export default async (interaction, messageFlags) => {
         case "card":
             const cardInput = interaction.options.getString("card");
             const cardSetId = cardInput.split("-")[0];
-            const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) };
+            const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
+            const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
             const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
@@ -511,7 +513,6 @@ export default async (interaction, messageFlags) => {
                 let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
-
             // Card subtypes can be undefined, for example for (old) trainer cards
             let embedAuthor = cardData.supertype;
             if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;

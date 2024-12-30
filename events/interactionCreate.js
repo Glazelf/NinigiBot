@@ -118,7 +118,6 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
-
                     let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                     switch (interaction.options.getBoolean("ephemeral")) {
                         case true:
@@ -148,7 +147,8 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
-                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: messageFlags.add(MessageFlags.Ephemeral) };
+                        let notOriginalUserMessageFlags = new MessageFlagsBitField(messageFlags);
+                        let notOriginalUserMessageObject = { interaction: interaction, content: `Only ${interaction.message.interaction?.user} can use this button as the original interaction was used by them.`, flags: notOriginalUserMessageFlags.add(MessageFlags.Ephemeral) };
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
