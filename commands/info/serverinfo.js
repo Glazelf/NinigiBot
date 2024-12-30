@@ -5,6 +5,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChannelType,
+    GuildFeature,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -94,7 +95,7 @@ export default async (interaction, messageFlags) => {
     let threadCount = 0;
     // let archivedThreadCount = 0;
     let serverLinks = "";
-    if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
+    if (guild.features.includes(GuildFeature.Community)) serverLinks += `<id:guide>\n<id:customize>\n`;
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
     if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
@@ -149,7 +150,7 @@ export default async (interaction, messageFlags) => {
         { name: "Assets:", value: assetString, inline: true },
         { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
     ]);
-    if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
+    if (guild.features.includes(GuildFeature.Community) && guild.preferredLocale) {
         if (languages[guild.preferredLocale]) serverEmbed.addFields([{ name: "Language:", value: languages[guild.preferredLocale], inline: true }]);
     };
     serverEmbed.addFields([
