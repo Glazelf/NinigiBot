@@ -20,6 +20,17 @@ import languages from "../../objects/discord/languages.json" with { type: "json"
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
 
 const nitroBoostEmojiName = "DiscordNitroBoost";
+const emoteCapTier0 = 100;
+const emoteCapTier1 = 200;
+const emoteCapTier2 = 300;
+const emoteCapTier3 = 500;
+const stickerCapTier0 = 5;
+const stickerCapTier1 = 15;
+const stickerCapTier2 = 30;
+const stickerCapTier3 = 60;
+const boosterRequirementTier1 = 2;
+const boosterRequirementTier2 = 7;
+const boosterRequirementTier3 = 14;
 
 export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
@@ -43,18 +54,8 @@ export default async (interaction, messageFlags) => {
     // Check emote and sticker caps, and boosters
     let emoteMax, stickerMax, boosterString;
     // Variables for the above
-    let emoteCapTier0 = 100;
-    let emoteCapTier1 = 200;
-    let emoteCapTier2 = 300;
-    let emoteCapTier3 = 500;
-    let stickerCapTier0 = 5;
-    let stickerCapTier1 = 15;
-    let stickerCapTier2 = 30;
-    let stickerCapTier3 = 60;
-    let boosterRequirementTier1 = 2;
-    let boosterRequirementTier2 = 7;
-    let boosterRequirementTier3 = 14;
-    if (guild.partnered || guild.verified) {
+
+    if (guild.partnered || guild.verified) { // Might need to swap to guildFeatures soon
         emoteMax = emoteCapTier3;
         stickerMax = stickerCapTier3;
         boosterString = guild.premiumSubscriptionCount;
