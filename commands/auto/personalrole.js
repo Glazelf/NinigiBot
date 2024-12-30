@@ -1,5 +1,6 @@
 import {
     MessageFlags,
+    GuildFeature,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
@@ -51,8 +52,7 @@ export default async (interaction, messageFlags) => {
     if (interaction.options.getSubcommand() == "delete") deleteBool = true;
     // Check if icons are possible
     let iconsAllowed = false;
-    let nitroLevel2Req = 7;
-    if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
+    if (interaction.guild.features.includes(GuildFeature.RoleIcons)) iconsAllowed = true;
     // Get Nitro Booster position
     let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
     if (!boosterRole) return sendMessage({ interaction: interaction, content: `${guildNameFormatted} does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
