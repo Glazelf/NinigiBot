@@ -473,7 +473,7 @@ export default async (client, interaction) => {
                         if (balanceHalf > 0) choices.push({ name: `50% (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
                         if (balanceHalf > 0) choices.push({ name: `100% (${currentBalance}${globalVars.currency})`, value: currentBalance });
                         // Only add random if there is money, due to way randomization works result can be 1 while balance is 0
-                        if (currentBalance > 0) choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
+                        if (currentBalance > 0) choices.push({ name: `Random`, value: balanceRandom });
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {
