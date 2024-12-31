@@ -61,9 +61,9 @@ export default async (interaction, messageFlags) => {
                 let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                 if (!currentRole) continue;
                 let roleOptionName = currentRole.name;
-                if (ephemeral && interaction.member.roles.cache.has(currentRole.id)) {
+                if (messageFlags.has(MessageFlags.Ephemeral) && interaction.member.roles.cache.has(currentRole.id)) {
                     roleOptionName = `${removeEmote} ${roleOptionName}`;
-                } else if (ephemeral) {
+                } else if (messageFlags.has(MessageFlags.Ephemeral)) {
                     roleOptionName = `${receiveEmote} ${roleOptionName}`;
                 };
                 let roleOption = {
@@ -84,7 +84,7 @@ export default async (interaction, messageFlags) => {
                 .addComponents(roleSelectMenu);
 
             let returnString = `Choose roles to toggle:`;
-            if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
+            if (messageFlags.has(MessageFlags.Ephemeral)) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
             return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects });
         };
         // Help menu

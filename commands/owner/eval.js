@@ -28,7 +28,7 @@ export default async (interaction, messageFlags) => {
     if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
     // Check if requested content has any matches with environment variables. Should avoid possible security leaks.
     for (const [key, value] of Object.entries(process.env)) {
-        if (evaled.includes(value) && ephemeral == false) return sendMessage({ interaction: interaction, content: `For security reasons this content can't be returned.`, flags: messageFlags });
+        if (evaled.includes(value) && !messageFlags.has(MessageFlags.Ephemeral)) return sendMessage({ interaction: interaction, content: `For security reasons this content can't be returned.`, flags: messageFlags });
     };
     let returnString = codeBlock("js", clean(evaled));
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });

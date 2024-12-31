@@ -12,7 +12,6 @@ export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    ephemeral = true;
     await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
 
     let avatarArg = interaction.options.getAttachment("avatar");
