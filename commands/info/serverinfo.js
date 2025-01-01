@@ -112,7 +112,7 @@ export default async (interaction, messageFlags) => {
     let serverButtons = new ActionRowBuilder();
     // Doesn't seem like there's a feature yet for having guild web pages enabled
     let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(/ /g, "-"))}-${guild.id}`;
-    if (guild.features.includes("DISCOVERABLE")) {
+    if (guild.features.includes(GuildFeature.Discoverable)) {
         const webPageButton = new ButtonBuilder()
             .setLabel("Server Web Page")
             .setStyle(ButtonStyle.Link)
