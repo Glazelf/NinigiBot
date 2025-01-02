@@ -77,7 +77,7 @@ export default async (interaction, page, user) => {
             // Banner
             let banner = null;
             if (user.bannerURL()) banner = user.bannerURL(globalVars.displayAvatarSettings);
-            if (member.bannerURL()) banner = member.bannerURL(globalVars.displayAvatarSettings);
+            if (member?.bannerURL()) banner = member.bannerURL(globalVars.displayAvatarSettings);
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
