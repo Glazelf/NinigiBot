@@ -18,7 +18,7 @@ export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
     let guildDataAvailable = isGuildDataAvailable(interaction);
-    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
+    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id, { force: true }).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -76,7 +76,8 @@ export default async (interaction, page, user) => {
             if (memberRoles) roleCount = memberRoles.size;
             // Banner
             let banner = null;
-            if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
+            if (user.bannerURL()) banner = user.bannerURL(globalVars.displayAvatarSettings);
+            if (member.bannerURL()) banner = member.bannerURL(globalVars.displayAvatarSettings);
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
