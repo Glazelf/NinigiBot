@@ -21,5 +21,5 @@ export default async (interaction, messageFlags) => {
 };
 
 export const commandObject = new ContextMenuCommandBuilder()
-    .setName("Sticker File")
+    .setName("Message Assets")
     .setType(ApplicationCommandType.Message);
