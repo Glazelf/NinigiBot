@@ -13,7 +13,6 @@ export default async (interaction, messageFlags) => {
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
     user = await user.fetch({ force: true });
-    member = await member.fetch({ force: true });
     // Get assets
     let avatar = null;
     let banner = null;
@@ -23,6 +22,7 @@ export default async (interaction, messageFlags) => {
     if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
     if (user.bannerURL()) banner = await user.bannerURL(globalVars.displayAvatarSettings);
     if (isGuildDataAvailable(interaction) && member) {
+        member = await member.fetch({ force: true });
         if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
         if (member.bannerURL()) serverBanner = await member.bannerURL(globalVars.displayAvatarSettings);
     };
