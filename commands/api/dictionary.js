@@ -42,7 +42,7 @@ export default async (interaction, messageFlags) => {
     for (let i = 0; i < wordStatus.length; i++) {
         if (inputWordType) {
             for (let meaning of wordStatus[i].meanings) {
-                if (meaning.partOfSpeech.toLowerCase() === inputWordType.toLowerCase()) {
+                if (meaning.partOfSpeech.toLowerCase() === inputWordType) { // inputWordType has to be lowercase, but is forced lowercase by choices
                     wordMeaning = meaning;
                     break outerLoop;
                 };
@@ -88,9 +88,9 @@ export default async (interaction, messageFlags) => {
 };
 
 const wordTypeChoices = [
-    { name: "noun", value: "noun" },
-    { name: "verb", value: "verb" },
-    { name: "adjective", value: "adjective" }
+    { name: "Noun", value: "noun" },
+    { name: "Verb", value: "verb" },
+    { name: "Adjective", value: "adjective" }
 ];
 
 // String options
