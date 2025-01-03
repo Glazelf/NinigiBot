@@ -22,7 +22,7 @@ export default async (interaction, messageFlags) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();

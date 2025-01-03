@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
@@ -28,7 +27,7 @@ const sanitizeValues = [
 ];
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let input = interaction.options.getString("input");
     // Sanitize input

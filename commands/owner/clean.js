@@ -19,7 +19,7 @@ export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
     await sendMessage({ interaction: interaction, content: 'Deleting outdated entries...', flags: messageFlags });
     const users = await getAllUsers();
     if (users.length == 0) return sendMessage({ interaction: interaction, content: 'Database is already empty!', flags: messageFlags });

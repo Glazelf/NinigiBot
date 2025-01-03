@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -11,7 +10,7 @@ import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     const money_db = await getUsersRankedByMoney();
     const leaderboardEmbed = new EmbedBuilder()

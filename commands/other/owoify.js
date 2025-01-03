@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
@@ -11,7 +10,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
     // TODO: Sanitize input somehow
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let input = interaction.options.getString("input");
     let severity = interaction.options.getString("severity");

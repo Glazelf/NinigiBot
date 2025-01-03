@@ -231,7 +231,7 @@ export default async (interaction, messageFlags) => {
                 .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
             break;
         case "schedule":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let inputData = interaction.options.getString("mode");
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
@@ -380,7 +380,7 @@ export default async (interaction, messageFlags) => {
             );
             break;
         case "splatnet":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let responseSplatnet = await axios.get(splatnetAPI);
             if (responseSplatnet.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
             let splatnetData = responseSplatnet.data.data.gesotown;
@@ -402,11 +402,11 @@ export default async (interaction, messageFlags) => {
             });
             break;
         case "splatfests":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
             return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components });
         case "replay":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let replayCode = interaction.options.getString("code");
             replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
             // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests

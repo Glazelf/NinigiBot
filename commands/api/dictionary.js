@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     SlashCommandBuilder,
     EmbedBuilder,
     SlashCommandStringOption,
@@ -14,7 +13,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const api = "https://api.dictionaryapi.dev/api/v2/";
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");

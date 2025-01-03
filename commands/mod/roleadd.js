@@ -22,7 +22,7 @@ export default async (interaction, messageFlags) => {
     let adminBoolUser = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let role = interaction.options.getRole("role");
     let description = null;

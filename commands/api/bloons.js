@@ -72,7 +72,7 @@ export default async (interaction, messageFlags) => {
                 ]);
             break;
         case "boss-event":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;

@@ -30,7 +30,7 @@ export default async (interaction, messageFlags) => {
     let guildNameFormatted = formatName(interaction.guild.name);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
     let colorArg = interaction.options.getString('color-hex');

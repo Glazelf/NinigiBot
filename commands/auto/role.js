@@ -13,7 +13,7 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
-    await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let roleArgument = interaction.options.getString('role');

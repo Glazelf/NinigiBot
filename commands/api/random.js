@@ -1,5 +1,4 @@
 import {
-    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -34,7 +33,7 @@ export default async (interaction, messageFlags) => {
                 .setFooter({ text: `Min: ${lowNumber}\nMax: ${highNumber}` });
             break;
         case "cat":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let catText = interaction.options.getString("caption");
             let standardCatText = "Meow";
             if (!catText) catText = standardCatText;
@@ -55,7 +54,7 @@ export default async (interaction, messageFlags) => {
                 .setFooter({ text: `"${catText}" -${catName}` });
             break;
         case "fox":
-            await interaction.deferReply({ ephemeral: messageFlags.has(MessageFlags.Ephemeral) });
+            await interaction.deferReply({ flags: messageFlags });
             let foxResponse = await axios.get(foxAPI);
             randomEmbed.setImage(foxResponse.data.image);
             break;
