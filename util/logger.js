@@ -1,14 +1,18 @@
 import {
-    codeBlock
+    MessageFlags,
+    MessageFlagsBitField,
+    codeBlock,
+    inlineCode
 } from "discord.js";
 import util from "util";
 import getTime from "./getTime.js";
-import sendMessage from "./sendMessage.js";
+import sendMessage from "./discord/sendMessage.js";
 import formatName from "./discord/formatName.js";
 
 export default async ({ exception, client, interaction = null }) => {
     // Note: interaction may be a message
     try {
+        let messageFlags = new MessageFlagsBitField;
         if (!exception) return;
         let timestamp = getTime();
         let exceptionString = exception.toString();
@@ -18,7 +22,7 @@ export default async ({ exception, client, interaction = null }) => {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
-            return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
+            return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", flags: messageFlags.add(MessageFlags.Ephemeral) });
         } else if (exceptionString.includes("Unknown interaction")) {
             return; // Expired interaction, can't reply to said interaction
         } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
@@ -46,7 +50,7 @@ export default async ({ exception, client, interaction = null }) => {
             subCommand = interaction.options._subcommand; // Using .getSubcommand() fails on user/message commands
             if (interaction.options._hoistedOptions) { // Doesn't seem to be a cleaner way to access all options at once
                 interaction.options._hoistedOptions.forEach(option => {
-                    interactionOptions += `- \`${option.name}\`: ${option.value}\n`;
+                    interactionOptions += `- ${inlineCode(option.name)}: ${option.value}\n`;
                 });
             };
         };
@@ -66,7 +70,7 @@ Options: ${interactionOptions}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``; // Backticks are to make sure codeBlock remains closed after substring
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (baseMessage.includes("Missing Permissions")) {

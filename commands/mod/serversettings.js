@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
@@ -9,7 +10,7 @@ import {
     SlashCommandBooleanOption,
     AutoModerationActionType
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -17,11 +18,11 @@ import textChannelTypes from "../../objects/discord/textChannelTypes.json" with 
 
 const requiredPermission = PermissionFlagsBits.ManageGuild;
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags });
 
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();

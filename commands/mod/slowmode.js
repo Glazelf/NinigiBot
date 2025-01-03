@@ -1,19 +1,19 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    ephemeral = false;
     let slowmodeSupportedChannelTypes = [
         ChannelType.GuildText,
         ChannelType.PublicThread,
@@ -21,12 +21,12 @@ export default async (interaction, ephemeral) => {
         ChannelType.GuildStageVoice,
         ChannelType.GuildVoice
     ];
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.` });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let time = interaction.options.getInteger("time");
     await interaction.channel.setRateLimitPerUser(time);
-    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, flags: messageFlags.remove(MessageFlags.Ephemeral) });
 };
 
 // Integer options

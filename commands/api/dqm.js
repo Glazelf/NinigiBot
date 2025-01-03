@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -7,7 +8,7 @@ import {
     SlashCommandSubcommandGroupBuilder,
     bold
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import synthesis from "../../submodules/DQM3-db/util/synthesis.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import familiesJSON from "../../submodules/DQM3-db/objects/families.json" with { type: "json" };
@@ -19,9 +20,7 @@ import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { typ
 import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let detailed = false;
     let detailedArg = interaction.options.getBoolean("detailed");
     if (detailedArg === true) detailed = true;
@@ -32,7 +31,7 @@ export default async (interaction, ephemeral) => {
     switch (interaction.options.getSubcommand()) {
         case "monster":
             let monsterData = monstersJSON[nameInput];
-            if (!monsterData) return sendMessage({ interaction: interaction, content: `Could not find that monster.` });
+            if (!monsterData) return sendMessage({ interaction: interaction, content: `Could not find that monster.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let monsterTitle = monsterData.name;
             if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
             let growthString = ""; // Redundant check in complete dataset
@@ -77,7 +76,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "talent":
             let talentData = talentsJSON[nameInput];
-            if (!talentData) return sendMessage({ interaction: interaction, content: `Could not find that talent.` });
+            if (!talentData) return sendMessage({ interaction: interaction, content: `Could not find that talent.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let talentSkillsString = "";
             if (talentData.skills) {
                 for (const [skillID, skillPoints] of Object.entries(talentData.skills)) {
@@ -108,7 +107,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "skill":
             let skillData = skillsJSON[nameInput];
-            if (!skillData) return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
+            if (!skillData) return sendMessage({ interaction: interaction, content: `Could not find that skill.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let mpCostString = skillData.mp_cost.toString();
             if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
             let skillTalents = [];
@@ -127,7 +126,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "trait":
             let traitData = traitsJSON[nameInput];
-            if (!traitData) return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
+            if (!traitData) return sendMessage({ interaction: interaction, content: `Could not find that trait.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let traitMonsters = [];
             for (const [monsterID, monsterObject] of Object.entries(monstersJSON)) {
                 if (monsterObject.traits == null) continue;
@@ -147,7 +146,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "item":
             let itemData = itemsJSON[nameInput];
-            if (!itemData) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
+            if (!itemData) return sendMessage({ interaction: interaction, content: `Could not find that item.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             dqm3Embed
                 .setTitle(itemData.name)
                 .setDescription(itemData.description)
@@ -214,11 +213,11 @@ export default async (interaction, ephemeral) => {
                 if (familySynthesisString.length > 0) dqm3Embed.addFields([{ name: "Family Synthesis:", value: `${familySynthesisString}\n${familySynthesisNote}`, inline: false }]);
                 if (uniqueSynthesisString.length > 0) dqm3Embed.addFields([{ name: "Unique Synthesis:", value: uniqueSynthesisString, inline: false }]);
             } else {
-                return sendMessage({ interaction: interaction, content: `Coming soon.` });
+                return sendMessage({ interaction: interaction, content: `Coming soon.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: dqm3Embed, flags: messageFlags });
 };
 
 const monsterOptionDescription = "Specify monster by name.";

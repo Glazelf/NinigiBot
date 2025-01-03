@@ -1,32 +1,34 @@
 import {
+    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandStringOption
+    SlashCommandStringOption,
+    inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply();
 
     let interactionName = interaction.options.getString("interaction-name");
     let guildID = interaction.options.getString("guild-id");
 
     let commands = await interaction.client.application.commands.fetch();
     let command = commands.find(c => c.name === interactionName);
-    if (!command) return sendMessage({ interaction: interaction, content: `Command \`${interactionName}\` not found.` });
+    if (!command) return sendMessage({ interaction: interaction, content: `Command ${inlineCode(interactionName)} not found.` });
 
     try {
         await interaction.client.application.commands.delete(command.id, guildID);
     } catch (e) {
         // console.log();
-        return sendMessage({ interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
+        return sendMessage({ interaction: interaction, content: `Failed to delete ${inlineCode(interactionName)}.` });
     };
-    return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
+    return sendMessage({ interaction: interaction, content: `Deleted interaction ${inlineCode(interactionName)}.` });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

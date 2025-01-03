@@ -1,11 +1,12 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
@@ -22,10 +23,7 @@ const mh3uString = "Monster Hunter 3 Ultimate";
 const mhStories2String = "Monster Hunter Stories 2";
 const mhStoriesString = "Monster Hunter Stories";
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-
+export default async (interaction, messageFlags) => {
     let buttonArray = [];
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
@@ -39,7 +37,7 @@ export default async (interaction, ephemeral) => {
             questsJSON.quests.forEach(quest => {
                 if (normalizeString(quest.name) == questName) questData = quest;
             });
-            if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest." });
+            if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Format quest title
             let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
             if (questData.isKey) questTitle += ` 🔑`;
@@ -69,7 +67,7 @@ export default async (interaction, ephemeral) => {
         case "questlist":
             const gameInput = interaction.options.getString("game");
             let questsMessageObject = await getQuests({ gameName: gameInput, page: 1 });
-            return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, flags: messageFlags });
         // Monsters
         case "monster":
             let monsterName = normalizeString(nameInput);
@@ -85,12 +83,12 @@ export default async (interaction, ephemeral) => {
                     if (normalizeString(monster.name) == monsterName) monsterData = monster;
                 });
             };
-            if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });
+            if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster.", flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let messageObject = await getMonster(monsterData, interaction.client.application.emojis.cache);
-            return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
+            return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, flags: messageFlags })
     };
-    return sendMessage({ interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
+    return sendMessage({ interaction: interaction, embeds: mhEmbed, components: buttonArray, flags: messageFlags });
 };
 
 const gameChoices = [

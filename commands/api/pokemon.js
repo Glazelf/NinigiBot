@@ -1,4 +1,6 @@
 import {
+    MessageFlags,
+    MessageFlagsBitField,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -9,13 +11,14 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     bold,
-    hyperlink
+    hyperlink,
+    inlineCode,
 } from "discord.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
 import getTypeEmojis from "../../util/pokemon/getTypeEmojis.js";
@@ -34,10 +37,7 @@ const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
 
-export default async (interaction, ephemeral) => {
-    // Command settings
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     // Bools
     let learnsetBool = false;
     let shinyBool = false;
@@ -51,9 +51,10 @@ export default async (interaction, ephemeral) => {
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
-    let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move = null;
+    let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
-    let generation = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
+    let generationInput = interaction.options.getInteger("generation");
+    let generation = generationInput || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
@@ -63,8 +64,10 @@ export default async (interaction, ephemeral) => {
     };
     if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
     if (moveInput) move = Dex.moves.get(moveInput);
-    let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
-    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemonGen);
+    let noPokemonString = `Sorry, I could not find a Pokémon called ${inlineCode(nameInput)} in generation ${generation}.`;
+    // Dex.species.get() is so that data in the object is consistent when delivered to later functions
+    // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
+    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
@@ -80,12 +83,12 @@ export default async (interaction, ephemeral) => {
             // let abilityGen = genData.abilities.get(abilitySearch);
             let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
-            if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
+            if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(abilityFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -116,7 +119,7 @@ export default async (interaction, ephemeral) => {
             let itemIsFuture = (item.gen > generation);
             let itemIsAvailable = (itemGen == undefined);
             let itemFailString = `I could not find that item in generation ${generation}.`;
-            if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
+            if (itemIsFuture) itemFailString += `\n${inlineCode(item.name)} was introduced in generation ${item.gen}.`;
             if (!itemGen) {
                 itemGen = item;
                 generationFooter = globalVars.pokemon.currentGeneration;
@@ -125,7 +128,7 @@ export default async (interaction, ephemeral) => {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(itemFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -156,18 +159,19 @@ export default async (interaction, ephemeral) => {
             };
             let moveIsFuture = (move.gen > generation);
             let moveFailString = `I could not find that move in generation ${generation}.`;
-            if (moveIsFuture) moveFailString += `\n\`${move.name}\` was introduced in generation ${move.gen}.`;
+            if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
                 pokemonEmbed
                     .setTitle("Error")
                     .setDescription(moveFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let moveLearnPool = [];
             for (const pokemon of allPokemonGen) {
                 if (isIdenticalForm(pokemon.name) ||
                     pokemon.name.startsWith("Terapagos-") ||
+                    pokemon.name.startsWith("Ogerpon-") ||
                     pokemon.name.endsWith("-Origin") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
                 if (DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
@@ -219,7 +223,7 @@ export default async (interaction, ephemeral) => {
         // Natures
         case "nature":
             let nature = Dex.natures.get(nameInput);
-            if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.` });
+            if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let boosted = Dex.stats.names[nature.plus];
             let lowered = Dex.stats.names[nature.minus];
@@ -237,7 +241,7 @@ export default async (interaction, ephemeral) => {
         case "format":
             let formatSearch = interaction.options.getString("format");
             let format = DexSim.formats.get(formatSearch);
-            if (!format || !format.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+            if (!format || !format.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a format by that name.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             if (format.threads) {
                 format.threads.forEach(thread => {
@@ -284,8 +288,8 @@ export default async (interaction, ephemeral) => {
             if (format.restricted && format.restricted.length > 0) pokemonEmbed.addFields([{ name: "Restricted type:", value: format.restricted.join(", "), inline: false }]);
             break;
         case "learn":
-            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${nameInput}\`.` });
+            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Set variables
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
@@ -325,7 +329,7 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed.setTitle(learnAuthor);
             break;
         case "usage":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let formatInput = interaction.options.getString("format");
             // There's a LOT of inconsistencies between the format names in Showdown and https://www.smogon.com/stats/
             if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
@@ -387,7 +391,7 @@ export default async (interaction, ephemeral) => {
             if (pokemon) {
                 const pokemonNameSearch = pokemon.name + " "; // Space is to exclude matching more popular subforms
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemonNameSearch));
-                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
+                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${inlineCode(pokemon.name)} in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
@@ -448,14 +452,17 @@ export default async (interaction, ephemeral) => {
             break;
         // Who's That Pokémon quiz
         case "whosthat":
-            await interaction.deferReply({ ephemeral: ephemeral });
-            let allPokemonFiltered = allPokemon.filter(pokemon =>
+            await interaction.deferReply({ flags: messageFlags });
+            let allowedPokemonList = allPokemon;
+            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
+            allowedPokemonList = allowedPokemonList.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
-                !pokemon.name.endsWith("-Totem")
+                !pokemon.name.endsWith("-Totem") &&
+                !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
             );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemonFiltered });
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
@@ -464,13 +471,14 @@ export default async (interaction, ephemeral) => {
         case "card":
             const cardInput = interaction.options.getString("card");
             const cardSetId = cardInput.split("-")[0];
-            const cardFailString = "Could not find that card. Please make sure to pick a card from the autocomplete options.";
+            const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
+            const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
             const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
-            if (!cardSetJSON) return sendMessage({ interaction: interaction, content: cardFailString });
+            if (!cardSetJSON) return sendMessage(cardFailMessageObject);
             const cardData = cardSetJSON.default.find(element => element.id == cardInput);
-            if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
+            if (!cardData) return sendMessage(cardFailMessageObject);
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
             let cardTitle = cardData.name; // Space for fomatting with emojis below
             if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
@@ -505,7 +513,6 @@ export default async (interaction, ephemeral) => {
                 let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
-
             // Card subtypes can be undefined, for example for (old) trainer cards
             let embedAuthor = cardData.supertype;
             if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
@@ -521,7 +528,7 @@ export default async (interaction, ephemeral) => {
             const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
-            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options." });
+            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             let setFooter = `${setData.releaseDate}\n`;
             if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
             let setDescription = "";
@@ -537,7 +544,7 @@ export default async (interaction, ephemeral) => {
             break;
         // Pokémon
         case "pokemon":
-            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
+            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, emojis: interaction.client.application.emojis.cache });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;
@@ -557,7 +564,7 @@ export default async (interaction, ephemeral) => {
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, flags: messageFlags });
 };
 
 function getLearnData(learnData) {
@@ -596,7 +603,7 @@ function getLearnData(learnData) {
     return learnInfo;
 };
 
-// "Identical" here means having the same sillouette and learnset
+// "Identical" here means having the same sillouette, learnset and abilities
 function isIdenticalForm(pokemonName) {
     if (pokemonName.startsWith("Arceus-") ||
         pokemonName.startsWith("Silvally-") ||
@@ -605,7 +612,7 @@ function isIdenticalForm(pokemonName) {
         pokemonName.startsWith("Gourgeist-") ||
         pokemonName.startsWith("Pumpkaboo-") ||
         pokemonName.startsWith("Squawkabilly-") ||
-        pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds proper images for them
+        pokemonName.endsWith("-Original") || // Megearna
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
@@ -628,7 +635,7 @@ function mapUsageString(string, seperator) {
 
 // Set nature choices. The max is 25 and there are exactly 25 natures.
 // If Gamefreak ever adds a 26th nature this will need to be moved back into autocomplete.
-let natureChoices = [];
+const natureChoices = [];
 allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });
@@ -794,6 +801,7 @@ const cardSetSubcommand = new SlashCommandSubcommandBuilder()
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
+    .addIntegerOption(generationOption)
     .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()

@@ -5,6 +5,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChannelType,
+    GuildFeature,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -12,19 +13,27 @@ import {
     TimestampStyles,
     hyperlink
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
 
 const nitroBoostEmojiName = "DiscordNitroBoost";
+const emoteCapTier0 = 100;
+const emoteCapTier1 = 200;
+const emoteCapTier2 = 300;
+const emoteCapTier3 = 500;
+const stickerCapTier0 = 5;
+const stickerCapTier1 = 15;
+const stickerCapTier2 = 30;
+const stickerCapTier3 = 60;
+const boosterRequirementTier1 = 2;
+const boosterRequirementTier2 = 7;
+const boosterRequirementTier3 = 14;
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     let guild = interaction.guild;
     await guild.members.fetch();
     await guild.channels.fetch();
@@ -45,18 +54,8 @@ export default async (interaction, ephemeral) => {
     // Check emote and sticker caps, and boosters
     let emoteMax, stickerMax, boosterString;
     // Variables for the above
-    let emoteCapTier0 = 100;
-    let emoteCapTier1 = 200;
-    let emoteCapTier2 = 300;
-    let emoteCapTier3 = 500;
-    let stickerCapTier0 = 5;
-    let stickerCapTier1 = 15;
-    let stickerCapTier2 = 30;
-    let stickerCapTier3 = 60;
-    let boosterRequirementTier1 = 2;
-    let boosterRequirementTier2 = 7;
-    let boosterRequirementTier3 = 14;
-    if (guild.partnered || guild.verified) {
+
+    if (guild.partnered || guild.verified) { // Might need to swap to guildFeatures soon
         emoteMax = emoteCapTier3;
         stickerMax = stickerCapTier3;
         boosterString = guild.premiumSubscriptionCount;
@@ -97,7 +96,7 @@ export default async (interaction, ephemeral) => {
     let threadCount = 0;
     // let archivedThreadCount = 0;
     let serverLinks = "";
-    if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
+    if (guild.features.includes(GuildFeature.Community)) serverLinks += `<id:guide>\n<id:customize>\n`;
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
     if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
@@ -113,7 +112,7 @@ export default async (interaction, ephemeral) => {
     let serverButtons = new ActionRowBuilder();
     // Doesn't seem like there's a feature yet for having guild web pages enabled
     let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(/ /g, "-"))}-${guild.id}`;
-    if (guild.features.includes("DISCOVERABLE")) {
+    if (guild.features.includes(GuildFeature.Discoverable)) {
         const webPageButton = new ButtonBuilder()
             .setLabel("Server Web Page")
             .setStyle(ButtonStyle.Link)
@@ -152,7 +151,7 @@ export default async (interaction, ephemeral) => {
         { name: "Assets:", value: assetString, inline: true },
         { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
     ]);
-    if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
+    if (guild.features.includes(GuildFeature.Community) && guild.preferredLocale) {
         if (languages[guild.preferredLocale]) serverEmbed.addFields([{ name: "Language:", value: languages[guild.preferredLocale], inline: true }]);
     };
     serverEmbed.addFields([
@@ -162,7 +161,7 @@ export default async (interaction, ephemeral) => {
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);
     if (banner) serverEmbed.setImage(banner);
-    return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, flags: messageFlags });
 };
 
 // Boolean options

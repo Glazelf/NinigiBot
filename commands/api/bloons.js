@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -10,19 +11,15 @@ import {
     hyperlink
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getBossEvent from "../../util/btd/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let oak = interaction.options.getString("oak");
     let apiError = null;
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    // await interaction.deferReply(ephemeral);
     let btd6Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let btd6ActionRow = new ActionRowBuilder();
@@ -75,7 +72,7 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "boss-event":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
@@ -87,13 +84,13 @@ export default async (interaction, ephemeral) => {
     };
     // Handle API errors
     if (apiError) {
-        ephemeral = true; // Error reply should be ephemeral
+        messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
             .setColor(globalVars.embedColorError)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
 };
 
 function getUsageListString(usageObject, emojis) {
@@ -128,13 +125,13 @@ const bossEventSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("See current boss event.")
     .addBooleanOption(ephemeralOption);
 // Subcommand groups
-const btd6SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
-    .setName("6")
-    .setDescription("BTD6")
+const td6SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("td6")
+    .setDescription("Shows Bloons Tower Defense 6 data.")
     .addSubcommand(userSubcommand)
     .addSubcommand(bossEventSubcommand);
 // Final command
 export const commandObject = new SlashCommandBuilder()
-    .setName("btd")
-    .setDescription("Shows Bloons Tower Defense data.")
-    .addSubcommandGroup(btd6SubcommandGroup);
+    .setName("bloons")
+    .setDescription("Shows Bloons data.")
+    .addSubcommandGroup(td6SubcommandGroup);

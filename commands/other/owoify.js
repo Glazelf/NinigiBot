@@ -1,18 +1,16 @@
 import {
-    codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    codeBlock
 } from "discord.js";
 import owoify from "owoify-js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     // TODO: Sanitize input somehow
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: messageFlags });
 
     let input = interaction.options.getString("input");
     let severity = interaction.options.getString("severity");
@@ -21,7 +19,7 @@ export default async (interaction, ephemeral) => {
     let inputOwOified = owoify.default(input, severity);
     let returnString = codeBlock("fix", inputOwOified);
 
-    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString });
 };
 
 const severityChoices = [

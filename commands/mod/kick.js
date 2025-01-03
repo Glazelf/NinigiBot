@@ -1,12 +1,14 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
@@ -16,12 +18,11 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.KickMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    let ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
 
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
@@ -29,7 +30,7 @@ export default async (interaction) => {
     let usernameFormatted = formatName(user.username);
     let executorNameFormatted = formatName(interaction.user.username);
 
-    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
+    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     // Check permissions
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
@@ -52,7 +53,7 @@ export default async (interaction) => {
         .catch(e => kickReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
-        return sendMessage({ interaction: interaction, content: kickReturn, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: kickReturn });
     } catch (e) {
         return sendMessage({ interaction: interaction, content: kickFailString });
     };

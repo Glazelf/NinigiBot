@@ -1,21 +1,21 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    await interaction.deferReply({ ephemeral: ephemeral });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    await interaction.deferReply();
     let removeInteractions = false;
     let interactionsArg = interaction.options.getBoolean("reset-interactions");
     if (interactionsArg === true) removeInteractions = interactionsArg;

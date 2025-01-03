@@ -1,18 +1,20 @@
 import {
+    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
 import forever from "forever";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.remove(MessageFlags.Ephemeral);
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let removeInteractions = false;
     let interactionsArg = interaction.options.getBoolean("remove-interactions");
@@ -24,7 +26,7 @@ export default async (interaction) => {
     await sendMessage({ interaction: interaction, content: shutdownString });
 
     if (removeInteractions) {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         // Delete all global commands
         await interaction.client.application.commands.set([]);
         // Delete all guild commands

@@ -1,24 +1,23 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    AttachmentBuilder
+    AttachmentBuilder,
+    inlineCode
 } from "discord.js";
 import { PassThrough } from "stream";
 import PImage from "pureimage";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-
+export default async (interaction, messageFlags) => {
     let hexInput = interaction.options.getString("hex");
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
 
-    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters \`0-9\` and \`A-F\`.` });
+    if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let imgWidth = 225;
     let imgHeight = 100;
@@ -35,7 +34,7 @@ export default async (interaction, ephemeral) => {
         .setColor(hexInput)
         .setTitle(hexInput)
         .setImage(`attachment://${attachment.name}`);
-    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], flags: messageFlags });
 };
 
 function hexToRgb(hex) {

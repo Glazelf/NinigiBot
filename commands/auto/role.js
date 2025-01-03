@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     EmbedBuilder,
     ActionRowBuilder,
@@ -7,17 +8,14 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
-
     let roleArgument = interaction.options.getString('role');
     let requestRole = null;
     if (roleArgument) requestRole = roleArgument;
@@ -63,9 +61,9 @@ export default async (interaction, ephemeral) => {
                 let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                 if (!currentRole) continue;
                 let roleOptionName = currentRole.name;
-                if (ephemeral && interaction.member.roles.cache.has(currentRole.id)) {
+                if (messageFlags.has(MessageFlags.Ephemeral) && interaction.member.roles.cache.has(currentRole.id)) {
                     roleOptionName = `${removeEmote} ${roleOptionName}`;
-                } else if (ephemeral) {
+                } else if (messageFlags.has(MessageFlags.Ephemeral)) {
                     roleOptionName = `${receiveEmote} ${roleOptionName}`;
                 };
                 let roleOption = {
@@ -86,8 +84,8 @@ export default async (interaction, ephemeral) => {
                 .addComponents(roleSelectMenu);
 
             let returnString = `Choose roles to toggle:`;
-            if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
-            return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
+            if (messageFlags.has(MessageFlags.Ephemeral)) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
+            return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects });
         };
         // Help menu
         for (let i = 0; i < roleText.length; i++) {
@@ -101,7 +99,7 @@ export default async (interaction, ephemeral) => {
             .setColor(globalVars.embedColor)
             .setTitle(`Available roles:`)
             .setDescription(roleHelpMessage);
-        return sendMessage({ interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: rolesHelp });
     } else {
         const roleCommandName = "role";
         const roleCommandId = commands.find(c => c.name == roleCommandName)?.id;

@@ -3,10 +3,11 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
@@ -14,10 +15,8 @@ const giAPI = `https://genshin.jmp.blue/`;
 const embedCharacterLimit = 6000;
 const descCharacterLimit = 1024;
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
 
     let response;
     let error200ReturnString = `Error occurred, make sure that your input is valid and exists.`;
@@ -71,7 +70,7 @@ export default async (interaction, ephemeral) => {
                     giEmbed.addFields(getCharacterAttributeFields(constellation, "Constellation", giEmbed.length));
                 };
             };
-            if (giEmbed.length > embedCharacterLimit - descCharacterLimit) returnString = `Embeds can only be ${embedCharacterLimit} characters long.\nIf you are missing fields they might have gone over this limit and not been added.\nTry selecting less attributes to display (\`skills\`, \`passives\`, \`constellations\`) at once.`;
+            if (giEmbed.length > embedCharacterLimit - descCharacterLimit) returnString = `Embeds can only be ${embedCharacterLimit} characters long.\nIf you are missing fields they might have gone over this limit and not been added.\nTry selecting less attributes to display (${inlineCode("skills")}, ${inlineCode("passives")}, ${inlineCode("constellations")}) at once.`;
             break;
         case "weapon":
             const giAPIWeapon = `${giAPI}weapons/${nameInput}`;
@@ -104,7 +103,7 @@ export default async (interaction, ephemeral) => {
             };
             break;
     };
-    return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed });
 };
 
 function getCharacterAttributeFields(attribute, type, embedCharacterLength) {

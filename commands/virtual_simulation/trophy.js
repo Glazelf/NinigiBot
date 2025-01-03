@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     codeBlock,
     AttachmentBuilder,
@@ -9,7 +10,7 @@ import {
     bold
 } from "discord.js";
 import Canvas from "canvas";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import {
     getFullBuyableShopTrophies,
@@ -20,16 +21,14 @@ import {
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let trophy_name = interaction.options.getString("name");
     let messageFile = null;
-    let res;
     let embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let returnString = '';
-    let canvas, ctx, img, shinx;
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    let canvas, ctx, img, shinx, res;
+
     let master = interaction.user;
     let trophies;
     const commands = await interaction.client.application.commands.fetch();
@@ -60,19 +59,22 @@ export default async (interaction, ephemeral) => {
             return sendMessage({
                 interaction: interaction,
                 embeds: [embed],
-                ephemeral: ephemeral
+                flags: messageFlags
             });
         case "buy":
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
                 case 'NoTrophy':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `${bold(trophy_name)} isn't available.`;
                     if (trophyCommandId) returnString += `\nTip: check today's stock with </${commandObject.name} stock:${trophyCommandId}>.`;
                     break;
                 case 'HasTrophy':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `You already have ${bold(trophy_name)}!`;
                     break;
                 case 'NoMoney':
+                    messageFlags.add(MessageFlags.Ephemeral);
                     returnString = `Not enough money for ${bold(trophy_name)}.`;
                     break;
                 case 'Ok':
@@ -96,7 +98,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 content: returnString,
                 files: messageFile,
-                ephemeral: ephemeral || (res != 'Ok')
+                flags: messageFlags
             });
         case "list":
             let trophy_slice = await getTrophyEmbedSlice(0);
@@ -104,7 +106,7 @@ export default async (interaction, ephemeral) => {
                 interaction: interaction,
                 embeds: [trophy_slice.embed],
                 components: trophy_slice.components,
-                ephemeral: ephemeral,
+                flags: messageFlags,
             });
         case "info":
             res = await getShopTrophyWithName(trophy_name);
@@ -119,7 +121,7 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({
                     interaction: interaction,
                     content: infoNoResString,
-                    ephemeral: true
+                    flags: messageFlags.add(MessageFlags.Ephemeral)
                 });
             } else {
                 embed
@@ -134,7 +136,7 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({
                     interaction: interaction,
                     embeds: [embed],
-                    ephemeral: ephemeral
+                    flags: messageFlags
                 });
             };
     };

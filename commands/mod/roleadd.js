@@ -1,11 +1,12 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandRoleOption,
     SlashCommandStringOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -13,15 +14,15 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ManageRoles;
 const selectDescriptionCharacterLimit = 50;
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let adminBoolBot = isAdmin(interaction.guild.members.me);
     let adminBoolUser = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: messageFlags });
 
     let role = interaction.options.getRole("role");
     let description = null;

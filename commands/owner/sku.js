@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder,
@@ -6,15 +7,14 @@ import {
     time,
     TimestampStyles
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    ephemeral = true;
     let SKUs = await interaction.client.application.fetchSKUs();
     let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
 
@@ -34,7 +34,7 @@ export default async (interaction, ephemeral) => {
         if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${userList.length})`, value: userList.join("\n") }]);
     };
 
-    return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: entitlementEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

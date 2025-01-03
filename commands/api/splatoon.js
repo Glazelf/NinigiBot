@@ -1,20 +1,22 @@
 import {
+    MessageFlags,
+    MessageFlagsBitField,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
-    ApplicationIntegrationType,
     bold,
     time,
     TimestampStyles
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/math/randomNumber.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
 import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
@@ -65,16 +67,13 @@ const splatfestAPI = "https://splatoon3.ink/data/festivals.json"; // All Splatfe
 const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/"; // Replay lookup
 const replayLookupGithub = "https://github.com/samuelthomas2774/splatoon3-replay-lookup";
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     // Game data
     let versionLatest = version;
     if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
     let versionSplit = versionLatest.split("").join(".");
     if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
     let versionString = `Splatoon 3 v${versionSplit}`;
-
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Check language
     let languageKey = interaction.options.getString("language");
     if (!languageKey) languageKey = "EUen";
@@ -93,7 +92,8 @@ export default async (interaction, ephemeral) => {
             inputIDSplit.pop(); // Remove added clothing type
             inputID = inputIDSplit.join("_"); // Restore original ID
             // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it
-            let clothingFailedString = `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`;
+            let clothingFailedMessageFlags = new MessageFlagsBitField(messageFlags);
+            let clothingFailedMessageObject = { interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`, flags: clothingFailedMessageFlags.add(MessageFlags.Ephemeral) };
             let selectedClothesJSON = null;
             switch (clothingType) {
                 case "Head":
@@ -106,10 +106,10 @@ export default async (interaction, ephemeral) => {
                     selectedClothesJSON = GearInfoShoesJSON;
                     break;
                 default:
-                    return sendMessage({ interaction: interaction, content: clothingFailedString });
+                    return sendMessage(clothingFailedMessageObject);
             };
             let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
-            if (!clothingObject) return sendMessage({ interaction: interaction, content: clothingFailedString });
+            if (!clothingObject) return sendMessage(clothingFailedMessageObject);
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
 
@@ -139,8 +139,8 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "weapon":
-            let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
-            if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
+            let weaponObject = Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
+            if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let weaponAuthor = languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID];
             if (!weaponAuthor) weaponAuthor = inputID;
@@ -150,7 +150,7 @@ export default async (interaction, ephemeral) => {
             let subID = weaponObject.SubWeapon.split("/");
             subID = subID[subID.length - 1].split(".")[0];
 
-            await weaponObject.UIParam.forEach(stat => {
+            weaponObject.UIParam.forEach(stat => {
                 weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
             });
             let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}`;
@@ -186,7 +186,7 @@ export default async (interaction, ephemeral) => {
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSubID) return true;
             });
-            if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.` });
+            if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSubweaponMatchesNames = "";
             subweaponMatches.forEach(subweapon => {
                 allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
@@ -212,7 +212,7 @@ export default async (interaction, ephemeral) => {
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSpecialID) return true;
             });
-            if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.` });
+            if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSpecialWeaponMatchesNames = "";
             specialWeaponMatches.forEach(specialWeaponEntry => {
                 allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialWeaponEntry.__RowId]} (${specialWeaponEntry.SpecialPoint}p)\n`;
@@ -231,7 +231,7 @@ export default async (interaction, ephemeral) => {
                 .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
             break;
         case "schedule":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let inputData = interaction.options.getString("mode");
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
@@ -380,7 +380,7 @@ export default async (interaction, ephemeral) => {
             );
             break;
         case "splatnet":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let responseSplatnet = await axios.get(splatnetAPI);
             if (responseSplatnet.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
             let splatnetData = responseSplatnet.data.data.gesotown;
@@ -402,16 +402,16 @@ export default async (interaction, ephemeral) => {
             });
             break;
         case "splatfests":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
-            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components });
         case "replay":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            await interaction.deferReply({ flags: messageFlags });
             let replayCode = interaction.options.getString("code");
             replayCode = replayCode.toUpperCase().replace(/-/g, ""); // Remove dashes for consistency
             // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
             let replayResponse = await axios.get(`${replayAPI}${replayCode}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" } });
-            if (replayResponse.status !== 200) return interaction.reply({ content: "Error occurred getting that replay. Make sure the code is correct." });
+            if (replayResponse.status !== 200) return sendMessage({ interaction: interaction, content: "Error occurred getting that replay. Make sure the code is correct." });
             let replayData = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
             // Match data
@@ -461,7 +461,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "splashtag-random":
             let userTitle = interaction.user.displayName;
-            if (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) userTitle = interaction.member.displayName;
+            if (isGuildDataAvailable(interaction)) userTitle = interaction.member.displayName;
 
             let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
@@ -487,7 +487,7 @@ export default async (interaction, ephemeral) => {
                 .setFooter({ text: discriminatorRandom.toString(), iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: splat3Embed, flags: messageFlags });
 };
 
 function getGearString(gear, type) {

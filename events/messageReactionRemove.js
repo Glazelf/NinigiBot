@@ -1,4 +1,4 @@
-import getStarboardMessage from "../util/getStarboardMessage.js";
+import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 

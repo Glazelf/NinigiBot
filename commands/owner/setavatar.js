@@ -1,18 +1,18 @@
 import {
+    MessageFlags,
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandAttachmentOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply({ flags: messageFlags });
 
     let avatarArg = interaction.options.getAttachment("avatar");
     let iconImg = avatarArg.url;

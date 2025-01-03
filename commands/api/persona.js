@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -7,7 +8,7 @@ import {
     SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import fs from "fs";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -28,11 +29,8 @@ eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", 
 // Object including all skill AND trait data
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let buttonArray = [];
-
     let p5Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let nameInput = interaction.options.getString("name");
@@ -41,7 +39,7 @@ export default async (interaction, ephemeral) => {
         case "persona":
             // TODO: use calculator to calc paths to fuse this monster
             let personaObject = personaMapRoyal[nameInput];
-            if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.` });
+            if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let personaWikiName = nameInput.replace(/ /g, "_");
             if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
             let personaImageFile = `${personaWikiName}_P5R.jpg`;
@@ -71,7 +69,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "skill":
             let skillObject = skillMapRoyal[nameInput];
-            if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
+            if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let skillPersonas = "";
             if (skillObject.unique) {
                 skillPersonas += `${skillObject.unique}: Unique\n`;
@@ -88,7 +86,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "trait":
             let traitObject = skillMapRoyal[nameInput];
-            if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
+            if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let traitPersonas = Object.keys(traitObject.personas).join("\n");
             p5Embed
                 .setTitle(nameInput)
@@ -97,7 +95,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "item":
             let itemObject = itemMapRoyal[nameInput];
-            if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
+            if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             if (itemObject.type && itemObject.description) {
                 p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
             } else if (itemObject.skillCard) {
@@ -105,7 +103,7 @@ export default async (interaction, ephemeral) => {
             };
             p5Embed.setTitle(nameInput);
     };
-    return sendMessage({ interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
+    return sendMessage({ interaction: interaction, embeds: p5Embed, components: buttonArray, flags: messageFlags });
 };
 
 function getWeaknessString(string) {

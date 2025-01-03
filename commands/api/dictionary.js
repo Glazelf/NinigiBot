@@ -3,18 +3,17 @@ import {
     EmbedBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    hyperlink
+    hyperlink,
+    inlineCode
 } from "discord.js";
 import axios from "axios";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const api = "https://api.dictionaryapi.dev/api/v2/";
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
 
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
@@ -34,8 +33,8 @@ export default async (interaction, ephemeral) => {
         let errorEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColorError)
             .setTitle("Error")
-            .setDescription(`Word \`${inputWord}\` not found.`);
-        return sendMessage({ interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
+            .setDescription(`Word ${inlineCode(inputWord)} not found.`);
+        return sendMessage({ interaction: interaction, embeds: errorEmbed });
     };
 
     let wordMeaning;
@@ -43,7 +42,7 @@ export default async (interaction, ephemeral) => {
     for (let i = 0; i < wordStatus.length; i++) {
         if (inputWordType) {
             for (let meaning of wordStatus[i].meanings) {
-                if (meaning.partOfSpeech.toLowerCase() === inputWordType.toLowerCase()) {
+                if (meaning.partOfSpeech.toLowerCase() === inputWordType) { // inputWordType has to be lowercase, but is forced lowercase by choices
                     wordMeaning = meaning;
                     break outerLoop;
                 };
@@ -85,13 +84,13 @@ export default async (interaction, ephemeral) => {
         .setTitle(`${wordStatusTitle}, ${wordType}`)
         .setURL(wordSourceUrls[0]);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
-    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed });
 };
 
 const wordTypeChoices = [
-    { name: "noun", value: "noun" },
-    { name: "verb", value: "verb" },
-    { name: "adjective", value: "adjective" }
+    { name: "Noun", value: "noun" },
+    { name: "Verb", value: "verb" },
+    { name: "Adjective", value: "adjective" }
 ];
 
 // String options

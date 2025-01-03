@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
@@ -7,9 +8,10 @@ import {
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
-    userMention
+    userMention,
+    inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
@@ -19,12 +21,11 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.BanMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    let ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
 
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
@@ -41,7 +42,7 @@ export default async (interaction) => {
 
     let executorNameFormatted = formatName(interaction.user.username);
     let banReturn = null;
-    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${requiredPermissionName}\` permission.`;
+    let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
@@ -66,7 +67,7 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: banReturn });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });
@@ -79,13 +80,13 @@ export default async (interaction) => {
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-            return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: banReturn });
         } catch (e) {
             // console.log(e);
             return sendMessage({ interaction: interaction, content: banFailString });
         };
     } else {
-        return sendMessage({ interaction: interaction, content: `You need to provide a target to ban either through the \`member\` or the \`user-id\` argument.` });
+        return sendMessage({ interaction: interaction, content: `You need to provide a target to ban either through the ${inlineCode("member")} or the ${inlineCode("user-id")} argument.` });
     };
 };
 

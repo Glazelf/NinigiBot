@@ -1,33 +1,38 @@
 import {
+    MessageFlags,
+    GuildFeature,
     InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
-    SlashCommandAttachmentOption
+    SlashCommandAttachmentOption,
+    inlineCode
 } from "discord.js";
 import logger from "../../util/logger.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import deletePersonalRole from "../../util/deletePersonalRole.js";
+import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
+import getBotSubscription from "../../util/discord/getBotSubscription.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.Ephemeral);
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let adminBool = isAdmin(interaction.member);
     let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
+    // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
+    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
     let guildNameFormatted = formatName(interaction.guild.name);
-    if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.` });
+    if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
+
+    await interaction.deferReply({ flags: messageFlags });
 
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
-
-    ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
-
     let colorArg = interaction.options.getString('color-hex');
     let iconArg = interaction.options.getAttachment("icon");
 
@@ -47,8 +52,7 @@ export default async (interaction, ephemeral) => {
     if (interaction.options.getSubcommand() == "delete") deleteBool = true;
     // Check if icons are possible
     let iconsAllowed = false;
-    let nitroLevel2Req = 7;
-    if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
+    if (interaction.guild.features.includes(GuildFeature.RoleIcons)) iconsAllowed = true;
     // Get Nitro Booster position
     let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
     if (!boosterRole) return sendMessage({ interaction: interaction, content: `${guildNameFormatted} does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
@@ -56,13 +60,12 @@ export default async (interaction, ephemeral) => {
     let personalRolePosition = boosterRole.position + 1;
     // Check SKU entitlement
     let botSubscriberBool = false;
-    if (interaction.guild.id == globalVars.ShinxServerID) {
-        let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
-        let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == "1164974692889808999" && entitlement.userId == interaction.user.id);
-        if (ninigiSubscriptions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
-    };
+    let botSubscription = await getBotSubscription(interaction.client.application, interaction.user.id);
+    if (interaction.guild.id == globalVars.ShinxServerID && botSubscription.entitlement) botSubscriberBool = true;
+    let isEligibleForPersonalRole = (boosterBool || modBool || adminBool || botSubscriberBool || integrationRoleBool);
+    let notEligibleString = "You need to be a Nitro Booster, Twitch/YouTube subscriber or moderator to manage a personal role.";
     // Check if user is eligible to use this command
-    if (!boosterBool && !modBool && !adminBool && !botSubscriberBool) return sendMessage({ interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
+    if (!isEligibleForPersonalRole) return sendMessage({ interaction: interaction, content: notEligibleString });
     // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
     // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
     if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
@@ -74,20 +77,18 @@ export default async (interaction, ephemeral) => {
         while (roleColor.length < 6) roleColor = "0" + roleColor;
     };
     if (deleteBool == true) return deleteRole({
-        client: interaction.client,
         interaction: interaction,
         roleDB: roleDB,
         successString: "Deleted your personal role and database entry.",
         failString: "Your personal role isn't in my database so I can't delete it."
     });
-    // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
+    // Might want to change checks to be more inline with role tags (assuming a mod role tag will be added someday)
     // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-    if (!boosterRole && !modBool && !adminBool && !botSubscriberBool) return deleteRole({
-        client: interaction.client,
+    if (!isEligibleForPersonalRole) return deleteRole({
         interaction: interaction,
         roleDB: roleDB,
         successString: "Since you can't manage a personal role anymore I cleaned up your old role.",
-        failString: "You need to be a Nitro Booster or moderator to manage a personal role."
+        failString: notEligibleString
     });
 
     if (roleDB) {
@@ -95,7 +96,7 @@ export default async (interaction, ephemeral) => {
         let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
         if (!personalRole) return createRole();
         if (!colorArg) roleColor = personalRole.color;
-        if (roleColor != personalRole.color) editReturnString += `\n- Color set to \`#${roleColor}\`.`;
+        if (roleColor != personalRole.color) editReturnString += `\n- Color set to ${inlineCode(`#${roleColor}`)}.`;
 
         try {
             await personalRole.edit({
@@ -123,7 +124,7 @@ export default async (interaction, ephemeral) => {
                 };
             };
         } else if (iconArg && !iconsAllowed) {
-            editReturnString += `-${guildNameFormatted} does not have role icons unlocked.`;
+            editReturnString += `\n- ${guildNameFormatted} does not have role icons unlocked.`;
         };
         // Re-add role if it got removed
         if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
@@ -168,7 +169,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-async function deleteRole({ client, interaction, roleDB, successString, failString }) {
+async function deleteRole({ interaction, roleDB, successString, failString }) {
     if (roleDB) {
         await deletePersonalRole(roleDB, interaction.guild);
         return sendMessage({ interaction: interaction, content: successString });
@@ -180,7 +181,9 @@ async function deleteRole({ client, interaction, roleDB, successString, failStri
 // String options
 const colorHexOption = new SlashCommandStringOption()
     .setName("color-hex")
-    .setDescription("Specify a color.");
+    .setDescription("Specify a color.")
+    .setMinLength(6)
+    .setMaxLength(6);
 // Attachment options
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")

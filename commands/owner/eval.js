@@ -1,20 +1,20 @@
 import {
+    MessageFlags,
     InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import util from "util";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = true;
+export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     // NEVER remove this, even for testing. Research eval() before doing so, at least.
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-    await interaction.deferReply({ ephemeral: ephemeral });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    await interaction.deferReply({ flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     const input = interaction.options.getString("input");
     let evaled;
@@ -28,10 +28,10 @@ export default async (interaction, ephemeral) => {
     if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
     // Check if requested content has any matches with environment variables. Should avoid possible security leaks.
     for (const [key, value] of Object.entries(process.env)) {
-        if (evaled.includes(value) && ephemeral == false) return sendMessage({ interaction: interaction, content: `For security reasons this content can't be returned.` });
+        if (evaled.includes(value) && !messageFlags.has(MessageFlags.Ephemeral)) return sendMessage({ interaction: interaction, content: `For security reasons this content can't be returned.`, flags: messageFlags });
     };
     let returnString = codeBlock("js", clean(evaled));
-    return sendMessage({ interaction: interaction, content: returnString });
+    return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 
     function clean(text) {
         if (typeof (text) === "string") {

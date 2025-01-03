@@ -1,22 +1,22 @@
 import {
+    MessageFlags,
     InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 // Avoid using channel ID for starboard (705601772785238080), link to channels directly instead.
 let previousQuoteTime = null;
-let allMessages = [];
+const allMessages = [];
 for (const [key, value] of Object.entries(quotes)) {
     value.forEach(messageID => allMessages.push({ channelID: key, messageID: messageID }));
 };
 
-export default async (interaction, ephemeral) => {
-    ephemeral = false;
+export default async (interaction, messageFlags) => {
     let quoteEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     // Set cooldown
@@ -26,7 +26,7 @@ export default async (interaction, ephemeral) => {
         const expirationTime = previousQuoteTime + cooldownAmount;
         if (now < expirationTime) {
             const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
-            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, ephemeral: true });
+            return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
         };
     };
     let randomMessage = allMessages[randomNumber(0, allMessages.length - 1)];
@@ -42,7 +42,7 @@ export default async (interaction, ephemeral) => {
             .setURL(messageURL)
             .setColor(globalVars.embedColorError)
             .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
-        return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
     };
 
     let messageImage = null;
@@ -59,7 +59,7 @@ export default async (interaction, ephemeral) => {
         .setTimestamp(message.createdTimestamp);
     if (message.content.length > 0) quoteEmbed.setDescription(message.content);
     previousQuoteTime = now;
-    return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.remove(MessageFlags.Ephemeral) });
 };
 
 export const guildID = globalVars.ShinxServerID;

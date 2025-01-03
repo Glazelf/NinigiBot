@@ -1,7 +1,7 @@
 import {
     EmbedBuilder
 } from "discord.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async ({ messageReaction, targetMessage, boardEmote }) => {
     // Check for atached files

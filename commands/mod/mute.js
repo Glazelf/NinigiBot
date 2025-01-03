@@ -1,4 +1,5 @@
 import {
+    MessageFlags,
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
@@ -6,9 +7,10 @@ import {
     SlashCommandStringOption,
     SlashCommandIntegerOption,
     SlashCommandUserOption,
-    bold
+    bold,
+    inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
@@ -18,12 +20,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, ephemeral) => {
+export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    ephemeral = false;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    await interaction.deferReply();
+
     let user = interaction.options.getUser("user");
     let member = await interaction.guild.members.fetch(user.id);
     if (!member) return sendMessage({ interaction: interaction, content: `Please provide a user to mute.` });
@@ -53,7 +55,7 @@ export default async (interaction, ephemeral) => {
     let usernameFormatted = formatName(user.username);
     if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than yours (${formatName(userRole.name)}).` });
     if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than mine (${formatName(botRole.name)}).` });
-    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the \`${requiredPermissionName}\` permission.` });
+    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the ${inlineCode(requiredPermissionName)} permission.` });
 
     let reason = "Not specified.";
     let reasonArg = interaction.options.getString("reason");
@@ -76,7 +78,7 @@ export default async (interaction, ephemeral) => {
         await user.send({ content: dmString })
             .then(message => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
             .catch(e => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);
-        return sendMessage({ interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: muteReturnString });
     } catch (e) {
         // console.log(e);
         return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${usernameFormatted}. I probably lack permissions.` });

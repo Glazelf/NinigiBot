@@ -4,14 +4,13 @@ import {
     SlashCommandIntegerOption,
     SlashCommandBooleanOption,
     time,
-    TimestampStyles
+    TimestampStyles,
+    inlineCode
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     // Date manipulation
     let currentDate = new Date();
     let targetDate = new Date();
@@ -64,15 +63,15 @@ export default async (interaction, ephemeral) => {
         .setColor(globalVars.embedColor)
         .setTitle(dateString)
         .addFields([
-            { name: "Short Time", value: `\`${shortTime}\` ➡ ${shortTime}`, inline: false },
-            { name: "Long Time", value: `\`${longTime}\` ➡ ${longTime}`, inline: false },
-            { name: "Short Date", value: `\`${shortDate}\` ➡ ${shortDate}`, inline: false },
-            { name: "Long Date", value: `\`${longDate}\` ➡ ${longDate}`, inline: false },
-            { name: "Short Date/Time", value: `\`${shortDateTime}\` ➡ ${shortDateTime}`, inline: false },
-            { name: "Long Date/Time", value: `\`${longDateTime}\` ➡ ${longDateTime}`, inline: false },
-            { name: "Relative Time", value: `\`${relativeTime}\` ➡ ${relativeTime}`, inline: false }
+            { name: "Short Time", value: `${inlineCode(shortTime)} ➡ ${shortTime}`, inline: false },
+            { name: "Long Time", value: `${inlineCode(longTime)} ➡ ${longTime}`, inline: false },
+            { name: "Short Date", value: `${inlineCode(shortDate)} ➡ ${shortDate}`, inline: false },
+            { name: "Long Date", value: `${inlineCode(longDate)} ➡ ${longDate}`, inline: false },
+            { name: "Short Date/Time", value: `${inlineCode(shortDateTime)} ➡ ${shortDateTime}`, inline: false },
+            { name: "Long Date/Time", value: `${inlineCode(longDateTime)} ➡ ${longDateTime}`, inline: false },
+            { name: "Relative Time", value: `${inlineCode(relativeTime)} ➡ ${relativeTime}`, inline: false }
         ]);
-    return sendMessage({ interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: timestampEmbed, flags: messageFlags });
 };
 
 // Integer options

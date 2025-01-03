@@ -1,26 +1,23 @@
 import {
+    MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
-    SlashCommandBooleanOption,
-    ApplicationIntegrationType
+    SlashCommandBooleanOption
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
+import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+export default async (interaction, messageFlags) => {
     let embed = new EmbedBuilder();
     switch (interaction.options.getSubcommand()) {
         case "info":
             let user = await getUser(interaction.user.id);
             let avatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            if (interaction.inGuild() && interaction.member && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
-                avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
-            };
+            if (isGuildDataAvailable(interaction)) avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let trophy_level = 0;
             let trophies = await user.getShopTrophies();
@@ -49,10 +46,10 @@ export default async (interaction, ephemeral) => {
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };
-            return sendMessage({ interaction: interaction, embeds: [embed], ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, embeds: [embed], flags: messageFlags });
         case "swapsprite":
             const shinx = await getShinx(interaction.user.id);
-            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!` });
+            return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     };
 };
 

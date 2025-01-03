@@ -1,12 +1,12 @@
 import {
-    codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
+    codeBlock,
     hyperlink,
     hideLinkEmbed
 } from "discord.js";
-import sendMessage from "../../util/sendMessage.js";
+import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const maxMessageLength = 2000;
@@ -26,10 +26,8 @@ const sanitizeValues = [
     "$"
 ];
 
-export default async (interaction, ephemeral) => {
-    let ephemeralArg = interaction.options.getBoolean("ephemeral");
-    if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
+export default async (interaction, messageFlags) => {
+    await interaction.deferReply({ flags: messageFlags });
 
     let input = interaction.options.getString("input");
     // Sanitize input
