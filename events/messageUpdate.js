@@ -16,9 +16,9 @@ export default async (client, message, newMessage) => {
         serverApi = await serverApi.default();
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
-        let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = message.guild.channels.cache.get(logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
-        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == globalVars.sysbotLogChannelID);
+        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.get(globalVars.sysbotLogChannelID);
         if (!log) return;
 
         let botMember = message.guild.members.me;

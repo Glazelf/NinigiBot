@@ -18,7 +18,7 @@ export default async (interaction, messageFlags) => {
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
-    let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
+    let memberCount = guildMembers.filter(member => member.roles.cache.get(role.id)).size;
     // Properties
     let roleProperties = "";
     if (role.hoist) roleProperties = `${roleProperties}Sorted seperately\n`;

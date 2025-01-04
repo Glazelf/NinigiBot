@@ -42,7 +42,7 @@ export default async (client) => {
                 };
             };
             if (cuties.length < 1) return;
-            let channel = guild.channels.cache.find(channel => channel.id === channelID);
+            let channel = guild.channels.cache.get(channelID);
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             // Create embed

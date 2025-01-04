@@ -6,7 +6,7 @@ export default async (application, userID) => {
     let entitlements = await application.entitlements.fetch({ excludeEnded: true });
     let entitlementSKU = null;
     let botSubscription = entitlements.find(entitlement => {
-        entitlementSKU = SKUs.find(SKU => SKU.id == entitlement.skuId);
+        entitlementSKU = SKUs.get(entitlement.skuId);
         if (entitlementSKU.type == SKUType.Subscription && entitlement.userId == userID) return entitlement;
     });
     return { entitlement: botSubscription, SKU: entitlementSKU };

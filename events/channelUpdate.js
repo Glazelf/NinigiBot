@@ -13,7 +13,7 @@ export default async (client, oldChannel, newChannel) => {
         serverApi = await serverApi.default();
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: newChannel.guild.id } });
         if (!logChannel) return;
-        let log = newChannel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = newChannel.guild.channels.cache.get(logChannel.channel_id);
         if (!log) return;
 
         let botMember = newChannel.guild.members.me;

@@ -35,7 +35,7 @@ export default async (client) => {
             const randomGif = await getRandomGif(gifTags);
             if (!randomGif) return;
 
-            let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
+            let channel = guild.channels.cache.get(globalVars.eventChannelID);
 
             const gifEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)

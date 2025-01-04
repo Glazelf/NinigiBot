@@ -204,7 +204,7 @@ export default async (client, interaction) => {
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newMonsterName) break;
-                                newMonsterName = componentRow.components.find(component => component.customId == interaction.customId);
+                                newMonsterName = componentRow.components.get(interaction.customId);
                             };
                             if (!newMonsterName) return;
                             newMonsterName = newMonsterName.label;
