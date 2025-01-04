@@ -341,23 +341,26 @@ export default async (interaction, messageFlags) => {
 
             let month = interaction.options.getInteger("month");
             let year = interaction.options.getInteger("year");
+            let updatedTimes;
             // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
             const date = new Date();
             if (!year) year = date.getFullYear();
             if (!month) {
                 month = date.getMonth();
+                updatedTimes = checkMonthLastYear({ month: month, year: year });
+                month = updatedTimes.month;
+                year = updatedTimes.year;
                 // Test month existence, otherwise default to last month
                 let currentMonnthExists = urlExists(`https://www.smogon.com/stats/${year}-${leadingZeros(month, 2)}/`);
                 if (!currentMonnthExists) month = month - 1;
             };
-            if (month < 1) {
-                month += 12;
-                year -= 1;
-            };
-            let stringMonth = leadingZeros(month, 2);
+            updatedTimes = checkMonthLastYear({ month: month, year: year });
+            month = updatedTimes.month;
+            year = updatedTimes.year;
+            let monthString = leadingZeros(month, 2);
             // Format URL and other variables
-            let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
-            let genericUsageURL = `https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`
+            let searchURL = `https://www.smogon.com/stats/${year}-${monthString}/moveset/${formatInput}-${rating}.txt`;
+            let genericUsageURL = `https://www.smogon.com/stats/${year}-${monthString}/${formatInput}-${rating}.txt`;
             let response = null;
             let genericUsageResponse = null;
             let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
@@ -413,7 +416,7 @@ export default async (interaction, messageFlags) => {
                 let teammatesString = mapUsageString(usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0], "%");
                 let countersString = mapUsageString(usagePokemonString.split("Checks and Counters")[1], "out)");
                 pokemonEmbed
-                    .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
+                    .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${monthString}/${year})`)
                     .setDescription(`Usage Rank: #${usageRank}\nUsage Percentage: ${usagePercentage}\nRaw Uses: ${rawUsage}`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
@@ -443,7 +446,7 @@ export default async (interaction, messageFlags) => {
                 });
                 usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                 pokemonEmbed
-                    .setTitle(`Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})`)
+                    .setTitle(`Usage for ${formatInput} ${rating}+ (${monthString}/${year})`)
                     .addFields([
                         { name: "1-50", value: usageListPart1.join("\n"), inline: true },
                         { name: "51-100", value: usageListPart2.join("\n"), inline: true }
@@ -631,6 +634,15 @@ function getCardMatchupString(matchupArray, emojis) {
 // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
 function mapUsageString(string, seperator) {
     return string.split(seperator).map(function (x) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
+};
+
+// Check if month is below 1, return older month and decrease year by one
+function checkMonthLastYear({ month: month, year: year }) {
+    if (month < 1) {
+        month += 12;
+        year -= 1;
+    };
+    return { month: month, year: year };
 };
 
 // Set nature choices. The max is 25 and there are exactly 25 natures.
