@@ -17,6 +17,7 @@ for (const [key, value] of Object.entries(quotes)) {
 };
 
 export default async (interaction, messageFlags) => {
+    messageFlags.remove(MessageFlags.Ephemeral);
     let quoteEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     // Set cooldown
@@ -59,7 +60,7 @@ export default async (interaction, messageFlags) => {
         .setTimestamp(message.createdTimestamp);
     if (message.content.length > 0) quoteEmbed.setDescription(message.content);
     previousQuoteTime = now;
-    return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.remove(MessageFlags.Ephemeral) });
+    return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags });
 };
 
 export const guildID = globalVars.ShinxServerID;

@@ -15,7 +15,10 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
-    await interaction.deferReply();
+
+    messageFlags.remove(MessageFlags.Ephemeral);
+    await interaction.deferReply({ flags: messageFlags });
+
     let removeInteractions = false;
     let interactionsArg = interaction.options.getBoolean("reset-interactions");
     if (interactionsArg === true) removeInteractions = interactionsArg;

@@ -12,6 +12,7 @@ import {
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
+    messageFlags.remove(MessageFlags.Ephemeral);
     const currentBalance = await getMoney(interaction.user.id);
     let transferAmount = interaction.options.getInteger("amount");
     let transferTarget = interaction.options.getUser("user");
@@ -23,7 +24,7 @@ export default async (interaction, messageFlags) => {
     addMoney(interaction.user.id, -transferAmount);
     addMoney(transferTarget.id, transferAmount);
 
-    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, flags: messageFlags.remove(MessageFlags.Ephemeral) });
+    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, flags: messageFlags });
 };
 
 // Integer options

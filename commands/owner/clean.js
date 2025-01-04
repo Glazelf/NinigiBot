@@ -11,7 +11,6 @@ import { getAllUsers } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
-    messageFlags.remove(MessageFlags.Ephemeral);
     let confirm = false;
     let confirmArg = interaction.options.getBoolean("confirm");
     if (confirmArg === true) confirm = confirmArg;
@@ -19,7 +18,9 @@ export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
+    messageFlags.remove(MessageFlags.Ephemeral);
     await interaction.deferReply({ flags: messageFlags });
+
     await sendMessage({ interaction: interaction, content: 'Deleting outdated entries...', flags: messageFlags });
     const users = await getAllUsers();
     if (users.length == 0) return sendMessage({ interaction: interaction, content: 'Database is already empty!', flags: messageFlags });

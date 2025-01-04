@@ -26,7 +26,7 @@ export default async (interaction, messageFlags) => {
     await sendMessage({ interaction: interaction, content: shutdownString });
 
     if (removeInteractions) {
-        await interaction.deferReply();
+        await interaction.deferReply({ flags: messageFlags });
         // Delete all global commands
         await interaction.client.application.commands.set([]);
         // Delete all guild commands

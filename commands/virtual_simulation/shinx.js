@@ -359,7 +359,9 @@ export default async (interaction, messageFlags) => {
                 const shinx = await getShinx(trainers[i].id);
                 shinxes.push(new ShinxBattle(trainers[i], shinx));
             };
-            await interaction.deferReply();
+
+            messageFlags.remove(MessageFlags.Ephemeral);
+            await interaction.deferReply({ flags: messageFlags });
 
             const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
             canvas = Canvas.createCanvas(240, 71);
