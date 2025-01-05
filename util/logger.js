@@ -27,7 +27,7 @@ export default async ({ exception, client, interaction = null }) => {
             return; // Expired interaction, can't reply to said interaction
         } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
             return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
-        } else if (exceptionString.includes("AxiosError")) {
+        } else if (exceptionString.includes("AxiosError") || exceptionString.includes("socket hang up")) {
             // console.log(exception);
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
             return sendMessage({ interaction: interaction, content: "An error occurred getting a response from the API or it did not respond.\nPlease try again later." });
