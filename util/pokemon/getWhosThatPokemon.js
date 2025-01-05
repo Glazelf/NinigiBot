@@ -6,6 +6,7 @@ import {
     EmbedBuilder,
     bold
 } from "discord.js";
+import fs from "fs";
 import Canvas from "canvas";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -58,11 +59,19 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         messageObject.files = [];
         messageObject.components = [];
     } else {
-        // Construct a black render, this forces us to load in the image entirely instead of just passing the URL :(
         // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
-        let imageBuffer = await axios.get(serebiiRender, { responseType: 'arraybuffer' }).then(response => response.data);
+        let localImagePath = `./assets/pkm/${pokemonID}.png`;
+        let localImageExists = fs.existsSync(localImagePath);
         let img = new Canvas.Image();
-        img.src = imageBuffer;
+        // Fetch image from Serebii if it doesn't exist locally
+        if (localImageExists) {
+            img.src = localImagePath;
+        } else {
+            let imageBuffer = await axios.get(serebiiRender, { responseType: 'arraybuffer' }).then(response => response.data);
+            fs.appendFileSync(localImagePath, Buffer.from(imageBuffer));
+            img.src = imageBuffer;
+        };
+        // Construct a black render, this forces us to load in the image entirely instead of just passing the URL :(
         let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
         let ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
@@ -70,6 +79,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         ctx.globalCompositeOperation = "source-in";
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
+        // Create local file if doesn't exist yet
         // Add buttons
         const quizGuessButton = new ButtonBuilder()
             .setCustomId(`pkmQuizGuess|${pokemon.name}`)
@@ -80,7 +90,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
             .setLabel("Reveal")
             .setStyle(ButtonStyle.Danger);
         pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
-        pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.jpg" });
+        pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.png" });
         embedImage = `attachment://${pokemonImage.name}`;
         messageObject.files = [pokemonImage];
         messageObject.components = [pokemonButtons];

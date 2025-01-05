@@ -21,6 +21,7 @@ config.json
 launch.json
 *.dev.js
 /.vscode
+/assets/pkm
 # Roms
 *.gbc
 *.gb
