@@ -60,7 +60,8 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         messageObject.components = [];
     } else {
         // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
-        let localImagePath = `./assets/pkm/${pokemonID}.png`;
+        let localImageFolder = "./assets/pkm/";
+        let localImagePath = `${localImageFolder}${pokemonID}.png`;
         let localImageExists = fs.existsSync(localImagePath);
         let img = new Canvas.Image();
         // Fetch image from Serebii if it doesn't exist locally
@@ -68,6 +69,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
             img.src = localImagePath;
         } else {
             let imageBuffer = await axios.get(serebiiRender, { responseType: 'arraybuffer' }).then(response => response.data);
+            fs.mkdirSync(localImageFolder, { recursive: true });
             fs.appendFileSync(localImagePath, Buffer.from(imageBuffer));
             img.src = imageBuffer;
         };
