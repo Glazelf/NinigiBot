@@ -95,14 +95,14 @@ export default async (interaction, messageFlags) => {
 
             canvas = Canvas.createCanvas(791, 441);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/data.png');
+            img = await Canvas.loadImage('./assets/shinx/data.png');
 
             ctx.drawImage(img, 0, 0);
             if (shinx.shiny) {
-                const cap = await Canvas.loadImage('./assets/shiny.png');
+                const cap = await Canvas.loadImage('./assets/shinx/shiny.png');
                 ctx.drawImage(cap, 97, 202);
             };
-            img = await Canvas.loadImage('./assets/owner.png');
+            img = await Canvas.loadImage('./assets/shinx/owner.png');
             ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125, 59 - 5 * !is_user_male, 49);
             ctx.font = applyText(canvas, shinx.nickname, 45, 266);
             ctx.fillStyle = '#FFFFFF';
@@ -156,9 +156,9 @@ export default async (interaction, messageFlags) => {
                     returnString = `${formatName(shinx.nickname)} ${reactionFeed[0]}`;
                     canvas = Canvas.createCanvas(393, 299);
                     ctx = canvas.getContext('2d');
-                    img = await Canvas.loadImage('./assets/dining.png');
+                    img = await Canvas.loadImage('./assets/shinx/dining.png');
                     ctx.drawImage(img, 0, 0);
-                    img = await Canvas.loadImage('./assets/mc.png');
+                    img = await Canvas.loadImage('./assets/shinx/mc.png');
                     let guests = [];
                     if (guildDataAvailable) guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
@@ -173,17 +173,17 @@ export default async (interaction, messageFlags) => {
                             ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
                         };
                     };
-                    img = await Canvas.loadImage('./assets/fieldShinx.png');
+                    img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
 
                     for (let i = 0; i < guests.length; i++) {
                         ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
                     };
-                    img = await Canvas.loadImage('./assets/reactions.png');
+                    img = await Canvas.loadImage('./assets/shinx/reactions.png');
                     ctx.drawImage(img, 10 + 30 * reactionFeed[1], 8, 30, 32, 202, 115, 30, 32);
 
                     if (now.getHours() > 20 || now.getHours() < 6) {
-                        img = await Canvas.loadImage('./assets/dinNight.png');
+                        img = await Canvas.loadImage('./assets/shinx/dinNight.png');
                         ctx.drawImage(img, 199, 0);
                     };
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
@@ -194,7 +194,7 @@ export default async (interaction, messageFlags) => {
             shinx = await getShinx(master.id);
             canvas = Canvas.createCanvas(578, 398);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/landscapes.png');
+            img = await Canvas.loadImage('./assets/shinx/landscapes.png');
             ctx.drawImage(img, 0, 0);
             if (now.getHours() >= 20 || now.getHours() < 4) {
                 time = 2;
@@ -207,7 +207,7 @@ export default async (interaction, messageFlags) => {
             const layout = getRandomVisitorPosition();
             let guests = [];
             if (guildDataAvailable) guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/shinx/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
@@ -220,7 +220,7 @@ export default async (interaction, messageFlags) => {
                     ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
                 };
             };
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
             ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
 
             for (let i = 0; i < guests.length; i++) {
@@ -229,7 +229,7 @@ export default async (interaction, messageFlags) => {
             let reactionPlay = playing_reaction();
             if (shinx.belly < 0.2) reactionPlay = playing_reaction(0);
 
-            img = await Canvas.loadImage('./assets/reactions.png');
+            img = await Canvas.loadImage('./assets/shinx/reactions.png');
             ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.addExperienceAndUnfeed(100 * reactionPlay[2], 1);
             messageFile = new AttachmentBuilder(canvas.toBuffer());
@@ -243,7 +243,7 @@ export default async (interaction, messageFlags) => {
             shinx = await getShinx(master.id);
             canvas = Canvas.createCanvas(256, 160);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/park.png');
+            img = await Canvas.loadImage('./assets/shinx/park.png');
             ctx.drawImage(img, 0, 0);
             if (now.getHours() >= 20 || now.getHours() < 4) {
                 time = 2;
@@ -253,9 +253,9 @@ export default async (interaction, messageFlags) => {
                 time = 1;
             };
             ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
-            img = await Canvas.loadImage('./assets/trainer.png');
+            img = await Canvas.loadImage('./assets/shinx/trainer.png');
             ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
-            img = await Canvas.loadImage('./assets/portraits.png');
+            img = await Canvas.loadImage('./assets/shinx/portraits.png');
             let conversation = await getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
@@ -280,14 +280,14 @@ export default async (interaction, messageFlags) => {
                     const is_shiny = await getShinxShininess(master.id);
                     canvas = Canvas.createCanvas(471, 355);
                     ctx = canvas.getContext('2d');
-                    img = await Canvas.loadImage('./assets/nicks.png');
+                    img = await Canvas.loadImage('./assets/shinx/nicks.png');
                     ctx.drawImage(img, 0, 0);
-                    img = await Canvas.loadImage('./assets/mc.png');
+                    img = await Canvas.loadImage('./assets/shinx/mc.png');
                     const is_user_male = await isTrainerMale(master.id);
                     ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
-                    img = await Canvas.loadImage('./assets/fieldShinx.png');
+                    img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
-                    img = await Canvas.loadImage('./assets/reactions.png');
+                    img = await Canvas.loadImage('./assets/shinx/reactions.png');
                     ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
                     returnString = `Nickname changed to ${formatName(new_nick)}!`;
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
@@ -308,12 +308,12 @@ export default async (interaction, messageFlags) => {
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
                 canvas = Canvas.createCanvas(255, 192);
                 ctx = canvas.getContext('2d');
-                img = await Canvas.loadImage('./assets/sky.png');
+                img = await Canvas.loadImage('./assets/shinx/sky.png');
                 ctx.drawImage(img, 0, 0);
-                img = await Canvas.loadImage('./assets/sprite.png');
+                img = await Canvas.loadImage('./assets/shinx/sprite.png');
                 ctx.drawImage(img, 94 * is_shiny, 0, 94, 72, 87, 61, 94, 72);
                 if (is_shiny) {
-                    img = await Canvas.loadImage('./assets/sparkle.png');
+                    img = await Canvas.loadImage('./assets/shinx/sparkle.png');
                     ctx.drawImage(img, 49, 10);
                 };
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
@@ -366,7 +366,7 @@ export default async (interaction, messageFlags) => {
             const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
             canvas = Canvas.createCanvas(240, 71);
             ctx = canvas.getContext('2d');
-            let background = await Canvas.loadImage('./assets/vs.png');
+            let background = await Canvas.loadImage('./assets/shinx/vs.png');
             ctx.drawImage(background, 0, 0);
             ctx.beginPath();
             for (let i = 0; i < 2; i++) ctx.arc(47 + 147 * i, 36, 29, 0, Math.PI * 2, false);
@@ -411,7 +411,7 @@ export default async (interaction, messageFlags) => {
             // await interaction.channel.send({ files: [messageFile] });
             canvas = Canvas.createCanvas(240, 168);
             ctx = canvas.getContext('2d');
-            background = await Canvas.loadImage('./assets/battleUI.png');
+            background = await Canvas.loadImage('./assets/shinx/battleUI.png');
             ctx.drawImage(background, 0, 0);
             ctx.font = 'normal bolder 14px Arial';
             ctx.fillStyle = '#FFFFFF';
@@ -420,7 +420,7 @@ export default async (interaction, messageFlags) => {
             for (let i = 0; i < 2; i++) {
                 ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
             };
-            const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
+            const battleSprite = await Canvas.loadImage('./assets/shinx/battleSprite.png');
 
             for (let i = 0; i < 2; i++) {
                 if (shinxes[i].shiny) {
@@ -431,8 +431,8 @@ export default async (interaction, messageFlags) => {
             const nicks = [];
             const prevColors = [0, 0];
             for (let i = 0; i < 2; i++) nicks.push(`${shinxes[i].owner.username}'s ${shinxes[i].nick}`);
-            const geasson = await Canvas.loadImage('./assets/geasson.png');
-            const geassoff = await Canvas.loadImage('./assets/geassoff.png');
+            const geasson = await Canvas.loadImage('./assets/shinx/geasson.png');
+            const geassoff = await Canvas.loadImage('./assets/shinx/geassoff.png');
 
             for (let i = 0; i < 2; i++) {
                 if (shinxes[i].geass > 0) {
@@ -453,7 +453,7 @@ export default async (interaction, messageFlags) => {
                     if (result === true) {
                         canvas = Canvas.createCanvas(240, 130);
                         ctx = canvas.getContext('2d');
-                        background = await Canvas.loadImage('./assets/results.png');
+                        background = await Canvas.loadImage('./assets/shinx/results.png');
                         ctx.drawImage(background, 0, 0);
                         ctx.beginPath();
                         for (let i = 0; i < 2; i++) ctx.arc(58 + 134 * i, 83, 40, 0, Math.PI * 2, false);

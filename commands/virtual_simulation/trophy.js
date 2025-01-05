@@ -82,13 +82,13 @@ export default async (interaction, messageFlags) => {
                     shinx = await getShinx(master.id);
                     canvas = Canvas.createCanvas(428, 310);
                     ctx = canvas.getContext('2d');
-                    img = await Canvas.loadImage('./assets/frontier.png');
+                    img = await Canvas.loadImage('./assets/shinx/frontier.png');
                     ctx.drawImage(img, 0, 0);
-                    img = await Canvas.loadImage('./assets/mc.png');
+                    img = await Canvas.loadImage('./assets/shinx/mc.png');
                     ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
-                    img = await Canvas.loadImage('./assets/fieldShinx.png');
+                    img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
-                    img = await Canvas.loadImage('./assets/reactions.png');
+                    img = await Canvas.loadImage('./assets/shinx/reactions.png');
                     ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
 
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
