@@ -7,7 +7,9 @@ const maxEmbedLength = 6000;
 const maxDescriptionLength = 2000;
 const maxFieldValueLength = 1024;
 const debugChannelID = "1325890140517826580"; // Replace ID with specific debug channel ID
-const fieldName = "Field";
+// Zero-width character for empty field names. Though this is an undocumented feature and may break in the future, which is why I generally avoid them.
+// It is usefull pretty much only here, where we want to paste one uninterrupted string for as long as possible, as close to 6000 characters as we can get.
+const fieldName = "​";
 
 export default async (client, info) => {
     // return; // Comment out to enable debugging, uncomment to disable
