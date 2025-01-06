@@ -173,7 +173,8 @@ export default async (client, interaction) => {
                                 .setLabel("Put in your guess!")
                                 .setPlaceholder("Azelf-Mega-Y")
                                 .setStyle(TextInputStyle.Short)
-                                .setMaxLength(64)
+                                .setMinLength(3) // Mew, Muk etc. are the shortest names
+                                .setMaxLength(25) // Urshifu-Rapid-Strike-Gmax and Dudunsparce-Three-Segment are the longest names
                                 .setRequired(true);
                             const pkmQuizActionRow = new ActionRowBuilder()
                                 .addComponents(pkmQuizModalGuessInput);
