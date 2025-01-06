@@ -7,6 +7,7 @@ const maxEmbedLength = 6000;
 const maxDescriptionLength = 2000;
 const maxFieldValueLength = 1024;
 const debugChannelID = "1325890140517826580"; // Replace ID with specific debug channel ID
+const fieldName = "Field";
 
 export default async (client, info) => {
     // return; // Comment out to enable debugging, uncomment to disable
@@ -24,7 +25,11 @@ export default async (client, info) => {
         .setDescription(description);
     // Fill fields
     while (debugEmbed.length <= maxEmbedLength && info[debugInfoIndex]) {
-        debugEmbed.addFields([{ name: "Field", value: info.substring(debugInfoIndex, debugInfoIndex + maxFieldValueLength), inline: false }]);
+        let fieldValue = info.substring(debugInfoIndex);
+        if (fieldValue.length > maxFieldValueLength) fieldValue = info.substring(debugInfoIndex, debugInfoIndex + maxFieldValueLength);
+        let substringRequiredToFit = debugEmbed.length + fieldName.length + fieldValue.length - maxEmbedLength;
+        if (substringRequiredToFit > 0) fieldValue = fieldValue.substring(0, fieldValue.length - substringRequiredToFit);
+        debugEmbed.addFields([{ name: fieldName, value: fieldValue, inline: false }]);
     };
     // Send embed
     return debugChannel.send({ embeds: [debugEmbed] });
