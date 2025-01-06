@@ -14,7 +14,7 @@ export default async (client, info) => {
     // Format strings
     let description = info;
     if (info.length > maxDescriptionLength) description = info.substring(0, maxDescriptionLength);
-    let debugInfoIndex = maxDescriptionLength + 1;
+    let debugInfoIndex = maxDescriptionLength;
     // Channel
     let debugChannel = client.channels.cache.get(debugChannelID);
     if (!debugChannel) debugChannel = await client.channels.fetch(debugChannelID);
@@ -30,6 +30,7 @@ export default async (client, info) => {
         let substringRequiredToFit = debugEmbed.length + fieldName.length + fieldValue.length - maxEmbedLength;
         if (substringRequiredToFit > 0) fieldValue = fieldValue.substring(0, fieldValue.length - substringRequiredToFit);
         debugEmbed.addFields([{ name: fieldName, value: fieldValue, inline: false }]);
+        debugInfoIndex += maxFieldValueLength;
     };
     // Send embed
     return debugChannel.send({ embeds: [debugEmbed] });
