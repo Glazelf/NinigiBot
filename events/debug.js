@@ -22,7 +22,6 @@ export default async (client, info) => {
     if (!debugChannel) debugChannel = await client.channels.fetch(debugChannelID);
     // Build embed
     let debugEmbed = new EmbedBuilder()
-        .setTitle("Debug")
         .setColor(globalVars.embedColor)
         .setDescription(description);
     // Fill fields
