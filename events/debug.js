@@ -18,8 +18,13 @@ export default async (client, info) => {
     if (info.length > maxDescriptionLength) description = info.substring(0, maxDescriptionLength);
     let debugInfoIndex = maxDescriptionLength;
     // Channel
-    let debugChannel = client.channels.cache.get(debugChannelID);
-    if (!debugChannel) debugChannel = await client.channels.fetch(debugChannelID);
+    let debugChannel;
+    try {
+        debugChannel = await client.channels.fetch(debugChannelID);
+    } catch (e) {
+        // console.log(e);
+        return console.log(info);
+    };
     // Build embed
     let debugEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
