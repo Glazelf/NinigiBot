@@ -22,7 +22,8 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
                     .setURL(targetMessage.url);
                 starboardEmbeds.push(imageEmbed);
             };
-            if ((attachmentsString.length + attachment.proxyURL.length) < 1024) attachmentsString += `${attachment.proxyURL}\n`;
+            let attachmentsStringAddition = `${attachment.proxyURL}\n`
+            if ((attachmentsString.length + attachmentsStringAddition.length) < 1024) attachmentsString += attachmentsStringAddition;
         });
     };
     // Get user's avatar, try to use server avatar, otherwise default to global avatar
