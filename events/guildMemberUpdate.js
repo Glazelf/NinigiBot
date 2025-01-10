@@ -27,8 +27,8 @@ export default async (client, member, newMember) => {
                 if (newMemberFetch) newMember = newMemberFetch;
             };
             if (!newMember) return;
-            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+            let oldAvatar = member.avatarURL(globalVars.displayAvatarSettings);
+            let avatar = newMember.avatarURL(globalVars.displayAvatarSettings);
 
             let updateCase = null;
             let topText = null;
