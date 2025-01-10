@@ -34,14 +34,6 @@ import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with 
 import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
-// DQM
-import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json" };
-import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
-// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json" };
-import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json" };
-import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json" };
-import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
-import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 // BTD
 import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
@@ -765,46 +757,6 @@ export default async (client, interaction) => {
                                         break;
                                 };
                                 break;
-                        };
-                        break;
-                    case "dqm":
-                        let targetJSON = null;
-                        switch (focusedOption.name) {
-                            case "parent1":
-                            case "parent2":
-                            case "target":
-                            case "name":
-                                switch (interaction.options.getSubcommand()) {
-                                    case "monster":
-                                    case "synthesis":
-                                        targetJSON = DQMMonstersJSON;
-                                        break;
-                                    case "area":
-                                        // Currently unused, add spawns under detailed monster info once the db has them
-                                        // targetJSON = DQMAreasJSON;
-                                        break;
-                                    case "family":
-                                        targetJSON = DQMFamiliesJSON;
-                                        break;
-                                    case "item":
-                                        targetJSON = DQMItemsJSON;
-                                        break;
-                                    case "skill":
-                                        targetJSON = DQMSkillsJSON;
-                                        break;
-                                    case "talent":
-                                        targetJSON = DQMTalentsJSON;
-                                        break;
-                                    case "trait":
-                                        targetJSON = DQMTraitsJSON;
-                                        break;
-                                };
-                                break;
-                        };
-                        if (targetJSON) {
-                            for await (const [key, value] of Object.entries(targetJSON)) {
-                                if (normalizeString(value.name).includes(normalizeString(focusedOption.value))) choices.push({ name: value.name, value: key });
-                            };
                         };
                         break;
                     case "helldivers":
