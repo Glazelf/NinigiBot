@@ -14,49 +14,26 @@ export default async (interaction, messageFlags) => {
     let member = interaction.options.getMember("user");
     user = await user.fetch({ force: true });
     // Get assets
-    let avatar = null;
-    let banner = null;
-    let serverAvatar = null;
-    let serverBanner = null;
+    let userAssetLinks = [];
     let userAssetEmbeds = [];
-    if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
-    if (user.bannerURL()) banner = await user.bannerURL(globalVars.displayAvatarSettings);
+    if (user.avatarURL()) userAssetLinks.push(await user.avatarURL(globalVars.displayAvatarSettings));
+    if (user.bannerURL()) userAssetLinks.push(await user.bannerURL(globalVars.displayAvatarSettings));
     if (isGuildDataAvailable(interaction) && member) {
         member = await member.fetch({ force: true });
-        if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (member.bannerURL()) serverBanner = await member.bannerURL(globalVars.displayAvatarSettings);
+        if (member.avatarURL()) userAssetLinks.push(await member.avatarURL(globalVars.displayAvatarSettings));
+        if (member.bannerURL()) userAssetLinks.push(await member.bannerURL(globalVars.displayAvatarSettings));
     };
-    if (!avatar && !serverAvatar && !banner && !serverBanner) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have any assets.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
-
-    const userAssetsEmbed = new EmbedBuilder()
+    // Construct embeds
+    for (const link of userAssetLinks) {
+        const linkEmbed = new EmbedBuilder()
+            .setImage(link)
+            .setURL("https://discord.gg"); // Not set to an asset url because images break if URL is null
+        userAssetEmbeds.push(linkEmbed);
+    };
+    if (userAssetEmbeds.length < 1) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have any assets.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    userAssetEmbeds[0]
         .setColor(globalVars.embedColor)
-        .setAuthor({ name: `${user.username}'s assets:` })
-        .setURL(avatar);
-    userAssetEmbeds.push(userAssetsEmbed);
-    if (avatar) {
-        const avatarEmbed = new EmbedBuilder()
-            .setImage(avatar)
-            .setURL(avatar);
-        userAssetEmbeds.push(avatarEmbed);
-    };
-    if (serverAvatar) {
-        const serverAvatarEmbed = new EmbedBuilder()
-            .setImage(serverAvatar)
-            .setURL(avatar);
-        userAssetEmbeds.push(serverAvatarEmbed);
-    };
-    if (banner) {
-        const bannerEmbed = new EmbedBuilder()
-            .setImage(banner)
-            .setURL(avatar);
-        userAssetEmbeds.push(bannerEmbed);
-    };
-    if (serverBanner) {
-        const serverBannerEmbed = new EmbedBuilder()
-            .setImage(serverBanner)
-            .setURL(avatar);
-        userAssetEmbeds.push(serverBannerEmbed)
-    };
+        .setAuthor({ name: `${user.username}'s assets:` });
     return sendMessage({ interaction: interaction, embeds: userAssetEmbeds, flags: messageFlags });
 };
 
