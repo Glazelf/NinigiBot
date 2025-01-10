@@ -3,7 +3,8 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ChannelType
+    ChannelType,
+    PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
 import normalizeString from "../util/string/normalizeString.js";
@@ -60,15 +61,16 @@ export default async (client, message) => {
                 .setURL(embedURL)
                 .setThumbnail(avatar)
                 .setImage(messageImage)
-                .setTimestamp()
+                .setTimestamp(message.createtTimestamp)
+                .setFooter({ text: `Channel: ${message.channel.id}\nMessage: ${message.id}` })
                 .addFields([{ name: `Author:`, value: normalizeString(message.author.username), inline: false }]);
-            if (message.content) dmEmbed.addFields([{ name: `Message Content:`, value: message.content, inline: false }]);
+            if (message.content) dmEmbed.setDescription(message.content);
             if (attachmentsString.length > 0) dmEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }]);
             dmEmbeds.unshift(dmEmbed);
             let dmLogObject = { content: message.author.id, embeds: dmEmbeds, components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
+        if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has(PermissionFlagsBits.SendMessages)) return;
         if (!message.member) return;
 
         let memberRoles = 0;
