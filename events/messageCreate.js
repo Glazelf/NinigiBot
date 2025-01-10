@@ -21,12 +21,14 @@ export default async (client, message) => {
         if (message.author.bot || message.author.system) return;
 
         let messageImage = null;
-        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+        if (message.attachments.size > 0) messageImage = message.attachments.first().proxyURL;
         // Ignore commands in DMs
-        if (message.channel.type == "DM" || !message.guild) {
+        if (message.channel.type == ChannelType.DM || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            let dmEmbeds = [];
+            let embedURL = message.url
 
             const profileButton = new ButtonBuilder()
                 .setLabel("Profile")
@@ -35,16 +37,35 @@ export default async (client, message) => {
             let profileButtons = new ActionRowBuilder()
                 .addComponents(profileButton);
 
+            let attachmentsTitle = "Attachments:";
+            let attachmentsString = "";
+            if (message.attachments.size > 0) {
+                attachmentsTitle += ` (${message.attachments.size})`;
+                // Videos can't be embedded unless you're X (formerly Twitter) or YouTube, so they are sent as seperate mesages
+                // if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
+                message.attachments.forEach(attachment => {
+                    if (attachment.proxyURL !== messageImage) {
+                        let imageEmbed = new EmbedBuilder()
+                            .setImage(attachment.proxyURL)
+                            .setURL(embedURL);
+                        dmEmbeds.push(imageEmbed);
+                    };
+                    let attachmentsStringAddition = `${attachment.proxyURL}\n`;
+                    if ((attachmentsString.length + attachmentsStringAddition.length) < 1024) attachmentsString += attachmentsStringAddition;
+                });
+            };
             const dmEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setTitle(`DM Message`)
+                .setAuthor({ name: "DM" })
+                .setURL(embedURL)
                 .setThumbnail(avatar)
                 .setImage(messageImage)
                 .setTimestamp()
                 .addFields([{ name: `Author:`, value: normalizeString(message.author.username), inline: false }]);
             if (message.content) dmEmbed.addFields([{ name: `Message Content:`, value: message.content, inline: false }]);
-            dmEmbed
-            let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
+            if (attachmentsString.length > 0) dmEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }]);
+            dmEmbeds.unshift(dmEmbed);
+            let dmLogObject = { content: message.author.id, embeds: dmEmbeds, components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
         if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
