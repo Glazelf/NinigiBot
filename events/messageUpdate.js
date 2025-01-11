@@ -6,22 +6,22 @@ import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../util/discord/perms/isAdmin.js";
 
-export default async (client, message, newMessage) => {
+export default async (client, oldMessage, newMessage) => {
     try {
-        if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
-        if (message.content === newMessage.content) return;
+        if (!oldMessage || !oldMessage.guild || !oldMessage.author || oldMessage.author.bot || oldMessage.author.system) return;
+        if (oldMessage.content === newMessage.content) return;
 
-        await message.guild.fetch();
+        await oldMessage.guild.fetch();
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMessage.guild.id } });
         if (!logChannel) return;
-        let log = message.guild.channels.cache.get(logChannel.channel_id);
+        let log = oldMessage.guild.channels.cache.get(logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
-        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.get(globalVars.sysbotLogChannelID);
+        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(oldMessage.channel.id)) log = oldMessage.guild.channels.cache.get(globalVars.sysbotLogChannelID);
         if (!log) return;
 
-        let botMember = message.guild.members.me;
+        let botMember = oldMessage.guild.members.me;
         let updateEmbeds = []; // Max embeds is 10, max images is also 10, so this doesn't need to be size limited
         let adminBool = isAdmin(botMember);
 
@@ -30,15 +30,15 @@ export default async (client, message, newMessage) => {
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             let messageImage = null;
-            if (message.attachments.size > 0) {
-                messageImage = message.attachments.first().proxyURL;
-                messageAttachmentsTitle += ` (${message.attachments.size})`;
-                message.attachments.forEach(attachment => {
+            if (oldMessage.attachments.size > 0) {
+                messageImage = oldMessage.attachments.first().proxyURL;
+                messageAttachmentsTitle += ` (${oldMessage.attachments.size})`;
+                oldMessage.attachments.forEach(attachment => {
                     // Image tiling
-                    if (attachment.proxyURL !== message.attachments.first().proxyURL) {
+                    if (attachment.proxyURL !== oldMessage.attachments.first().proxyURL) {
                         let imageEmbed = new EmbedBuilder()
                             .setImage(attachment.proxyURL)
-                            .setURL(message.url);
+                            .setURL(oldMessage.url);
                         updateEmbeds.push(imageEmbed);
                     };
                     // Image links
@@ -46,17 +46,17 @@ export default async (client, message, newMessage) => {
                 });
             };
             // Content checks
-            let messageContent = message.content;
+            let messageContent = oldMessage.content;
             let newMessageContent = newMessage.content
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1021)}...`;
             // Reply info
             let isReply = false;
             let replyMessage;
-            if (message.reference) isReply = true;
+            if (oldMessage.reference) isReply = true;
             if (isReply) {
                 try {
-                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
+                    replyMessage = await oldMessage.channel.messages.fetch(oldMessage.reference.messageId);
                 } catch (e) {
                     isReply = false;
                 };
@@ -68,11 +68,11 @@ export default async (client, message, newMessage) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
                 .setImage(messageImage)
-                .setURL(message.url)
+                .setURL(oldMessage.url)
                 .setThumbnail(avatar)
-                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})\nContext: ${message.url}`)
-                .setFooter({ text: message.author.username })
-                .setTimestamp(message.createdTimestamp);
+                .setDescription(`Author: ${oldMessage.author} (${oldMessage.author.id})\nChannel: ${oldMessage.channel} (${oldMessage.channel.id})\nContext: ${oldMessage.url}`)
+                .setFooter({ text: oldMessage.author.username })
+                .setTimestamp(oldMessage.createdTimestamp);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
             if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
@@ -91,6 +91,6 @@ export default async (client, message, newMessage) => {
         };
 
     } catch (e) {
-        logger({ exception: e, client: client, interaction: message });
+        logger({ exception: e, client: client, interaction: oldMessage });
     };
 };
