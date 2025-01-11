@@ -29,6 +29,7 @@ export default async (client, oldMember, newMember) => {
             if (!newMember) return;
             let oldAvatar = oldMember.avatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.avatarURL(globalVars.displayAvatarSettings);
+            let displayAvatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
             let oldBanner = oldMember.bannerURL(globalVars.displayAvatarSettings);
             let banner = newMember.bannerURL(globalVars.displayAvatarSettings);
 
@@ -144,7 +145,7 @@ export default async (client, oldMember, newMember) => {
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(topText)
-                .setThumbnail(oldAvatar)
+                .setThumbnail(displayAvatar)
                 .setImage(image)
                 .setFooter({ text: oldMember.user.username })
                 .setTimestamp();
