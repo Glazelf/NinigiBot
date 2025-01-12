@@ -39,7 +39,7 @@ export default async (interaction, messageFlags) => {
     let deleteMessageDaysArg = interaction.options.getInteger("delete-messages-days");
     if (deleteMessageDaysArg) deleteMessageDays = deleteMessageDaysArg;
     let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
-    let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
+    let deleteMessageSeconds = deleteMessageDays * 86_400; // Why is this in seconds now??
 
     let executorNameFormatted = formatName(interaction.user.username);
     let banReturn = null;
