@@ -5,25 +5,55 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const answers = [
+    //// Lucien Cohen answers
+    // Positive (10)
+    "It is certain",
+    "It is decidedly so",
+    "Without a doubt",
+    "Yes definetly",
+    "You may rely on it",
+    "As I see it, yes",
+    "Most likely",
+    "Outlook good",
+    "Yes",
+    "Signs point to yes",
+    // Neutral (5)
+    "Reply hazy, try again",
+    "Ask again later",
+    "Better not tell you now",
+    "Cannot predict now",
+    "Concentrate and ask again",
+    // Negative (5)
+    "Don't count on it",
+    "My reply is no",
+    "My sources say no",
+    "Outlook nto so good",
+    "Very doubtful",
+    //// Custom answers
+    // Positive
+    "Definitely",
+    "There is no other possibility",
+    // Neutral
     "Maybe someday",
+    "Try asking again",
+    "It is possible",
+    // Negative
     "Nothing",
     "Neither",
     "I don't think so",
     "No",
-    "Yes",
-    "Try asking again",
-    "Definitely",
     "Probably not"
 ];
 
 export default async (interaction, messageFlags) => {
     let input = interaction.options.getString("input");
 
-    const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-    let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
+    const randomAnswer = answers[randomNumber(0, answers.length)];
+    let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}".`;
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 
