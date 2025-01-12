@@ -37,10 +37,12 @@ const answers = [
     // Positive
     "Definitely",
     "There is no other possibility",
+    "If you want it enough",
     // Neutral
     "Maybe someday",
     "Try asking again",
     "It is possible",
+    "Help me I'm stuck inside a Discord bot writing 8ball replies",
     // Negative
     "Nothing",
     "Neither",
