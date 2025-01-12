@@ -177,31 +177,31 @@ export default async ({ page, region }) => {
             if (splatfest.state == "CLOSED") {
                 // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
                 if (team.result && team.result.horagaiRatio) {
-                    let conchShellResultString = `${Math.round(team.result.horagaiRatio * 10000) / 100}%`;
+                    let conchShellResultString = `${Math.round(team.result.horagaiRatio * 10_000) / 100}%`;
                     if (team.result.isHoragaiRatioTop) conchShellResultString = bold(conchShellResultString);
                     if (team.result.isHoragaiRatioSecond) conchShellResultString = italic(conchShellResultString);
                     splatfestResultsHoragai += conchShellResultString;
                 };
                 if (team.result && team.result.voteRatio) {
-                    let voteResultString = `${Math.round(team.result.voteRatio * 10000) / 100}%`;
+                    let voteResultString = `${Math.round(team.result.voteRatio * 10_000) / 100}%`;
                     if (team.result.isVoteRatioTop) voteResultString = bold(voteResultString);
                     if (team.result.isVoteRatioSecond) voteResultString = italic(voteResultString);
                     splatfestResultsVote += voteResultString;
                 };
                 if (team.result && team.result.regularContributionRatio) {
-                    let regularBattleResultString = `${Math.round(team.result.regularContributionRatio * 10000) / 100}%`;
+                    let regularBattleResultString = `${Math.round(team.result.regularContributionRatio * 10_000) / 100}%`;
                     if (team.result.isRegularContributionRatioTop) regularBattleResultString = bold(regularBattleResultString);
                     if (team.result.isRegularContributionRatioSecond) regularBattleResultString = italic(regularBattleResultString);
                     splatfestResultsRegular += regularBattleResultString;
                 };
                 if (team.result && team.result.challengeContributionRatio) {
-                    let proBattleResultString = `${Math.round(team.result.challengeContributionRatio * 10000) / 100}%`;
+                    let proBattleResultString = `${Math.round(team.result.challengeContributionRatio * 10_000) / 100}%`;
                     if (team.result.isChallengeContributionRatioTop) proBattleResultString = bold(proBattleResultString);
                     if (team.result.isChallengeContributionRatioSecond) proBattleResultString = italic(proBattleResultString);
                     splatfestResultsChallenge += proBattleResultString;
                 };
                 if (team.result && team.result.tricolorContributionRatio) {
-                    let tricolorBattleResultString = `${Math.round(team.result.tricolorContributionRatio * 10000) / 100}%`;
+                    let tricolorBattleResultString = `${Math.round(team.result.tricolorContributionRatio * 10_000) / 100}%`;
                     if (team.result.isTricolorContributionRatioTop) tricolorBattleResultString = bold(tricolorBattleResultString);
                     if (team.result.isTricolorContributionRatioSecond) tricolorBattleResultString = italic(tricolorBattleResultString);
                     splatfestResultsTricolor += tricolorBattleResultString;

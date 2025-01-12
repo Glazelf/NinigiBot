@@ -19,6 +19,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
+const maxMuteTime = 2_419_200_000; // Max time is 28 days, but we count in milliseconds
 
 export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
@@ -32,7 +33,6 @@ export default async (interaction, messageFlags) => {
     if (!member) return sendMessage({ interaction: interaction, content: `Please provide a user to mute.` });
 
     let muteTime = 60;
-    let maxMuteTime = 2419200000; // Max time is 28 days
     let timeArg = interaction.options.getInteger("time");
     if (timeArg) muteTime = timeArg;
     if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ interaction: interaction, content: `Please provide a valid number.` });

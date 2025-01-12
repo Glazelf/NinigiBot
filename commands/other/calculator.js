@@ -47,7 +47,7 @@ export default async (interaction, messageFlags) => {
     // Test out rounding based on remainder sometime
     // let remainder = evaled % 1;
     // Amount of 0's is the amount of decimals to round to
-    let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
+    let rounded = Math.round((evaled + Number.EPSILON) * 10_000) / 10_000;
     let output = codeBlock("js", `${rounded} (${calcInput})`);
     if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently ${hyperlink("not supported", hideLinkEmbed("https://github.com/Glazelf/NinigiBot/issues/436"))}.`;
     let returnString = output;

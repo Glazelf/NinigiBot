@@ -86,7 +86,7 @@ export default async (client, message) => {
                     talkedRecently.add(message.member.id);
                     setTimeout(() => {
                         if (message.member) talkedRecently.delete(message.member.id);
-                    }, 60000);
+                    }, 60_000);
                 };
             };
         };

@@ -2,6 +2,7 @@ import getExpFromLevel from "../../../../util/shinx/getExpFromLevel.js";
 import parseMeetDate from "../../../../util/shinx/parseMeetDate.js";
 import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";
 
+const millisecondsInADay = 86_400_000;
 export default (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
     const parseMeetDateNow = () => {
@@ -9,7 +10,7 @@ export default (sequelize, DataTypes) => {
         return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear());
     };
     const getDay = () => {
-        return Math.floor(Date.now() / 86400000);
+        return Math.floor(Date.now() / millisecondsInADay);
     };
     const Shinx = sequelize.define("Shinx", {
         user_id: {
@@ -40,7 +41,7 @@ export default (sequelize, DataTypes) => {
         lastmeet: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: Math.floor(Date.now() / 86400000)
+            defaultValue: Math.floor(Date.now() / millisecondsInADay)
         },
         meetup: {
             type: DataTypes.STRING,
