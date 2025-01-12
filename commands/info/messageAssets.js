@@ -3,8 +3,7 @@ import {
     ContextMenuCommandBuilder,
     ApplicationCommandType,
     hyperlink,
-    hideLinkEmbed,
-    HeadingLevel
+    hideLinkEmbed
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 
