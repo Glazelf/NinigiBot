@@ -31,7 +31,7 @@ const answers = [
     "Don't count on it",
     "My reply is no",
     "My sources say no",
-    "Outlook nto so good",
+    "Outlook not so good",
     "Very doubtful",
     //// Custom answers
     // Positive
