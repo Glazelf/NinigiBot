@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 
-const noAssetsString = `This only works for messages with supported assets, like stickers, attached. Note that regular images are not included.`;
+const noAssetsString = `This only works for messages with attachments or stickers.`;
 
 export default async (interaction, messageFlags) => {
     messageFlags.add(MessageFlags.Ephemeral);
