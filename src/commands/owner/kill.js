@@ -4,7 +4,7 @@ import {
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
-import forever from "forever";
+import forever from "forever-monitor";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
@@ -37,7 +37,7 @@ export default async (interaction, messageFlags) => {
         });
     };
     try {
-        forever.stopAll();
+        forever.kill();
     } catch (e) {
         console.log(e);
     };

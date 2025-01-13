@@ -9,4 +9,3 @@ const foreverOptions = [{
     "uid": "Ninigi",
 }];
 const child = forever.start('./bot.js', foreverOptions);
-forever.startServer(child);

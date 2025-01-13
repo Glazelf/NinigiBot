@@ -15,16 +15,15 @@ export default async (interaction, messageFlags) => {
     let hexInput = interaction.options.getString("hex");
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
-
     if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let imgWidth = 225;
     let imgHeight = 100;
-    let canvas = Canvas.createCanvas(img.width, img.height);
+    let canvas = Canvas.createCanvas(imgWidth, imgHeight);
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`;
     ctx.fillRect(0, 0, imgWidth, imgHeight);
-    let attachment = new AttachmentBuilder(canvas.toBuffer(), { name: "HexColor.png" });
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: "hexcolor.png" });
 
     let hexColorEmbed = new EmbedBuilder()
         .setColor(hexInput)
