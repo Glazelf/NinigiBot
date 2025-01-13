@@ -11,9 +11,10 @@ import {
     addMoney
 } from "../../database/dbServices/user.api.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 

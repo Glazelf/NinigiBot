@@ -8,11 +8,12 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.remove(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
     let slowmodeSupportedChannelTypes = [

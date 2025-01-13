@@ -13,7 +13,7 @@ import serverdataModel from "../../database/dbObjects/serverdata.model.js";
 import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";
 import checkFormat from "../../util/string/checkFormat.js";
 
-export async function getShinx(id, attributes = null) {
+export async function getShinx(id: any, attributes = null) {
     const { Shinx } = await userdataModel(userdata);
     let shinx = await Shinx.findByPk(id, {
         attributes: attributes
@@ -26,7 +26,7 @@ export async function getShinx(id, attributes = null) {
     return shinx;
 };
 
-export async function getUser(id, attributes = null) {
+export async function getUser(id: any, attributes = null) {
     const { User } = await userdataModel(userdata);
     let user = await User.findByPk(id, {
         attributes: attributes
@@ -35,13 +35,14 @@ export async function getUser(id, attributes = null) {
     return user;
 };
 
-export async function getRandomShinx(amount, exclude, guild) {
+export async function getRandomShinx(amount: any, exclude: any, guild: any) {
     const { Shinx } = await userdataModel(userdata);
     const results = await Shinx.findAll({ attributes: ['user_id', 'shiny', 'user_male'], where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: fn('RANDOM'), limit: amount });
-    return results.map(res => res.dataValues);
+    return results.map((res: any) => res.dataValues);
 };
 
-export async function getShinxShininess(id) {
+export async function getShinxShininess(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['shiny'])
     return shinx.shiny;
 };
@@ -53,17 +54,20 @@ export async function getRandomReaction() {
     return result;
 };
 
-export async function switchShininessAndGet(id) {
+export async function switchShininessAndGet(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'shiny']);
     return shinx.switchShininessAndGet();
 };
 
-export async function changeAutoFeed(id, mode) {
+export async function changeAutoFeed(id: any, mode: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'auto_feed']);
     return shinx.setAutoFeed(mode);
 };
 
-export async function addExperience(id, experience) {
+export async function addExperience(id: any, experience: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'experience']);
     const res = await shinx.addExperienceAndLevelUp(experience);
     if (res.pre != res.post) {
@@ -74,8 +78,9 @@ export async function addExperience(id, experience) {
     };
 };
 
-export async function hasEventTrophy(user_id, trophy_id) {
+export async function hasEventTrophy(user_id: any, trophy_id: any) {
     const { EventTrophy } = await userdataModel(userdata);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -85,8 +90,9 @@ export async function hasEventTrophy(user_id, trophy_id) {
     return res;
 };
 
-export async function addEventTrophy(user_id, trophy_id) {
+export async function addEventTrophy(user_id: any, trophy_id: any) {
     const { EventTrophy } = await userdataModel(userdata);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -95,10 +101,12 @@ export async function addEventTrophy(user_id, trophy_id) {
     if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
 };
 
-export async function feedShinx(id) {
+export async function feedShinx(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger()
     if (shinx_hunger == 0) return 'NoHungry';
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'food']);
 
     let feed_amount = Math.min(shinx_hunger, user.getFood())
@@ -108,15 +116,18 @@ export async function feedShinx(id) {
     return 'Ok';
 };
 
-export async function getShinxAutofeed(id) {
+export async function getShinxAutofeed(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['auto_feed'])
     return shinx.auto_feed;
 };
 
-export async function autoFeedShinx1(id) {
+export async function autoFeedShinx1(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'food']);
 
     let feed_amount = Math.min(shinx_hunger, user.getFood())
@@ -125,10 +136,12 @@ export async function autoFeedShinx1(id) {
     await shinx.feedAndExp(feed_amount);
 };
 
-export async function autoFeedShinx2(id) {
+export async function autoFeedShinx2(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'food', 'money']);
     let used_food = 0;
     let used_money = 0;
@@ -151,21 +164,23 @@ export async function autoFeedShinx2(id) {
     await shinx.feedAndExp(used_food + used_money);
 };
 
-export async function nameShinx(id, nick) {
+export async function nameShinx(id: any, nick: any) {
     const check = checkFormat(nick, 12);
     if (check == 'Ok') {
+        // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
         let shinx = await getShinx(id, ['user_id', 'nickname']);
         shinx.changeNick(nick.trim());
     };
     return check;
 };
 
-export async function isTrainerMale(id) {
+export async function isTrainerMale(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let shinx = await getShinx(id, ['user_male']);
     return shinx.user_male
 };
 
-export async function saveBattle(shinxBattleData, wins) {
+export async function saveBattle(shinxBattleData: any, wins: any) {
     let shinx = await getShinx(shinxBattleData.owner.id);
     await shinx.saveBattle(shinxBattleData, wins);
 };

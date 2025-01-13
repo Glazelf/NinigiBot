@@ -8,13 +8,16 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 
 
-export default async (client, guildBan) => {
+export default async (client: any, guildBan: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
         let log = guildBan.guild.channels.cache.get(logChannel.channel_id);
@@ -48,7 +51,7 @@ export default async (client, guildBan) => {
             let banButtons = new ActionRowBuilder()
                 .addComponents(profileButton);
             const banEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
                 .setDescription(`${formatName(guildBan.guild.name)} now has ${guildBan.guild.memberCount} members.`)

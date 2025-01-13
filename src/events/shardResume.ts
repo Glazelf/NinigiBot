@@ -1,7 +1,8 @@
 import getTime from '../util/getTime.js';
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, id) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, id: any) => {
     try {
         // Set bot status
         client.user.setPresence(globalVars.presence);

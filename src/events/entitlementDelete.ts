@@ -4,11 +4,13 @@ import {
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, entitlement) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, entitlement: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
 
         let guild = await client.guilds.fetch(globalVars.ShinxServerID);
@@ -16,7 +18,9 @@ export default async (client, entitlement) => {
         let user = await client.users.fetch(entitlement.userId);
         let member = await guild.members.fetch(entitlement.userId);
         if (!member) return;
+        // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
         let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: guild.id, user_id: entitlement.userId } });
+        // @ts-expect-error TS(2304): Cannot find name 'PermissionFlagsBits'.
         if (!member.premiumSince && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, guild);
 
         if (!user) return;
@@ -28,7 +32,7 @@ export default async (client, entitlement) => {
         if (!matchingSKU) return;
 
         const entitlementEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(globalVars.embedColor as ColorResolvable)
             .setTitle("Entitlemend Ended ❌")
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name)} ended.`)
             .setFooter({ text: entitlement.id })

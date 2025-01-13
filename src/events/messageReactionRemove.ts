@@ -1,17 +1,18 @@
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 
 const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
-export default async (client, messageReaction) => {
+export default async (client: any, messageReaction: any) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message reaction counts are valid and that reaction is a star, different check from messageReactionAdd because count can be 0 here
-        if (messageReaction.count == null || messageReaction.count == undefined) messageReaction = await messageReaction.fetch().catch(e => { return null; });
+        if (messageReaction.count == null || messageReaction.count == undefined) messageReaction = await messageReaction.fetch().catch((e: any) => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
@@ -20,11 +21,13 @@ export default async (client, messageReaction) => {
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel, starboard;
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
         if (isNoStar == true) { // Find altboard channel
             boardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
+            // @ts-expect-error TS(2339): Property 'StarboardChannels' does not exist on typ... Remove this comment to see the full error message
             starboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
             if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
@@ -32,12 +35,13 @@ export default async (client, messageReaction) => {
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
+        // @ts-expect-error TS(2339): Property 'StarboardMessages' does not exist on typ... Remove this comment to see the full error message
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         let starboardMessage = await getStarboardMessage({ messageReaction: messageReaction, targetMessage: targetMessage, boardEmote: boardEmote });
         if (messageReaction.count == 0 && messageDB) {
             // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            await starChannel.messages.fetch(messageDB.starboard_message_id).then(m => {
+            await starChannel.messages.fetch(messageDB.starboard_message_id).then((m: any) => {
                 m.delete();
             });
             await messageDB.destroy();

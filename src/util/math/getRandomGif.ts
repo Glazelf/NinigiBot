@@ -8,6 +8,7 @@ export default async (gifTags = []) => {
         api_key: process.env.GIPHY_TOKEN,
         rating: "g"
     };
+    // @ts-expect-error TS(2339): Property 'tag' does not exist on type '{ api_key: ... Remove this comment to see the full error message
     if (gifTags.length > 0) giphyParams.tag = randomTag;
     // Uglier replacement function for the one below
     let giphyURL = `${giphyAPI}?`;

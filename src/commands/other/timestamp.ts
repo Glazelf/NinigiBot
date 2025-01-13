@@ -8,9 +8,10 @@ import {
     inlineCode
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     // Date manipulation
     let currentDate = new Date();
     let targetDate = new Date();
@@ -60,7 +61,7 @@ export default async (interaction, messageFlags) => {
     const longDateTime = time(unixTime, TimestampStyles.LongDateTime);
     const relativeTime = time(unixTime, TimestampStyles.RelativeTime);
     const timestampEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle(dateString)
         .addFields([
             { name: "Short Time", value: `${inlineCode(shortTime)} ➡ ${shortTime}`, inline: false },

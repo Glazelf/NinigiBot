@@ -1,6 +1,7 @@
 import userdata from "./database/dbInit/userdata.init.js";
 import serverdata from "./database/dbInit/serverdata.init.js";
-// @ts-ignore
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'mini... Remove this comment to see the full error message
 import minimist from "minimist";
 
 const initDB = async (reset_db: boolean) => {

@@ -1,7 +1,7 @@
 import getTime from "../util/getTime.js";
 import logger from "../util/logger.js";
 
-export default async (client, id) => {
+export default async (client: any, id: any) => {
     try {
         let timestamp = getTime();
         // const storedBalances = await Users.findAll();

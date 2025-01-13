@@ -13,13 +13,14 @@ import {
     getMoney,
     addMoney
 } from "../../database/dbServices/user.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const minGridLength = 2;
 const maxGridLength = 5;
 const profitPerMine = 10; // 10% gain per mine on won bet
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let correctionString = "";
     let rows = 5;
     let columns = 5;

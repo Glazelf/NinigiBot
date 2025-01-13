@@ -45,7 +45,8 @@ import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction.js
 import getRandomVisitorPosition from "../../util/shinx/getRandomVisitorPosition.js";
 import playing_reaction from "../../util/shinx/getPlayingReaction.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const autoFeedModes = [
     {
@@ -67,7 +68,7 @@ const colors = [
     'purple'
 ];
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     // Every subcommand here except maybe "play" should be accessible in DMs honestly but I don't feel like rewriting them significantly for now to actually allow for that
     let shinx, res, time, canvas, ctx, img;
     let returnString = "";
@@ -103,6 +104,7 @@ export default async (interaction, messageFlags) => {
                 ctx.drawImage(cap, 97, 202);
             };
             img = await Canvas.loadImage('./assets/shinx/owner.png');
+            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
             ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125, 59 - 5 * !is_user_male, 49);
             ctx.font = applyText(canvas, shinx.nickname, 45, 266);
             ctx.fillStyle = '#FFFFFF';
@@ -146,7 +148,7 @@ export default async (interaction, messageFlags) => {
                     messageFlags.add(MessageFlags.Ephemeral);
                     const commands = await interaction.client.application.commands.fetch();
                     let buyFoodCommandName = "buyfood";
-                    const buyFoodCommandId = commands.find(c => c.name == buyFoodCommandName)?.id;
+                    const buyFoodCommandId = commands.find((c: any) => c.name == buyFoodCommandName)?.id;
                     returnString = "Not enough food.";
                     if (buyFoodCommandId) returnString += `\nTip: you can buy more using </${buyFoodCommandName}:${buyFoodCommandId}>.`;
                     break;
@@ -161,12 +163,14 @@ export default async (interaction, messageFlags) => {
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
                     let guests = [];
                     if (guildDataAvailable) guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
+                    // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
 
                     for (let i = 0; i < guests.length; i++) {
                         const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                        // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                         ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
                         for (let k = nick.length - 1; 0 <= k; k--) {
                             ctx.font = applyText(canvas, nick[k], 16, 51);
@@ -180,6 +184,7 @@ export default async (interaction, messageFlags) => {
                         ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
                     };
                     img = await Canvas.loadImage('./assets/shinx/reactions.png');
+                    // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                     ctx.drawImage(img, 10 + 30 * reactionFeed[1], 8, 30, 32, 202, 115, 30, 32);
 
                     if (now.getHours() > 20 || now.getHours() < 6) {
@@ -208,12 +213,14 @@ export default async (interaction, messageFlags) => {
             let guests = [];
             if (guildDataAvailable) guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
             img = await Canvas.loadImage('./assets/shinx/mc.png');
+            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
 
             for (let i = 0; i < guests.length; i++) {
                 const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                 ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
                 for (let k = nick.length - 1; 0 <= k; k--) {
                     ctx.font = applyText(canvas, nick[k], 18, 51);
@@ -230,7 +237,9 @@ export default async (interaction, messageFlags) => {
             if (shinx.belly < 0.2) reactionPlay = playing_reaction(0);
 
             img = await Canvas.loadImage('./assets/shinx/reactions.png');
+            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
             ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
+            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
             shinx.addExperienceAndUnfeed(100 * reactionPlay[2], 1);
             messageFile = new AttachmentBuilder(canvas.toBuffer());
             return sendMessage({
@@ -254,6 +263,7 @@ export default async (interaction, messageFlags) => {
             };
             ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
             img = await Canvas.loadImage('./assets/shinx/trainer.png');
+            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
             ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
             img = await Canvas.loadImage('./assets/shinx/portraits.png');
             let conversation = await getRandomReaction();
@@ -284,6 +294,7 @@ export default async (interaction, messageFlags) => {
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
                     const is_user_male = await isTrainerMale(master.id);
+                    // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                     ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
                     img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
@@ -390,7 +401,7 @@ export default async (interaction, messageFlags) => {
                 .addComponents([battleAcceptButton, battleRefuseButton]);
             const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
-            const filter = (interaction) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
+            const filter = (interaction: any) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
             let trainer_answer;
             try {
                 trainer_answer = await sent_message.awaitMessageComponent({ filter, time: 25_000 });
@@ -448,6 +459,7 @@ export default async (interaction, messageFlags) => {
                 text = '';
                 for (let i = 0; i < 2; i++) {
                     const attackMove = shinxes[i].attack();
+                    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                     text += addLine(`${formatName(nicks[i])} used ${bold(attackMove[0])}!`);
                     const result = shinxes[(i + 1) % 2].takeDamage(attackMove);
                     if (result === true) {
@@ -464,6 +476,7 @@ export default async (interaction, messageFlags) => {
                             let avatarBuffer = await axios.get(avatars[q], { responseType: 'arraybuffer' }).then(response => response.data);
                             let avatar = new Canvas.Image();
                             avatar.src = avatarBuffer;
+                            // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                             ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
                         };
                         text += addLine(`${formatName(nicks[(i + 1) % 2])} fainted!`);
@@ -480,6 +493,7 @@ export default async (interaction, messageFlags) => {
                         messageFile = new AttachmentBuilder(canvas.toBuffer());
                         return sendMessage({ interaction: interaction, content: text, files: messageFile });
                     } else {
+                        // @ts-expect-error TS(2367): This condition will always return 'false' since th... Remove this comment to see the full error message
                         if (result === -1) {
                             text += addLine(`${formatName(nicks[i])} lost his shield by blocking a deathblow!`);
                         };
@@ -489,14 +503,20 @@ export default async (interaction, messageFlags) => {
                 let shinxHP1 = await hp(shinxes[1].percent);
                 const hps = [shinxHP0, shinxHP1];
                 for (let i = 0; i < 2; i++) {
+                    // @ts-expect-error TS(2345): Argument of type 'string | number' is not assignab... Remove this comment to see the full error message
                     if (!isNaN(hps[i][0])) {
                         const color = hps[i][0];
+                        // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
                         if (color > 2 && prevColors[i] <= color - 1) {
+                            // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
                             ctx.fillStyle = colors[color - 1];
                             ctx.fillRect(38 + 90 * i, 58 + 78 * i, 96, 4);
                         };
+                        // @ts-expect-error TS(7015): Element implicitly has an 'any' type because index... Remove this comment to see the full error message
                         ctx.fillStyle = colors[color];
+                        // @ts-expect-error TS(2345): Argument of type 'string | number' is not assignab... Remove this comment to see the full error message
                         ctx.fillRect(38 + 90 * i, 58 + 78 * i, hps[i][1], 4);
+                        // @ts-expect-error TS(2322): Type 'string | number' is not assignable to type '... Remove this comment to see the full error message
                         prevColors[i] = color;
                     };
                     if (shinxes[i].geassMode()) {

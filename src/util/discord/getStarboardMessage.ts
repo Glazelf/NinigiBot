@@ -1,13 +1,18 @@
 import {
     EmbedBuilder
 } from "discord.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async ({ messageReaction, targetMessage, boardEmote }) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async ({
+    messageReaction,
+    targetMessage,
+    boardEmote
+}: any) => {
     // Check for atached files
     let attachmentsTitle = "Attachments:";
     let attachmentsString = "";
-    let messageImage = null;
+    let messageImage: any = null;
     let starboardEmbeds = [];
     // let seperateFiles = null;
     if (targetMessage.attachments.size > 0) {
@@ -15,7 +20,7 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
         messageImage = targetMessage.attachments.first().proxyURL;
         // Videos can't be embedded unless you're X (formerly Twitter) or YouTube, so they are sent as seperate mesages
         // if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
-        targetMessage.attachments.forEach(attachment => {
+        targetMessage.attachments.forEach((attachment: any) => {
             if (attachment.proxyURL !== messageImage) {
                 let imageEmbed = new EmbedBuilder()
                     .setImage(attachment.proxyURL)
@@ -46,7 +51,7 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
     };
     // Format the starboard embed message
     const starEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle(`${boardEmote}${messageReaction.count}`)
         .setURL(targetMessage.url)
         .setThumbnail(avatar)

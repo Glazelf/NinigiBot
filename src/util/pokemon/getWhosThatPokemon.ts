@@ -15,11 +15,19 @@ import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import rewardMoney from "../db/rewardMoney.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import colorHexes from "../../objects/colorHexes.json";
 
 // Winner = person who ended the game, either through reveal or guessing correctly
-export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => {
+export default async ({
+    interaction,
+    winner,
+    pokemonList,
+    pokemon,
+    reveal
+}: any) => {
     let messageObject = {};
     let pokemonButtons = new ActionRowBuilder();
     let doesRenderExist = false;
@@ -56,7 +64,9 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
         quizDescription += `\nThe answer was ${bold(pokemon.name)}.`;
+        // @ts-expect-error TS(2339): Property 'files' does not exist on type '{}'.
         messageObject.files = [];
+        // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
         messageObject.components = [];
     } else {
         // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
@@ -68,6 +78,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         if (localImageExists) {
             img.src = localImagePath;
         } else {
+            // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
             let imageBuffer = await axios.get(serebiiRender, { responseType: 'arraybuffer' }).then(response => response.data);
             fs.mkdirSync(localImageFolder, { recursive: true });
             fs.appendFileSync(localImagePath, Buffer.from(imageBuffer));
@@ -94,15 +105,19 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
         pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.png" });
         embedImage = `attachment://${pokemonImage.name}`;
+        // @ts-expect-error TS(2339): Property 'files' does not exist on type '{}'.
         messageObject.files = [pokemonImage];
+        // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
         messageObject.components = [pokemonButtons];
     };
 
     let quizEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as ColorResolvable)
         .setTitle(quizTitle)
         .setDescription(quizDescription)
+        // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
         .setImage(embedImage);
+    // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
     messageObject.embeds = [quizEmbed];
     return messageObject;
 };

@@ -6,8 +6,10 @@ import {
 } from "discord.js";
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import monstersJSON from "../../../submodules/monster-hunter-DB/monsters.json";
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
 const mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
@@ -22,7 +24,7 @@ const spinoffGameNames = {
     MHST2: "Monster Hunter Stories 2"
 };
 
-export default async (monsterData, emojis) => {
+export default async (monsterData: any, emojis: any) => {
     // Get icon, description and game appearances
     let gameDBName, monsterIcon, monsterDescription, monsterDanger;
     let monsterBanner = null;
@@ -30,10 +32,10 @@ export default async (monsterData, emojis) => {
     let mostRecentMainlineGame = mainlineGameNames.MHRise;
     let fallbackGame1 = mainlineGameNames.MHW;
     let fallbackGame2 = mainlineGameNames.MHGU;
-    let mainlineGamesMatches = monsterData.games.filter(game => !Object.values(spinoffGameNames).includes(game.game));
+    let mainlineGamesMatches = monsterData.games.filter((game: any) => !Object.values(spinoffGameNames).includes(game.game));
     let mostRecentMainlineGameEntry = mainlineGamesMatches[mainlineGamesMatches.length - 1];
 
-    monsterData.games.forEach(game => {
+    monsterData.games.forEach((game: any) => {
         // Add to game appearances list
         gameAppearances += game.game;
         if (game.danger) gameAppearances += ` (${game.danger}⭐)`;
@@ -80,6 +82,7 @@ export default async (monsterData, emojis) => {
     let monsterRender = getWikiURL(monsterRenderName, mhWiki);
     let renderExists = urlExists(monsterRender);
     if (!renderExists) {
+        // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
         if (["MHGU", "MH4U"].includes(monsterGameIndicator)) {
             // Check for 4U only renders
             for (let i = 5; i > 2; i--) {
@@ -97,12 +100,14 @@ export default async (monsterData, emojis) => {
             };
         } else if (mainlineGamesMatches.length == 0) {
             // Check if there's a render 2 (seems to be for spinoff exclusive monsters, namely Oltura)
+            // @ts-expect-error TS(2769): No overload matches this call.
             monsterRenderName = monsterRenderName.replace("Render_001", "Render_002").replace(monsterGameIndicator, "MHST2");
             monsterRender = getWikiURL(monsterRenderName, mhWiki);
         };
     };
     if (!monsterBanner) {
         monsterBanner = monsterRender;
+        // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'string'.
         monsterRender = null;
     };
     // Format footer
@@ -134,7 +139,7 @@ export default async (monsterData, emojis) => {
     };
     // Get base monster
     if (!monsterData.subSpecies) {
-        monstersJSON.monsters.forEach(monster => {
+        monstersJSON.monsters.forEach((monster: any) => {
             if (!monster.subSpecies) return;
             if (monster.subSpecies.includes(monsterData.name)) {
                 const baseMonsterButton = new ButtonBuilder()
@@ -148,7 +153,7 @@ export default async (monsterData, emojis) => {
     if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
     let mhEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setAuthor({ name: `${monsterData.name} (${monsterType})`, iconURL: monsterIcon })
         .setThumbnail(monsterRender)
         .setImage(monsterBanner);
@@ -169,9 +174,9 @@ export default async (monsterData, emojis) => {
 };
 
 // Type is "Ailment" or "Element"
-function getStringFromObject(object, emojis, type) {
-    let itemArray = [];
-    object.forEach(item => {
+function getStringFromObject(object: any, emojis: any, type: any) {
+    let itemArray: any = [];
+    object.forEach((item: any) => {
         let emojiType = type;
         let emojiName = item;
         // Use matching elemental emojis for blights
@@ -179,7 +184,7 @@ function getStringFromObject(object, emojis, type) {
             emojiType = "Element";
             emojiName = item.replace("blight", "");
         };
-        let itemEmoji = emojis.find(emoji => emoji.name == `MH${emojiType}${emojiName}`);
+        let itemEmoji = emojis.find((emoji: any) => emoji.name == `MH${emojiType}${emojiName}`);
         if (itemEmoji) {
             let itemString = `${itemEmoji}${item}`;
             itemArray.push(itemString);

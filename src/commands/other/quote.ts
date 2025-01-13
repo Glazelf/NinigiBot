@@ -6,20 +6,23 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
-import quotes from "../../objects/quotes.json" with { type: "json" };
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import quotes from "../../objects/quotes.json";
+
+import globalVars from "../../objects/globalVars.json";
 
 // Avoid using channel ID for starboard (705601772785238080), link to channels directly instead.
-let previousQuoteTime = null;
-const allMessages = [];
+let previousQuoteTime: any = null;
+const allMessages: any = [];
 for (const [key, value] of Object.entries(quotes)) {
-    value.forEach(messageID => allMessages.push({ channelID: key, messageID: messageID }));
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    value.forEach((messageID: any) => allMessages.push({ channelID: key, messageID: messageID }));
 };
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.remove(MessageFlags.Ephemeral);
     let quoteEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     // Set cooldown
     const now = Date.now();
     const cooldownAmount = 1 * 60 * 60 * 1000; // 1 hour in ms
@@ -41,7 +44,7 @@ export default async (interaction, messageFlags) => {
         quoteEmbed
             .setTitle("Error")
             .setURL(messageURL)
-            .setColor(globalVars.embedColorError)
+            .setColor(globalVars.embedColorError as ColorResolvable)
             .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
         return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
     };

@@ -4,12 +4,15 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, oldRole, newRole) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, oldRole: any, newRole: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: newRole.guild.id } });
         if (!logChannel) return;
         let log = newRole.guild.channels.cache.get(logChannel.channel_id);
@@ -35,7 +38,7 @@ export default async (client, oldRole, newRole) => {
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new EmbedBuilder()
-                .setColor(embedColor)
+                .setColor(embedColor as ColorResolvable)
                 .setTitle(`Role Updated ⚒️`)
                 .setFooter({ text: newRole.id })
                 .setTimestamp();

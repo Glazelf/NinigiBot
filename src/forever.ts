@@ -1,4 +1,5 @@
-// @ts-ignore
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'fore... Remove this comment to see the full error message
 import forever from 'forever-monitor';
 // import forevermonitor from 'forever-monitor';
 

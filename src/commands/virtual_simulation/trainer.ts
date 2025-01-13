@@ -9,9 +9,10 @@ import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let embed = new EmbedBuilder();
     switch (interaction.options.getSubcommand()) {
         case "info":
@@ -22,19 +23,19 @@ export default async (interaction, messageFlags) => {
             let trophy_level = 0;
             let trophies = await user.getShopTrophies();
             let trophy_string = '';
-            trophies.forEach(trophy => {
+            trophies.forEach((trophy: any) => {
                 trophy_string += (trophy.icon + ' ');
             });
             trophy_level += trophies.length;
             trophies = await user.getEventTrophies();
 
-            trophies.forEach(trophy => {
+            trophies.forEach((trophy: any) => {
                 trophy_string += (trophy.icon + ' ');
             });
             trophy_level += trophies.length;
 
             embed
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setThumbnail(avatar)
                 .addFields([
                     { name: "Balance:", value: user.money.toString(), inline: true },

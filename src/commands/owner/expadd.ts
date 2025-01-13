@@ -8,9 +8,10 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -19,7 +20,9 @@ export default async (interaction, messageFlags) => {
     if (!userArg) return sendMessage({ interaction: interaction, content: `Could not find user.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     let expArg = interaction.options.getInteger("amount");
     await addExperience(userArg.id, expArg);
+    // @ts-expect-error TS(2304): Cannot find name 'returnString'.
     returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
+    // @ts-expect-error TS(2304): Cannot find name 'returnString'.
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 

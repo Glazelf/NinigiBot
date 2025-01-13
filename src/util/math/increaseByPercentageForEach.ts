@@ -1,4 +1,4 @@
-export default (input, amount, percentage) => {
+export default (input: any, amount: any, percentage: any) => {
     let multiplierInteger = 1;
     let multiplierDecimal = 0;
     while (amount >= 1) {

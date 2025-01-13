@@ -10,9 +10,10 @@ import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -33,12 +34,14 @@ export default async (interaction, messageFlags) => {
     let installResult = "";
     // Run commands
     if (npmInstall) {
+        // @ts-expect-error TS(2322): Type '{ stdout: string; stderr: string; }' is not ... Remove this comment to see the full error message
         installResult = await runCommand("npm install");
         await runCommand("git stash");
     };
     if (dbinit) await runCommand("node dbInit.js");
     // Return messages then destroy
     let restartString = "Restarting.";
+    // @ts-expect-error TS(2339): Property 'stdout' does not exist on type 'string'.
     let installResultString = codeBlock("fix", installResult.stdout);
     if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
     if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
@@ -48,8 +51,8 @@ export default async (interaction, messageFlags) => {
         // Delete all global commands
         await interaction.client.application.commands.set([]);
         // Delete all guild commands
-        await interaction.client.guilds.cache.forEach(async (guild) => {
-            guild.commands.set([]).catch(e => {
+        await interaction.client.guilds.cache.forEach(async (guild: any) => {
+            guild.commands.set([]).catch((e: any) => {
                 return;
             });
         });

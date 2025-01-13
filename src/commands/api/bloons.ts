@@ -8,20 +8,21 @@ import {
     codeBlock,
     ActionRowBuilder,
     SlashCommandSubcommandGroupBuilder,
-    hyperlink
+    hyperlink,
+    ColorResolvable
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
 import getBossEvent from "../../util/btd/getBossEvent.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import globalVars from "../../objects/globalVars.json";
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let oak = interaction.options.getString("oak");
     let apiError = null;
     let btd6Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let btd6ActionRow = new ActionRowBuilder();
 
     switch (interaction.options.getSubcommand()) {
@@ -37,7 +38,7 @@ export default async (interaction, messageFlags) => {
             // Rank string
             let rankString = "\nLevel: ";
             if (userData.veteranRank > 0) {
-                let veteranEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6LevelVeteran");
+                let veteranEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == "BTD6LevelVeteran");
                 rankString += userData.veteranRank;
                 if (veteranEmoji) rankString += ` ${veteranEmoji}`;
             } else {
@@ -46,12 +47,12 @@ export default async (interaction, messageFlags) => {
             // General stats
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
             if (saveData.achievementsClaimed.length > 0) {
-                let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
+                let achievementsEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == "BTD6Achievement");
                 userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/150`; // Total achievement amount is hardcoded, doesn't seem to be a way to reverse engineer it from the data received. Make sure to update if more achievements are added!
                 if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
             };
             if (saveData.lifetimeTrophies > 0) {
-                let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
+                let trophyStoreEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == "BTD6TrophyStore");
                 userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
                 if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
             };
@@ -87,18 +88,19 @@ export default async (interaction, messageFlags) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
-            .setColor(globalVars.embedColorError)
+            .setColor(globalVars.embedColorError as ColorResolvable)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
     };
     return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
 };
 
-function getUsageListString(usageObject, emojis) {
+function getUsageListString(usageObject: any, emojis: any) {
     // Rosalia icon is missing
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
-        let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
+        let heroIcon = emojis.find((emoji: any) => emoji.name == `BTD6Hero${element[0]}`);
         if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
         usageString += `${element[0]}: ${element[1]}\n`;
     });

@@ -9,9 +9,10 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import leadingZeros from "../../util/leadingZeros.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let input = null;
     switch (interaction.options.getSubcommand()) {
         case "tohex":

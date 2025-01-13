@@ -9,7 +9,11 @@ import getTime from "./getTime.js";
 import sendMessage from "./discord/sendMessage.js";
 import formatName from "./discord/formatName.js";
 
-export default async ({ exception, client, interaction = null }) => {
+export default async ({
+    exception,
+    client,
+    interaction = null
+}: any) => {
     // Note: interaction may be a message
     try {
         let messageFlags = new MessageFlagsBitField;
@@ -20,6 +24,7 @@ export default async ({ exception, client, interaction = null }) => {
         if (!client && interaction) client = interaction.client;
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
+        // @ts-expect-error TS(2304): Cannot find name 'message'.
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
             return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -49,7 +54,7 @@ export default async ({ exception, client, interaction = null }) => {
         if (interaction && interaction.options) {
             subCommand = interaction.options._subcommand; // Using .getSubcommand() fails on user/message commands
             if (interaction.options._hoistedOptions) { // Doesn't seem to be a cleaner way to access all options at once
-                interaction.options._hoistedOptions.forEach(option => {
+                interaction.options._hoistedOptions.forEach((option: any) => {
                     interactionOptions += `- ${inlineCode(option.name)}: ${option.value}\n`;
                 });
             };

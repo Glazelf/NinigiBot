@@ -16,12 +16,13 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.BanMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -42,11 +43,11 @@ export default async (interaction, messageFlags) => {
     let deleteMessageSeconds = deleteMessageDays * 86_400; // Why is this in seconds now??
 
     let executorNameFormatted = formatName(interaction.user.username);
-    let banReturn = null;
+    let banReturn: any = null;
     let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
-    let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
+    let bansFetch = await interaction.guild.bans.fetch().catch((e: any) => { return null; });
     let time = getTime();
     let reasonInfo = `-${executorNameFormatted} (${time})`;
     // If member is found
@@ -63,8 +64,8 @@ export default async (interaction, messageFlags) => {
         if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${usernameFormatted} (${member.id}) is already banned.` });
         banReturn = `Banned ${user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
-            .then(message => banReturn += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
-            .catch(e => banReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
+            .then((message: any) => banReturn += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
+            .catch((e: any) => banReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });

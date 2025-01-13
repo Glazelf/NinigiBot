@@ -6,9 +6,10 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let user = interaction.options.getUser("user");
     let member = interaction.options.getMember("user");
@@ -32,7 +33,7 @@ export default async (interaction, messageFlags) => {
     };
     if (userAssetEmbeds.length < 1) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have any assets.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     userAssetEmbeds[0]
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setAuthor({ name: `${user.username}'s assets:` });
     return sendMessage({ interaction: interaction, embeds: userAssetEmbeds, flags: messageFlags });
 };

@@ -9,9 +9,10 @@ import {
 } from "discord.js";
 import Canvas from "canvas";
 import sendMessage from "../../util/discord/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let hexInput = interaction.options.getString("hex");
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
@@ -32,7 +33,7 @@ export default async (interaction, messageFlags) => {
     return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], flags: messageFlags });
 };
 
-function hexToRgb(hex) {
+function hexToRgb(hex: any) {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
         r: parseInt(result[1], 16),

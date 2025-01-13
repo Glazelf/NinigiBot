@@ -9,16 +9,17 @@ import {
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import isGuildDataAvailable from "../discord/isGuildDataAvailable.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const number_of_pages = 2;
 const nitroBoostEmojiName = "DiscordNitroBoost";
 
-export default async (interaction, page, user) => {
+export default async (interaction: any, page: any, user: any) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
     let guildDataAvailable = isGuildDataAvailable(interaction);
-    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id, { force: true }).catch(e => { return null; });
+    if (guildDataAvailable) member = await interaction.guild.members.fetch(user.id, { force: true }).catch((e: any) => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -29,7 +30,7 @@ export default async (interaction, page, user) => {
     if (serverAvatar == avatar) avatar = null; // Null tiny avatar if bigger avatar is identical
 
     const profileEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as ColorResolvable)
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
     let profileButtons = new ActionRowBuilder();
@@ -53,20 +54,25 @@ export default async (interaction, page, user) => {
         profileButtons.addComponents(nextPageButton);
     };
 
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
             // Roles
             let memberRoles = null;
-            if (member && guildDataAvailable) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
+            if (member && guildDataAvailable) memberRoles = member.roles.cache.filter((element: any) => element.name !== "@everyone");
             let rolesSorted = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
-                rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
+                rolesSorted = await memberRoles.sort((r: any, r2: any) => r2.position - r.position);
+                // @ts-expect-error TS(2339): Property 'values' does not exist on type 'string'.
                 rolesSorted = [...rolesSorted.values()].join(", ");
                 for (let i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
+                    // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                     rolesSorted = rolesSorted.split(", ");
+                    // @ts-expect-error TS(2339): Property 'pop' does not exist on type 'string'.
                     await rolesSorted.pop();
+                    // @ts-expect-error TS(2339): Property 'join' does not exist on type 'string'.
                     rolesSorted = rolesSorted.join(", ");
                     shortenedRoles = true;
                 };
@@ -86,7 +92,7 @@ export default async (interaction, page, user) => {
                 let guildOwner = await interaction.guild?.fetchOwner();
                 if (guildOwner?.id === user.id) badgesArray.push("👑");
                 if (member && member.premiumSince > 0) {
-                    let boostEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == nitroBoostEmojiName);
+                    let boostEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == nitroBoostEmojiName);
                     if (boostEmoji) badgesArray.push(boostEmoji);
                 };
                 if (user.flags) {
@@ -95,7 +101,7 @@ export default async (interaction, page, user) => {
                     let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
                     for (const key of Object.keys(userFlagsTrue)) {
-                        let badgeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `Badge${key}`);
+                        let badgeEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == `Badge${key}`);
                         if (badgeEmoji) badgesArray.push(badgeEmoji);
                     };
                 };
@@ -108,10 +114,12 @@ export default async (interaction, page, user) => {
             let joinRankText = null;
             if (guildDataAvailable) {
                 joinRank = await getJoinRank(user, interaction.guild);
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
             };
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
+            // @ts-expect-error TS(2345): Argument of type '[{ name: string; value: string |... Remove this comment to see the full error message
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
             profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
@@ -139,12 +147,12 @@ export default async (interaction, page, user) => {
             let trophy_level = 0;
             let trophy_string = '';
             let trophies = await user_db.getShopTrophies();
-            trophies.forEach(trophy => {
+            trophies.forEach((trophy: any) => {
                 trophy_string += (trophy.icon + ' ');
             });
             trophy_level += trophies.length;
             trophies = await user_db.getEventTrophies();
-            trophies.forEach(trophy => {
+            trophies.forEach((trophy: any) => {
                 trophy_string += (trophy.icon + ' ');
             });
             trophy_level += trophies.length;
@@ -163,7 +171,7 @@ export default async (interaction, page, user) => {
     };
 };
 
-async function getJoinRank(user, guild) {
+async function getJoinRank(user: any, guild: any) {
     if (!user) return;
     await guild.members.fetch();
     // Sort all users by join time

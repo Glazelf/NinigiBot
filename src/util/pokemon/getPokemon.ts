@@ -14,15 +14,24 @@ import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getTypeEmojis from "./getTypeEmojis.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import colorHexes from "../../objects/colorHexes.json";
 
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
+export default async ({
+    pokemon,
+    learnsetBool = false,
+    shinyBool = false,
+    genData,
+    emojis
+}: any) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex.gen;
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
     pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
@@ -132,6 +141,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     if (shinyBool) iconThumbnail = shinyRender;
     if (!PMDPortraitExists) {
         iconAuthor = partyIcon;
+        // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'string'.
         iconFooter = null;
     };
     let abilityString = "";
@@ -174,17 +184,17 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     };
     statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
 
-    let levelMoves = [];
-    let levelMovesNames = [];
-    let tmMoves = [];
+    let levelMoves: any = [];
+    let levelMovesNames: any = [];
+    let tmMoves: any = [];
     let tmMovesStrings = [];
-    let eggMoves = [];
-    let tutorMoves = [];
-    let specialMoves = [];
+    let eggMoves: any = [];
+    let tutorMoves: any = [];
+    let specialMoves: any = [];
     let transferMoves = [];
     let transferMovesStrings = [];
-    let reminderMoves = [];
-    let vcMoves = [];
+    let reminderMoves: any = [];
+    let vcMoves: any = [];
     let levelMovesString = "";
     let eggMovesString = "";
     let tutorMovesString = "";
@@ -195,6 +205,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             for (let moveLearnData of learnData) {
                 let moveLearnGen = moveLearnData[0];
                 if (moveLearnGen > generation) {
@@ -222,6 +233,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
         // Prevo egg moves
         if (prevoDataMoves && prevoDataMoves.name) {
@@ -230,6 +242,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 for (let [moveName, learnData] of Object.entries(pokemonPrevoLearnset.learnset)) {
                     let moveData = genData.moves.get(moveName);
                     if (moveData) moveName = moveData.name;
+                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
                     for (let moveLearnData of learnData) {
                         if (moveLearnData.startsWith(`${generation}E`)) eggMoves.push(moveName);
                     };
@@ -243,6 +256,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         let transferMoveIndex = 0;
         for (const tmMove of tmMoves) {
             if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
+            // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
             tmMovesStrings[tmMoveIndex].push(tmMove);
             if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
         };
@@ -253,6 +267,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
         for (const transferMove of transferMoves) {
             if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
+            // @ts-expect-error TS(2345): Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
@@ -261,6 +276,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let previousPokemon = null;
     let nextPokemon = null;
     let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
     let previousPokemonID = pokemon.num - 1;
     let nextPokemonID = pokemon.num + 1;
@@ -345,7 +361,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         3: new ActionRowBuilder(),
         4: new ActionRowBuilder()
     };
-    let pokemonForms = [];
+    let pokemonForms: any = [];
     if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
     if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
     if (pokemonForms && pokemonForms.length > 0) {
@@ -353,11 +369,13 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             for (let i = 0; i < pokemonForms.length; i++) {
                 let formData = Dex.species.get(pokemonForms[i]);
                 if (formData.gen > generation) continue;
+                // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                 if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
                 const formButton = new ButtonBuilder()
                     .setCustomId(`pkmForm${i}|${buttonAppend}`)
                     .setLabel(pokemonForms[i])
                     .setStyle(ButtonStyle.Secondary);
+                // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                 formButtonsObject[formButtonsComponentsCounter].addComponents(formButton);
             };
         };
@@ -397,12 +415,12 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Embed color, mostly for buttons
     let embedColor = globalVars.embedColor;
     if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
-    pkmEmbed.setColor(embedColor);
+    pkmEmbed.setColor(embedColor as ColorResolvable);
     messageObject = { embeds: [pkmEmbed], components: buttonArray };
     return messageObject;
 };
 
-function calcHP(pokemon, generation) {
+function calcHP(pokemon: any, generation: any) {
     let base = pokemon.baseStats.hp;
     let min50;
     let max50;
@@ -431,12 +449,13 @@ function calcHP(pokemon, generation) {
     // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
     let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
     if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
     return StatText;
 };
 
-function calcStat(base, generation) {
+function calcStat(base: any, generation: any) {
     let min50;
     let max50;
     let min100;
@@ -468,7 +487,7 @@ function calcStat(base, generation) {
     return StatText;
 };
 
-function getEvoMethod(pokemon) {
+function getEvoMethod(pokemon: any) {
     let evoMethod;
     switch (pokemon.evoType) {
         case "useItem":

@@ -4,14 +4,16 @@ import {
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'fore... Remove this comment to see the full error message
 import forever from "forever-monitor";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.remove(MessageFlags.Ephemeral);
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -30,8 +32,8 @@ export default async (interaction, messageFlags) => {
         // Delete all global commands
         await interaction.client.application.commands.set([]);
         // Delete all guild commands
-        await interaction.client.guilds.cache.forEach(async (guild) => {
-            guild.commands.set([]).catch(e => {
+        await interaction.client.guilds.cache.forEach(async (guild: any) => {
+            guild.commands.set([]).catch((e: any) => {
                 return;
             });
         });

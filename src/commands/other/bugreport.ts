@@ -59,9 +59,10 @@ const actionRow4 = new ActionRowBuilder()
     .addComponents(behaviourInput);
 const actionRow5 = new ActionRowBuilder()
     .addComponents(contextInput);
+// @ts-expect-error TS(2345): Argument of type '[ActionRowBuilder<AnyComponentBu... Remove this comment to see the full error message
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 
-export default async (interaction) => {
+export default async (interaction: any) => {
     return interaction.showModal(modal);
 };
 

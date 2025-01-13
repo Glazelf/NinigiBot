@@ -15,9 +15,12 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import languages from "../../objects/discord/languages.json" with { type: "json" };
-import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import languages from "../../objects/discord/languages.json";
+
+import verifLevels from "../../objects/discord/verificationLevels.json";
 
 const nitroBoostEmojiName = "DiscordNitroBoost";
 const emoteCapTier0 = 100;
@@ -32,15 +35,15 @@ const boosterRequirementTier1 = 2;
 const boosterRequirementTier2 = 7;
 const boosterRequirementTier3 = 14;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let adminBool = isAdmin(interaction.member);
     let guild = interaction.guild;
     await guild.members.fetch();
     await guild.channels.fetch();
     let guildOwner = await guild.fetchOwner();
-    let botMembers = guild.members.cache.filter(member => member.user.bot);
+    let botMembers = guild.members.cache.filter((member: any) => member.user.bot);
     // let humanMemberCount = guild.members.cache.size - botMembers.size;
-    let managedEmojis = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
+    let managedEmojis = guild.emojis.cache.filter((emote: any) => emote.managed); // Only managed emote source seems to be Twitch
     let unmanagedEmoteCount = guild.emojis.cache.size - managedEmojis.size;
 
     // Bans
@@ -82,7 +85,7 @@ export default async (interaction, messageFlags) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    let discordNitroEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name === nitroBoostEmojiName);
+    let discordNitroEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name === nitroBoostEmojiName);
     if (discordNitroEmoji) boosterString += ` ${discordNitroEmoji}`; // Shows up as just ID without explicit string conversion
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
@@ -100,8 +103,9 @@ export default async (interaction, messageFlags) => {
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
     if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
-    await guild.channels.cache.forEach(async channel => {
+    await guild.channels.cache.forEach(async (channel: any) => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
+        // @ts-expect-error TS(2339): Property 'GuildThread' does not exist on type 'typ... Remove this comment to see the full error message
         if (channel.type == ChannelType.GuildThread) threadCount += 1;
         // Get archived threads?
         // if (channel.threads && channel.type == ChannelType.GuildText && botMember.permissions.has(PermissionFlagsBits.Administrator)) {
@@ -140,7 +144,7 @@ export default async (interaction, messageFlags) => {
     assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
     const serverEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle(guild.name)
         .setThumbnail(icon)
         .setFooter({ text: guild.id });

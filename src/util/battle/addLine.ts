@@ -1,3 +1,3 @@
-export default (line) => {
+export default (line: any) => {
     return (line + '\n');
 };

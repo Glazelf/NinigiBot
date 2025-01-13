@@ -3,17 +3,20 @@ import {
     PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 import isAdmin from "../util/discord/perms/isAdmin.js";
 
-export default async (client, oldMessage, newMessage) => {
+export default async (client: any, oldMessage: any, newMessage: any) => {
     try {
         if (!oldMessage || !oldMessage.guild || !oldMessage.author || oldMessage.author.bot || oldMessage.author.system) return;
         if (oldMessage.content === newMessage.content) return;
 
         await oldMessage.guild.fetch();
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMessage.guild.id } });
         if (!logChannel) return;
         let log = oldMessage.guild.channels.cache.get(logChannel.channel_id);
@@ -33,7 +36,7 @@ export default async (client, oldMessage, newMessage) => {
             if (oldMessage.attachments.size > 0) {
                 messageImage = oldMessage.attachments.first().proxyURL;
                 messageAttachmentsTitle += ` (${oldMessage.attachments.size})`;
-                oldMessage.attachments.forEach(attachment => {
+                oldMessage.attachments.forEach((attachment: any) => {
                     // Image tiling
                     if (attachment.proxyURL !== oldMessage.attachments.first().proxyURL) {
                         let imageEmbed = new EmbedBuilder()
@@ -65,7 +68,7 @@ export default async (client, oldMessage, newMessage) => {
             if (newMessage.member) avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setTitle(`Message Edited ⚒️`)
                 .setImage(messageImage)
                 .setURL(oldMessage.url)

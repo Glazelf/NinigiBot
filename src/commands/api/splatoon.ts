@@ -9,7 +9,8 @@ import {
     SlashCommandSubcommandGroupBuilder,
     bold,
     time,
-    TimestampStyles
+    TimestampStyles,
+    ColorResolvable
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -17,14 +18,19 @@ import sendMessage from "../../util/discord/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 const version = "latest"; // Use version number without periods or "latest"
-import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
-import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
-import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
-import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
-// import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
-// import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
+
+import GearInfoClothesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoClothes.json";
+
+import GearInfoHeadJSON from "../../../submodules/splat3/data/mush/latest/GearInfoHead.json";
+
+import GearInfoShoesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoShoes.json";
+
+import WeaponInfoMainJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoMain.json";
+// import WeaponInfoSpecialJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json";
+// import WeaponInfoSubJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoSub.json";
 
 // Import language files
 fs.readdir("./submodules/splat3/data/language/", (err, files) => {
@@ -33,7 +39,7 @@ fs.readdir("./submodules/splat3/data/language/", (err, files) => {
         const fileName = file.split(".")[0];
         if (!fileName.endsWith("_full")) return; // Skip to next iteration, only count full language files
         const languageKey = fileName.split("_")[0];
-        const languageJSON = await import(`../../submodules/splat3/data/language/${file}`, { assert: { type: "json" } });
+        const languageJSON = await import(`../../submodules/splat3/data/language/${file}`);
         globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
     });
 });
@@ -67,7 +73,7 @@ const splatfestAPI = "https://splatoon3.ink/data/festivals.json"; // All Splatfe
 const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/"; // Replay lookup
 const replayLookupGithub = "https://github.com/samuelthomas2774/splatoon3-replay-lookup";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     // Game data
     let versionLatest = version;
     if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
@@ -83,7 +89,7 @@ export default async (interaction, messageFlags) => {
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
     let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
     let splat3Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     switch (interaction.options.getSubcommand()) {
         case "clothing":
             // Get clothing type as added in events/interactionCreate.js
@@ -108,23 +114,30 @@ export default async (interaction, messageFlags) => {
                 default:
                     return sendMessage(clothingFailedMessageObject);
             };
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
             if (!clothingObject) return sendMessage(clothingFailedMessageObject);
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
 
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let starRating = star.repeat(clothingObject.Rarity);
             if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
             // Obtainability
             let shopsTitle = languageJSON["LayoutMsg/Cmn_Menu_00"]["T_Shop_00"];
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let obtainMethod = clothingObject.HowToGet;
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             if (obtainMethod == "Shop") obtainMethod = `${shopsTitle} (${clothingObject.Price})`;
 
             let abilityTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["001"]}:`;
             let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
             let slotsTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_Player_02-T_BlackText_00"]}:`;
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let brandImage = `${githubRaw}images/brand/${clothingObject.Brand}.png`;
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let abilityImage = `${githubRaw}images/skill/${clothingObject.Skill}.png`;
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let clothingImage = `${githubRaw}images/gear/${clothingObject.__RowId}.png`;
             splat3Embed
                 .setAuthor({ name: clothingAuthor, iconURL: brandImage })
@@ -132,29 +145,37 @@ export default async (interaction, messageFlags) => {
                 .setImage(clothingImage)
                 .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` })
                 .addFields([
+                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
                     { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
+                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
                     { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
+                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
                     { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
                     { name: "Obtain Method:", value: obtainMethod, inline: true }
                 ]);
             break;
         case "weapon":
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let weaponObject = Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
             if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let weaponAuthor = languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID];
             if (!weaponAuthor) weaponAuthor = inputID;
             let weaponStats = "";
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let specialID = weaponObject.SpecialWeapon.split("/");
             specialID = specialID[specialID.length - 1].split(".")[0];
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let subID = weaponObject.SubWeapon.split("/");
             subID = subID[subID.length - 1].split(".")[0];
 
-            weaponObject.UIParam.forEach(stat => {
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
+            weaponObject.UIParam.forEach((stat: any) => {
                 weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
             });
             let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}`;
             if (!specialPointsTitle.endsWith(":")) specialPointsTitle += ":";
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             weaponStats += `\n${specialPointsTitle} ${weaponObject.SpecialPoint}`;
 
             let subTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["004"]}:`;
@@ -163,6 +184,7 @@ export default async (interaction, messageFlags) => {
             let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
             let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
             if (levelString.includes("[")) levelString = levelString.split(" ")[0];
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let weaponUnlockString = `${levelString} ${weaponObject.ShopUnlockRank}+`.replace("-", "");
             let subImage = `${githubRaw}images/subspe/Wsb_${subID}00.png`;
             let specialImage = `${githubRaw}images/subspe/Wsp_${specialID}00.png`;
@@ -181,14 +203,17 @@ export default async (interaction, messageFlags) => {
             break;
         case "subweapon":
             let subweaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 let weaponSubID = weapon.SubWeapon.split("/");
                 weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSubID) return true;
             });
             if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSubweaponMatchesNames = "";
             subweaponMatches.forEach(subweapon => {
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
             });
             let subThumbnail = `${githubRaw}images/subspe/Wsb_${inputID}00.png`;
@@ -207,14 +232,17 @@ export default async (interaction, messageFlags) => {
             break;
         case "special":
             let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 let weaponSpecialID = weapon.SpecialWeapon.split("/");
                 weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSpecialID) return true;
             });
             if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSpecialWeaponMatchesNames = "";
             specialWeaponMatches.forEach(specialWeaponEntry => {
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialWeaponEntry.__RowId]} (${specialWeaponEntry.SpecialPoint}p)\n`;
             });
             let specialThumbnail = `${githubRaw}images/subspe/Wsp_${inputID}00.png`;
@@ -236,7 +264,7 @@ export default async (interaction, messageFlags) => {
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
             let submode = inputData.split("|")[2];
-            let modeIndex = null;
+            let modeIndex: any = null;
             if (submode == "series") modeIndex = 0;
             if (submode == "open") modeIndex = 1;
             let responseSchedules = await axios.get(schedulesAPI);
@@ -279,10 +307,10 @@ export default async (interaction, messageFlags) => {
             let scheduleMode = inputMode.split("Schedule")[0];
 
             let currentTime = new Date().valueOf();
-            let currentMaps = null;
+            let currentMaps: any = null;
             let upcomingMaps = null;
-            if (!currentSalmonRunEvent) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
-            upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
+            if (!currentSalmonRunEvent) currentMaps = scheduleData.nodes.find((entry: any) => Date.parse(entry.startTime) < currentTime);
+            upcomingMaps = scheduleData.nodes.find((entry: any) => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
             let randomStageIndex = randomNumber(0, 1);
             let modeSettings = `${scheduleMode}MatchSetting`;
@@ -303,15 +331,15 @@ export default async (interaction, messageFlags) => {
                 };
                 if (currentSalmonRunEvent) {
                     let eventWeaponString = "";
-                    await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
+                    await currentSalmonRunEvent.setting.weapons.forEach((weapon: any) => {
                         eventWeaponString += `- ${weapon.name}\n`;
                     });
                     splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: ${time(Date.parse(currentSalmonRunEvent.startTime) / 1000, TimestampStyles.ShortDateTime)}\nEnd: ${time(Date.parse(currentSalmonRunEvent.endTime) / 1000, TimestampStyles.ShortDateTime)}\nMap: ${bold(currentSalmonRunEvent.setting.coopStage.name)}\nWeapons:\n${eventWeaponString}`);
                 };
-                await scheduleData.nodes.forEach(async (entry) => {
+                await scheduleData.nodes.forEach(async (entry: any) => {
                     let salmonRotationTime = time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortDateTime);
                     let weaponString = "";
-                    await entry.setting.weapons.forEach(weapon => {
+                    await entry.setting.weapons.forEach((weapon: any) => {
                         weaponString += `- ${weapon.name}\n`;
                     });
                     splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}`, value: `${entry.__splatoon3ink_king_salmonid_guess}\n${weaponString}`, inline: true }]);
@@ -327,10 +355,10 @@ export default async (interaction, messageFlags) => {
                 // Splatfest
                 let splatfestScheduleDescription = `${currentFest.title}\n`;
                 let responseSplatfest = await axios.get(splatfestAPI);
-                let splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
+                let splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes.find((fest: any) => fest.startTime == currentFest.startTime);
                 let splatfestDefender = null;
                 let splatfestTeamIndex = 0;
-                await splatfestData.teams.forEach(team => {
+                await splatfestData.teams.forEach((team: any) => {
                     if (splatfestTeamIndex !== 0) splatfestScheduleDescription += " vs. ";
                     splatfestTeamIndex++;
                     splatfestScheduleDescription += team.teamName;
@@ -347,7 +375,7 @@ export default async (interaction, messageFlags) => {
             };
             if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
                 // Turf War, Anarchy, xBattle and SplatfestTW
-                await scheduleData.nodes.forEach(entry => {
+                await scheduleData.nodes.forEach((entry: any) => {
                     entrySettings = entry[modeSettings];
                     let mapEntryTimes = `${time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortTime)}-${time(Date.parse(entry.endTime) / 1000, TimestampStyles.ShortTime)}`;
                     let mapEntryTitle = mapEntryTimes;
@@ -365,14 +393,14 @@ export default async (interaction, messageFlags) => {
                         .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
                 };
             } else if (inputMode == challengesID) (
-                await scheduleData.nodes.forEach(async (entry) => {
+                await scheduleData.nodes.forEach(async (entry: any) => {
                     let challengeName = entry.leagueMatchSetting.leagueMatchEvent.name;
                     let challengeDesc = entry.leagueMatchSetting.leagueMatchEvent.desc;
                     let challengeDescLong = entry.leagueMatchSetting.leagueMatchEvent.regulation.replace(/<br \/>/g, "").replace(/・/g, "\n- ");
                     let challengeMode = entry.leagueMatchSetting.vsRule.name;
                     let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
                     let challengeTimes = "";
-                    await entry.timePeriods.forEach(challengeTimePeriod => {
+                    await entry.timePeriods.forEach((challengeTimePeriod: any) => {
                         challengeTimes += `- ${time(Date.parse(challengeTimePeriod.startTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(challengeTimePeriod.endTime) / 1000, TimestampStyles.ShortTime)}\n`;
                     });
                     splat3Embed.addFields([{ name: challengeName, value: `${bold(challengeDesc)}\n${challengeDescLong}\n${bold("Mode:")} ${challengeMode}\n${bold("Maps:")} ${challengeMaps}\n${bold("Times:")}\n${challengeTimes}`, inline: false }]);
@@ -390,13 +418,13 @@ export default async (interaction, messageFlags) => {
                 .setImage(splatnetData.pickupBrand.image.url)
                 .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` })
                 .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts ${time(Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
-            await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
+            await splatnetData.pickupBrand.brandGears.forEach((brandGear: any) => {
                 let brandGearString = getGearString(brandGear, "brand");
                 splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
             });
             // Individual gear pieces
             splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item ${time(Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
-            await splatnetData.limitedGears.forEach(limitedGear => {
+            await splatnetData.limitedGears.forEach((limitedGear: any) => {
                 let limitedGearString = getGearString(limitedGear, "limited");
                 splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
             });
@@ -404,6 +432,7 @@ export default async (interaction, messageFlags) => {
         case "splatfests":
             await interaction.deferReply({ flags: messageFlags });
             let splatfestReplyObject = await getSplatfests({ page: 1, region: inputRegion });
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type '{}'.
             return sendMessage({ interaction: interaction, content: splatfestReplyObject.content, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components });
         case "replay":
             await interaction.deferReply({ flags: messageFlags });
@@ -436,14 +465,14 @@ export default async (interaction, messageFlags) => {
             if (replayIsTurfWar) playerData.push(`Points: ${replayData.myTeam.result.paintPoint}`);
             // Skills
             let headSkills = [bold(replayData.player.headGear.primaryGearPower.name)];
-            replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills.push(power.name) });
+            replayData.player.headGear.additionalGearPowers.forEach((power: any) => { headSkills.push(power.name) });
             let clothingSkills = [bold(replayData.player.clothingGear.primaryGearPower.name)];
-            replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills.push(power.name) });
+            replayData.player.clothingGear.additionalGearPowers.forEach((power: any) => { clothingSkills.push(power.name) });
             let shoesSkills = [bold(replayData.player.shoesGear.primaryGearPower.name)];
-            replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills.push(power.name) });
+            replayData.player.shoesGear.additionalGearPowers.forEach((power: any) => { shoesSkills.push(power.name) });
             // Awards
-            let replayAwards = [];
-            replayData.awards.forEach(award => { replayAwards.push(award.name) });
+            let replayAwards: any = [];
+            replayData.awards.forEach((award: any) => { replayAwards.push(award.name) });
 
             splat3Embed
                 .setTitle(replayMode)
@@ -463,8 +492,10 @@ export default async (interaction, messageFlags) => {
             let userTitle = interaction.user.displayName;
             if (isGuildDataAvailable(interaction)) userTitle = interaction.member.displayName;
 
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => !subject.includes("[") && subject !== "");
             let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
 
@@ -490,7 +521,7 @@ export default async (interaction, messageFlags) => {
     return sendMessage({ interaction: interaction, embeds: splat3Embed, flags: messageFlags });
 };
 
-function getGearString(gear, type) {
+function getGearString(gear: any, type: any) {
     let limitedGearString = "";
     if (type == "limited") limitedGearString += `Sale ends ${time(Date.parse(gear.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.\n`;
     limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;

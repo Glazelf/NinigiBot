@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.remove(MessageFlags.Ephemeral);
     let message = interaction.options._hoistedOptions[0].message;
     let input = message.content;

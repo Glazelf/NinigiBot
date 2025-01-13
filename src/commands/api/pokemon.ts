@@ -13,6 +13,7 @@ import {
     bold,
     hyperlink,
     inlineCode,
+    ColorResolvable
 } from "discord.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -27,9 +28,12 @@ import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/math/getRandomObjectItem.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import colorHexes from "../../objects/colorHexes.json";
+
+import pokemonCardSetsJSON from "../../../submodules/pokemon-tcg-data/sets/en.json";
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
@@ -37,7 +41,7 @@ const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     // Bools
     let learnsetBool = false;
     let shinyBool = false;
@@ -56,6 +60,7 @@ export default async (interaction, messageFlags) => {
     let generationInput = interaction.options.getInteger("generation");
     let generation = generationInput || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
+    // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
     if (nameInput) {
@@ -69,6 +74,7 @@ export default async (interaction, messageFlags) => {
     // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
     if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
     let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
@@ -97,7 +103,7 @@ export default async (interaction, messageFlags) => {
 
             let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0);
             abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
-            let abilityMatchesArray = [];
+            let abilityMatchesArray: any = [];
             abilityMatches.forEach(match => {
                 if (!isIdenticalForm(match.name)) abilityMatchesArray.push(match.name);
             });
@@ -157,8 +163,10 @@ export default async (interaction, messageFlags) => {
                 moveGen = move;
                 moveIsAvailable = false;
             };
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let moveIsFuture = (move.gen > generation);
             let moveFailString = `I could not find that move in generation ${generation}.`;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
                 pokemonEmbed
@@ -173,38 +181,55 @@ export default async (interaction, messageFlags) => {
                     pokemon.name.startsWith("Terapagos-") ||
                     pokemon.name.startsWith("Ogerpon-") ||
                     pokemon.name.endsWith("-Origin") ||
+                    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
+                // @ts-expect-error TS(2345): Argument of type 'import("C:/Users/Glaze/Code/Nini... Remove this comment to see the full error message
                 if (DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
             };
             let moveLearnPoolString = moveLearnPool.join(", ");
             if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
             // Capitalization doesn't matter for Bulbapedia URLs
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             nameBulbapedia = moveGen.name.replace(/ /g, "_");
             linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let description = moveGen.desc;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.flags.contact) description += " Makes contact with the target.";
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let category = move.category;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let accuracy = `${move.accuracy}%`;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.accuracy === true) accuracy = "Can't miss";
             // Smogon target is camelcased for some reason, this splits it on capital letters and formats them better
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let target = capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
             if (target == "Normal") target = "Any Adjacent";
 
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let moveTitle = move.name;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.isMax) moveTitle = `${move.name} (Max Move)`;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.isZ) moveTitle = `${move.name} (Z-Move)`;
 
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
@@ -212,11 +237,17 @@ export default async (interaction, messageFlags) => {
                 { name: "Category:", value: category, inline: true },
                 { name: "Target:", value: target, inline: true }
             ]);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: move.critRatio.toString(), inline: true }]);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: move.priority.toString(), inline: true }]);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: move.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
             if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
             break;
@@ -225,12 +256,14 @@ export default async (interaction, messageFlags) => {
             let nature = Dex.natures.get(nameInput);
             if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
+            // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
             let boosted = Dex.stats.names[nature.plus];
+            // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
             let lowered = Dex.stats.names[nature.minus];
             let resultString = "Neutral nature, no stat changes.";
             if (boosted && lowered) {
-                boosted = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == "MiscArrowUpRed")}${boosted}`;
-                lowered = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == "MiscArrowDownBlue")}${lowered}`;
+                boosted = `${interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == "MiscArrowUpRed")}${boosted}`;
+                lowered = `${interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == "MiscArrowDownBlue")}${lowered}`;
                 resultString = `${boosted}\n${lowered}`;
             };
             pokemonEmbed
@@ -291,39 +324,52 @@ export default async (interaction, messageFlags) => {
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
             if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Set variables
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
 
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let prevo = Dex.species.get(pokemon.prevo);
             let prevoLearnset = null;
             let prevoprevoLearnset = null;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             let pokemonLearnset = await Dex.learnsets.get(pokemon.id);
             pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if (pokemon.prevo) prevoLearnset = await Dex.learnsets.get(pokemon.prevo);
             if (prevoLearnset && prevo.prevo) prevoprevoLearnset = await Dex.learnsets.get(prevo.prevo);
 
             let learnsMove = false;
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             if ((pokemonLearnset && pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) ||
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 (prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 (prevoprevoLearnset && prevoprevoLearnset.learnset && prevoprevoLearnset.learnset[move.id])) learnsMove = true;
 
             if (learnsMove) {
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 if (pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) learnInfo += getLearnData(pokemonLearnset?.learnset[move.id]);
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 while ((prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
+                    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                     (prevoprevoLearnset && prevoprevoLearnset.learnset && prevoprevoLearnset.learnset[move.id])) {
                     let learnDataToAdd = "";
+                    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                     if (prevoLearnset && prevoLearnset.learnset) learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
                     if (learnDataToAdd.length > 0) {
                         learnsMove = true;
                         learnInfo += `${bold(`As ${prevo.name}:`)}\n${learnDataToAdd}`;
                     };
                     // Set up next loop
+                    // @ts-expect-error TS(2345): Argument of type '"" | SpeciesName | undefined' is... Remove this comment to see the full error message
                     prevo = Dex.species.get(prevo.prevo);
                     prevoLearnset = await Dex.learnsets.get(prevo.id);
                     prevoprevoLearnset = null; // Prevents infinite loops untill we get 4 stage evolution lines
                 };
                 pokemonEmbed.setDescription(learnInfo);
             } else {
+                // @ts-expect-error TS(2532): Object is possibly 'undefined'.
                 learnAuthor = `${pokemon.name} does not learn ${move.name}`;
             };
             pokemonEmbed.setTitle(learnAuthor);
@@ -362,7 +408,7 @@ export default async (interaction, messageFlags) => {
             let searchURL = `https://www.smogon.com/stats/${year}-${monthString}/moveset/${formatInput}-${rating}.txt`;
             let genericUsageURL = `https://www.smogon.com/stats/${year}-${monthString}/${formatInput}-${rating}.txt`;
             let response = null;
-            let genericUsageResponse = null;
+            let genericUsageResponse: any = null;
             let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
             const usageButtonSimple = new ButtonBuilder()
                 .setLabel("Showdown Usage")
@@ -383,7 +429,7 @@ export default async (interaction, messageFlags) => {
             // Filter, split and trim pokemon data
             let usageArray = response.data.replace(/\|/g, "").replace(/\n/g, "").trim().split(`----------------------------------------+  +----------------------------------------+`);
             Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replace(/\+/g, "").replace(/--/g, "") });
-            usageArray = usageArray.map(element => element.trim());
+            usageArray = usageArray.map((element: any) => element.trim());
             // Variables for generic usage data
             // let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
             let rawUsage = 0;
@@ -393,14 +439,16 @@ export default async (interaction, messageFlags) => {
             let pokemonDataSplitLine = null;
             if (pokemon) {
                 const pokemonNameSearch = pokemon.name + " "; // Space is to exclude matching more popular subforms
-                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonNameSearch));
+                let usagePokemonString = usageArray.find((element: any) => element.startsWith(pokemonNameSearch));
                 if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${inlineCode(pokemon.name)} in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
+                // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
                 usageRank = genericDataSplitPokemon[0].split("|");
+                // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                 usageRank = usageRank[usageRank.length - 2].trim();
                 // Not all formats and months have tera types. Counters list exists everywhere but can be empty.
                 let teraTypesString = "";
@@ -431,19 +479,21 @@ export default async (interaction, messageFlags) => {
                 if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: false }]);
             } else {
                 // Format generic data display
-                let usageList = [];
-                let usageListPart1 = [];
-                let usageListPart2 = [];
+                let usageList: any = [];
+                let usageListPart1: any = [];
+                let usageListPart2: any = [];
                 let usageListIndex = 1;
-                await usageArray.forEach(element => {
+                await usageArray.forEach((element: any) => {
                     nameInput = element.split("Raw count")[0].trim();
                     // Percentage determination copied from generic usage data parsing for specific pokemon
                     genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
+                    // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
                     usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
+                // @ts-expect-error TS(7006): Parameter 'element' implicitly has an 'any' type.
                 usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                 pokemonEmbed
                     .setTitle(`Usage for ${formatInput} ${rating}+ (${monthString}/${year})`)
@@ -457,6 +507,7 @@ export default async (interaction, messageFlags) => {
         case "whosthat":
             await interaction.deferReply({ flags: messageFlags });
             let allowedPokemonList = allPokemon;
+            // @ts-expect-error TS(2322): Type 'Specie[]' is not assignable to type 'Species... Remove this comment to see the full error message
             if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
             allowedPokemonList = allowedPokemonList.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
@@ -466,8 +517,11 @@ export default async (interaction, messageFlags) => {
                 !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
             );
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
+            // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
+            // @ts-expect-error TS(2339): Property 'files' does not exist on type '{}'.
             pokemonFiles = whosThatPokemonMessageObject.files;
+            // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
             pokemonButtons = whosThatPokemonMessageObject.components;
             break;
         // Card
@@ -476,18 +530,19 @@ export default async (interaction, messageFlags) => {
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
-            const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
+            const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`).catch(e => {
                 return null;
             });
             if (!cardSetJSON) return sendMessage(cardFailMessageObject);
-            const cardData = cardSetJSON.default.find(element => element.id == cardInput);
+            const cardData = cardSetJSON.default.find((element: any) => element.id == cardInput);
             if (!cardData) return sendMessage(cardFailMessageObject);
-            const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
+            const cardSetData = pokemonCardSetsJSON.find((set: any) => set.id == cardSetId);
+            if (!cardSetData) return sendMessage(cardFailMessageObject); // Should be impossible if dataset is good
             let cardTitle = cardData.name; // Space for fomatting with emojis below
             if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
             if (cardData.types) {
-                cardData.types.forEach(type => {
-                    let cardTypeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + type);
+                cardData.types.forEach((type: any) => {
+                    let cardTypeEmoji = interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == cardTypeEmojiPrefix + type);
                     if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
                 });
             };
@@ -499,21 +554,21 @@ export default async (interaction, messageFlags) => {
                 if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
                 Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
             };
-            if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
-            if (cardData.attacks) cardData.attacks.forEach(attack => {
+            if (cardData.abilities) cardData.abilities.forEach((ability: any) => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
+            if (cardData.attacks) cardData.attacks.forEach((attack: any) => {
                 let attackName = attack.name;
                 if (attack.damage) attackName += ` - ${attack.damage}`;
                 let attackDescription = attack.text || "No additional effect.";
                 if (attack.cost) {
                     attackName = ` ${attackName}`; // Space looks better between cost and name
-                    attack.cost.reverse().forEach(cost => attackName = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost) || ""}${attackName}`); // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
+                    attack.cost.reverse().forEach((cost: any) => attackName = `${interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == cardTypeEmojiPrefix + cost) || ""}${attackName}`); // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
                 };
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
             if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
             if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
             if (cardData.retreatCost) {
-                let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
+                let retreatCostString = cardData.retreatCost.map((cost: any) => interaction.client.application.emojis.cache.find((emoji: any) => emoji.name == cardTypeEmojiPrefix + cost)).join("");
                 if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
             };
             // Card subtypes can be undefined, for example for (old) trainer cards
@@ -527,15 +582,15 @@ export default async (interaction, messageFlags) => {
             if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
             break;
         case "cardset":
-            const setData = pokemonCardSetsJSON.find(element => element.id == nameInput);
-            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
+            const setData = pokemonCardSetsJSON.find((element: any) => element.id == nameInput);
+            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`).catch(e => {
                 return null;
             });
             if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             let setFooter = `${setData.releaseDate}\n`;
             if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
             let setDescription = "";
-            setJSON.default.forEach(card => {
+            setJSON.default.forEach((card: any) => {
                 setDescription += `\n${card.number} ${card.name}`;
             });
             pokemonEmbed
@@ -549,7 +604,9 @@ export default async (interaction, messageFlags) => {
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, emojis: interaction.client.application.emojis.cache });
+            // @ts-expect-error TS(2532): Object is possibly 'undefined'.
             pokemonEmbed = messageObject.embeds[0];
+            // @ts-expect-error TS(2322): Type 'never[] | ActionRowBuilder<AnyComponentBuild... Remove this comment to see the full error message
             pokemonButtons = messageObject.components;
             break;
     };
@@ -564,16 +621,16 @@ export default async (interaction, messageFlags) => {
     // Color check for non-Pokémon commands
     if (pokemonEmbed) {
         const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
-        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
-        pokemonEmbed.setColor(embedColor);
+        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase() as keyof object];
+        pokemonEmbed.setColor(embedColor as ColorResolvable);
     };
     return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, flags: messageFlags });
 };
 
-function getLearnData(learnData) {
+function getLearnData(learnData: any) {
     let learnInfo = "";
     if (!learnData || learnData.length == 0) return learnInfo;
-    learnData.forEach(learnMethod => {
+    learnData.forEach((learnMethod: any) => {
         let learnGen = learnMethod.charAt(0);
         let learnType = learnMethod.charAt(1);
         let learnGenString = `Gen ${learnGen}:`;
@@ -607,7 +664,7 @@ function getLearnData(learnData) {
 };
 
 // "Identical" here means having the same sillouette, learnset and abilities
-function isIdenticalForm(pokemonName) {
+function isIdenticalForm(pokemonName: any) {
     if (pokemonName.startsWith("Arceus-") ||
         pokemonName.startsWith("Silvally-") ||
         pokemonName.startsWith("Vivillon-") ||
@@ -621,10 +678,10 @@ function isIdenticalForm(pokemonName) {
 };
 
 // Get weakness/resistance string from dataset's array format
-function getCardMatchupString(matchupArray, emojis) {
+function getCardMatchupString(matchupArray: any, emojis: any) {
     let matchupString = "";
     for (const matchup of matchupArray) {
-        const matchupEmoji = emojis.find(emoji => emoji.name == cardTypeEmojiPrefix + matchup.type);
+        const matchupEmoji = emojis.find((emoji: any) => emoji.name == cardTypeEmojiPrefix + matchup.type);
         if (matchupEmoji) matchupString += matchupEmoji.toString(); // For some reason lists the emoji ID without manually converting to string
     };
     matchupString += ` ${matchupArray[0].value}`; // This operates under the assumption that all resistances/weaknesses are equal within each card. Rewrite if this ever changes.
@@ -632,11 +689,12 @@ function getCardMatchupString(matchupArray, emojis) {
 };
 
 // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
-function mapUsageString(string, seperator) {
-    return string.split(seperator).map(function (x) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
+function mapUsageString(string: any, seperator: any) {
+    return string.split(seperator).map(function (x: any) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
 };
 
 // Check if month is below 1, return older month and decrease year by one
+// @ts-expect-error TS(7031): Binding element 'month' implicitly has an 'any' ty... Remove this comment to see the full error message
 function checkMonthLastYear({ month: month, year: year }) {
     if (month < 1) {
         month += 12;
@@ -647,7 +705,7 @@ function checkMonthLastYear({ month: month, year: year }) {
 
 // Set nature choices. The max is 25 and there are exactly 25 natures.
 // If Gamefreak ever adds a 26th nature this will need to be moved back into autocomplete.
-const natureChoices = [];
+const natureChoices: any = [];
 allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });

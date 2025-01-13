@@ -6,9 +6,10 @@ import {
 } from "discord.js";
 import owoify from "owoify-js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     // TODO: Sanitize input somehow
     await interaction.deferReply({ flags: messageFlags });
 
@@ -16,6 +17,7 @@ export default async (interaction, messageFlags) => {
     let severity = interaction.options.getString("severity");
     if (!severity) severity = "owo";
 
+    // @ts-expect-error TS(2339): Property 'default' does not exist on type '(v: str... Remove this comment to see the full error message
     let inputOwOified = owoify.default(input, severity);
     let returnString = codeBlock("fix", inputOwOified);
 

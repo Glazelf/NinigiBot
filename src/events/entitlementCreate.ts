@@ -3,9 +3,10 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, entitlement) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, entitlement: any) => {
     try {
         let user = await client.users.fetch(entitlement.userId);
         if (!user) return;
@@ -17,7 +18,7 @@ export default async (client, entitlement) => {
         if (!matchingSKU) return;
 
         const entitlementEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(globalVars.embedColor as ColorResolvable)
             .setTitle("Entitlemend Started ⭐")
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name)} started.`)
             .setFooter({ text: entitlement.id })

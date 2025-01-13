@@ -1,3 +1,3 @@
-export default (from, to, middle) => {
+export default (from: any, to: any, middle: any) => {
     return (from < middle) && (middle <= to);
 };

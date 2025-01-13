@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-export default (fileName, baseURL) => {
+export default (fileName: any, baseURL: any) => {
     fileName = fileName.replace(" ", "_");
     let md5 = crypto.createHash("md5").update(fileName).digest("hex");
     let md5first = md5.substring(0, 1);

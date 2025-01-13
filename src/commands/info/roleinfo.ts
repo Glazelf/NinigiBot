@@ -6,9 +6,10 @@ import {
     SlashCommandRoleOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let role = interaction.options.getRole("role");
     // Role visuals
     let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -16,9 +17,9 @@ export default async (interaction, messageFlags) => {
     let embedColor = role.hexColor;
     if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
-    let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
+    let guildMembers = await interaction.guild.members.fetch().catch((e: any) => { return null; });
     if (!guildMembers) return;
-    let memberCount = guildMembers.filter(member => member.roles.cache.get(role.id)).size;
+    let memberCount = guildMembers.filter((member: any) => member.roles.cache.get(role.id)).size;
     // Properties
     let roleProperties = "";
     if (role.hoist) roleProperties = `${roleProperties}Sorted seperately\n`;
@@ -31,7 +32,7 @@ export default async (interaction, messageFlags) => {
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
     // Embed
     let roleEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as ColorResolvable)
         .setTitle(role.name)
         .setThumbnail(icon)
         .setFooter({ text: role.id })

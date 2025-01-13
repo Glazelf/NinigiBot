@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
     return sequelize.define('shinx_quote', {
         quote: {
             type: DataTypes.STRING,

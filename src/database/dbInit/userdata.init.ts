@@ -1,6 +1,6 @@
 import { userdata } from "../dbConnection/dbConnection.js";
 
-export default async (reset_db) => {
+export default async (reset_db: any) => {
     try {
         const userdataModel = await import("../dbObjects/userdata.model.js");
         const { User, Shinx, EventTrophy, ShopTrophy } = await userdataModel.default(userdata);

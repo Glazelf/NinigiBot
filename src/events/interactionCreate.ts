@@ -19,19 +19,23 @@ import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/discord/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 // Pokémon
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
-import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+
+import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json";
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
-import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+
+import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json";
+
+import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json";
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // BTD
@@ -63,14 +67,16 @@ import formatName from "../util/discord/formatName.js";
 const gens = new Generations(Dex);
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
-let pokemonCardsAll = [];
+let pokemonCardsAll: any = [];
 fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
     if (err) return console.error(err);
     files.forEach(async (file) => {
         const fileName = file.split(".")[0];
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
-        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { assert: { type: "json" } });
-        setJSON.default.forEach(card => {
+        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`);
+        setJSON.default.forEach((card: any) => {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             pokemonCardsBySet[fileName].push(card);
             pokemonCardsAll.push(card);
         });
@@ -80,14 +86,14 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
 const apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona
 // Submodule is documented in persona command
-let skillMapRoyal, personaMapRoyal, itemMapRoyal;
+let skillMapRoyal: any, personaMapRoyal: any, itemMapRoyal: any;
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
 // Genshin Impact
 const giAPI = `https://genshin.jmp.blue/`;
 
-export default async (client, interaction) => {
+export default async (client: any, interaction: any) => {
     try {
         let messageFlags = new MessageFlagsBitField;
         // ID split
@@ -105,7 +111,7 @@ export default async (client, interaction) => {
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
                 // Slower? command checker, since some commands user capitalization
-                await client.commands.forEach(command => {
+                await client.commands.forEach((command: any) => {
                     if (command.commandObject.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
                 });
                 // Run the command
@@ -122,6 +128,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
+                    // @ts-expect-error TS(2339): Property 'default' does not exist on type 'never'.
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -151,9 +158,13 @@ export default async (client, interaction) => {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
                             let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
+                            // @ts-expect-error TS(2339): Property 'content' does not exist on type '{}'.
                             contentReturn = pkmQuizRevealMessageObject.content;
+                            // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
+                            // @ts-expect-error TS(2339): Property 'files' does not exist on type '{}'.
                             filesReturn = pkmQuizRevealMessageObject.files;
+                            // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
                             componentsReturn = pkmQuizRevealMessageObject.components;
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
@@ -170,6 +181,7 @@ export default async (client, interaction) => {
                                 .setRequired(true);
                             const pkmQuizActionRow = new ActionRowBuilder()
                                 .addComponents(pkmQuizModalGuessInput);
+                            // @ts-expect-error TS(2345): Argument of type '[ActionRowBuilder<AnyComponentBu... Remove this comment to see the full error message
                             pkmQuizModal.addComponents(pkmQuizActionRow);
                             return interaction.showModal(pkmQuizModal);
                         } else if (interaction.customId.startsWith("pkm")) {
@@ -177,7 +189,7 @@ export default async (client, interaction) => {
                             let newPokemonName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newPokemonName) break;
-                                newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
+                                newPokemonName = componentRow.components.find((component: any) => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
 
@@ -194,7 +206,7 @@ export default async (client, interaction) => {
                             componentsReturn = messageObject.components;
                         } else if (interaction.customId.startsWith("mhSub")) {
                             // Monster Hunter forms
-                            let newMonsterName = null;
+                            let newMonsterName: any = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newMonsterName) break;
                                 newMonsterName = componentRow.components.get(interaction.customId);
@@ -202,7 +214,7 @@ export default async (client, interaction) => {
                             if (!newMonsterName) return;
                             newMonsterName = newMonsterName.label;
                             let monsterData = null;
-                            MHMonstersJSON.monsters.forEach(monster => {
+                            MHMonstersJSON.monsters.forEach((monster: any) => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
@@ -233,7 +245,9 @@ export default async (client, interaction) => {
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
                             let mhQuestsMessageObject = await getMHQuests({ gameName: mhQuestsGameName, page: mhQuestsPage });
+                            // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
                             embedsReturn = mhQuestsMessageObject.embeds;
+                            // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
                             componentsReturn = mhQuestsMessageObject.components;
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
@@ -249,8 +263,11 @@ export default async (client, interaction) => {
                                     break;
                             };
                             let splatfestMessageObject = await getSplatfests({ page: splatfestPage, region: splatfestRegion });
+                            // @ts-expect-error TS(2339): Property 'content' does not exist on type '{}'.
                             contentReturn = splatfestMessageObject.content;
+                            // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
                             embedsReturn = splatfestMessageObject.embeds;
+                            // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
@@ -282,17 +299,22 @@ export default async (client, interaction) => {
 
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
+                                    // @ts-expect-error TS(2345): Argument of type 'AnyComponentBuilder' is not assi... Remove this comment to see the full error message
                                     const buttonCopy = ButtonBuilder.from(button);
                                     if (isFirstButton) {
+                                        // @ts-expect-error TS(2339): Property 'custom_id' does not exist on type 'Parti... Remove this comment to see the full error message
                                         buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
                                     };
+                                    // @ts-expect-error TS(2339): Property 'custom_id' does not exist on type 'Parti... Remove this comment to see the full error message
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
+                                    // @ts-expect-error TS(2339): Property 'custom_id' does not exist on type 'Parti... Remove this comment to see the full error message
                                     if (button.data.custom_id == interaction.customId) {
                                         // Regenerate board if first button is a bomb or spoiler
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
                                             matrix = createBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                                            // @ts-expect-error TS(2531): Object is possibly 'null'.
                                             buttonEmoji = matrix[rowIndex][columnIndex]; // Needs to be set like this to prevent infinite loop. Can't be centralized into a variable.
                                             if (!bannedStartingCells.includes(buttonEmoji)) {
                                                 rowIndex = 6;
@@ -401,6 +423,7 @@ export default async (client, interaction) => {
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             let serverApi = await import("../database/dbServices/server.api.js");
+                            // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
                             serverApi = await serverApi.default();
                             // Toggle selected role
                             const rolesArray = [];
@@ -413,6 +436,7 @@ export default async (client, interaction) => {
 
                             let roleSelectReturnString = "Role toggling results:\n";
                             for await (const role of rolesArray) {
+                                // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
                                 let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
                                 if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
@@ -474,22 +498,26 @@ export default async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "role":
                                 let serverApi = await import("../database/dbServices/server.api.js");
+                                // @ts-expect-error TS(2322): Type '{ shinxQuotes: any; EligibleRoles: any; Pers... Remove this comment to see the full error message
                                 serverApi = await serverApi.default();
+                                // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
                                 let dbRoles = await serverApi.EligibleRoles.findAll();
-                                let roleIDs = [];
-                                let roleObject = [];
-                                await dbRoles.forEach(eligibleRole => {
+                                let roleIDs: any = [];
+                                let roleObject: any = [];
+                                await dbRoles.forEach((eligibleRole: any) => {
                                     roleIDs.push(eligibleRole.role_id);
                                 });
-                                await interaction.guild.roles.cache.forEach(async (role) => {
+                                await interaction.guild.roles.cache.forEach(async (role: any) => {
                                     if (roleIDs.includes(role.id)) {
                                         let choiceName = role.name;
-                                        let dbRole = dbRoles.find(eligibleRole => eligibleRole.role_id == role.id);
+                                        let dbRole = dbRoles.find((eligibleRole: any) => eligibleRole.role_id == role.id);
                                         if (dbRole.description) choiceName = `${choiceName} | ${dbRole.description}`;
                                         roleObject.push({ name: choiceName, value: role.id, position: role.position });
                                     };
                                 });
+                                // @ts-expect-error TS(7006): Parameter 'r' implicitly has an 'any' type.
                                 roleObject = roleObject.sort((r, r2) => r2.position - r.position);
+                                // @ts-expect-error TS(7006): Parameter 'role' implicitly has an 'any' type.
                                 roleObject.forEach(role => {
                                     if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
                                 });
@@ -499,6 +527,7 @@ export default async (client, interaction) => {
                         break;
                     case "pokemon":
                         let generationInput = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
+                        // @ts-expect-error TS(2345): Argument of type '`gen${any}`' is not assignable t... Remove this comment to see the full error message
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
@@ -512,6 +541,7 @@ export default async (client, interaction) => {
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                            // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
                                             let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
@@ -519,6 +549,7 @@ export default async (client, interaction) => {
                                             break;
                                         } else {
                                             // For some reason filtering breaks the original sorted order, sort by number to restore it
+                                            // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
                                             let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
@@ -530,6 +561,7 @@ export default async (client, interaction) => {
                                         };
                                     case "ability":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                        // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
                                         let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                         abilities.forEach(ability => {
                                             if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
@@ -537,16 +569,18 @@ export default async (client, interaction) => {
                                         break;
                                     case "item":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                        // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
                                         let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                         items.forEach(item => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
                                         break;
                                     case "cardset":
-                                        pokemonCardSetsJSON.forEach(set => {
+                                        pokemonCardSetsJSON.forEach((set: any) => {
                                             const setReleaseDateSplit = set.releaseDate.split("/");
                                             const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
                                             if (normalizeString(set.name).includes(normalizeString(focusedOption.value))) {
+                                                // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                                                 valuesByDate[set.id] = setReleaseDate;
                                                 choices.push({ name: set.name, value: set.id });
                                             };
@@ -571,11 +605,12 @@ export default async (client, interaction) => {
                             case "card":
                                 for await (const card of pokemonCardsAll) {
                                     const pokemonCardSetId = card.id.split("-")[0];
-                                    const pokemonCardSet = pokemonCardSetsJSON.find((element) => element.id == pokemonCardSetId);
+                                    const pokemonCardSet = pokemonCardSetsJSON.find((element: any) => element.id == pokemonCardSetId);
                                     const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
                                     const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
                                     const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${card.number}/${pokemonCardSet.printedTotal}`;
                                     if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                                         valuesByDate[card.id] = pokemonCardReleaseDate;
                                         choices.push({ name: cardOptionString, value: card.id });
                                     };
@@ -588,12 +623,12 @@ export default async (client, interaction) => {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "monster":
-                                        MHMonstersJSON.monsters.forEach(monster => {
+                                        MHMonstersJSON.monsters.forEach((monster: any) => {
                                             if (normalizeString(monster.name).includes(normalizeString(focusedOption.value))) choices.push({ name: monster.name, value: monster.name });
                                         });
                                         break;
                                     case "quest":
-                                        MHQuestsJSON.quests.forEach(quest => {
+                                        MHQuestsJSON.quests.forEach((quest: any) => {
                                             let gameSubtitle = quest.game.replace("Monster Hunter", "").trim();
                                             if (normalizeString(quest.name).includes(normalizeString(focusedOption.value))) choices.push({ name: `${quest.name} (${gameSubtitle})`, value: quest.name });
                                         });
@@ -740,18 +775,21 @@ export default async (client, interaction) => {
                                     case "skill":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
+                                                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                                                 value.element !== "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "trait":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
+                                                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                                                 value.element == "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "item":
                                         for await (const [key, value] of Object.entries(itemMapRoyal)) {
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
+                                                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                                                 !value.skillCard) choices.push({ name: key, value: key });
                                         };
                                         break;
@@ -765,6 +803,7 @@ export default async (client, interaction) => {
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);
                                 let planetsData = planetsResponse.data;
                                 for await (const [key, value] of Object.entries(planetsData)) {
+                                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
                                     if (normalizeString(value.name).includes(normalizeString(focusedOption.value))) choices.push({ name: value.name, value: value.name });
                                 };
                                 break;
@@ -775,7 +814,7 @@ export default async (client, interaction) => {
                             case "name":
                                 let trophies = await getShopTrophies();
                                 let temp = '';
-                                trophies.forEach(trophy => {
+                                trophies.forEach((trophy: any) => {
                                     temp = trophy.trophy_id;
                                     if (normalizeString(temp).includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 });
@@ -796,12 +835,12 @@ export default async (client, interaction) => {
                                     case "trophy":
                                         let trophies = await getShopTrophies();
                                         let temp = '';
-                                        trophies.forEach(trophy => {
+                                        trophies.forEach((trophy: any) => {
                                             temp = trophy.trophy_id;
                                             if (normalizeString(temp).includes(normalizeString(focusedOption.value))) choices.push({ name: temp, value: temp });
                                         });
                                         trophies = await getEventTrophies();
-                                        trophies.forEach(trophy => {
+                                        trophies.forEach((trophy: any) => {
                                             temp = trophy.trophy_id;
                                             if (normalizeString(temp).includes(normalizeString(focusedOption.value))) choices.push({ name: temp, value: temp });
                                         });
@@ -813,6 +852,7 @@ export default async (client, interaction) => {
                         break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
+                // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
                 if (Object.keys(valuesByDate).length > 0) choices.sort((a, b) => valuesByDate[b.value] - valuesByDate[a.value]); // Sort from new to old
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
@@ -852,7 +892,7 @@ export default async (client, interaction) => {
                         let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
 
                         const bugReportEmbed = new EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(globalVars.embedColor as ColorResolvable)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
@@ -876,7 +916,7 @@ export default async (client, interaction) => {
                         let profileButtons = new ActionRowBuilder()
                             .addComponents(profileButton);
                         const modMailEmbed = new EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(globalVars.embedColor as ColorResolvable)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
@@ -886,8 +926,8 @@ export default async (client, interaction) => {
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
-                            .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
-                            .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
+                            .then((message: any) => modmailReturnString += "You should have received a receipt in your DMs.")
+                            .catch((e: any) => modmailReturnString += "Faled to send you a receipt through DMs.");
                         return sendMessage({ interaction: interaction, content: modmailReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case pkmQuizModalId:
                         messageFlags.remove(MessageFlags.Ephemeral);
@@ -899,6 +939,7 @@ export default async (client, interaction) => {
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
+                        // @ts-expect-error TS(2571): Object is of type 'unknown'.
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         // Getting from dex allows aliases
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
@@ -907,7 +948,8 @@ export default async (client, interaction) => {
 
                         if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
-                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch(e => {
+                            // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
+                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch((e: any) => {
                                 // Only saw this be necessary once when edit got blocked by AutoMod, but it caused a crash so still worth catching
                                 // Can't reply or followUp because the interaction counts as handled after the above update fails
                                 return null;

@@ -7,18 +7,23 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, member) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, member: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.get(logChannel.channel_id);
         if (!log) return;
 
+        // @ts-expect-error TS(2339): Property 'PersonalRoleServers' does not exist on t... Remove this comment to see the full error message
         let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+        // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
         let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
@@ -29,7 +34,7 @@ export default async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
             let leaveEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setDescription(`${formatName(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
@@ -72,6 +77,7 @@ export default async (client, member) => {
                     if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);
                 };
             };
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);
 

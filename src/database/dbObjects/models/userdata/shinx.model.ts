@@ -3,7 +3,7 @@ import parseMeetDate from "../../../../util/shinx/parseMeetDate.js";
 import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";
 
 const millisecondsInADay = 86_400_000;
-export default (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
     const MAX_RANGE = 10;
     const parseMeetDateNow = () => {
         const now = new Date();
@@ -72,14 +72,14 @@ export default (sequelize, DataTypes) => {
         };
     };
     //  Experience
-    Shinx.prototype.addExperienceGeneric = function (experience) {
+    Shinx.prototype.addExperienceGeneric = function (experience: any) {
         this.experience += Math.ceil(experience);
     };
-    Shinx.prototype.addExperience = function (experience) {
+    Shinx.prototype.addExperience = function (experience: any) {
         this.addExperienceGeneric(experience)
         this.save({ fields: ["experience"] });
     };
-    Shinx.prototype.addExperienceAndLevelUp = function (experience) {
+    Shinx.prototype.addExperienceAndLevelUp = function (experience: any) {
         const pre = this.getLevel();
         this.addExperience(experience);
         const post = this.getLevel();
@@ -96,14 +96,14 @@ export default (sequelize, DataTypes) => {
             curr_percent: (this.experience - prev_level) / (next_level - prev_level)
         };
     };
-    Shinx.prototype.feedAndExp = function (food) {
+    Shinx.prototype.feedAndExp = function (food: any) {
         const prev_level = Math.ceil(getExpFromLevel(this.getLevel()))
         const next_level = Math.ceil(getExpFromLevel(this.getLevel() + 1))
         this.addExperienceGeneric((next_level - prev_level) * (food / MAX_RANGE));
         this.feedGeneric(food);
         this.save({ fields: ["belly", "experience"] });
     };
-    Shinx.prototype.addExperienceAndUnfeed = function (experience, food) {
+    Shinx.prototype.addExperienceAndUnfeed = function (experience: any, food: any) {
         this.addExperienceGeneric(experience);
         this.unfeedGeneric(food);
         this.save({ fields: ["experience", "belly"] });
@@ -119,18 +119,18 @@ export default (sequelize, DataTypes) => {
         return this.shiny;
     };
     // Belly
-    Shinx.prototype.feedGeneric = function (amount) {
+    Shinx.prototype.feedGeneric = function (amount: any) {
         this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + amount);
     }
-    Shinx.prototype.feed = function (amount) {
+    Shinx.prototype.feed = function (amount: any) {
         this.feedGeneric(amount);
         this.save({ fields: ["belly"] });
     };
 
-    Shinx.prototype.unfeedGeneric = function (amount) {
+    Shinx.prototype.unfeedGeneric = function (amount: any) {
         this.belly = Math.max(0, this.belly - amount);
     };
-    Shinx.prototype.unfeed = function (amount) {
+    Shinx.prototype.unfeed = function (amount: any) {
         this.unfeedGeneric(amount);
         this.save({ fields: ["belly"] });
     };
@@ -138,6 +138,7 @@ export default (sequelize, DataTypes) => {
         return MAX_RANGE - this.belly;
     };
     Shinx.prototype.getBelly = () => {
+        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         return this.belly;
     };
     Shinx.prototype.getBellyPercent = function () {
@@ -147,7 +148,7 @@ export default (sequelize, DataTypes) => {
         return this.belly / MAX_RANGE
     };
     // Nickname
-    Shinx.prototype.changeNick = function (nick) {
+    Shinx.prototype.changeNick = function (nick: any) {
         this.nickname = nick;
         this.save({ fields: ["nickname"] });
     };
@@ -158,17 +159,17 @@ export default (sequelize, DataTypes) => {
         return this.user_male;
     };
     // Battle
-    Shinx.prototype.saveBattle = function (shinxBattle, wins) {
+    Shinx.prototype.saveBattle = function (shinxBattle: any, wins: any) {
         this.experience = Math.floor(shinxBattle.exp * (1 + wins * 0.2));
         this.save({ fields: ["experience"] });
     };
     // Auto feed
-    Shinx.prototype.setAutoFeedUnchecked = function (mode) {
+    Shinx.prototype.setAutoFeedUnchecked = function (mode: any) {
         this.auto_feed = mode;
         this.save({ fields: ["auto_feed"] });
         return this.auto_feed;
     };
-    Shinx.prototype.setAutoFeed = function (mode) {
+    Shinx.prototype.setAutoFeed = function (mode: any) {
         if (this.auto_feed == mode) {
             return false;
         } else {

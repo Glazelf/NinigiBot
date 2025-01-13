@@ -15,29 +15,34 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
 import getBotSubscription from "../../util/discord/getBotSubscription.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+import colorHexes from "../../objects/colorHexes.json";
+
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let serverApi = await import("../../database/dbServices/server.api.js");
+    // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
     serverApi = await serverApi.default();
     let adminBool = isAdmin(interaction.member);
     let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
-    let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
+    let integrationRoleBool = interaction.member.roles.cache.some((role: any) => role.tags?.integrationId);
+    // @ts-expect-error TS(2339): Property 'PersonalRoleServers' does not exist on t... Remove this comment to see the full error message
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
     let guildNameFormatted = formatName(interaction.guild.name);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     await interaction.deferReply({ flags: messageFlags });
 
+    // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
     let colorArg = interaction.options.getString('color-hex');
     let iconArg = interaction.options.getAttachment("icon");
 
-    let roleColor = null;
-    let iconImg = null;
+    let roleColor: any = null;
+    let iconImg: any = null;
     let deleteBool = false;
     let fileIsImg = false;
     let iconSize = 0;
@@ -127,7 +132,7 @@ export default async (interaction, messageFlags) => {
             editReturnString += `\n- ${guildNameFormatted} does not have role icons unlocked.`;
         };
         // Re-add role if it got removed
-        if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
+        if (!interaction.member.roles.cache.find((r: any) => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
 
         return sendMessage({ interaction: interaction, content: editReturnString });
     } else {
@@ -137,6 +142,7 @@ export default async (interaction, messageFlags) => {
 
     async function createRole() {
         // Clean up possible old entry
+        // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
         let oldEntry = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
         if (oldEntry) await oldEntry.destroy();
         if (!colorArg) roleColor = 0;
@@ -151,25 +157,32 @@ export default async (interaction, messageFlags) => {
             });
         } catch (e) {
             // console.log(e);
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             if (e.toString().includes("Missing Permissions")) {
                 return logger({ exception: e, interaction: interaction });
             } else {
                 return sendMessage({ interaction: interaction, content: `An error occurred creating a role.` });
             };
         };
-        let createdRole = await interaction.guild.roles.cache.find(role => role.name == interaction.user.username);
+        let createdRole = await interaction.guild.roles.cache.find((role: any) => role.name == interaction.user.username);
         try {
             if (iconArg && iconsAllowed && fileIsImg) createdRole.setIcon(iconImg);
         } catch (e) {
             // console.log(e);
         };
         interaction.member.roles.add(createdRole.id);
+        // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
         await serverApi.PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
         return sendMessage({ interaction: interaction, content: `Created a personal role for you.` });
     };
 };
 
-async function deleteRole({ interaction, roleDB, successString, failString }) {
+async function deleteRole({
+    interaction,
+    roleDB,
+    successString,
+    failString
+}: any) {
     if (roleDB) {
         await deletePersonalRole(roleDB, interaction.guild);
         return sendMessage({ interaction: interaction, content: successString });

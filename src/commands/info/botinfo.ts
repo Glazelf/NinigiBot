@@ -13,13 +13,15 @@ import sendMessage from "../../util/discord/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
 import isOwner from "../../util/discord/perms/isOwner.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import packageJSON from "../../package.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import packageJSON from "../../package.json";
 
 const owner = "glazelf";
 const emojiMax = 2000;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
 
     let DiscordJSVersion = packageJSON.dependencies["discord.js"].substring(1,); // Substring is because string starts with ^
@@ -28,7 +30,7 @@ export default async (interaction, messageFlags) => {
 
     let emojis = await interaction.client.application.emojis.fetch();
     await interaction.client.guilds.fetch();
-    let totalMembers = interaction.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+    let totalMembers = interaction.client.guilds.cache.reduce((acc: any, guild: any) => acc + guild.memberCount, 0);
     // Get latest commit
     let githubURLVars = "Glazelf/NinigiBot";
     let githubRepoURL = `https://api.github.com/repos/${githubURLVars}`;
@@ -43,9 +45,12 @@ export default async (interaction, messageFlags) => {
     let createdAt = Math.floor(interaction.client.user.createdTimestamp / 1000);
     let date = Date.now();
     let onlineSince = Math.floor((date - interaction.client.uptime) / 1000);
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     let lastCommitMessage = `"${hyperlink(githubMasterResponse.data.commit.commit.message.split("\n")[0], `https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha}`)}"`;
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     let lastCommitAuthor = `-${hyperlink(githubMasterResponse.data.commit.author.login, `https://github.com/${githubMasterResponse.data.commit.author.login}`)}`;
     let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n${time(lastCommitTimestamp, TimestampStyles.RelativeTime)}`;
 
@@ -56,12 +61,14 @@ export default async (interaction, messageFlags) => {
     developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
 
     let botEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle(interaction.client.user.username)
         .setThumbnail(avatar)
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}.`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
+            // @ts-expect-error TS(2531): Object is possibly 'null'.
             { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);

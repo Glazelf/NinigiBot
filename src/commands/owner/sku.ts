@@ -9,9 +9,10 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -19,12 +20,12 @@ export default async (interaction, messageFlags) => {
     let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
 
     const entitlementEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle("SKUs & Entitlements");
 
     for await (let [SKUID, SKU] of SKUs) {
         let userList = [];
-        let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
+        let entitlementsSKU = entitlements.filter((entitlement: any) => entitlement.skuId == SKU.id);
         if (entitlementsSKU.length < 1) continue;
         for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
             let entitlementUser = await entitlement.fetchUser();

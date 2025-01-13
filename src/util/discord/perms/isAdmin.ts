@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
 
-export default (member) => {
+export default (member: any) => {
     if (!member || !member.guild || !member.permissions) return false;
     if (member.guild.ownerID == member.id) {
         return true

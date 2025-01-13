@@ -19,7 +19,7 @@ import {
 import leadingZeros from "../../util/leadingZeros.js";
 import formatName from "../../util/discord/formatName.js";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     switch (interaction.options.getSubcommand()) {
         case "birthday":

@@ -4,7 +4,8 @@ import {
     SlashCommandStringOption,
     SlashCommandIntegerOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    ColorResolvable
 } from "discord.js";
 import axios from "axios";
 import {
@@ -13,15 +14,16 @@ import {
 } from 'unique-names-generator'; // Random name generator that can be seeded
 import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const catAPI = "https://cataas.com/cat";
 const foxAPI = "https://randomfox.ca/floof/";
 const errorAPI = "An error occurred with the API. Please try again later.";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let randomEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     switch (interaction.options.getSubcommand()) {
         case "number":
             let lowNumber = interaction.options.getInteger("number-min");

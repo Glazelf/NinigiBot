@@ -2,12 +2,13 @@ import { codeBlock } from 'discord.js';
 import getTime from '../util/getTime.js';
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any) => {
     try {
         // Set interactions
-        await client.commands.forEach(async (command) => {
+        await client.commands.forEach(async (command: any) => {
             try {
                 let commandGuildID = null;
                 if (command.guildID) {

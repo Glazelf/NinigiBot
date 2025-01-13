@@ -1,7 +1,7 @@
 import { userdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 
-export async function getUser(id, attributes = null) {
+export async function getUser(id: any, attributes = null) {
     const { User } = await userdataModel(userdata);
     let user = await User.findByPk(id, {
         attributes: attributes
@@ -17,7 +17,7 @@ export async function getAllUsers() {
     return users;
 };
 
-export async function bulkDeleteUsers(id_arr) {
+export async function bulkDeleteUsers(id_arr: any) {
     const { User } = await userdataModel(userdata);
     await userdata.models.Shinx.destroy({
         where: { user_id: id_arr },
@@ -33,12 +33,14 @@ export async function bulkDeleteUsers(id_arr) {
     });
 };
 // Money
-export async function addMoney(id, money) {
+export async function addMoney(id: any, money: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'money']);
     await user.addMoney(money);
 };
 
-export async function getMoney(id) {
+export async function getMoney(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['money']);
     return user.money;
 };
@@ -56,37 +58,44 @@ export async function getUsersRankedByMoney() {
     return users_money;
 };
 // Birthday
-export async function getBirthday(id) {
+export async function getBirthday(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['birthday']);
     return user.birthday;
 };
 
-export async function setBirthday(id, birthday) {
+export async function setBirthday(id: any, birthday: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'birthday']);
     user.setBirthday(birthday);
 };
 // Switch Code
-export async function getSwitchCode(id) {
+export async function getSwitchCode(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['swcode']);
     return user.swcode;
 };
 
-export async function setSwitchCode(id, swcode) {
+export async function setSwitchCode(id: any, swcode: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'swcode']);
     user.setSwitchCode(swcode);
 };
 // Ephemeral default
-export async function getEphemeralDefault(id) {
+export async function getEphemeralDefault(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['ephemeral_default']);
     return user.ephemeral_default;
 };
 
-export async function setEphemeralDefault(id, ephemeral_default) {
+export async function setEphemeralDefault(id: any, ephemeral_default: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'ephemeral_default']);
     user.setEphemeralDefault(ephemeral_default);
 };
 // Buying food
-export async function buyFood(id, amount) {
+export async function buyFood(id: any, amount: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'food', 'money']);
 
     let res = await user.hasMoney(amount);

@@ -7,14 +7,15 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
 
     const money_db = await getUsersRankedByMoney();
     const leaderboardEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let scopeInput = interaction.options.getString("scope");
     let scope = scopeInput;
     if (!scopeInput || !isGuildDataAvailable(interaction)) scope = "global";
@@ -22,10 +23,10 @@ export default async (interaction, messageFlags) => {
     switch (scope) {
         case "global":
             // Global leaderboard
-            let leaderboardStringGlobal = money_db.filter(user => interaction.client.users.cache.has(user.user_id))
-                .filter(user => !interaction.client.users.cache.get(user.user_id).bot)
+            let leaderboardStringGlobal = money_db.filter((user: any) => interaction.client.users.cache.has(user.user_id))
+                .filter((user: any) => !interaction.client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user: any, position: any) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
@@ -36,10 +37,10 @@ export default async (interaction, messageFlags) => {
             // Server leaderboard
             let memberFetch = await interaction.guild.members.fetch();
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            let leaderboardString = money_db.filter(user => interaction.client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
-                .filter(user => !interaction.client.users.cache.get(user.user_id).bot)
+            let leaderboardString = money_db.filter((user: any) => interaction.client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
+                .filter((user: any) => !interaction.client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user: any, position: any) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
             if (leaderboardString.length < 1) return sendMessage({ interaction: interaction, content: "Noone in this server has any currency yet." });
             leaderboardEmbed

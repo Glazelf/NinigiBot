@@ -4,14 +4,17 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, message) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, message: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
         console.log
+        // @ts-expect-error TS(2339): Property 'StarboardMessages' does not exist on typ... Remove this comment to see the full error message
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
@@ -21,6 +24,7 @@ export default async (client, message) => {
             };
         };
         // Get log
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.get(logChannel.channel_id);
@@ -67,7 +71,7 @@ export default async (client, message) => {
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
                 messageAttachmentsTitle += ` (${message.attachments.size})`;
-                message.attachments.forEach(attachment => {
+                message.attachments.forEach((attachment: any) => {
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });
             };
@@ -75,7 +79,7 @@ export default async (client, message) => {
             if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const deleteEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);

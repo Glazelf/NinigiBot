@@ -16,9 +16,10 @@ import {
     deleteShopTrophy
 } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -70,6 +71,7 @@ export default async (interaction, messageFlags) => {
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
+            // @ts-expect-error TS(2304): Cannot find name 'shop'.
             returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
     };
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags.add(MessageFlags.Ephemeral) });

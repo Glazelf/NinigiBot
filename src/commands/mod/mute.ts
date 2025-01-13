@@ -15,13 +15,14 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 const maxMuteTime = 2_419_200_000; // Max time is 28 days, but we count in milliseconds
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -46,6 +47,7 @@ export default async (interaction, messageFlags) => {
     let daysMutedDisplay = daysMuted > 0 ? daysMuted + (daysMuted == 1 ? " day " : " days ") : "";
     let hoursMutedDisplay = hoursMuted > 0 ? hoursMuted + (hoursMuted == 1 ? " hour " : " hours ") : "";
     let minutesMutedDisplay = minutesMuted > 0 ? minutesMuted + (minutesMuted == 1 ? " minute " : " minutes ") : "";
+    // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
     displayMuteTime = daysMutedDisplay + hoursMutedDisplay + minutesMutedDisplay;
 
     if (!member) return sendMessage({ interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
@@ -66,19 +68,21 @@ export default async (interaction, messageFlags) => {
     let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${reasonCodeBlock}`;
     if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
         if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
+            // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'number'.
             muteTime = null;
             muteReturnString = `Unmuted ${user.username} (${member.id}).\n`;
         };
     };
     let time = getTime();
     let reasonInfo = `-${interaction.user.username} (${time})`;
+    // @ts-expect-error TS(2345): Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
     let dmString = `You got muted in ${formatName(interaction.guild.name)} for ${bold(displayMuteTime)} by ${formatName(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
     // Timeout logic
     try {
         await member.timeout(muteTime, `${reason} ${reasonInfo}`);
         await user.send({ content: dmString })
-            .then(message => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
-            .catch(e => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);
+            .then((message: any) => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
+            .catch((e: any) => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);
         return sendMessage({ interaction: interaction, content: muteReturnString });
     } catch (e) {
         // console.log(e);

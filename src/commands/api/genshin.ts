@@ -4,25 +4,27 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    inlineCode
+    inlineCode,
+    ColorResolvable
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
 import parseDate from "../../util/parseDate.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const giAPI = `https://genshin.jmp.blue/`;
 const embedCharacterLimit = 6000;
 const descCharacterLimit = 1024;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
 
     let response;
     let error200ReturnString = `Error occurred, make sure that your input is valid and exists.`;
     let returnString = "";
     let giEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
@@ -41,6 +43,7 @@ export default async (interaction, messageFlags) => {
             let characterBirthday = "";
             if (character.birthday) {
                 characterBirthdayArray = character.birthday.split("-");
+                // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
                 characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
             };
             giEmbed
@@ -106,11 +109,11 @@ export default async (interaction, messageFlags) => {
     return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed });
 };
 
-function getCharacterAttributeFields(attribute, type, embedCharacterLength) {
+function getCharacterAttributeFields(attribute: any, type: any, embedCharacterLength: any) {
     let attributeDesc = attribute.description.replace("\n\n", "\n");
     let descSplit = "...";
     let descMaxLength = descCharacterLimit - descSplit.length;
-    let fields = [];
+    let fields: any = [];
     if (attributeDesc.length <= descCharacterLimit) {
         fields.push({ name: `${attribute.name} (${type})`, value: attributeDesc, inline: false });
     } else {

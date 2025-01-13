@@ -9,7 +9,7 @@ import sendMessage from "../../util/discord/sendMessage.js";
 
 const noAssetsString = `This only works for messages with attachments or stickers.`;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let returnString = `Here's the assets you requested.\n`;
     let message = interaction.options._hoistedOptions[0].message;
@@ -23,9 +23,9 @@ export default async (interaction, messageFlags) => {
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 
-function addAttachmentString(collection) {
+function addAttachmentString(collection: any) {
     let string = "";
-    collection.forEach(item => {
+    collection.forEach((item: any) => {
         let url = item.url;
         if (item.proxyURL) url = item.proxyURL;
         string += `${hyperlink(item.name, hideLinkEmbed(url))}\n`;

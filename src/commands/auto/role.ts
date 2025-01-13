@@ -10,11 +10,13 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
     let serverApi = await import("../../database/dbServices/server.api.js");
+    // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
     serverApi = await serverApi.default();
     let roleArgument = interaction.options.getString('role');
     let requestRole = null;
@@ -23,31 +25,33 @@ export default async (interaction, messageFlags) => {
     let embedDescriptionCharacterLimit = 4096;
     let selectOptionLimit = 25;
 
+    // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
     let db = await serverApi.EligibleRoles.findAll();
-    let roles = [];
-    let roleIDs = [];
-    let roleText = [];
-    await db.forEach(eligibleRole => {
+    let roles: any = [];
+    let roleIDs: any = [];
+    let roleText: any = [];
+    await db.forEach((eligibleRole: any) => {
         roleIDs.push(eligibleRole.role_id);
     });
-    await interaction.guild.roles.cache.each(async (role) => {
+    await interaction.guild.roles.cache.each(async (role: any) => {
         if (roleIDs.includes(role.id)) roleText.push(role);
     });
     const commands = await interaction.client.application.commands.fetch();
     // Role sorting for role help
+    // @ts-expect-error TS(7006): Parameter 'r' implicitly has an 'any' type.
     roleText = roleText.sort((r, r2) => r2.position - r.position);
     // Role help embed and logic
     let roleHelpMessage = "";
     let rolesArray = [];
     const roleaddCommandName = "roleadd";
-    const roleaddCommandId = commands.find(c => c.name == roleaddCommandName)?.id;
+    const roleaddCommandId = commands.find((c: any) => c.name == roleaddCommandName)?.id;
     let noRolesString = `No roles have been made selfassignable yet.\nModerators can use </${roleaddCommandName}:${roleaddCommandId}> to add roles to this list.`;
     let receiveEmote = "❌";
     let removeEmote = "✅";
     if (!requestRole) {
         // Select Menu
         if (roleText.length <= selectOptionLimit) {
-            await db.forEach(async (eligibleRole) => {
+            await db.forEach(async (eligibleRole: any) => {
                 let currentRole = await interaction.guild.roles.fetch(eligibleRole.role_id);
                 if (!currentRole) return;
                 roles.push({
@@ -56,8 +60,10 @@ export default async (interaction, messageFlags) => {
                 });
                 roleIDs.push(eligibleRole.role_id);
             });
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             roles = Object.entries(roles).sort((a, b) => b[1].role.position - a[1].role.position);
             for await (const [key, value] of Object.entries(roles)) {
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                 if (!currentRole) continue;
                 let roleOptionName = currentRole.name;
@@ -70,6 +76,7 @@ export default async (interaction, messageFlags) => {
                     label: roleOptionName,
                     value: currentRole.id
                 };
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 if (value[1].description) roleOption.description = value[1].description;
                 rolesArray.push(roleOption);
             };
@@ -96,13 +103,13 @@ export default async (interaction, messageFlags) => {
         if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
         const rolesHelp = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(globalVars.embedColor as ColorResolvable)
             .setTitle(`Available roles:`)
             .setDescription(roleHelpMessage);
         return sendMessage({ interaction: interaction, embeds: rolesHelp });
     } else {
         const roleCommandName = "role";
-        const roleCommandId = commands.find(c => c.name == roleCommandName)?.id;
+        const roleCommandId = commands.find((c: any) => c.name == roleCommandName)?.id;
         let invalidRoleText = `That role does not exist or isn't selfassignable. Use </${roleCommandName}:${roleCommandId}> without any argument to see a drop down menu of available roles.`;
         // Catch because the fetch errors out if the input is not a snowflake, in case of random string inputs.
         try {

@@ -19,20 +19,21 @@ import {
     getEventTrophyWithName
 } from "../../database/dbServices/trophy.api.js";
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let trophy_name = interaction.options.getString("name");
     let messageFile = null;
     let embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let returnString = '';
     let canvas, ctx, img, shinx, res;
 
     let master = interaction.user;
     let trophies;
     const commands = await interaction.client.application.commands.fetch();
-    const trophyCommandId = commands.find(c => c.name == commandObject.name)?.id;
+    const trophyCommandId = commands.find((c: any) => c.name == commandObject.name)?.id;
     switch (interaction.options.getSubcommand()) {
         case "stock":
             trophies = await getFullBuyableShopTrophies(master.id);
@@ -42,9 +43,11 @@ export default async (interaction, messageFlags) => {
                 let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
                 switch (trophy.temp_bought) {
                     case 'Bought':
+                        // @ts-expect-error TS(2322): Type '"```yaml\nBought\n```"' is not assignable to... Remove this comment to see the full error message
                         trophy_price.value = codeBlock("yaml", `Bought`);
                         break;
                     case 'CantBuy':
+                        // @ts-expect-error TS(2322): Type '`\`\`\`css\n[${any}]\n\`\`\``' is not assign... Remove this comment to see the full error message
                         trophy_price.value = codeBlock("css", `[${trophy.price}]`);
                         break;
                     case 'CanBuy':
@@ -85,6 +88,7 @@ export default async (interaction, messageFlags) => {
                     img = await Canvas.loadImage('./assets/shinx/frontier.png');
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
+                    // @ts-expect-error TS(2363): The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
                     ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
                     img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);

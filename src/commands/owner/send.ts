@@ -11,9 +11,10 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -45,6 +46,7 @@ export default async (interaction, messageFlags) => {
     if (userIDArg) targetFormat = `${formatName(target.username)} (${target.id})`;
     try {
         let messageObject = { content: messageContent };
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         if (attachment) messageObject["files"] = [attachment];
         await target.send(messageObject);
         return sendMessage({ interaction: interaction, content: `Message sent to ${targetFormat}:${textMessageBlock}`, files: attachment });

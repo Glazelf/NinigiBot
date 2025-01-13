@@ -3,9 +3,10 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, guild) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, guild: any) => {
     try {
         let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
@@ -19,7 +20,7 @@ export default async (client, guild) => {
             return;
         };
         const guildEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(globalVars.embedColor as ColorResolvable)
             .setTitle(`Guild Joined ⭐`)
             .setThumbnail(icon)
             .setDescription(`${formatName(client.user.username)} is now in ${client.guilds.cache.size} servers.`)

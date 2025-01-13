@@ -4,16 +4,19 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    ColorResolvable
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
 import normalizeString from "../../util/string/normalizeString.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import monstersJSON from "../../../submodules/monster-hunter-DB/monsters.json";
+import questsJSON from "../../../submodules/monster-hunter-DB/quests.json";
 
 const mhRiseString = "Monster Hunter Rise";
 const mhWorldString = "Monster Hunter World";
@@ -23,10 +26,10 @@ const mh3uString = "Monster Hunter 3 Ultimate";
 const mhStories2String = "Monster Hunter Stories 2";
 const mhStoriesString = "Monster Hunter Stories";
 
-export default async (interaction, messageFlags) => {
-    let buttonArray = [];
+export default async (interaction: any, messageFlags: any) => {
+    let buttonArray: any = [];
     let mhEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let nameInput = interaction.options.getString("name");
 
     switch (interaction.options.getSubcommand()) {
@@ -34,17 +37,21 @@ export default async (interaction, messageFlags) => {
         case "quest":
             let questName = normalizeString(nameInput);
             let questData;
-            questsJSON.quests.forEach(quest => {
+            questsJSON.quests.forEach((quest: any) => {
                 if (normalizeString(quest.name) == questName) questData = quest;
             });
             if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest.", flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Format quest title
+            // @ts-expect-error TS(2339): Property 'difficulty' does not exist on type 'neve... Remove this comment to see the full error message
             let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
+            // @ts-expect-error TS(2339): Property 'isKey' does not exist on type 'never'.
             if (questData.isKey) questTitle += ` 🔑`;
             // Set up quest targets
             let targets = "";
+            // @ts-expect-error TS(2339): Property 'targets' does not exist on type 'never'.
             if (questData.targets && questData.targets.length > 1) {
-                questData.targets.forEach(target => {
+                // @ts-expect-error TS(2339): Property 'targets' does not exist on type 'never'.
+                questData.targets.forEach((target: any) => {
                     if (targets.length == 0) {
                         targets = target;
                     } else {
@@ -54,11 +61,16 @@ export default async (interaction, messageFlags) => {
             };
             mhEmbed
                 .setTitle(questTitle)
+                // @ts-expect-error TS(2339): Property 'description' does not exist on type 'nev... Remove this comment to see the full error message
                 .setDescription(`${questData.description} -${questData.client}`)
                 .addFields([
+                    // @ts-expect-error TS(2339): Property 'game' does not exist on type 'never'.
                     { name: "Game:", value: questData.game, inline: true },
+                    // @ts-expect-error TS(2339): Property 'questType' does not exist on type 'never... Remove this comment to see the full error message
                     { name: "Type:", value: questData.questType, inline: true },
+                    // @ts-expect-error TS(2339): Property 'map' does not exist on type 'never'.
                     { name: "Map:", value: questData.map, inline: true },
+                    // @ts-expect-error TS(2339): Property 'objective' does not exist on type 'never... Remove this comment to see the full error message
                     { name: "Objective:", value: questData.objective, inline: true }
                 ]);
             if (targets.length > 0) mhEmbed.addFields([{ name: "Targets:", value: targets, inline: true }]);
@@ -67,6 +79,7 @@ export default async (interaction, messageFlags) => {
         case "questlist":
             const gameInput = interaction.options.getString("game");
             let questsMessageObject = await getQuests({ gameName: gameInput, page: 1 });
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type '{}'.
             return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, flags: messageFlags });
         // Monsters
         case "monster":
@@ -79,7 +92,7 @@ export default async (interaction, messageFlags) => {
                 monsterData = monstersJSON.monsters[randomIndex];
             } else {
                 // Get named monster
-                monstersJSON.monsters.forEach(monster => {
+                monstersJSON.monsters.forEach((monster: any) => {
                     if (normalizeString(monster.name) == monsterName) monsterData = monster;
                 });
             };

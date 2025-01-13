@@ -1,4 +1,5 @@
 import leadingZeros from "../leadingZeros.js";
+
 import correctionID from "../../objects/pokemon/correctionID.json" with { type: "json"};
 
 const formSuffixes = {
@@ -8,12 +9,13 @@ const formSuffixes = {
     "-Eternamax": ""
 };
 
-export default (pokemon) => {
+export default (pokemon: any) => {
     let { num, name: pokemonName, types: pokemonTypes } = pokemon;
     let pokemonID = leadingZeros(num.toString(), 3); // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently. This approach doesn't change 4-digit IDs.
 
     const formKey = Object.keys(formSuffixes).find(suffix => pokemonName.endsWith(suffix));
     if (formKey) {
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         pokemonID += formSuffixes[formKey];
     } else {
         const formPart = pokemonName.split("-")[1];
@@ -28,7 +30,7 @@ export default (pokemon) => {
     return correctValue(correctionID, pokemonName, pokemonID);
 };
 
-function correctValue(object, key, input) {
+function correctValue(object: any, key: any, input: any) {
     key = key.toLowerCase();
     return object[key] || input;
 };

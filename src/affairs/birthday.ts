@@ -1,9 +1,13 @@
-import { EmbedBuilder } from "discord.js";
+import {
+    EmbedBuilder,
+    ColorResolvable
+} from "discord.js";
 import cron from "cron";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/math/getRandomGif.js";
 import { getBirthday } from "../database/dbServices/user.api.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 
 const timezone = "utc";
 const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
@@ -12,7 +16,7 @@ const guildID = globalVars.ShinxServerID;
 const channelID = globalVars.eventChannelID;
 const birthdayRoleID = "744719808058228796";
 
-export default async (client) => {
+export default async (client: any) => {
     try {
         if (client.user.id != globalVars.NinigiID) return;
         // Create cron job
@@ -23,7 +27,7 @@ export default async (client) => {
             const birthdayRole = await guild.roles.fetch(birthdayRoleID, { force: true });
             if (!birthdayRole) return;
             let yesterdayCuties = birthdayRole.members;
-            yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
+            yesterdayCuties.forEach((cutie: any) => cutie.roles.remove(birthdayRole));
             let cuties = [];
             let cutiesUsernames = [];
             await guild.members.fetch();
@@ -44,10 +48,11 @@ export default async (client) => {
             if (cuties.length < 1) return;
             let channel = guild.channels.cache.get(channelID);
             // Random gif
+            // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
             const randomGif = await getRandomGif(gifTags);
             // Create embed
             const gifEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
             channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });

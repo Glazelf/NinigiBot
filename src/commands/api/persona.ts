@@ -5,13 +5,15 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
+    SlashCommandSubcommandGroupBuilder,
+    ColorResolvable
 } from "discord.js";
 import fs from "fs";
 import sendMessage from "../../util/discord/sendMessage.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // rarePersonaeRoyal; list of treasure Persona
@@ -21,7 +23,7 @@ const personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // dlcPersonaRoyal; list of DLC Persona names
 // let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
 // eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace("var", ""));
-let itemMapRoyal, personaMapRoyal, skillMapRoyal;
+let itemMapRoyal: any, personaMapRoyal: any, skillMapRoyal: any;
 // Object including all item names mapped to item type/descriptions
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
 // Object including all persona data (incl. DLC)
@@ -29,10 +31,10 @@ eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", 
 // Object including all skill AND trait data
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 
-export default async (interaction, messageFlags) => {
-    let buttonArray = [];
+export default async (interaction: any, messageFlags: any) => {
+    let buttonArray: any = [];
     let p5Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+        .setColor(globalVars.embedColor as ColorResolvable);
     let nameInput = interaction.options.getString("name");
 
     switch (interaction.options.getSubcommand()) {
@@ -106,11 +108,11 @@ export default async (interaction, messageFlags) => {
     return sendMessage({ interaction: interaction, embeds: p5Embed, components: buttonArray, flags: messageFlags });
 };
 
-function getWeaknessString(string) {
+function getWeaknessString(string: any) {
     string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
     return string;
 };
-function getItemString(string) {
+function getItemString(string: any) {
     let itemObject = itemMapRoyal[string];
     if (!itemObject) return "None";
     if (itemObject.type && itemObject.description) {

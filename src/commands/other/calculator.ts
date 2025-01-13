@@ -7,7 +7,8 @@ import {
     hideLinkEmbed
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const maxMessageLength = 2000;
 const noInputString = `You need to provide a valid input.`;
@@ -26,7 +27,7 @@ const sanitizeValues = [
     "$"
 ];
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
 
     let input = interaction.options.getString("input");

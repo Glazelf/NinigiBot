@@ -7,7 +7,8 @@ import {
     TimestampStyles
 } from "discord.js";
 import axios from "axios";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 const heroesOrdered = [
@@ -55,10 +56,13 @@ const towersOrdered = [
     "BeastHandler"
 ];
 
-export default async ({ elite = false, emojis }) => {
+export default async ({
+    elite = false,
+    emojis
+}: any) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
     if (!bossEventsResponse.data.success) return bossEventsResponse.data.error;
-    let bossEventSelected = bossEventsResponse.data.body.find(event => event.start < Date.now() && event.end > Date.now());
+    let bossEventSelected = bossEventsResponse.data.body.find((event: any) => event.start < Date.now() && event.end > Date.now());
     if (!bossEventSelected) bossEventSelected = bossEventsResponse.data.body[0];
 
     let metadataURL = bossEventSelected.metadataStandard;
@@ -95,12 +99,12 @@ export default async ({ elite = false, emojis }) => {
 
     let bossEventDescription = `${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)} to ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
 
-    let allowedHeroesArray = [];
-    let allowedTowersArray = [];
-    let bannedArray = [];
-    let allHeroesAllowed = bossEventMetadata._towers.find((hero) => hero.tower == "ChosenPrimaryHero").max == 99; // This seems to be how to check if all heroes are allowed? Even when this is 99, heroes inconsistently have either a max of 0 or 1, making it hard to tell otherwise
-    bossEventMetadata._towers.forEach(tower => {
-        let towerIcon = emojis.find(emoji => emoji.name == `BTD6Hero${tower.tower}`);
+    let allowedHeroesArray: any = [];
+    let allowedTowersArray: any = [];
+    let bannedArray: any = [];
+    let allHeroesAllowed = bossEventMetadata._towers.find((hero: any) => hero.tower == "ChosenPrimaryHero").max == 99; // This seems to be how to check if all heroes are allowed? Even when this is 99, heroes inconsistently have either a max of 0 or 1, making it hard to tell otherwise
+    bossEventMetadata._towers.forEach((tower: any) => {
+        let towerIcon = emojis.find((emoji: any) => emoji.name == `BTD6Hero${tower.tower}`);
         if (tower.tower == "ChosenPrimaryHero") return; // Skip the ChosenPrimaryHero tower
         if (tower.isHero) {
             let heroString = tower.tower;
@@ -128,7 +132,7 @@ export default async ({ elite = false, emojis }) => {
     if (bannedString.length == 0) bannedString = "Nothing.";
 
     let bossEventEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setTitle(bossEventTitle)
         .setDescription(bossEventDescription)
         .setThumbnail(bossEventMetadata.mapURL)
@@ -160,8 +164,8 @@ export default async ({ elite = false, emojis }) => {
     return { embeds: bossEventEmbed, components: bossEventActionRow };
 };
 
-function sortTowersToIngame(towerList, type) {
-    let comparisonArray = null;
+function sortTowersToIngame(towerList: any, type: any) {
+    let comparisonArray: any = null;
     switch (type) {
         case "towers":
             comparisonArray = towersOrdered;
@@ -173,7 +177,7 @@ function sortTowersToIngame(towerList, type) {
             comparisonArray = heroesOrdered.concat(towersOrdered);
             break;
     };
-    let sortedArray = towerList.sort((a, b) => {
+    let sortedArray = towerList.sort((a: any, b: any) => {
         a = filterTowerStringToName(a);
         b = filterTowerStringToName(b);
         return comparisonArray.indexOf(a) - comparisonArray.indexOf(b);
@@ -181,7 +185,7 @@ function sortTowersToIngame(towerList, type) {
     return sortedArray;
 };
 
-function filterTowerStringToName(towerString) {
+function filterTowerStringToName(towerString: any) {
     if (towerString.includes(" ")) towerString = towerString.split(" ")[0]; // Catch towers with limited upgrades appended to the end
     if (towerString.includes(">")) towerString = towerString.split(">")[1]; // Catch heroes with emotes appended to the front
     return towerString;

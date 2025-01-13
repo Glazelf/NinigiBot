@@ -9,9 +9,10 @@ import {
     getMoney,
     addMoney
 } from "../../database/dbServices/user.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.remove(MessageFlags.Ephemeral);
     const currentBalance = await getMoney(interaction.user.id);
     let transferAmount = interaction.options.getInteger("amount");

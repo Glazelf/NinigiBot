@@ -8,7 +8,8 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import normalizeString from "../util/string/normalizeString.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../objects/globalVars.json";
 import {
     getMoney,
     addMoney
@@ -16,12 +17,12 @@ import {
 
 const talkedRecently = new Set();
 
-export default async (client, message) => {
+export default async (client: any, message: any) => {
     try {
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
 
-        let messageImage = null;
+        let messageImage: any = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().proxyURL;
         // Ignore commands in DMs
         if (message.channel.type == ChannelType.DM || !message.guild) {
@@ -44,7 +45,7 @@ export default async (client, message) => {
                 attachmentsTitle += ` (${message.attachments.size})`;
                 // Videos can't be embedded unless you're X (formerly Twitter) or YouTube, so they are sent as seperate mesages
                 // if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
-                message.attachments.forEach(attachment => {
+                message.attachments.forEach((attachment: any) => {
                     if (attachment.proxyURL !== messageImage) {
                         let imageEmbed = new EmbedBuilder()
                             .setImage(attachment.proxyURL)
@@ -56,7 +57,7 @@ export default async (client, message) => {
                 });
             };
             const dmEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setAuthor({ name: "DM" })
                 .setURL(embedURL)
                 .setThumbnail(avatar)
@@ -70,11 +71,12 @@ export default async (client, message) => {
             let dmLogObject = { content: message.author.id, embeds: dmEmbeds, components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
+        // @ts-expect-error TS(2367): This condition will always return 'false' since th... Remove this comment to see the full error message
         if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has(PermissionFlagsBits.SendMessages)) return;
         if (!message.member) return;
 
         let memberRoles = 0;
-        if (message.member.roles) memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone").size;
+        if (message.member.roles) memberRoles = message.member.roles.cache.filter((element: any) => element.name !== "@everyone").size;
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {

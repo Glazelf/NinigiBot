@@ -3,7 +3,7 @@ import userdataModel from "../dbObjects/userdata.model.js";
 
 const DAILY_TROPHIES = 5;
 
-export async function getUser(id, attributes = null) {
+export async function getUser(id: any, attributes = null) {
     const { User } = await userdataModel(userdata);
     let user = await User.findByPk(id, {
         attributes: attributes
@@ -14,7 +14,7 @@ export async function getUser(id, attributes = null) {
     return user;
 };
 
-export async function getHistory(id, attributes = null) {
+export async function getHistory(id: any, attributes = null) {
     const { History } = await userdataModel(userdata);
     let history = await History.findByPk(id, {
         attributes: attributes
@@ -26,18 +26,20 @@ export async function getHistory(id, attributes = null) {
     return history;
 };
 
-export async function incrementStanAmount(id) {
+export async function incrementStanAmount(id: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let history = await getHistory(id, ['user_id']);
     await history.increment('stan_amount');
 };
 
-export async function incrementCombatAmount(id, won = false) {
+export async function incrementCombatAmount(id: any, won = false) {
     let attributes = ['combat_amount'];
     if (won) attributes = attributes.concat(['win_amount']);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let history = await getHistory(id, ['user_id']);
     await history.increment(attributes);
 };
-export async function checkEvent(Model, trophy_id, attribute) {
+export async function checkEvent(Model: any, trophy_id: any, attribute: any) {
     let instances = await Model.findAll({
         attributes: [
             'user_id', attribute

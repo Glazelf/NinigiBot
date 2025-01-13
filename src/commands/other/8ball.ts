@@ -6,7 +6,8 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const answers = [
     //// Lucien Cohen answers
@@ -51,7 +52,7 @@ const answers = [
     "Probably not"
 ];
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let input = interaction.options.getString("input");
 
     const randomAnswer = answers[randomNumber(0, answers.length)];

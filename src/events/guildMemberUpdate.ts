@@ -9,12 +9,15 @@ import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
 import getBotSubscription from "../util/discord/getBotSubscription.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, oldMember, newMember) => {
+import globalVars from "../objects/globalVars.json";
+
+export default async (client: any, oldMember: any, newMember: any) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
+        // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
         serverApi = await serverApi.default();
+        // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMember.guild.id } });
         if (!logChannel) return;
         let log = oldMember.guild.channels.cache.get(logChannel.channel_id);
@@ -23,7 +26,7 @@ export default async (client, oldMember, newMember) => {
 
         if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (newMember) {
-                let newMemberFetch = await newMember.fetch({ force: true }).catch(e => { return; });
+                let newMemberFetch = await newMember.fetch({ force: true }).catch((e: any) => { return; });
                 if (newMemberFetch) newMember = newMemberFetch;
             };
             if (!newMember) return;
@@ -81,16 +84,19 @@ export default async (client, oldMember, newMember) => {
                 if (executor.id == oldMember.id || (memberUpdateLog && memberUpdateLog.createdTimestamp < (Date.now() - 5000))) executor = null;
             } catch (e) {
                 // console.log(e);
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
             if (!newMember.premiumSince && newMember.permissions && !newMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
+                // @ts-expect-error TS(2339): Property 'PersonalRoleServers' does not exist on t... Remove this comment to see the full error message
                 let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: oldMember.guild.id } });
+                // @ts-expect-error TS(2339): Property 'PersonalRoles' does not exist on type 't... Remove this comment to see the full error message
                 let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: oldMember.guild.id, user_id: oldMember.id } });
                 let isSupporter = false;
                 let botSubscription = await getBotSubscription(client.application, newMember.id);
                 if (newMember.guild.id == globalVars.ShinxServerID && botSubscription.entitlement) isSupporter = true;
-                let integrationRoleBool = newMember.roles.cache.some(role => role.tags?.integrationId);
+                let integrationRoleBool = newMember.roles.cache.some((role: any) => role.tags?.integrationId);
                 if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, oldMember.guild);
             };
 
@@ -143,7 +149,7 @@ export default async (client, oldMember, newMember) => {
             };
             if (changeText && changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
             const updateEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(globalVars.embedColor as ColorResolvable)
                 .setTitle(topText)
                 .setThumbnail(displayAvatar)
                 .setImage(image)

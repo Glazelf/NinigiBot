@@ -12,12 +12,13 @@ import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.ManageMessages;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -25,7 +26,7 @@ export default async (interaction, messageFlags) => {
     let returnString = "";
     let amount = interaction.options.getInteger("amount");
     // Get users
-    let user = null;
+    let user: any = null;
     let userArg = interaction.options.getUser("user");
     if (userArg) user = userArg;
 
@@ -35,19 +36,19 @@ export default async (interaction, messageFlags) => {
     try {
         let messagesAll = await interaction.channel.messages.fetch({ limit: amount });
         if (user) {
-            let messagesFilteredUser = await messagesAll.filter(message => message.author.id == user.id && message.id !== resultMessage.id);
+            let messagesFilteredUser = await messagesAll.filter((message: any) => message.author.id == user.id && message.id !== resultMessage.id);
             let messages = Object.values(Object.fromEntries(messagesFilteredUser)).slice(0, amount);
             await interaction.channel.bulkDelete(messages, [true])
-                .then(messagesDeleted => {
+                .then((messagesDeleted: any) => {
                     returnString = `Deleted ${messagesDeleted.size} messages from ${formatName(user.username)} within the last ${amount} messages.`;
                     if (messagesDeleted.size < amount) returnString += missingMessagesString;
                     return sendMessage({ interaction: interaction, content: returnString });
                 });
             return;
         } else {
-            let messagesFiltered = await messagesAll.filter(message => message.id !== resultMessage.id);
+            let messagesFiltered = await messagesAll.filter((message: any) => message.id !== resultMessage.id);
             await interaction.channel.bulkDelete(messagesFiltered, [true])
-                .then(messagesDeleted => {
+                .then((messagesDeleted: any) => {
                     returnString = `Deleted ${messagesDeleted.size} messages.`;
                     if (messagesDeleted.size < amount) returnString += missingMessagesString;
                     return sendMessage({ interaction: interaction, content: returnString });

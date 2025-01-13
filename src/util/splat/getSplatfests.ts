@@ -8,27 +8,32 @@ import {
     time,
     TimestampStyles
 } from "discord.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 import axios from "axios";
 
-export default async ({ page, region }) => {
+export default async ({
+    page,
+    region
+}: any) => {
     let splatfestMessageObject = {};
     let splat3Embed = new EmbedBuilder()
         .setTitle("Splatfests")
-        .setColor(globalVars.embedColor)
+        .setColor(globalVars.embedColor as ColorResolvable)
         .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
     let splatfestButtons = new ActionRowBuilder();
-    let splat3EmbedFields = [];
+    let splat3EmbedFields: any = [];
     let pageStartIndex = (page - 1) * 10; // 1 --> 0, 2 --> 10, 3 --> 20, etc.
     let pageEndIndex = page * 10 - 1; // 1 --> 9, 2 --> 19, 3 --> 29, etc.
     let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
     let responseSplatfest = await axios.get(splatfestAPI);
     if (responseSplatfest.status != 200) {
+        // @ts-expect-error TS(2339): Property 'content' does not exist on type '{}'.
         splatfestMessageObject.content = `Error occurred getting Splatfest data. Please try again later.`;
         return splatfestMessageObject;
     };
     let splatfestData = responseSplatfest.data[region].data.festRecords.nodes;
-    let splatfestBanner = null;
+    let splatfestBanner: any = null;
     let isUpcomingOrOngoingSplatfest = false;
     let pointValues = {
         vote: { // Popularity
@@ -44,13 +49,13 @@ export default async ({ page, region }) => {
             first: 10
         }
     };
-    splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
-    await splatfestData.forEach(async (splatfest) => {
+    splatfestData = await splatfestData.sort((a: any, b: any) => Date.parse(b.endTime) - Date.parse(a.endTime));
+    await splatfestData.forEach(async (splatfest: any) => {
         if (splatfest.title.length < 1) splatfest.title = "Unknown Splatfest (API error)"; // In case no valid name in API return
         let currentSplatfestPointValues = pointValues;
         // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
         // 00003 = Spicy|Sweet|Sour
-        if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00003").startTime) currentSplatfestPointValues = {
+        if (splatfest.endTime > splatfestData.find((s: any) => s.__splatoon3ink_id.split("-")[1] == "00003").startTime) currentSplatfestPointValues = {
             vote: {
                 first: 10
             },
@@ -63,13 +68,14 @@ export default async ({ page, region }) => {
             challenge: {
                 first: 12
             },
+            // @ts-expect-error TS(2322): Type '{ vote: { first: number; }; horagai: { first... Remove this comment to see the full error message
             tricolor: {
                 first: 15
             }
         };
         // Second check is for a minor points change
         // 00005 = Nessie|Aliens|Bigfoot
-        if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00005").startTime) currentSplatfestPointValues = {
+        if (splatfest.endTime > splatfestData.find((s: any) => s.__splatoon3ink_id.split("-")[1] == "00005").startTime) currentSplatfestPointValues = {
             vote: {
                 first: 8
             },
@@ -82,27 +88,32 @@ export default async ({ page, region }) => {
             challenge: {
                 first: 12
             },
+            // @ts-expect-error TS(2322): Type '{ vote: { first: number; }; horagai: { first... Remove this comment to see the full error message
             tricolor: {
                 first: 18
             }
         };
         // Bigger points overhaul
         // 00014 = Drums|Guitar|Keyboard
-        if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
+        if (splatfest.endTime > splatfestData.find((s: any) => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
             horagai: {
                 first: 90,
+                // @ts-expect-error TS(2322): Type '{ first: number; second: number; }' is not a... Remove this comment to see the full error message
                 second: 45
             },
             vote: {
                 first: 70,
+                // @ts-expect-error TS(2322): Type '{ first: number; second: number; }' is not a... Remove this comment to see the full error message
                 second: 35
             },
             regular: {
                 first: 120,
+                // @ts-expect-error TS(2322): Type '{ first: number; second: number; }' is not a... Remove this comment to see the full error message
                 second: 60
             },
             challenge: {
                 first: 120,
+                // @ts-expect-error TS(2322): Type '{ first: number; second: number; }' is not a... Remove this comment to see the full error message
                 second: 60
             },
             tricolor: {
@@ -144,7 +155,8 @@ export default async ({ page, region }) => {
             1: "Frye",
             2: "Big Man"
         };
-        await splatfest.teams.forEach(async (team) => {
+        await splatfest.teams.forEach(async (team: any) => {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             if (team.teamName.length < 1) team.teamName = splatfestIdols[splatfestTeamIndex]; // In case no valid name in API return
             if (splatfestTeamIndex !== 0) {
                 splatfestDescription += " vs. ";
@@ -159,15 +171,22 @@ export default async ({ page, region }) => {
             if (team.result && team.result.isWinner) {
                 splatfestDescription += bold(team.teamName);
                 if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote.first;
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 if (team.result.isVoteRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.vote.second;
                 if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai.first;
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 if (team.result.isHoragaiRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.horagai.second;
                 if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular.first;
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 if (team.result.isRegularContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second;
                 if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge.first;
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 if (team.result.isChallengeContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second;
+                // @ts-expect-error TS(2339): Property 'tricolor' does not exist on type '{ vote... Remove this comment to see the full error message
                 if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.first;
+                // @ts-expect-error TS(2339): Property 'tricolor' does not exist on type '{ vote... Remove this comment to see the full error message
                 if (team.result.isTricolorContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.second;
+                // @ts-expect-error TS(2322): Type 'string' is not assignable to type '"**Winner... Remove this comment to see the full error message
                 splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
             } else if (team.result && team.result.isSecondWinner) {
                 splatfestDescription += italic(team.teamName);
@@ -214,16 +233,24 @@ export default async ({ page, region }) => {
             splatfestResultsVote += ` (${bold(`${currentSplatfestPointValues.vote.first}p`)})`;
             splatfestResultsRegular += ` (${bold(`${currentSplatfestPointValues.regular.first}p`)})`;
             splatfestResultsChallenge += ` (${bold(`${currentSplatfestPointValues.challenge.first}p`)})`;
+            // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
             if (currentSplatfestPointValues.horagai.second) {
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 splatfestResultsHoragai = splatfestResultsHoragai.replace(")", ` | ${italic(`${currentSplatfestPointValues.horagai.second}p`)})`);
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 splatfestResultsVote = splatfestResultsVote.replace(")", ` | ${italic(`${currentSplatfestPointValues.vote.second}p`)})`);
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 splatfestResultsRegular = splatfestResultsRegular.replace(")", ` | ${italic(`${currentSplatfestPointValues.regular.second}p`)})`);
+                // @ts-expect-error TS(2339): Property 'second' does not exist on type '{ first:... Remove this comment to see the full error message
                 splatfestResultsChallenge = splatfestResultsChallenge.replace(")", ` | ${italic(`${currentSplatfestPointValues.challenge.second}p`)})`);
             };
 
             splatfestResultsDescription += `${splatfestResultsHoragai}\n${splatfestResultsVote}\n${splatfestResultsRegular}\n${splatfestResultsChallenge}`;
+            // @ts-expect-error TS(2339): Property 'tricolor' does not exist on type '{ vote... Remove this comment to see the full error message
             if (!midTermWinner && currentSplatfestPointValues.tricolor) {
+                // @ts-expect-error TS(2339): Property 'tricolor' does not exist on type '{ vote... Remove this comment to see the full error message
                 splatfestResultsTricolor += ` (${bold(`${currentSplatfestPointValues.tricolor.first}p`)})`;
+                // @ts-expect-error TS(2339): Property 'tricolor' does not exist on type '{ vote... Remove this comment to see the full error message
                 if (currentSplatfestPointValues.tricolor.second) splatfestResultsTricolor = splatfestResultsTricolor.replace(")", ` | ${italic(`${currentSplatfestPointValues.tricolor.second}p`)})`);
                 splatfestResultsDescription += `\n${splatfestResultsTricolor}`;
             };
@@ -256,7 +283,9 @@ export default async ({ page, region }) => {
     if (page < 2) rightButton.setDisabled(true);
     splat3Embed.setImage(splatfestBanner);
     if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription(`Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n${bold("Bold")} indicates the winning team, ${italic("italics")} indicates second place.`);
+    // @ts-expect-error TS(2339): Property 'embeds' does not exist on type '{}'.
     splatfestMessageObject.embeds = [splat3Embed];
+    // @ts-expect-error TS(2339): Property 'components' does not exist on type '{}'.
     splatfestMessageObject.components = splatfestButtons;
     return splatfestMessageObject;
 };

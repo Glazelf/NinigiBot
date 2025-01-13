@@ -1,7 +1,7 @@
 const exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy", "soul-heart", "multi-attack"];
 const exceptionsLowercase = ["v-create", "u-turn"];
 
-export default (str) => {
+export default (str: any) => {
     str = str.replace("-s-", "'s-")
     let splitStr = str;
     if (!exceptionsLowercase.includes(str)) splitStr = str.split('-');

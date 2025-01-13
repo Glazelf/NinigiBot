@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
     const Trophy = sequelize.define('EventTrophy', {
         trophy_id: {
             type: DataTypes.STRING,

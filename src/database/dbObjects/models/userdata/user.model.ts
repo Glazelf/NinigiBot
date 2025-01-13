@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
     const User = sequelize.define("User", {
         user_id: {
             type: DataTypes.STRING,
@@ -32,51 +32,51 @@ export default (sequelize, DataTypes) => {
         timestamps: false
     });
     // Money
-    User.prototype.addMoneyGeneric = function (money) {
+    User.prototype.addMoneyGeneric = function (money: any) {
         this.money = Math.max(this.money + money, 0);
     };
-    User.prototype.addMoney = function (money) {
+    User.prototype.addMoney = function (money: any) {
         this.addMoneyGeneric(money);
         this.save({ fields: ["money"] });
     };
     User.prototype.getMoney = function () {
         return this.money;
     };
-    User.prototype.hasMoney = function (money) {
+    User.prototype.hasMoney = function (money: any) {
         return this.money >= money;
     };
     // Birthday
-    User.prototype.setBirthday = function (birthday) {
+    User.prototype.setBirthday = function (birthday: any) {
         this.birthday = birthday;
         this.save({ fields: ["birthday"] });
     };
     // Switch Code
-    User.prototype.setSwitchCode = function (swcode) {
+    User.prototype.setSwitchCode = function (swcode: any) {
         this.swcode = swcode;
         this.save({ fields: ["swcode"] });
     };
     // Ephemeral default
-    User.prototype.setEphemeralDefault = function (ephemeral_default) {
+    User.prototype.setEphemeralDefault = function (ephemeral_default: any) {
         this.ephemeral_default = ephemeral_default;
         this.save({ fields: ["ephemeral_default"] });
     };
     // Food
-    User.prototype.hasFood = function (food) {
+    User.prototype.hasFood = function (food: any) {
         return this.food >= food;
     };
-    User.prototype.addFoodGeneric = function (food) {
+    User.prototype.addFoodGeneric = function (food: any) {
         this.food = Math.max(this.food + food, 0);
     };
-    User.prototype.addFood = function (food) {
+    User.prototype.addFood = function (food: any) {
         this.addFoodGeneric(food);
         this.save({ fields: ["food"] });
     };
-    User.prototype.buyFood = function (food) {
+    User.prototype.buyFood = function (food: any) {
         this.addMoneyGeneric(-food);
         this.addFoodGeneric(food);
         this.save({ fields: ["money", "food"] });
     };
-    User.prototype.reduceFoodMoney = function (food, money) {
+    User.prototype.reduceFoodMoney = function (food: any, money: any) {
         if (food != 0 && money != 0) {
             this.addMoneyGeneric(-money);
             this.addFoodGeneric(-food);

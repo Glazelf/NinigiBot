@@ -13,18 +13,21 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
+
+import textChannelTypes from "../../objects/discord/textChannelTypes.json";
 
 const requiredPermission = PermissionFlagsBits.ManageGuild;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
     await interaction.deferReply({ flags: messageFlags });
 
     let serverApi = await import("../../database/dbServices/server.api.js");
+    // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
     serverApi = await serverApi.default();
 
     let disableBool = false;
@@ -41,7 +44,9 @@ export default async (interaction, messageFlags) => {
             let starlimitArg = interaction.options.getInteger("starlimit");
             if (starlimitArg && !channelArg) return sendMessage({ interaction: interaction, content: "Can not set starlimit without also providing a channel." });
             if (!channelArg && !disableArg && !starlimitArg) return sendMessage({ interaction: interaction, content: argRequiredString });
+            // @ts-expect-error TS(2339): Property 'StarboardChannels' does not exist on typ... Remove this comment to see the full error message
             let oldStarboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
+            // @ts-expect-error TS(2339): Property 'StarboardLimits' does not exist on type ... Remove this comment to see the full error message
             let oldStarLimitDB = await serverApi.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
             let starlimit = globalVars.starboardLimit;
             if (oldStarLimitDB) starlimit = oldStarLimitDB.star_limit;
@@ -50,19 +55,23 @@ export default async (interaction, messageFlags) => {
             if (starlimitArg) {
                 starlimit = starlimitArg;
                 if (oldStarLimitDB) await oldStarLimitDB.destroy();
+                // @ts-expect-error TS(2339): Property 'StarboardLimits' does not exist on type ... Remove this comment to see the full error message
                 await serverApi.StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
             };
             // Database
             if (oldStarboardChannel) await oldStarboardChannel.destroy();
             if (disableBool) return sendMessage({ interaction: interaction, content: disableString });
+            // @ts-expect-error TS(2339): Property 'StarboardChannels' does not exist on typ... Remove this comment to see the full error message
             await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
             return sendMessage({ interaction: interaction, content: `${channelArg} is now ${guildNameFormatted}'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
         case "log":
             if (!channelArg && !disableArg) return sendMessage({ interaction: interaction, content: argRequiredString });
+            // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
             let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
             if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ interaction: interaction, content: textChannelInvalidString })
             if (oldLogChannel) await oldLogChannel.destroy();
             if (disableBool) return sendMessage({ interaction: interaction, content: disableString });
+            // @ts-expect-error TS(2339): Property 'LogChannels' does not exist on type 'typ... Remove this comment to see the full error message
             await serverApi.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
             return sendMessage({ interaction: interaction, content: `Logging has been added to ${channelArg}.` });
         case "automod":
@@ -110,6 +119,7 @@ export default async (interaction, messageFlags) => {
                 ],
                 reason: `Requested by ${interaction.user.username}.`
             };
+            // @ts-expect-error TS(2339): Property 'keywordFilter' does not exist on type '{... Remove this comment to see the full error message
             if (interaction.options.getBoolean("advertisement")) autoModObject.triggerMetadata.keywordFilter = advertisementKeywords;
             try {
                 await interaction.guild.autoModerationRules.create(autoModObject);
@@ -119,12 +129,14 @@ export default async (interaction, messageFlags) => {
             }
             return sendMessage({ interaction: interaction, content: `AutoMod rules added to ${guildNameFormatted}.\nAutoMod notiications will be sent to ${channelArg}.` });
         case "personalroles":
+            // @ts-expect-error TS(2339): Property 'PersonalRoleServers' does not exist on t... Remove this comment to see the full error message
             let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
             // Database
             if (personalRolesServerID) {
                 await personalRolesServerID.destroy();
                 return sendMessage({ interaction: interaction, content: `Personal roles can no longer be managed by users in ${guildNameFormatted}.` });
             } else {
+                // @ts-expect-error TS(2339): Property 'PersonalRoleServers' does not exist on t... Remove this comment to see the full error message
                 await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
                 return sendMessage({ interaction: interaction, content: `Personal roles can now be managed by users in ${guildNameFormatted}.` });
             };

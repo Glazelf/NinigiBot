@@ -4,9 +4,10 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import { getMoney } from "../../database/dbServices/user.api.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (interaction, messageFlags) => {
+import globalVars from "../../objects/globalVars.json";
+
+export default async (interaction: any, messageFlags: any) => {
     let dbBalance = await getMoney(interaction.user.id);
     return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, flags: messageFlags });
 };

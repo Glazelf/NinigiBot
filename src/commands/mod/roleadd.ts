@@ -9,14 +9,16 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.ManageRoles;
 const selectDescriptionCharacterLimit = 50;
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
     let serverApi = await import("../../database/dbServices/server.api.js");
+    // @ts-expect-error TS(2741): Property 'default' is missing in type '{ shinxQuot... Remove this comment to see the full error message
     serverApi = await serverApi.default();
     let adminBoolBot = isAdmin(interaction.guild.members.me);
     let adminBoolUser = isAdmin(interaction.member);
@@ -37,6 +39,7 @@ export default async (interaction, messageFlags) => {
     if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage the ${roleNameFormatted} role because it is above my highest role.` });
     if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to make the ${roleNameFormatted} role selfassignable.` });
 
+    // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
     let roleIDs = await serverApi.EligibleRoles.findAll({ where: { role_id: role.id } });
     if (roleIDs.length > 0) {
         for await (const roleID of roleIDs) {
@@ -45,8 +48,10 @@ export default async (interaction, messageFlags) => {
         return sendMessage({ interaction: interaction, content: `${role} is no longer eligible to be selfassigned.` });
     } else {
         if (description) {
+            // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
             await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
         } else {
+            // @ts-expect-error TS(2339): Property 'EligibleRoles' does not exist on type 't... Remove this comment to see the full error message
             await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name });
         };
         return sendMessage({ interaction: interaction, content: `${role} is now eligible to be selfassigned.` });

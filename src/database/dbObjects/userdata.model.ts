@@ -1,7 +1,7 @@
 
 import { DataTypes } from "sequelize";
 
-export default async (sequelize) => {
+export default async (sequelize: any) => {
     const shinxModel = await import("./models/userdata/shinx.model.js");
     const userModel = await import("./models/userdata/user.model.js");
     const historyModel = await import("./models/userdata/history.model.js");

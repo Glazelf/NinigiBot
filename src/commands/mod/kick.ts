@@ -13,12 +13,13 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getPermissionName from "../../util/discord/getPermissionName.js";
 import formatName from "../../util/discord/formatName.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+import globalVars from "../../objects/globalVars.json";
 
 const requiredPermission = PermissionFlagsBits.KickMembers;
 const requiredPermissionName = getPermissionName(requiredPermission);
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: any, messageFlags: any) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
@@ -50,8 +51,8 @@ export default async (interaction, messageFlags) => {
     // Kick
     let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
     await user.send({ content: `You've been kicked from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}` })
-        .then(message => kickReturn += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
-        .catch(e => kickReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
+        .then((message: any) => kickReturn += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
+        .catch((e: any) => kickReturn += `Failed to send a DM to ${usernameFormatted} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
         return sendMessage({ interaction: interaction, content: kickReturn });

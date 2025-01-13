@@ -8,7 +8,7 @@ import { userdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 const DAILY_TROPHIES = 5;
 
-export async function getUser(id, attributes = null) {
+export async function getUser(id: any, attributes = null) {
     const { User } = await userdataModel(userdata);
     let user = await User.findByPk(id, {
         attributes: attributes
@@ -18,12 +18,13 @@ export async function getUser(id, attributes = null) {
     return user;
 };
 
-export async function addMoney(id, money) {
+export async function addMoney(id: any, money: any) {
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(id, ['user_id', 'money']);
     await user.addMoney(money);
 };
 
-export async function getTrophieslice(offset, trophies_per_page) {
+export async function getTrophieslice(offset: any, trophies_per_page: any) {
     const { ShopTrophy, EventTrophy } = await userdataModel(userdata);
     let EventTrophies = await EventTrophy.findAll({ attributes: ['trophy_id', 'icon'] });
     let shoptrophies = await ShopTrophy.findAll({ attributes: ['trophy_id', 'icon'] });
@@ -51,7 +52,7 @@ export async function getTodayShopTrophies() {
     const trophies = await ShopTrophy.findAll();
     let index = (d.getDate() + d.getFullYear()) % trophies.length;
     const today_trophies = [];
-    const today_indexes = [];
+    const today_indexes: any = [];
     for (let i = 0; i < DAILY_TROPHIES; i++) {
         while (today_indexes.includes(index)) {
             index = ((index + 1) % trophies.length);
@@ -63,12 +64,12 @@ export async function getTodayShopTrophies() {
     return today_trophies;
 };
 
-export async function createShopTrophy(name, emote, description, price) {
+export async function createShopTrophy(name: any, emote: any, description: any, price: any) {
     const { ShopTrophy } = await userdataModel(userdata);
     await ShopTrophy.create({ trophy_id: name, icon: emote, description: description, price: price });
 };
 
-export async function deleteShopTrophy(trophy_id) {
+export async function deleteShopTrophy(trophy_id: any) {
     const { User, ShopTrophy, EventTrophy } = await userdataModel(userdata);
     const trophy_id_t = trophy_id.toLowerCase()
     const trophy = await ShopTrophy.findOne({ attributes: ['price'], where: where(fn('lower', col('trophy_id')), trophy_id_t) })
@@ -86,7 +87,7 @@ export async function deleteShopTrophy(trophy_id) {
     return true;
 };
 
-export async function getTodayShopTrophiesToBuy(money) {
+export async function getTodayShopTrophiesToBuy(money: any) {
     const { ShopTrophy } = await userdataModel(userdata);
     const d = new Date();
 
@@ -97,7 +98,7 @@ export async function getTodayShopTrophiesToBuy(money) {
     });
     let index = (d.getDate() + d.getFullYear()) % trophies.length;
     let today_trophies = [];
-    const today_indexes = [];
+    const today_indexes: any = [];
     for (let i = 0; i < DAILY_TROPHIES; i++) {
         while (today_indexes.includes(index)) {
             index = ((index + 1) % trophies.length);
@@ -111,7 +112,7 @@ export async function getTodayShopTrophiesToBuy(money) {
     return trophies_ids;
 };
 
-export async function getShopTrophyWithName(name) {
+export async function getShopTrophyWithName(name: any) {
     const { ShopTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
     const trophy = await ShopTrophy.findOne(
@@ -127,7 +128,7 @@ export async function getShopTrophyWithName(name) {
     return trophy;
 };
 
-export async function checkTrophyExistance(name, only_shop = false) {
+export async function checkTrophyExistance(name: any, only_shop = false) {
     const { ShopTrophy, EventTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
     let trophy = await ShopTrophy.findOne(
@@ -147,20 +148,20 @@ export async function checkTrophyExistance(name, only_shop = false) {
     return false;
 };
 
-export async function getBuyableShopTrophies(user_id) {
+export async function getBuyableShopTrophies(user_id: any) {
     let user = await getUser(user_id);
     const user_trophies = await user.getShopTrophies();
-    const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
+    const user_trophies_list = user_trophies.map((trophy: any) => trophy.trophy_id);
 
     let today_trophies = await getTodayShopTrophiesToBuy(user.money);
     today_trophies = today_trophies.filter(trophy => !(trophy in user_trophies_list));
     return today_trophies;
 };
 
-export async function getFullBuyableShopTrophies(user_id) {
+export async function getFullBuyableShopTrophies(user_id: any) {
     let user = await getUser(user_id);
     const user_trophies = await user.getShopTrophies();
-    const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
+    const user_trophies_list = user_trophies.map((trophy: any) => trophy.trophy_id);
 
     let today_trophies = await getTodayShopTrophies();
     today_trophies.forEach(trophy => {
@@ -174,11 +175,12 @@ export async function getFullBuyableShopTrophies(user_id) {
     return today_trophies;
 };
 
-export async function buyShopTrophy(user_id, trophy_id) {
+export async function buyShopTrophy(user_id: any, trophy_id: any) {
     const trophy_id_t = trophy_id.toLowerCase()
     const trophies = await getTodayShopTrophies();
     let trophy = trophies.find(elem => elem.trophy_id.toLowerCase() == trophy_id_t);
     if (!trophy) return 'NoTrophy';
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id', 'money']);
     if (await user.hasShopTrophy(trophy)) return 'HasTrophy';
     if (user.money < trophy.price) return 'NoMoney';
@@ -188,8 +190,9 @@ export async function buyShopTrophy(user_id, trophy_id) {
     return 'Ok';
 };
 
-export async function addEventTrophy(user_id, trophy_id) {
+export async function addEventTrophy(user_id: any, trophy_id: any) {
     const { EventTrophy } = await userdataModel(userdata);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -199,8 +202,9 @@ export async function addEventTrophy(user_id, trophy_id) {
     if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
 };
 
-export async function hasEventTrophy(user_id, trophy_id) {
+export async function hasEventTrophy(user_id: any, trophy_id: any) {
     const { EventTrophy } = await userdataModel(userdata);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -210,8 +214,9 @@ export async function hasEventTrophy(user_id, trophy_id) {
     return (await user.hasEventTrophy(trophy));
 };
 
-export async function addEventTrophyUnchecked(user_id, trophy_id) {
+export async function addEventTrophyUnchecked(user_id: any, trophy_id: any) {
     const { EventTrophy } = await userdataModel(userdata);
+    // @ts-expect-error TS(2345): Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -226,7 +231,7 @@ export async function getEventTrophies() {
     return trophies;
 };
 
-export async function getEventTrophyWithName(name) {
+export async function getEventTrophyWithName(name: any) {
 
     const { EventTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
