@@ -7,8 +7,7 @@ import {
     AttachmentBuilder,
     inlineCode
 } from "discord.js";
-import { PassThrough } from "stream";
-import PImage from "pureimage";
+import Canvas from "canvas";
 import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
@@ -16,20 +15,16 @@ export default async (interaction, messageFlags) => {
     let hexInput = interaction.options.getString("hex");
     let rgb = hexToRgb(hexInput);
     if (!hexInput.startsWith("#")) hexInput = `#${hexInput}`;
-
     if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters ${inlineCode("0-9")} and ${inlineCode("A-F")}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let imgWidth = 225;
     let imgHeight = 100;
-    let img = PImage.make(imgWidth, imgHeight);
-    let ctx = img.getContext('2d');
+    let canvas = Canvas.createCanvas(imgWidth, imgHeight);
+    let ctx = canvas.getContext('2d');
     ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`;
     ctx.fillRect(0, 0, imgWidth, imgHeight);
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: "hexcolor.png" });
 
-    const stream = new PassThrough();
-    await PImage.encodePNGToStream(img, stream);
-
-    let attachment = new AttachmentBuilder(stream, { name: "hexcolor.png" });
     let hexColorEmbed = new EmbedBuilder()
         .setColor(hexInput)
         .setTitle(hexInput)
