@@ -22,6 +22,9 @@ launch.json
 *.dev.js
 /.vscode
 /src/assets/pkm
+# TypeScript
+/build
+*.tsbuildinfo
 # Roms
 *.gbc
 *.gb
