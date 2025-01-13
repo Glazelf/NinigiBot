@@ -1,8 +1,9 @@
 import userdata from "./database/dbInit/userdata.init.js";
 import serverdata from "./database/dbInit/serverdata.init.js";
+// @ts-ignore
 import minimist from "minimist";
 
-const initDB = async (reset_db) => {
+const initDB = async (reset_db: boolean) => {
     try {
         let inits = [userdata(reset_db), serverdata(reset_db)];
         await Promise.all(inits);

@@ -7,8 +7,7 @@ import {
     AttachmentBuilder,
     inlineCode
 } from "discord.js";
-import { PassThrough } from "stream";
-import PImage from "pureimage";
+import Canvas from "canvas";
 import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
@@ -21,15 +20,12 @@ export default async (interaction, messageFlags) => {
 
     let imgWidth = 225;
     let imgHeight = 100;
-    let img = PImage.make(imgWidth, imgHeight);
-    let ctx = img.getContext('2d');
+    let canvas = Canvas.createCanvas(img.width, img.height);
+    let ctx = canvas.getContext('2d');
     ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`;
     ctx.fillRect(0, 0, imgWidth, imgHeight);
+    let attachment = new AttachmentBuilder(canvas.toBuffer(), { name: "HexColor.png" });
 
-    const stream = new PassThrough();
-    await PImage.encodePNGToStream(img, stream);
-
-    let attachment = new AttachmentBuilder(stream, { name: "hexcolor.png" });
     let hexColorEmbed = new EmbedBuilder()
         .setColor(hexInput)
         .setTitle(hexInput)

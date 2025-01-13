@@ -1,4 +1,5 @@
-import forever from 'forever';
+// @ts-ignore
+import forever from 'forever-monitor';
 // import forevermonitor from 'forever-monitor';
 
 // const foreverConfig = {

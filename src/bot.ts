@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
-import globalVars from "./objects/globalVars.json" with { type: "json" };
+import globalVars from "./objects/globalVars.json";
 
 const intents = [
     GatewayIntentBits.Guilds,
