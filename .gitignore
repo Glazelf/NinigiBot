@@ -21,10 +21,10 @@ config.json
 launch.json
 *.dev.js
 /.vscode
-/assets/pkm
+/src/assets/pkm
 # Roms
 *.gbc
 *.gb
 *.gba
 *.sav
-/assets/images/roms/screenshot.*
+/src/assets/roms/screenshot.*
