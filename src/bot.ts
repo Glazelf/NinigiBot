@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
+
 import globalVars from "./objects/globalVars.json";
 
 const intents = [
@@ -48,6 +49,7 @@ const presenceObject = {
 globalVars.presence = presenceObject;
 
 const client = new Client({
+    // @ts-expect-error TS(2322): Type '{ activities: ({ name: string; state: string... Remove this comment to see the full error message
     presence: presenceObject,
     intents: intents,
     partials: partials,
@@ -59,6 +61,7 @@ const client = new Client({
 });
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
+// @ts-expect-error TS(1378): Top-level 'await' expressions are only allowed whe... Remove this comment to see the full error message
 await fs.promises.readdir("./events/").then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
@@ -77,14 +80,16 @@ await fs.promises.readdir("./events/").then(async (files) => {
 });
 console.log("Loaded events!");
 
+// @ts-expect-error TS(2339): Property 'commands' does not exist on type 'Client... Remove this comment to see the full error message
 client.commands = new Collection();
+// @ts-expect-error TS(1378): Top-level 'await' expressions are only allowed whe... Remove this comment to see the full error message
 await walk(`./commands/`);
 console.log("Loaded commands!");
 
 client.login(process.env.TOKEN);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
-async function walk(dir, callback) {
+async function walk(dir: any, callback: any) {
     await fs.promises.readdir(dir).then(async (files) => {
         for (const file of files) {
             let filepath = path.join(dir, file);
@@ -111,6 +116,7 @@ async function walk(dir, callback) {
                     ];
                     let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
+                    // @ts-expect-error TS(2339): Property 'commands' does not exist on type 'Client... Remove this comment to see the full error message
                     client.commands.set(commandName, props);
                 };
             });
