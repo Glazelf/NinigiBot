@@ -473,7 +473,7 @@ export default async (interaction, messageFlags) => {
         // Card
         case "card":
             const cardInput = interaction.options.getString("card");
-            const smallImageBool = interaction.options.getBoolean("small-image") || false;
+            const largeImageBool = interaction.options.getBoolean("large-image") || false;
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
@@ -524,10 +524,10 @@ export default async (interaction, messageFlags) => {
                 .setAuthor({ name: embedAuthor })
                 .setTitle(cardTitle)
                 .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
-            if (smallImageBool) {
-                pokemonEmbed.setThumbnail(cardData.images.large);
-            } else {
+            if (largeImageBool) {
                 pokemonEmbed.setImage(cardData.images.large);
+            } else {
+                pokemonEmbed.setThumbnail(cardData.images.large);
             };
             if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
             break;
@@ -750,9 +750,9 @@ const learnsetOption = new SlashCommandBooleanOption()
 const shinyOption = new SlashCommandBooleanOption()
     .setName("shiny")
     .setDescription("Whether to show the Pokémon's shiny sprite.");
-const smallImageOption = new SlashCommandBooleanOption()
-    .setName("small-image")
-    .setDescription("Whether the image should be small.");
+const largeImageOption = new SlashCommandBooleanOption()
+    .setName("large-image")
+    .setDescription("Whether the image should be large.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
@@ -812,7 +812,7 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
     .setName("card")
     .setDescription("Get info on a card.")
     .addStringOption(cardOption)
-    .addBooleanOption(smallImageOption)
+    .addBooleanOption(largeImageOption)
     .addBooleanOption(ephemeralOption);
 const cardSetSubcommand = new SlashCommandSubcommandBuilder()
     .setName("cardset")
