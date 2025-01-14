@@ -473,7 +473,7 @@ export default async (interaction, messageFlags) => {
         // Card
         case "card":
             const cardInput = interaction.options.getString("card");
-            const smallImageBool = interaction.options.getString("small-image") || false;
+            const smallImageBool = interaction.options.getBoolean("small-image") || false;
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
