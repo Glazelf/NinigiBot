@@ -14,12 +14,19 @@ export default async (interaction, messageFlags) => {
     let returnString = `Here's the assets you requested.\n`;
     let message = interaction.options._hoistedOptions[0].message;
 
-    const messageHasStickers = message.stickers.size > 0;
-    const messageHasAttachments = message.attachments.size > 0;
+    let messageStickers = message.stickers;
+    let messageAttachments = message.attachments;
+    message.messageSnapshots.forEach(snapshot => {
+        messageStickers = messageStickers.concat(snapshot.stickers);
+        messageAttachments = messageAttachments.concat(snapshot.attachments);
+    });
+
+    const messageHasStickers = messageStickers.size > 0;
+    const messageHasAttachments = messageAttachments.size > 0;
     if (!messageHasAttachments && !messageHasStickers) return sendMessage({ interaction: interaction, content: noAssetsString, flags: messageFlags });
 
-    if (messageHasStickers) returnString += `Sticker(s):\n${addAttachmentString(message.stickers)}\n`;
-    if (messageHasAttachments) returnString += `Attachment(s):\n${addAttachmentString(message.attachments)}\n`;
+    if (messageHasStickers) returnString += `Sticker(s):\n${addAttachmentString(messageStickers)}\n`;
+    if (messageHasAttachments) returnString += `Attachment(s):\n${addAttachmentString(messageAttachments)}\n`;
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 
