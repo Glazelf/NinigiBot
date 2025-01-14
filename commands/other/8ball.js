@@ -38,11 +38,21 @@ const answers = [
     "Definitely",
     "There is no other possibility",
     "If you want it enough",
+    "I will make it so",
+    "...Yes?",
+    "For sure",
+    "The stars have willed it so",
+    "If it will make you stop bothering me, yes",
+    "This is the only timeline where that is the case",
     // Neutral
     "Maybe someday",
     "Try asking again",
     "It is possible",
     "Help me I'm stuck inside a Discord bot writing 8ball replies",
+    "42",
+    "You know the answer in your heart",
+    "\*Explodes*",
+    "Whatever, honestly",
     // Negative
     "Nothing",
     "Neither",
@@ -53,7 +63,6 @@ const answers = [
 
 export default async (interaction, messageFlags) => {
     let input = interaction.options.getString("input");
-
     const randomAnswer = answers[randomNumber(0, answers.length)];
     let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}".`;
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
