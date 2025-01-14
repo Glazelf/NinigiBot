@@ -527,6 +527,7 @@ export default async (interaction: any, messageFlags: any) => {
         // Card
         case "card":
             const cardInput = interaction.options.getString("card");
+            const largeImageBool = interaction.options.getBoolean("large-image") || false;
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
@@ -577,8 +578,12 @@ export default async (interaction: any, messageFlags: any) => {
             pokemonEmbed
                 .setAuthor({ name: embedAuthor })
                 .setTitle(cardTitle)
-                .setImage(cardData.images.large)
                 .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
+            if (largeImageBool) {
+                pokemonEmbed.setImage(cardData.images.large);
+            } else {
+                pokemonEmbed.setThumbnail(cardData.images.large);
+            };
             if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
             break;
         case "cardset":
@@ -803,6 +808,9 @@ const learnsetOption = new SlashCommandBooleanOption()
 const shinyOption = new SlashCommandBooleanOption()
     .setName("shiny")
     .setDescription("Whether to show the Pokémon's shiny sprite.");
+const largeImageOption = new SlashCommandBooleanOption()
+    .setName("large-image")
+    .setDescription("Whether the image should be large.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
@@ -862,6 +870,7 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
     .setName("card")
     .setDescription("Get info on a card.")
     .addStringOption(cardOption)
+    .addBooleanOption(largeImageOption)
     .addBooleanOption(ephemeralOption);
 const cardSetSubcommand = new SlashCommandSubcommandBuilder()
     .setName("cardset")

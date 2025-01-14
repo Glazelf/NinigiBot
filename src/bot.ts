@@ -44,7 +44,7 @@ const presenceObject = {
     }, {
         name: "the lake theme",
         type: ActivityType.Listening
-    }], status: PresenceUpdateStatus
+    }], status: PresenceUpdateStatus.Idle
 };
 globalVars.presence = presenceObject;
 
