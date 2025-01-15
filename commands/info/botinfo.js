@@ -66,9 +66,10 @@ export default async (interaction, messageFlags) => {
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
+    const appDirectory = "https://discord.com/discovery/applications/";
     //// Shop Button
     // let shopButtonText = "Donate";
-    // let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/`;
+    // let shopButtonLink = `${appDirectory}${interaction.client.user.id}/store/`;
     // const shopButton = new ButtonBuilder()
     //     .setLabel(shopButtonText)
     //     .setStyle(ButtonStyle.Link)
@@ -77,7 +78,7 @@ export default async (interaction, messageFlags) => {
     const appDirectoryButton = new ButtonBuilder()
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.com/application-directory/${interaction.client.user.id}`);
+        .setURL(`${appDirectory}${interaction.client.user.id}`);
     const inviteButton = new ButtonBuilder()
         .setLabel("Add Bot") // "Add" over "Invite" as bots can be added to users now 
         .setStyle(ButtonStyle.Link)
