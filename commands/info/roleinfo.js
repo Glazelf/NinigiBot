@@ -52,7 +52,7 @@ export default async (interaction, messageFlags) => {
         { name: "Position:", value: role.rawPosition.toString(), inline: true },
         { name: "Properties:", value: roleProperties, inline: false },
         { name: "Permissions:", value: permissionString, inline: false },
-        { name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false },
+        { name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false }
     ]);
     return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
 };
