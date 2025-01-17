@@ -18,7 +18,18 @@ export default async (interaction, messageFlags) => {
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
-    let memberCount = guildMembers.filter(member => member.roles.cache.get(role.id)).size;
+    let roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
+    let roleMembersString = "";
+    for (const [id, member] of roleMembers) {
+        let stringAddition = member.toString();
+        if (roleMembersString.length > 0) stringAddition = `, ${member}`;
+        if (roleMembersString.length + stringAddition.length < 1021) { // Limit is 1024, 1021 used so that dots in else statement always fit
+            roleMembersString += stringAddition;
+        } else {
+            roleMembersString += "...";
+            break;
+        };
+    };
     // Properties
     let roleProperties = "";
     if (role.hoist) roleProperties = `${roleProperties}Sorted seperately\n`;
@@ -38,10 +49,10 @@ export default async (interaction, messageFlags) => {
         .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
     if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
     roleEmbed.addFields([
-        { name: "Members:", value: memberCount.toString(), inline: true },
         { name: "Position:", value: role.rawPosition.toString(), inline: true },
         { name: "Properties:", value: roleProperties, inline: false },
-        { name: "Permissions:", value: permissionString, inline: false }
+        { name: "Permissions:", value: permissionString, inline: false },
+        { name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false },
     ]);
     return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
 };
