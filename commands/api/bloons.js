@@ -23,6 +23,7 @@ export default async (interaction, messageFlags) => {
     let btd6Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let btd6ActionRow = new ActionRowBuilder();
+    await interaction.deferReply({ flags: messageFlags });
 
     switch (interaction.options.getSubcommand()) {
         case "user":
@@ -72,7 +73,6 @@ export default async (interaction, messageFlags) => {
                 ]);
             break;
         case "boss-event":
-            await interaction.deferReply({ flags: messageFlags });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
