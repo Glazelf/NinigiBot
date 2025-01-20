@@ -54,7 +54,7 @@ export default async (interaction, messageFlags) => {
     let targetRole = member.roles.highest;
     let botRole = interaction.guild.members.me.roles.highest;
     let usernameFormatted = formatName(user.username);
-    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than yours (${formatName(userRole.name)}).` });
+    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
     if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
     if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the ${inlineCode(requiredPermissionName)} permission.` });
 
