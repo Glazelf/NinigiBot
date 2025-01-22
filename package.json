@@ -9,7 +9,7 @@
     "@pkmn/dex": "^0.9.27",
     "@pkmn/sim": "^0.9.27",
     "axios": "^1.7.9",
-    "canvas": "^3.0.1",
+    "canvas": "^3.1.0",
     "cron": "^3.5.0",
     "discord.js": "^14.17.3-dev.1736104404-15cbca941",
     "discord.js-minesweeper": "^1.1.0",
