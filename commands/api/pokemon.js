@@ -473,7 +473,7 @@ export default async (interaction, messageFlags) => {
         // Card
         case "card":
             const cardInput = interaction.options.getString("card");
-            const largeImageBool = interaction.options.getBoolean("large-image") || false;
+            const imageType = interaction.options.getString("image") || "small";
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
@@ -484,52 +484,61 @@ export default async (interaction, messageFlags) => {
             const cardData = cardSetJSON.default.find(element => element.id == cardInput);
             if (!cardData) return sendMessage(cardFailMessageObject);
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
-            let cardTitle = cardData.name; // Space for fomatting with emojis below
-            if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
-            if (cardData.types) {
-                cardData.types.forEach(type => {
-                    let cardTypeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + type);
-                    if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
-                });
+            switch (imageType) {
+                case "only":
+                    pokemonEmbed.setImage(cardData.images.large);
+                    break;
+                default:
+                    let cardTitle = cardData.name; // Space for fomatting with emojis below
+                    if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
+                    if (cardData.types) {
+                        cardData.types.forEach(type => {
+                            let cardTypeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + type);
+                            if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
+                        });
+                    };
+                    let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}`;
+                    if (cardData.artist) cardFooter += ` by ${cardData.artist}`;
+                    cardFooter += "\n";
+                    if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
+                    if (cardData.legalities) {
+                        if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
+                        Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
+                    };
+                    if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
+                    if (cardData.attacks) cardData.attacks.forEach(attack => {
+                        let attackName = attack.name;
+                        if (attack.damage) attackName += ` - ${attack.damage}`;
+                        let attackDescription = attack.text || "No additional effect.";
+                        if (attack.cost) {
+                            attackName = ` ${attackName}`; // Space looks better between cost and name
+                            let attackCostCopy = attack.cost.slice(); // Avoid altering attack cost which causes issues with emoji order, slice seemed like the cleanest way to actually copy the array
+                            // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
+                            attackCostCopy.reverse().forEach(cost => attackName = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost) || cost}${attackName}`);
+                        };
+                        pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
+                    });
+                    if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
+                    if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
+                    if (cardData.retreatCost) {
+                        let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
+                        if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
+                    };
+                    // Card subtypes can be undefined, for example for (old) trainer cards
+                    let embedAuthor = cardData.supertype;
+                    if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
+                    pokemonEmbed
+                        .setAuthor({ name: embedAuthor })
+                        .setTitle(cardTitle)
+                        .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
+                    if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
+                    if (imageType == "large") {
+                        pokemonEmbed.setImage(cardData.images.large);
+                    } else if (imageType == "small") {
+                        pokemonEmbed.setThumbnail(cardData.images.large);
+                    };
+                    break;
             };
-            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}`;
-            if (cardData.artist) cardFooter += ` by ${cardData.artist}`;
-            cardFooter += "\n";
-            if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
-            if (cardData.legalities) {
-                if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
-                Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
-            };
-            if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
-            if (cardData.attacks) cardData.attacks.forEach(attack => {
-                let attackName = attack.name;
-                if (attack.damage) attackName += ` - ${attack.damage}`;
-                let attackDescription = attack.text || "No additional effect.";
-                if (attack.cost) {
-                    attackName = ` ${attackName}`; // Space looks better between cost and name
-                    attack.cost.reverse().forEach(cost => attackName = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost) || ""}${attackName}`); // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
-                };
-                pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
-            });
-            if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
-            if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
-            if (cardData.retreatCost) {
-                let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
-                if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
-            };
-            // Card subtypes can be undefined, for example for (old) trainer cards
-            let embedAuthor = cardData.supertype;
-            if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
-            pokemonEmbed
-                .setAuthor({ name: embedAuthor })
-                .setTitle(cardTitle)
-                .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
-            if (largeImageBool) {
-                pokemonEmbed.setImage(cardData.images.large);
-            } else {
-                pokemonEmbed.setThumbnail(cardData.images.large);
-            };
-            if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
             break;
         case "cardset":
             const setData = pokemonCardSetsJSON.find(element => element.id == nameInput);
@@ -656,6 +665,12 @@ const natureChoices = [];
 allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });
+const cardImageChoices = [
+    { name: "Small", value: "small" },
+    { name: "Large", value: "large" },
+    { name: "Image Only", value: "only" },
+    { name: "No Image", value: "none" }
+];
 
 const pokemonOptionDescription = "Pokémon to get info on.";
 const moveOptionDescription = "Move to get info on.";
@@ -711,6 +726,10 @@ const cardOption = new SlashCommandStringOption()
     .setDescription("Pick a card. Any card.")
     .setAutocomplete(true)
     .setRequired(true);
+const cardImageOption = new SlashCommandStringOption()
+    .setName("image")
+    .setDescription("Set the size of the image.")
+    .setChoices(cardImageChoices)
 const cardSetOption = new SlashCommandStringOption()
     .setName("name")
     .setDescription("Specify set by name.")
@@ -750,9 +769,6 @@ const learnsetOption = new SlashCommandBooleanOption()
 const shinyOption = new SlashCommandBooleanOption()
     .setName("shiny")
     .setDescription("Whether to show the Pokémon's shiny sprite.");
-const largeImageOption = new SlashCommandBooleanOption()
-    .setName("large-image")
-    .setDescription("Whether the image should be large.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
@@ -812,7 +828,7 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
     .setName("card")
     .setDescription("Get info on a card.")
     .addStringOption(cardOption)
-    .addBooleanOption(largeImageOption)
+    .addStringOption(cardImageOption)
     .addBooleanOption(ephemeralOption);
 const cardSetSubcommand = new SlashCommandSubcommandBuilder()
     .setName("cardset")
