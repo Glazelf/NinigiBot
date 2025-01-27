@@ -62,7 +62,7 @@ export default async (interaction, messageFlags) => {
         .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}.`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
-            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
+            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
