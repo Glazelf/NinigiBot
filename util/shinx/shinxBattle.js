@@ -1,5 +1,7 @@
 import getLevelFromExp from "./getLevelFromExp.js";
 
+// Might be good to rewrite around Math.random() in this file but it's a hassle to test battles for this and these uses pose no security risk
+
 const battleMoves = [
     // [chance, [name, attack, knockout]],
     [0, ['Judgement Storm', 2, 2]],
@@ -47,13 +49,13 @@ export default class ShinxBattle {
     takeDamage(move) {
         this.percent = Math.max(0, this.percent + (move[1] - this.belly / 10));
         const knockout = this.percent * move[2];
-        const random = Math.random(0, 1);
+        const random = Math.random();
         return random <= knockout;
     };
 
     attack() {
         if (this.knocked) return false;
-        const rawMove = getMove(Math.min(Math.max(0, Math.random(0, 1) + 0.5 - (this.level / 100)), 1));
+        const rawMove = getMove(Math.min(Math.max(0, Math.random() + 0.5 - (this.level / 100)), 1));
         const move = [rawMove[0]];
         move.push(rawMove[1] * (2 - this.belly));
         move.push(rawMove[2] * (1 + this.belly) * (1 + (this.geass > 0) / 2));
@@ -70,7 +72,7 @@ export default class ShinxBattle {
 
     geassMode() {
         if (this.geass < 1) {
-            const geass_activated_chance = Math.random(0, 1);
+            const geass_activated_chance = Math.random();
             if (geass_activated_chance < 0.2) {
                 this.geass = 3;
                 return true;

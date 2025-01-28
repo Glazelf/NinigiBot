@@ -63,7 +63,7 @@ const answers = [
 
 export default async (interaction, messageFlags) => {
     let input = interaction.options.getString("input");
-    const randomAnswer = answers[randomNumber(0, answers.length)];
+    const randomAnswer = answers[randomNumber(0, answers.length - 1)];
     let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}".`;
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };

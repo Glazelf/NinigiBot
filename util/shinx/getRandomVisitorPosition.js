@@ -1,3 +1,5 @@
+import randomNumber from "../math/randomNumber.js";
+
 const visitors = [
     // [[[mc.facing, mc.x , mc.y],[shinx.facing, shinx.x , shinx.y]], ...]
     [[[2, 294, 171], [8, 290, 254]], [[3, 417, 121], [7, 479, 145]]],
@@ -7,5 +9,5 @@ const visitors = [
 ];
 
 export default () => {
-    return visitors[Math.floor(Math.random() * visitors.length)];
+    return visitors[randomNumber(0, visitors.length - 1)];
 };
