@@ -432,7 +432,7 @@ function calcHP(pokemon, generation) {
 
     let statText = `(${min50}-${max50}) (${min100}-${max100})`;
     if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) statText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
-    if (pokemon.name == "Shedinja") statText = `(1-1) (1-1)`;
+    if (pokemon.name == "Shedinja") statText = "(1-1) (1-1)";
     return statText;
 };
 
