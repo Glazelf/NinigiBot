@@ -430,10 +430,10 @@ function calcHP(pokemon, generation) {
     // min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
     // max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
-    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-    if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
-    if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
-    return StatText;
+    let statText = `(${min50}-${max50}) (${min100}-${max100})`;
+    if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) statText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
+    if (pokemon.name == "Shedinja") statText = `(1-1) (1-1)`;
+    return statText;
 };
 
 function calcStat(base, generation) {
@@ -464,8 +464,8 @@ function calcStat(base, generation) {
     // min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
     // max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
-    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-    return StatText;
+    let statText = `(${min50}-${max50}) (${min100}-${max100})`;
+    return statText;
 };
 
 function getEvoMethod(pokemon) {
