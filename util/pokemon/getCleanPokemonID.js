@@ -4,8 +4,7 @@ import correctionID from "../../objects/pokemon/correctionID.json" with { type: 
 const formSuffixes = {
     "-Primal": "-m",
     "-Totem": "-t",
-    "-Gmax": "-gi",
-    "-Eternamax": ""
+    "-Gmax": "-gi"
 };
 
 export default (pokemon) => {
