@@ -463,7 +463,8 @@ export default async (interaction, messageFlags) => {
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem") &&
-                !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
+                !pokemon.name.endsWith("-Starter") && // Let's Go Eevee & Pikachu starter forms
+                !pokemon.name.endsWith("-Bond") // Greninja
             );
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
