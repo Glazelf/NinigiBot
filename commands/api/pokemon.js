@@ -185,7 +185,7 @@ export default async (interaction, messageFlags) => {
             let category = move.category;
             let ppString = moveGen.pp.toString();
             let ppMax = Math.floor(moveGen.pp * 1.6);
-            if (moveGen.pp !== ppMax) ppString += ` (${ppMax})`;
+            if (moveGen.pp !== ppMax) ppString += ` (${ppMax})`; // Only add max PP in brackets if max PP is actually different from base PP
 
             let accuracy = `${moveGen.accuracy}%`;
             if (moveGen.accuracy === true) accuracy = "Can't miss";
