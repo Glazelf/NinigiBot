@@ -25,7 +25,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let generation = genData.dex.gen;
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
-    pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
+    pokemonLearnset = await checkBaseSpeciesMoves(genData, pokemon, pokemonLearnset);
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
         pkmEmbed
@@ -176,6 +176,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
 
     let levelMoves = [];
     let levelMovesNames = [];
+    let levelMoveSplit = "#"; // Used over a regular array to allow for repeated levels and move names
     let tmMoves = [];
     let tmMovesStrings = [];
     let eggMoves = [];
@@ -204,8 +205,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                     continue;
                 } else if (moveLearnGen < generation) {
                     continue;
-                } else if (moveLearnData.includes("L")) { // Levelup moves can be repeated
-                    levelMoves[moveName] = parseInt(moveLearnData.split("L")[1]);
+                } else if (moveLearnData.includes("L")) { // Level-up moves can be repeated
+                    levelMoves.push(`${moveName}${levelMoveSplit}${moveLearnData.split("L")[1]}`);
                     levelMovesNames.push(moveName);
                 } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                     tmMoves.push(moveName);
@@ -222,7 +223,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-        levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
+        levelMoves = levelMoves.sort((a, b) => a.split(levelMoveSplit)[1] - b.split(levelMoveSplit)[1]);
         // Prevo egg moves
         if (prevoDataMoves && prevoDataMoves.name) {
             let pokemonPrevoLearnset = await genData.learnsets.get(prevoDataMoves.name);
@@ -236,9 +237,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-
-        for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
-        for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
+        for (let reminderMove of reminderMoves) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
+        for (let levelMove of levelMoves) {
+            levelMovesString += `${levelMove.split(levelMoveSplit)[1]}: ${levelMove.split(levelMoveSplit)[0]}\n`;
+        }
         let tmMoveIndex = 0;
         let transferMoveIndex = 0;
         for (const tmMove of tmMoves) {
