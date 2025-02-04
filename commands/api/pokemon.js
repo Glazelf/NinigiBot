@@ -463,7 +463,8 @@ export default async (interaction, messageFlags) => {
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem") &&
-                !pokemon.name.endsWith("-Starter") // Let's Go Eevee & Pikachu starter forms
+                !pokemon.name.endsWith("-Starter") && // Let's Go Eevee & Pikachu starter forms
+                !pokemon.name.endsWith("-Bond") // Greninja
             );
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
@@ -630,7 +631,6 @@ function isIdenticalForm(pokemonName) {
         pokemonName.startsWith("Pumpkaboo-") ||
         pokemonName.startsWith("Squawkabilly-") ||
         pokemonName.endsWith("-Original") || // Megearna
-        pokemonName.endsWith("-Bond") || // Greninja, not identical but Battle Bond is included as a special ability on regular Greninja
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
