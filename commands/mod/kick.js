@@ -36,7 +36,8 @@ export default async (interaction, messageFlags) => {
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
     let botRole = interaction.guild.members.me.roles.highest;
-    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not kick ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
+    if (member.id == interaction.guild.ownerId) return sendMessage({interaction: interaction, content: `I can not kick ${member} because they are the owner of ${formatName(interaction.guild.name)}.`});
+    if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not kick ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
     if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not kick ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
     if (!member.kickable) return sendMessage({ interaction: interaction, content: kickFailString });
 
