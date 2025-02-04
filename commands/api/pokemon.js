@@ -183,7 +183,9 @@ export default async (interaction, messageFlags) => {
 
             let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
             let category = move.category;
-            let ppString = `${moveGen.pp} (${Math.floor(moveGen.pp * 1.6)})`;
+            let ppString = moveGen.pp.toString();
+            let ppMax = Math.floor(moveGen.pp * 1.6);
+            if (moveGen.pp !== ppMax) ppString += ` (${ppMax})`;
 
             let accuracy = `${moveGen.accuracy}%`;
             if (moveGen.accuracy === true) accuracy = "Can't miss";
