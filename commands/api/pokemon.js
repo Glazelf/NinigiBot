@@ -74,6 +74,9 @@ export default async (interaction, messageFlags) => {
     let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
     // Embed initialization
     let pokemonEmbed = new EmbedBuilder();
+    let errorEmbed = new EmbedBuilder()
+        .setName("Error")
+        .setColor(globalVars.embedColorError);
 
     switch (interaction.options.getSubcommand()) {
         // Abilities
@@ -85,10 +88,7 @@ export default async (interaction, messageFlags) => {
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
             if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
-                pokemonEmbed
-                    .setTitle("Error")
-                    .setDescription(abilityFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(abilityFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -125,10 +125,7 @@ export default async (interaction, messageFlags) => {
                 generationFooter = globalVars.pokemon.currentGeneration;
             };
             if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) {
-                pokemonEmbed
-                    .setTitle("Error")
-                    .setDescription(itemFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(itemFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -161,10 +158,7 @@ export default async (interaction, messageFlags) => {
             let moveFailString = `I could not find that move in generation ${generation}.`;
             if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
-                pokemonEmbed
-                    .setTitle("Error")
-                    .setDescription(moveFailString);
-                return sendMessage({ interaction: interaction, embeds: pokemonEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(moveFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let moveLearnPool = [];
