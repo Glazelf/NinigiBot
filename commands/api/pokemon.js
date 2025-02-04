@@ -183,39 +183,39 @@ export default async (interaction, messageFlags) => {
             linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
             let description = moveGen.desc;
-            if (move.flags.contact) description += " Makes contact with the target.";
-            if (move.flags.bypasssub) description += " Bypasses Substitute.";
+            if (moveGen.flags.contact) description += " Makes contact with the target.";
+            if (moveGen.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
             let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
             let category = move.category;
-            let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
+            let ppString = `${moveGen.pp} (${Math.floor(moveGen.pp * 1.6)})`;
 
-            let accuracy = `${move.accuracy}%`;
-            if (move.accuracy === true) accuracy = "Can't miss";
+            let accuracy = `${moveGen.accuracy}%`;
+            if (moveGen.accuracy === true) accuracy = "Can't miss";
             // Smogon target is camelcased for some reason, this splits it on capital letters and formats them better
-            let target = capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
+            let target = capitalizeString(moveGen.target.split(/(?=[A-Z])/).join(" "));
             if (target == "Normal") target = "Any Adjacent";
 
-            let moveTitle = move.name;
-            if (move.isMax) moveTitle = `${move.name} (Max Move)`;
-            if (move.isZ) moveTitle = `${move.name} (Z-Move)`;
+            let moveTitle = moveGen.name;
+            if (moveGen.isMax) moveTitle = `${moveGen.name} (Max Move)`;
+            if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
 
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
                 .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
-            if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
+            if (moveGenbasePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
                 { name: "Category:", value: category, inline: true },
                 { name: "Target:", value: target, inline: true }
             ]);
-            if (move.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: move.critRatio.toString(), inline: true }]);
+            if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
-            if (move.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: move.priority.toString(), inline: true }]);
-            if (move.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: move.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
+            if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority.toString(), inline: true }]);
+            if (moveGen.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
             if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
             if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
             if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
