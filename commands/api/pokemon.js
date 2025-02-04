@@ -75,7 +75,7 @@ export default async (interaction, messageFlags) => {
     // Embed initialization
     let pokemonEmbed = new EmbedBuilder();
     let errorEmbed = new EmbedBuilder()
-        .setName("Error")
+        .setTitle("Error")
         .setColor(globalVars.embedColorError);
 
     switch (interaction.options.getSubcommand()) {
