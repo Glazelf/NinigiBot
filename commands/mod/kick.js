@@ -31,7 +31,7 @@ export default async (interaction, messageFlags) => {
     let usernameFormatted = formatName(user.username);
     let executorNameFormatted = formatName(interaction.user.username);
 
-    let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
+    let kickFailString = `Kick failed. This might be because the specified user is not in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     // Check permissions
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
