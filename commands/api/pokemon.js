@@ -205,7 +205,7 @@ export default async (interaction, messageFlags) => {
                 .setTitle(moveTitle)
                 .setDescription(description)
                 .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
-            if (moveGenbasePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
+            if (moveGen.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
