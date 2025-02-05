@@ -294,7 +294,7 @@ export default async (interaction, messageFlags) => {
             let prevoLearnset = null;
             let prevoprevoLearnset = null;
             let pokemonLearnset = await Dex.learnsets.get(pokemon.id);
-            pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
+            pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
             if (pokemon.prevo) prevoLearnset = await Dex.learnsets.get(pokemon.prevo);
             if (prevoLearnset && prevo.prevo) prevoprevoLearnset = await Dex.learnsets.get(prevo.prevo);
 

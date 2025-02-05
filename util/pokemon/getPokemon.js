@@ -25,7 +25,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let generation = genData.dex.gen;
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
-    pokemonLearnset = await checkBaseSpeciesMoves(genData, pokemon, pokemonLearnset);
+    pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
         pkmEmbed
