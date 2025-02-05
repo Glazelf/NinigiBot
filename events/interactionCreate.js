@@ -512,7 +512,8 @@ export default async (client, interaction) => {
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                            // Also filter out typed hidden powers
+                                            let moves = dexModified.moves.all().filter(move => move.exists && !move.name.startsWith("Hidden Power ") && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
