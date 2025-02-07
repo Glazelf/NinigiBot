@@ -47,10 +47,10 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
     // Format the starboard embed message
     const starEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
-        .setAuthor({ name: targetMessage.author.username, iconURL: avatar })
         .setTitle(`${boardEmote}${messageReaction.count}`)
         .setURL(targetMessage.url)
         .setImage(messageImage)
+        .setFooter({ text: targetMessage.author.username, iconURL: avatar })
         .setTimestamp(targetMessage.createdTimestamp);
     if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
     starEmbed.addFields([{ name: `Context:`, value: targetMessage.url, inline: false }]);
