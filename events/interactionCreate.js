@@ -855,10 +855,9 @@ export default async (client, interaction) => {
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
-                            .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescription)
-                            .setFooter({ text: interaction.user.username })
+                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar })
                             .addFields([
                                 { name: "Reproduce:", value: bugReportReproduce, inline: false },
                                 { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
@@ -882,7 +881,7 @@ export default async (client, interaction) => {
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescription)
-                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
+                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
 
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
