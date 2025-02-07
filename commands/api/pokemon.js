@@ -627,6 +627,9 @@ function isIdenticalForm(pokemonName) {
         pokemonName.startsWith("Pumpkaboo-") ||
         pokemonName.startsWith("Squawkabilly-") ||
         pokemonName.endsWith("-Original") || // Megearna
+        pokemonName.endsWith("-Masterpiece") || // Sinistcha
+        pokemonName.endsWith("-Antique") || // Polteageist, Sinistea
+        pokemonName.endsWith("-Artisan") || // Poltchageist
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
