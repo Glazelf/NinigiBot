@@ -81,7 +81,8 @@ export default async (interaction, messageFlags) => {
     let wordSourceUrls = wordStatus[0].sourceUrls;
 
     dictionaryEmbed
-        .setTitle(`${wordStatusTitle}, ${wordType}`)
+        .setAuthor({ name: wordType })
+        .setTitle(wordStatusTitle)
         .setURL(wordSourceUrls[0]);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
     return sendMessage({ interaction: interaction, embeds: dictionaryEmbed });
