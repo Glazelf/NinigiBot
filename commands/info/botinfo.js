@@ -63,7 +63,7 @@ export default async (interaction, messageFlags) => {
     if (ownerBool) serverInstallString += `/${maxServersPerShard * interaction.client.options.shardCount}`;
     let totalMemberCountString = `Total Members: ${totalMembers}`;
     let emojiCountString = `Emojis: ${emojis.size}/${emojiMax}`;
-    let githubStarCountString = `GitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}`;
+    let githubStarCountString = `GitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`;
     let statFieldValue = `${userInstallString}\n${serverInstallString}\n${totalMemberCountString}\n${emojiCountString}\n${githubStarCountString}`;
 
     let botEmbed = new EmbedBuilder()
