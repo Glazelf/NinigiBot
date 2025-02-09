@@ -25,7 +25,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let generation = genData.dex.gen;
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
-    pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
         pkmEmbed
@@ -194,6 +193,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let prevoDataMoves = Dex.species.get(pokemon.prevo);
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
     if (learnsetBool && pokemonLearnset && pokemonAvailable) {
+        pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
         for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
