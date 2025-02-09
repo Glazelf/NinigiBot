@@ -18,6 +18,7 @@ import packageJSON from "../../package.json" with { type: "json" };
 
 const owner = "glazelf";
 const emojiMax = 2000;
+const maxServersPerShard = 2500;
 
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
@@ -51,9 +52,19 @@ export default async (interaction, messageFlags) => {
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
+    let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}`;
+    if (ownerBool || interaction.client.options.shardCount > 1) developmentString += `\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
     developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
+
+    // Stats
+    let userInstallString = `User Installs: ${interaction.client.application.approximateUserInstallCount}`;
+    let serverInstallString = `Servers: ${interaction.client.application.approximateGuildCount}`;
+    if (ownerBool) serverInstallString += `/${maxServersPerShard * interaction.client.options.shardCount}`;
+    let totalMemberCountString = `Total Members: ${totalMembers}`;
+    let emojiCountString = `Emojis: ${emojis.size}/${emojiMax}`;
+    let githubStarCountString = `GitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}`;
+    let statFieldValue = `${userInstallString}\n${serverInstallString}\n${totalMemberCountString}\n${emojiCountString}\n${githubStarCountString}`;
 
     let botEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
@@ -62,7 +73,7 @@ export default async (interaction, messageFlags) => {
         .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}.`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
-            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
+            { name: "Stats:", value: statFieldValue, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
