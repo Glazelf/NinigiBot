@@ -42,7 +42,8 @@ export default async (interaction, messageFlags) => {
     let sourceURL = wordStatus.sourceUrls.find((url) => url.split("/").slice(-1)[0].toLowerCase() == wordString.toLowerCase());
     if (!sourceURL) sourceURL = wordStatus.sourceUrls[0];
     for await (const meaning of wordStatus.meanings) {
-        let meaningType = meaning.partOfSpeech.charAt(0).toUpperCase() + meaning.partOfSpeech.slice(1);
+        if (inputWordType && inputWordType.toLowerCase() !== meaning.partOfSpeech.toLowerCase()) continue;
+        let meaningTypeString = meaning.partOfSpeech.charAt(0).toUpperCase() + meaning.partOfSpeech.slice(1);
         // Top-level synonym and antonym fields seem to always be empty?
         for await (const definition of meaning.definitions) {
             let wordExtrasString = "";
@@ -50,7 +51,7 @@ export default async (interaction, messageFlags) => {
             if (definition.synonyms.length > 0) wordExtrasString += `Synonyms: ${definition.synonyms.join(', ')}\n`;
             if (definition.antonyms.length > 0) wordExtrasString += `Antonyms: ${definition.antonyms.join(', ')}\n`;
             if (wordExtrasString.length == 0) wordExtrasString = "No example, synonyms or antonyms.";
-            dictionaryEmbed.addFields({ name: `${meaningType}: ${definition.definition}`, value: wordExtrasString, inline: false });
+            dictionaryEmbed.addFields({ name: `${meaningTypeString}: ${definition.definition}`, value: wordExtrasString, inline: false });
         };
     };
     let wordPhoneticString = "";
