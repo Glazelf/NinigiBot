@@ -52,8 +52,7 @@ export default async (interaction, messageFlags) => {
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}`;
-    if (ownerBool || interaction.client.options.shardCount > 1) developmentString += `\nShards: ${interaction.client.options.shardCount}`;
+    let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
     developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
 
