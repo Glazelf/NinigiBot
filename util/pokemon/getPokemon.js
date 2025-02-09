@@ -29,9 +29,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
         pkmEmbed
-            .setTitle(`Error`)
+            .setTitle("Error")
+            .setColor(globalVars.embedColorError)
             .setDescription(`${inlineCode(pokemon.name)} does not exist yet in generation ${generation}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
-        messageObject = { embeds: pkmEmbed, components: [] };
+        messageObject = { embeds: [pkmEmbed], components: [] };
         return messageObject;
     };
     // Common settings
