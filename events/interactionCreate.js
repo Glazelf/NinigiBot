@@ -99,6 +99,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
+        if(interaction.type !== InteractionType.ApplicationCommand) console.log(interaction.customId);  // Find infinite loop #1033
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -122,6 +123,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
+                    console.log(commandName); // Find infinite loop #1033
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
