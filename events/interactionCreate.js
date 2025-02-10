@@ -881,7 +881,6 @@ export default async (client, interaction) => {
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
-                            .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescription)
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
