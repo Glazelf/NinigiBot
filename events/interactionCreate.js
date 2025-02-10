@@ -442,7 +442,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
-                console.log(`${interaction.commandName}: ${focusedOption.name}`); // Find infinite loop #1033
+                console.log(`${interaction.commandName} | ${interaction.options.getSubcommand()} | ${focusedOption.name}`); // Find infinite loop #1033
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
