@@ -60,7 +60,7 @@ import normalizeString from "../util/string/normalizeString.js";
 import formatName from "../util/discord/formatName.js";
 
 // Pokémon
-const gens = new Generations(Dex);
+const pokemonGenerations = new Generations(Dex);
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
 let pokemonCardsAll = [];
@@ -184,7 +184,7 @@ export default async (client, interaction) => {
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
                             let generationButton = customIdSplit[3];
-                            let genData = gens.get(generationButton);
+                            let genData = pokemonGenerations.get(generationButton);
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
@@ -498,7 +498,7 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
+                        let generationInput = interaction.options.getInteger("generation") || Dex.gen;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":

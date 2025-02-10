@@ -54,7 +54,7 @@ export default async (interaction, messageFlags) => {
     let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
     let generationInput = interaction.options.getInteger("generation");
-    let generation = generationInput || globalVars.pokemon.currentGeneration;
+    let generation = generationInput || Dex.gen;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
@@ -122,7 +122,7 @@ export default async (interaction, messageFlags) => {
             if (itemIsFuture) itemFailString += `\n${inlineCode(item.name)} was introduced in generation ${item.gen}.`;
             if (!itemGen) {
                 itemGen = item;
-                generationFooter = globalVars.pokemon.currentGeneration;
+                generationFooter = Dex.gen;
             };
             if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) {
                 return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(itemFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -740,12 +740,12 @@ const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
     .setDescription(generationOptionDescription)
     .setMinValue(1)
-    .setMaxValue(globalVars.pokemon.currentGeneration);
+    .setMaxValue(Dex.gen);
 const generationOptionAbilities = new SlashCommandIntegerOption()
     .setName(generationOptionName)
     .setDescription(generationOptionDescription)
     .setMinValue(3)
-    .setMaxValue(globalVars.pokemon.currentGeneration);
+    .setMaxValue(Dex.gen);
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
     .setDescription("Month (number) to get data from.")
