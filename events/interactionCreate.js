@@ -99,6 +99,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
+        if(![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // Find infinite loop #1033
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -122,6 +123,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
+                    console.log(`${interaction.user.username}: ${commandName}`); // Find infinite loop #1033
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -440,6 +442,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
+                console.log(`${interaction.user.username}: ${interaction.commandName} | ${interaction.options.getSubcommand()} | ${focusedOption.name}`); // Find infinite loop #1033
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
@@ -878,7 +881,6 @@ export default async (client, interaction) => {
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
-                            .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescription)
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
