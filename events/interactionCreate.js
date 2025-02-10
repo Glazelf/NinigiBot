@@ -99,7 +99,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
-        if(![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].has(interaction.type)) console.log(interaction.customId);  // Find infinite loop #1033
+        if(![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(interaction.customId);  // Find infinite loop #1033
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
