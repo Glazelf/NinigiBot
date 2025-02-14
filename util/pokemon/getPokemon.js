@@ -286,14 +286,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         .setStyle(ButtonStyle.Primary)
         .setEmoji('➡️');
     pkmButtons.addComponents(nextPokemonButton);
-    if (pokemon.name !== pokemon.baseSpecies) {
-        const baseSpeciesButton = new ButtonBuilder()
-            .setCustomId(`pkmbase|${buttonAppend}`)
-            .setLabel(pokemon.baseSpecies)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬇️');
-        pkmButtons.addComponents(baseSpeciesButton);
-    };
     if (pokemon.prevo) {
         let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
         let evoMethod = getEvoMethod(pokemon);
@@ -365,6 +357,20 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             };
         };
     };
+    if (pokemon.name !== pokemon.baseSpecies) {
+        const baseSpeciesButton = new ButtonBuilder()
+            .setCustomId(`pkmbase|${buttonAppend}`)
+            .setLabel(pokemon.baseSpecies)
+            .setStyle(ButtonStyle.Secondary);
+        // If we add more buttons this way, move this loop to base level and add a check if BaseSpeciesButton =/= null
+        for (let i = 0; i < Object.keys(formButtonsObject).length; i++) {
+            if (formButtonsObject[i].components.length < 5) {
+                formButtonsObject[i].addComponents(baseSpeciesButton);
+                break;
+            };
+        };
+    };
+
     let buttonArray = [];
     if (formButtonsObject[0].components.length > 0) buttonArray.push(formButtonsObject[0]);
     if (formButtonsObject[1].components.length > 0) buttonArray.push(formButtonsObject[1]);
