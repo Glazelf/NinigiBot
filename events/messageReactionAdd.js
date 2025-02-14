@@ -4,8 +4,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
-const altboardEmote = "<:nostar:780198211913646130>";
-const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
+const altboardEmote = "🫃"; // Escaped emoji (i.e. <emoji:123>) or plain unicode emote
+const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, ""); // Empty and unused for plain emojis
 
 export default async (client, messageReaction) => {
     try {
@@ -14,7 +14,9 @@ export default async (client, messageReaction) => {
         if (!messageReaction.count) messageReaction = await messageReaction.fetch().catch(e => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
-        const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
+        const isInShinxServer = (messageReaction.message.guildId == globalVars.ShinxServerID);
+        let isNoStar = (isInShinxServer && messageReaction.emoji.id === altboardEmoteID);
+        if (!messageReaction.emoji.id) isNoStar = (isInShinxServer && messageReaction.emoji.name == altboardEmote);
         if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
         // Try to fetch message
         // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
