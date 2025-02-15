@@ -886,7 +886,7 @@ export default async (client, interaction) => {
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
 
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
-                        await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
+                        await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
