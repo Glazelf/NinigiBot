@@ -12,7 +12,7 @@ import {
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
-import getBossEvent from "../../util/btd/getBossEvent.js";
+import getBossEvent from "../../util/bloons/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";

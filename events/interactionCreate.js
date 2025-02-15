@@ -35,7 +35,7 @@ import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { ty
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // BTD
-import getBossEvent from "../util/btd/getBossEvent.js";
+import getBossEvent from "../util/bloons/getBossEvent.js";
 // Minesweeper
 import createBoard from "../util/minesweeper/createBoard.js";
 import getMatrixString from "../util/minesweeper/getMatrixString.js";
