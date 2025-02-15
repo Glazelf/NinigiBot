@@ -93,7 +93,7 @@ export default async ({ elite = false, emojis }) => {
     if (bossEventMetadata._bloonModifiers.allRegen) rulesArray.push(`All bloons are regen.`);
     let rulesString = rulesArray.join("\n");
 
-    let bossEventDescription = `${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)} to ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
+    let bossEventDescription = `Starts: ${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)}\nEnds: ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
 
     let allowedHeroesArray = [];
     let allowedTowersArray = [];
