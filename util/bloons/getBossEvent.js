@@ -80,6 +80,7 @@ export default async ({ elite = false, emojis }) => {
         `Max Paragons: ${bossEventMetadata.maxParagons}`
     ];
     // Math.round() is to avoid JS floating point errors
+    if (bossEventMetadata.maxTowers < 9999) rulesArray.push(`Max Towers: ${bossEventMetadata.maxTowers}`);
     if (bossEventMetadata.abilityCooldownReductionMultiplier !== 1) rulesArray.push(`Ability Cooldowns: ${Math.round(bossEventMetadata.abilityCooldownReductionMultiplier * 100)}%`);
     if (bossEventMetadata.removeableCostMultiplier !== 1) rulesArray.push(`Removeables Cost: ${Math.round(bossEventMetadata.removeableCostMultiplier * 100)}%`);
     if (bossEventMetadata._bloonModifiers.healthMultipliers.bloons !== 1) rulesArray.push(`Bloon Health: ${Math.round(bossEventMetadata._bloonModifiers.healthMultipliers.bloons * 100)}%`);
