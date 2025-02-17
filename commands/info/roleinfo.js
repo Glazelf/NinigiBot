@@ -19,7 +19,7 @@ export default async (interaction, messageFlags) => {
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
-    
+
     let roleMembersString = "";
     let roleMembers = {};
     if (memberListBool === true) {
@@ -32,7 +32,7 @@ export default async (interaction, messageFlags) => {
             } else {
                 roleMembersString += "...";
                 break;
-          };
+            };
         };
     };
     // Properties
