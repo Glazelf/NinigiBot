@@ -22,7 +22,8 @@ export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
     if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    let resultMessage = await interaction.deferReply({ flags: messageFlags, fetchReply: true });
+    let deferralResponse = await interaction.deferReply({ flags: messageFlags, withResponse: true });
+    let resultMessage = deferralResponse.resource?.message;
     let returnString = "";
     let amount = interaction.options.getInteger("amount");
     let amountDisplay = amount;
