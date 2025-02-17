@@ -10,6 +10,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
     let role = interaction.options.getRole("role");
+    let memberListBool = interaction.options.getBoolean("memberlist");
     // Role visuals
     let icon = role.iconURL(globalVars.displayAvatarSettings);
     let defaultColor = "#000000";
@@ -18,16 +19,20 @@ export default async (interaction, messageFlags) => {
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
-    let roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
+    
     let roleMembersString = "";
-    for (const [id, member] of roleMembers) {
-        let stringAddition = member.toString();
-        if (roleMembersString.length > 0) stringAddition = `, ${member}`;
-        if (roleMembersString.length + stringAddition.length < 1021) { // Limit is 1024, 1021 used so that dots in else statement always fit
-            roleMembersString += stringAddition;
-        } else {
-            roleMembersString += "...";
-            break;
+    let roleMembers = {};
+    if (memberListBool === true) {
+        roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
+        for (const [id, member] of roleMembers) {
+            let stringAddition = member.toString();
+            if (roleMembersString.length > 0) stringAddition = `, ${member}`;
+            if (roleMembersString.length + stringAddition.length < 1021) { // Limit is 1024, 1021 used so that dots in else statement always fit
+                roleMembersString += stringAddition;
+            } else {
+                roleMembersString += "...";
+                break;
+          };
         };
     };
     // Properties
@@ -51,9 +56,9 @@ export default async (interaction, messageFlags) => {
     roleEmbed.addFields([
         { name: "Position:", value: role.rawPosition.toString(), inline: true },
         { name: "Properties:", value: roleProperties, inline: false },
-        { name: "Permissions:", value: permissionString, inline: false },
-        { name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false }
+        { name: "Permissions:", value: permissionString, inline: false }
     ]);
+    if (memberListBool === true) roleEmbed.addFields([{ name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false }]);
     return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
 };
 
@@ -63,6 +68,9 @@ const roleOption = new SlashCommandRoleOption()
     .setDescription("Specify a role.")
     .setRequired(true);
 // Boolean options
+const memberListOption = new SlashCommandBooleanOption()
+    .setName("memberlist")
+    .setDescription("Display list of members.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
@@ -72,4 +80,5 @@ export const commandObject = new SlashCommandBuilder()
     .setDescription("Displays info about a role.")
     .setContexts([InteractionContextType.Guild])
     .addRoleOption(roleOption)
+    .addBooleanOption(memberListOption)
     .addBooleanOption(ephemeralOption);
