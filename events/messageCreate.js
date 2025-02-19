@@ -23,9 +23,6 @@ export default async (client, message) => {
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().proxyURL;
-        // Ignore commands in DMs
-        console.log(message.channel.type)
-        console.log(ChannelType.DM)
         if (message.channel.type === ChannelType.DM) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
