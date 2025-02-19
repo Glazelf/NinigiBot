@@ -24,7 +24,9 @@ export default async (client, message) => {
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().proxyURL;
         // Ignore commands in DMs
-        if (message.channel.type == ChannelType.DM) {
+        console.log(message.channel.type)
+        console.log(ChannelType.DM)
+        if (message.channel.type === ChannelType.DM) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -62,7 +64,7 @@ export default async (client, message) => {
                 .setThumbnail(avatar)
                 .setImage(messageImage)
                 .setTimestamp(message.createtTimestamp)
-                .setFooter({ text: `Channel: ${message.channel.id}\nMessage: ${message.id}` })
+                .setFooter({ text: `Channel: ${message.channel.id} (${message.channel.type})\nMessage: ${message.id}` })
                 .addFields([{ name: `Author:`, value: normalizeString(message.author.username), inline: false }]);
             if (message.content) dmEmbed.setDescription(message.content);
             if (attachmentsString.length > 0) dmEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }]);
@@ -70,7 +72,7 @@ export default async (client, message) => {
             let dmLogObject = { content: message.author.id, embeds: dmEmbeds, components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has(PermissionFlagsBits.SendMessages)) return;
+        if (!message.channel.type === ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has(PermissionFlagsBits.SendMessages)) return;
         if (!message.member) return;
 
         let memberRoles = 0;
