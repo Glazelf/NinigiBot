@@ -10,12 +10,12 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
-import getPermissionName from "../../util/discord/getPermissionName.js";
+import getEnumName from "../../util/discord/getEnumName.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageMessages;
-const requiredPermissionName = getPermissionName(requiredPermission);
+const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBits);
 const filterOldMessages = true;
 
 export default async (interaction, messageFlags) => {
