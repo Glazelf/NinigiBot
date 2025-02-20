@@ -12,7 +12,6 @@ const debugChannelID = "1325890140517826580"; // Replace ID with specific debug 
 const fieldName = "​";
 
 export default async (client, info) => {
-
     // return; // Comment out to enable debugging, uncomment to disable
     // Format strings
     let description = info;
@@ -32,13 +31,13 @@ export default async (client, info) => {
         .setColor(globalVars.embedColor)
         .setDescription(description);
     ////////////////////////////// test
-    let loggedTestChannel = false;
-    if (loggedTestChannel === false) {
-        problemChannel = await client.channels.fetch("581776008978497537");
-        debugEmbed.send({ content: problemChannel });
-        loggedTestChannel = true;
-        return;
-    };
+    // let loggedTestChannel = false;
+    // if (loggedTestChannel === false) {
+    //     loggedTestChannel = true;
+    //     problemChannel = await client.channels.fetch("581776008978497537");
+    //     debugEmbed.send({ content: problemChannel });
+    //     return;
+    // };
     //////////////////////////////
     // Fill fields
     while (debugEmbed.length <= maxEmbedLength && info[debugInfoIndex]) {

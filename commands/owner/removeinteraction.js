@@ -26,7 +26,7 @@ export default async (interaction, messageFlags) => {
     try {
         await interaction.client.application.commands.delete(command.id, guildID);
     } catch (e) {
-        // console.log();
+        // console.log(e);
         return sendMessage({ interaction: interaction, content: `Failed to delete ${inlineCode(interactionName)}.` });
     };
     return sendMessage({ interaction: interaction, content: `Deleted interaction ${inlineCode(interactionName)}.` });
