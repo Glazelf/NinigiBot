@@ -9,7 +9,7 @@ export default async (interaction, messageFlags) => {
     let websocketPing = Math.abs(interaction.client.ws.ping);
     let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;
 
-    let problemChannel = await client.channels.fetch("581776008978497537");
+    let problemChannel = await interaction.client.channels.fetch("581776008978497537");
     console.log(problemChannel)
     return sendMessage({ interaction: interaction, content: problemChannel, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
