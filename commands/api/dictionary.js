@@ -16,8 +16,8 @@ export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
     //// https://github.com/discordjs/discord.js/issues/10563
-    // let problemChannel = await interaction.client.rest.get("/channels/581776008978497537");
-    // console.log(problemChannel);
+    let problemChannel = await interaction.client.rest.get("/channels/581776008978497537");
+    console.log(problemChannel);
     
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
