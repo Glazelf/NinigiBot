@@ -15,7 +15,7 @@ const api = "https://api.dictionaryapi.dev/api/v2/";
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
-    client.rest.on("restDebug", console.log);
+    interaction.client.rest.on("restDebug", console.log);
     let problemChannel = await interaction.client.rest.get("/channels/922972585992532022");
     console.log(problemChannel);
     
