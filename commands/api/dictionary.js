@@ -27,9 +27,11 @@ export default async (interaction, messageFlags) => {
     axios.request(config)
         .then((response) => {
             console.log(JSON.stringify(response.data));
+            return sendMessage({interaction: interaction, content: JSON.stringify(response.data)});
         })
         .catch((error) => {
             console.log(error);
+            return sendMessage({interaction: interaction, content: error});
     });
 
 
