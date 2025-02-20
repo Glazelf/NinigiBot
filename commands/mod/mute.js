@@ -19,7 +19,6 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
 const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBits);
-console.log(requiredPermissionName)
 const maxMuteTime = 2_419_200_000; // Max time is 28 days, but we count in milliseconds
 
 export default async (interaction, messageFlags) => {
