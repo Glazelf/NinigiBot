@@ -6,7 +6,6 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client) => {
     try {
-        client.rest.on("restDebug", console.log);
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
