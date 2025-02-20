@@ -35,7 +35,7 @@ import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { ty
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // BTD
-import getBossEvent from "../util/btd/getBossEvent.js";
+import getBossEvent from "../util/bloons/getBossEvent.js";
 // Minesweeper
 import createBoard from "../util/minesweeper/createBoard.js";
 import getMatrixString from "../util/minesweeper/getMatrixString.js";
@@ -60,7 +60,7 @@ import normalizeString from "../util/string/normalizeString.js";
 import formatName from "../util/discord/formatName.js";
 
 // Pokémon
-const gens = new Generations(Dex);
+const pokemonGenerations = new Generations(Dex);
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
 let pokemonCardsAll = [];
@@ -99,6 +99,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
+        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // Find infinite loop #1033
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -122,6 +123,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
+                    console.log(`${interaction.user.username}: ${commandName}`); // Find infinite loop #1033
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -184,7 +186,7 @@ export default async (client, interaction) => {
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
                             let generationButton = customIdSplit[3];
-                            let genData = gens.get(generationButton);
+                            let genData = pokemonGenerations.get(generationButton);
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
@@ -197,7 +199,7 @@ export default async (client, interaction) => {
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newMonsterName) break;
-                                newMonsterName = componentRow.components.get(interaction.customId);
+                                newMonsterName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newMonsterName) return;
                             newMonsterName = newMonsterName.label;
@@ -440,6 +442,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
+                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // Find infinite loop #1033
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
@@ -498,7 +501,7 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
+                        let generationInput = interaction.options.getInteger("generation") || Dex.gen;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
@@ -512,7 +515,8 @@ export default async (client, interaction) => {
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                            // Also filter out typed hidden powers
+                                            let moves = dexModified.moves.all().filter(move => move.exists && !move.name.startsWith("Hidden Power ") && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
@@ -854,10 +858,9 @@ export default async (client, interaction) => {
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
-                            .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescription)
-                            .setFooter({ text: interaction.user.username })
+                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar })
                             .addFields([
                                 { name: "Reproduce:", value: bugReportReproduce, inline: false },
                                 { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
@@ -878,13 +881,12 @@ export default async (client, interaction) => {
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
-                            .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescription)
-                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
+                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
 
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
-                        await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
+                        await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");

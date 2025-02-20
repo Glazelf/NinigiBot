@@ -2,6 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import cron from "cron";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/math/getRandomGif.js";
+import randomNumber from "../util/math/randomNumber.js";
 import {
     incrementStanAmount,
     checkEvents
@@ -25,9 +26,7 @@ export default async (client) => {
             let stanRole = await guild.roles.fetch(stanRoleID, { force: true });
             let candidates = stanRole.members.map(m => m.user);
             if (candidates.length < 1) return;
-
-            let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
-            let candidateRandom = candidates[randomPick];
+            let candidateRandom = candidates[randomNumber(0, candidates.length - 1)];
 
             await incrementStanAmount(candidateRandom.id);
             await checkEvents();

@@ -281,7 +281,9 @@ export default async (interaction, messageFlags) => {
             let currentTime = new Date().valueOf();
             let currentMaps = null;
             let upcomingMaps = null;
-            if (!currentSalmonRunEvent) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
+            let currentSalmonRunEventIsActive = false;
+            if (currentSalmonRunEvent) currentSalmonRunEventIsActive = (Date.now() >= Date.parse(currentSalmonRunEvent.startTime) && Date.now() <= Date.parse(currentSalmonRunEvent.endTime));
+            if (!currentSalmonRunEventIsActive) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
             upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
             let randomStageIndex = randomNumber(0, 1);
@@ -301,7 +303,7 @@ export default async (interaction, messageFlags) => {
                         .setDescription(`Monthly Gear: ${responseSalmonRunGear.data.data.coopResult.monthlyGear.name}`)
                         .setThumbnail(responseSalmonRunGear.data.data.coopResult.monthlyGear.image.url);
                 };
-                if (currentSalmonRunEvent) {
+                if (currentSalmonRunEventIsActive) {
                     let eventWeaponString = "";
                     await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
                         eventWeaponString += `- ${weapon.name}\n`;
@@ -316,7 +318,7 @@ export default async (interaction, messageFlags) => {
                     });
                     splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}`, value: `${entry.__splatoon3ink_king_salmonid_guess}\n${weaponString}`, inline: true }]);
                 });
-                if (currentSalmonRunEvent && Date.now() >= Date.parse(currentSalmonRunEvent.startTime)) {
+                if (currentSalmonRunEventIsActive) {
                     splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
                 } else {
                     splat3Embed

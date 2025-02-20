@@ -75,7 +75,7 @@ export default async (interaction, messageFlags) => {
             let monsterData;
             if (monsterName == "random") {
                 // Get random monster
-                let randomIndex = randomNumber(0, monstersJSON.monsters.length);
+                let randomIndex = randomNumber(0, monstersJSON.monsters.length - 1);
                 monsterData = monstersJSON.monsters[randomIndex];
             } else {
                 // Get named monster

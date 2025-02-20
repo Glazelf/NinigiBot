@@ -19,7 +19,7 @@ export default async ({ exception, client, interaction = null }) => {
         let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (!client && interaction) client = interaction.client;
         if (exceptionString.includes("Missing Access")) {
-            return; // Permission error; guild-side mistake
+            return; // Permission error; guild-side mistake (Also returns here on 403 errors from fetching things inside the client code)
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
             return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", flags: messageFlags.add(MessageFlags.Ephemeral) });

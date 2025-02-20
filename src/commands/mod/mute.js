@@ -13,12 +13,12 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
-import getPermissionName from "../../util/discord/getPermissionName.js";
+import getEnumName from "../../util/discord/getEnumName.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ModerateMembers;
-const requiredPermissionName = getPermissionName(requiredPermission);
+const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBits);
 const maxMuteTime = 2_419_200_000; // Max time is 28 days, but we count in milliseconds
 
 export default async (interaction, messageFlags) => {
@@ -54,9 +54,10 @@ export default async (interaction, messageFlags) => {
     let targetRole = member.roles.highest;
     let botRole = interaction.guild.members.me.roles.highest;
     let usernameFormatted = formatName(user.username);
-    if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than yours (${formatName(userRole.name)}).` });
-    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} because their highest role (${formatName(targetRole.name)}) is higher than mine (${formatName(botRole.name)}).` });
-    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user, I lack the ${inlineCode(requiredPermissionName)} permission.` });
+    if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name)}.` });
+    if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
+    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
+    if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user. This might be because I lack the ${inlineCode(requiredPermissionName)} permission.` });
 
     let reason = "Not specified.";
     let reasonArg = interaction.options.getString("reason");

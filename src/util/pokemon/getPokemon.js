@@ -25,13 +25,13 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let generation = genData.dex.gen;
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
-    pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
         pkmEmbed
-            .setTitle(`Error`)
+            .setTitle("Error")
+            .setColor(globalVars.embedColorError)
             .setDescription(`${inlineCode(pokemon.name)} does not exist yet in generation ${generation}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
-        messageObject = { embeds: pkmEmbed, components: [] };
+        messageObject = { embeds: [pkmEmbed], components: [] };
         return messageObject;
     };
     // Common settings
@@ -176,6 +176,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
 
     let levelMoves = [];
     let levelMovesNames = [];
+    let levelMoveSplit = "#"; // Used over a regular array to allow for repeated levels and move names
     let tmMoves = [];
     let tmMovesStrings = [];
     let eggMoves = [];
@@ -192,6 +193,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let prevoDataMoves = Dex.species.get(pokemon.prevo);
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
     if (learnsetBool && pokemonLearnset && pokemonAvailable) {
+        pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
         for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
@@ -204,8 +206,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                     continue;
                 } else if (moveLearnGen < generation) {
                     continue;
-                } else if (moveLearnData.includes("L")) { // Levelup moves can be repeated
-                    levelMoves[moveName] = parseInt(moveLearnData.split("L")[1]);
+                } else if (moveLearnData.includes("L")) { // Level-up moves can be repeated
+                    levelMoves.push(`${moveName}${levelMoveSplit}${moveLearnData.split("L")[1]}`);
                     levelMovesNames.push(moveName);
                 } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                     tmMoves.push(moveName);
@@ -222,7 +224,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-        levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
+        levelMoves = levelMoves.sort((a, b) => a.split(levelMoveSplit)[1] - b.split(levelMoveSplit)[1]);
         // Prevo egg moves
         if (prevoDataMoves && prevoDataMoves.name) {
             let pokemonPrevoLearnset = await genData.learnsets.get(prevoDataMoves.name);
@@ -236,9 +238,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-
-        for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
-        for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
+        for (let reminderMove of reminderMoves) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
+        for (let levelMove of levelMoves) {
+            levelMovesString += `${levelMove.split(levelMoveSplit)[1]}: ${levelMove.split(levelMoveSplit)[0]}\n`;
+        }
         let tmMoveIndex = 0;
         let transferMoveIndex = 0;
         for (const tmMove of tmMoves) {
@@ -283,14 +286,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         .setStyle(ButtonStyle.Primary)
         .setEmoji('➡️');
     pkmButtons.addComponents(nextPokemonButton);
-    if (pokemon.name !== pokemon.baseSpecies) {
-        const baseSpeciesButton = new ButtonBuilder()
-            .setCustomId(`pkmbase|${buttonAppend}`)
-            .setLabel(pokemon.baseSpecies)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬇️');
-        pkmButtons.addComponents(baseSpeciesButton);
-    };
     if (pokemon.prevo) {
         let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
         let evoMethod = getEvoMethod(pokemon);
@@ -362,6 +357,20 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             };
         };
     };
+    if (pokemon.name !== pokemon.baseSpecies) {
+        const baseSpeciesButton = new ButtonBuilder()
+            .setCustomId(`pkmbase|${buttonAppend}`)
+            .setLabel(pokemon.baseSpecies)
+            .setStyle(ButtonStyle.Secondary);
+        // If we add more buttons this way, move this loop to base level and add a check if BaseSpeciesButton =/= null
+        for (let i = 0; i < Object.keys(formButtonsObject).length; i++) {
+            if (formButtonsObject[i].components.length < 5) {
+                formButtonsObject[i].addComponents(baseSpeciesButton);
+                break;
+            };
+        };
+    };
+
     let buttonArray = [];
     if (formButtonsObject[0].components.length > 0) buttonArray.push(formButtonsObject[0]);
     if (formButtonsObject[1].components.length > 0) buttonArray.push(formButtonsObject[1]);
@@ -420,20 +429,20 @@ function calcHP(pokemon, generation) {
         max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
     };
     //// Let's Go
-    // let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
-    // let max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
-    // let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
-    // let max100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10 + 200);
+    // min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+    // max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
+    // min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+    // max100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10 + 200);
     //// Legends: Arceus
-    // let min50 = Math.floor((50 / 100 + 1) * base + 50 + (50 / 2.5));
-    // let max50 = Math.floor((50 / 100 + 1) * base + 50 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-    // let min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
-    // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // min50 = Math.floor((50 / 100 + 1) * base + 50 + (50 / 2.5));
+    // max50 = Math.floor((50 / 100 + 1) * base + 50 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
+    // max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
-    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-    if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
-    if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
-    return StatText;
+    let statText = `(${min50}-${max50}) (${min100}-${max100})`;
+    if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) statText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
+    if (pokemon.name == "Shedinja") statText = "(1-1) (1-1)";
+    return statText;
 };
 
 function calcStat(base, generation) {
@@ -454,18 +463,18 @@ function calcStat(base, generation) {
         max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
     };
     //// Let's Go
-    // let min50 = Math.floor((((2 * base) * 50) / 100) + 5);
-    // let max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
-    // let min100 = Math.floor((((2 * base) * 100) / 100) + 5);
-    // let max100 = Math.floor((((((2 * base + 31) * 100) / 100) + 5) * 1.1 * 1.1) + 200);
+    // min50 = Math.floor((((2 * base) * 50) / 100) + 5);
+    // max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
+    // min100 = Math.floor((((2 * base) * 100) / 100) + 5);
+    // max100 = Math.floor((((((2 * base + 31) * 100) / 100) + 5) * 1.1 * 1.1) + 200);
     //// Legends: Arceus
-    // let min50 = Math.floor((((50 / 50 + 1) * base) / 1.5) + (50 / 2.5));
-    // let max50 = Math.floor(((((50 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-    // let min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
-    // let max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // min50 = Math.floor((((50 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+    // max50 = Math.floor(((((50 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+    // max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
-    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-    return StatText;
+    let statText = `(${min50}-${max50}) (${min100}-${max100})`;
+    return statText;
 };
 
 function getEvoMethod(pokemon) {

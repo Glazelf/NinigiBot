@@ -49,9 +49,8 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
         .setColor(globalVars.embedColor)
         .setTitle(`${boardEmote}${messageReaction.count}`)
         .setURL(targetMessage.url)
-        .setThumbnail(avatar)
         .setImage(messageImage)
-        .setFooter({ text: targetMessage.author.username })
+        .setFooter({ text: targetMessage.author.username, iconURL: avatar })
         .setTimestamp(targetMessage.createdTimestamp);
     if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
     starEmbed.addFields([{ name: `Context:`, value: targetMessage.url, inline: false }]);

@@ -69,9 +69,8 @@ export default async (client, oldMessage, newMessage) => {
                 .setTitle(`Message Edited ⚒️`)
                 .setImage(messageImage)
                 .setURL(oldMessage.url)
-                .setThumbnail(avatar)
                 .setDescription(`Author: ${oldMessage.author} (${oldMessage.author.id})\nChannel: ${oldMessage.channel} (${oldMessage.channel.id})\nContext: ${oldMessage.url}`)
-                .setFooter({ text: oldMessage.author.username })
+                .setFooter({ text: oldMessage.author.username, iconURL: avatar })
                 .setTimestamp(oldMessage.createdTimestamp);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);

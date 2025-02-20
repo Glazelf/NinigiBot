@@ -1,3 +1,5 @@
+import randomNumber from "../math/randomNumber.js";
+
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
     ['woke up! He wanted to sleep more...', 4, 8],
@@ -5,5 +7,5 @@ const tapping = [
 ];
 
 export default () => {
-    return tapping[Math.floor(Math.random() * tapping.length)];
+    return tapping[randomNumber(0, tapping.length - 1)];
 };

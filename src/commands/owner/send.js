@@ -41,7 +41,13 @@ export default async (interaction, messageFlags) => {
     };
     if (!target) return sendMessage({ interaction: interaction, content: "I could not find a user or channel with that ID." });
     let targetFormat = null;
-    if (channelIDArg) targetFormat = `${formatName(target.name)} (${target.id}) in ${formatName(target.guild.name)} (${target.guild.id})`;
+    if (channelIDArg) {
+        if(target.guild) {
+            targetFormat = `${formatName(target.name)} (${target.id}) in ${formatName(target.guild.name)} (${target.guild.id})`;
+        } else {
+            targetFormat = `Channel ${target.id}`;
+        };
+    };
     if (userIDArg) targetFormat = `${formatName(target.username)} (${target.id})`;
     try {
         let messageObject = { content: messageContent };

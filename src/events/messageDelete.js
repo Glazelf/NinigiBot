@@ -77,14 +77,13 @@ export default async (client, message) => {
             const deleteEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
-                .setThumbnail(avatar)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
             if (messageContent.length > 0) deleteEmbed.addFields([{ name: `Content:`, value: messageContent, inline: false }]);
             if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
-                .setFooter({ text: message.author.username })
+                .setFooter({ text: message.author.username, iconURL: avatar })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
