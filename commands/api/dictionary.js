@@ -15,6 +15,10 @@ const api = "https://api.dictionaryapi.dev/api/v2/";
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
+    interaction.client.rest.on("restDebug", console.log);
+    let problemChannel = await interaction.client.rest.get("/channels/581776008978497537");
+    console.log(problemChannel);
+    
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
     let wordStatus;
