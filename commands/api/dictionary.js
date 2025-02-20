@@ -15,6 +15,24 @@ const api = "https://api.dictionaryapi.dev/api/v2/";
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: 'https://discord.com/api/v10/channels/581776008978497537',
+        headers: { 
+            'Accept': 'application/json'
+        }
+    };
+
+    axios.request(config)
+        .then((response) => {
+            console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+            console.log(error);
+    });
+
+
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
     let wordStatus;
