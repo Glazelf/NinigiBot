@@ -16,7 +16,6 @@ export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
     //// https://github.com/discordjs/discord.js/issues/10563
-    // interaction.client.rest.on("restDebug", console.log);
     // let problemChannel = await interaction.client.rest.get("/channels/581776008978497537");
     // console.log(problemChannel);
     

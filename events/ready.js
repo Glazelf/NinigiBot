@@ -7,6 +7,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 export default async (client) => {
     try {
         // Set interactions
+        // client.rest.on("restDebug", console.log); // https://github.com/discordjs/discord.js/issues/10563
         await client.commands.forEach(async (command) => {
             try {
                 let commandGuildID = null;
