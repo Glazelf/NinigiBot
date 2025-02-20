@@ -14,12 +14,12 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
-import getPermissionName from "../../util/discord/getPermissionName.js";
+import getEnumName from "../../util/discord/getEnumName.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.BanMembers;
-const requiredPermissionName = getPermissionName(requiredPermission);
+const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBits);
 
 export default async (interaction, messageFlags) => {
     let adminBool = isAdmin(interaction.member);
@@ -56,7 +56,7 @@ export default async (interaction, messageFlags) => {
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         let botRole = interaction.guild.members.me.roles.highest;
-        if (member.id == interaction.guild.ownerId) return sendMessage({interaction: interaction, content: `I can not ban ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name)}.`});
+        if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name)}.` });
         if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not ban ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
         if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });

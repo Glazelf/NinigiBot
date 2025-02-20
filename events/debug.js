@@ -21,6 +21,7 @@ export default async (client, info) => {
     let debugChannel;
     try {
         debugChannel = await client.channels.fetch(debugChannelID);
+        // console.log(info); // Uncomment to always log to console
     } catch (e) {
         // console.log(e);
         return console.log(info);
