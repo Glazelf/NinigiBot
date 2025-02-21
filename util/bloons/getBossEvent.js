@@ -131,11 +131,11 @@ export default async ({ elite = false, emojis }) => {
     bannedArray = sortTowersToIngame(bannedArray, "all");
     let allowedHeroesString = allowedHeroesArray.join("\n");
     if (allowedHeroesArray.length == 0) allowedHeroesString = "No heroes are allowed.";
-    if (JSON.stringify(allowedHeroesArray) == JSON.stringify(heroesOrdered)) allowedHeroesString = "All heroes are allowed.";
+    if (allowedHeroesArray.length == heroesOrdered.length) allowedHeroesString = "All heroes are allowed.";
     let allowedTowersString = allowedTowersArray.join("\n");
     let bannedString = bannedArray.join("\n");
     if (bannedString.length == 0) bannedString = "Nothing is banned.";
-    if (JSON.stringify(allowedTowersArray) == JSON.stringify(towersOrdered) && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
+    if (allowedHeroesArray.length == towersOrdered.length && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
 
     let bossEventEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
