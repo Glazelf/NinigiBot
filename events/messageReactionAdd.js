@@ -4,7 +4,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
-const altboardEmote = "🫃"; // Escaped emoji (i.e. <emoji:123>) or plain unicode emote
+const altboardEmote = "<:nostar:780198211913646130>"; // Escaped emoji (i.e. <emoji:123>) or plain unicode emote
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, ""); // Empty and unused for plain emojis
 
 export default async (client, messageReaction) => {

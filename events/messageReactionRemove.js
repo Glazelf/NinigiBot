@@ -4,7 +4,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
-const altboardEmote = "🫃";
+const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
