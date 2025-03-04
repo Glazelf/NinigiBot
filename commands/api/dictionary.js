@@ -38,6 +38,7 @@ export default async (interaction, messageFlags) => {
     };
 
     let wordString = wordStatus.word;
+    let definitionCount = 0;
     // .slice(-1)[0] is to get final entry in array in single line
     let sourceURL = wordStatus.sourceUrls.find((url) => url.split("/").slice(-1)[0].toLowerCase() == wordString.toLowerCase());
     if (!sourceURL) sourceURL = wordStatus.sourceUrls[0];
@@ -46,6 +47,8 @@ export default async (interaction, messageFlags) => {
         let meaningTypeString = meaning.partOfSpeech.charAt(0).toUpperCase() + meaning.partOfSpeech.slice(1);
         // Top-level synonym and antonym fields seem to always be empty?
         for await (const definition of meaning.definitions) {
+            definitionCount++;
+            if (dictionaryEmbed.data.fields?.length === 25) break;
             let wordExtrasString = "";
             if (definition.example) wordExtrasString += `Example: ${definition.example}\n`;
             if (definition.synonyms.length > 0) wordExtrasString += `Synonyms: ${definition.synonyms.join(', ')}\n`;
@@ -54,6 +57,7 @@ export default async (interaction, messageFlags) => {
             dictionaryEmbed.addFields({ name: `${meaningTypeString}: ${definition.definition}`, value: wordExtrasString, inline: false });
         };
     };
+    if (definitionCount > 25) dictionaryEmbed.setFooter({ text: "Some defintiions were hidden due to length.\nSpecify the word type if you can't find what you're looking for." });
     let wordPhoneticString = "";
     if (wordStatus.phonetics) {
         // Would be cool if this could be attached as a voice notes but this feature is blocked for bots
