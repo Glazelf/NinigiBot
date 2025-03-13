@@ -29,7 +29,7 @@ export default async (client, info) => {
     // Build embed
     let debugEmbeds = [];
     let debugEmbedsIndex = 0;
-    debugEmbeds[0] = new EmbedBuilder()
+    debugEmbeds[debugEmbedsIndex] = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setDescription(description);
     // Fill fields
