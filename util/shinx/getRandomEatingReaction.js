@@ -1,3 +1,5 @@
+import randomNumber from "../math/randomNumber.js";
+
 const eating = [
     ['seems to like the food!', 3],
     ['is in love with this food!', 2],
@@ -6,5 +8,5 @@ const eating = [
 ];
 
 export default () => {
-    return eating[Math.floor(Math.random() * eating.length)];
+    return eating[randomNumber(0, eating.length - 1)];
 };

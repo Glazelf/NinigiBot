@@ -71,9 +71,7 @@ export default async (interaction, messageFlags) => {
             let skillObject = skillMapRoyal[nameInput];
             if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let skillPersonas = "";
-            if (skillObject.unique) {
-                skillPersonas += `${skillObject.unique}: Unique\n`;
-            };
+            if (skillObject.unique) skillPersonas += `${skillObject.unique}: Unique\n`;
             if (skillObject.personas) {
                 for await (const [key, value] of Object.entries(skillObject.personas)) {
                     skillPersonas += `${key}: Level ${value}\n`;
@@ -87,7 +85,9 @@ export default async (interaction, messageFlags) => {
         case "trait":
             let traitObject = skillMapRoyal[nameInput];
             if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
-            let traitPersonas = Object.keys(traitObject.personas).join("\n");
+            let traitPersonas = "";
+            if (traitObject.unique) traitPersonas += `${traitObject.unique} (Unique)\n`;
+            if (traitObject.personas) traitPersonas += Object.keys(traitObject.personas).join("\n");
             p5Embed
                 .setTitle(nameInput)
                 .setDescription(traitObject.effect)

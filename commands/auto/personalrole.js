@@ -93,7 +93,7 @@ export default async (interaction, messageFlags) => {
 
     if (roleDB) {
         let editReturnString = `Updated your role.`;
-        let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
+        let personalRole = interaction.guild.roles.cache.get(roleDB.role_id);
         if (!personalRole) return createRole();
         if (!colorArg) roleColor = personalRole.color;
         if (roleColor != personalRole.color) editReturnString += `\n- Color set to ${inlineCode(`#${roleColor}`)}.`;

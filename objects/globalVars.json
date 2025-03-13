@@ -21,9 +21,6 @@
         "size": 512,
         "extension": "png"
     },
-    "pokemon": {
-        "currentGeneration": 9
-    },
     "splatoon3": {
         "languageJSONs": {}
     }

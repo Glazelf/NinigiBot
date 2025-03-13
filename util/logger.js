@@ -19,7 +19,7 @@ export default async ({ exception, client, interaction = null }) => {
         let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (!client && interaction) client = interaction.client;
         if (exceptionString.includes("Missing Access")) {
-            return; // Permission error; guild-side mistake
+            return; // Permission error; guild-side mistake (Also returns here on 403 errors from fetching things inside the client code)
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
             return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -27,7 +27,7 @@ export default async ({ exception, client, interaction = null }) => {
             return; // Expired interaction, can't reply to said interaction
         } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
             return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
-        } else if (exceptionString.includes("AxiosError")) {
+        } else if (exceptionString.includes("AxiosError") || exceptionString.includes("socket hang up")) {
             // console.log(exception);
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
             return sendMessage({ interaction: interaction, content: "An error occurred getting a response from the API or it did not respond.\nPlease try again later." });

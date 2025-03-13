@@ -1,9 +1,10 @@
 import axios from "axios";
+import randomNumber from "./randomNumber.js";
 
 const giphyAPI = "https://api.giphy.com/v1/gifs/random";
 
 export default async (gifTags = []) => {
-    const randomTag = gifTags[Math.floor(Math.random() * gifTags.length)];
+    const randomTag = gifTags[randomNumber(0, gifTags.length - 1)];
     let giphyParams = {
         api_key: process.env.GIPHY_TOKEN,
         rating: "g"

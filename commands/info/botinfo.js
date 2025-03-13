@@ -18,6 +18,7 @@ import packageJSON from "../../package.json" with { type: "json" };
 
 const owner = "glazelf";
 const emojiMax = 2000;
+const maxServersPerShard = 2500;
 
 export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
@@ -55,6 +56,15 @@ export default async (interaction, messageFlags) => {
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
     developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
 
+    // Stats
+    let userInstallString = `User Installs: ${interaction.client.application.approximateUserInstallCount}`;
+    let serverInstallString = `Servers: ${interaction.client.application.approximateGuildCount}`;
+    if (ownerBool) serverInstallString += `/${maxServersPerShard * interaction.client.options.shardCount}`;
+    let totalMemberCountString = `Total Members: ${totalMembers}`;
+    let emojiCountString = `Emojis: ${emojis.size}/${emojiMax}`;
+    let githubStarCountString = `GitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`;
+    let statFieldValue = `${userInstallString}\n${serverInstallString}\n${totalMemberCountString}\n${emojiCountString}\n${githubStarCountString}`;
+
     let botEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(interaction.client.user.username)
@@ -62,13 +72,14 @@ export default async (interaction, messageFlags) => {
         .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}.`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
-            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
+            { name: "Stats:", value: statFieldValue, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
+    const appDirectory = "https://discord.com/discovery/applications/";
     //// Shop Button
     // let shopButtonText = "Donate";
-    // let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/`;
+    // let shopButtonLink = `${appDirectory}${interaction.client.user.id}/store/`;
     // const shopButton = new ButtonBuilder()
     //     .setLabel(shopButtonText)
     //     .setStyle(ButtonStyle.Link)
@@ -77,7 +88,7 @@ export default async (interaction, messageFlags) => {
     const appDirectoryButton = new ButtonBuilder()
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.com/application-directory/${interaction.client.user.id}`);
+        .setURL(`${appDirectory}${interaction.client.user.id}`);
     const inviteButton = new ButtonBuilder()
         .setLabel("Add Bot") // "Add" over "Invite" as bots can be added to users now 
         .setStyle(ButtonStyle.Link)

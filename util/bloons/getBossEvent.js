@@ -80,6 +80,7 @@ export default async ({ elite = false, emojis }) => {
         `Max Paragons: ${bossEventMetadata.maxParagons}`
     ];
     // Math.round() is to avoid JS floating point errors
+    if (bossEventMetadata.maxTowers < 9999) rulesArray.push(`Max Towers: ${bossEventMetadata.maxTowers}`);
     if (bossEventMetadata.abilityCooldownReductionMultiplier !== 1) rulesArray.push(`Ability Cooldowns: ${Math.round(bossEventMetadata.abilityCooldownReductionMultiplier * 100)}%`);
     if (bossEventMetadata.removeableCostMultiplier !== 1) rulesArray.push(`Removeables Cost: ${Math.round(bossEventMetadata.removeableCostMultiplier * 100)}%`);
     if (bossEventMetadata._bloonModifiers.healthMultipliers.bloons !== 1) rulesArray.push(`Bloon Health: ${Math.round(bossEventMetadata._bloonModifiers.healthMultipliers.bloons * 100)}%`);
@@ -93,11 +94,12 @@ export default async ({ elite = false, emojis }) => {
     if (bossEventMetadata._bloonModifiers.allRegen) rulesArray.push(`All bloons are regen.`);
     let rulesString = rulesArray.join("\n");
 
-    let bossEventDescription = `${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)} to ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
+    let bossEventDescription = `Starts: ${time(Math.floor(bossEventSelected.start / 1000), TimestampStyles.ShortDateTime)}\nEnds: ${time(Math.floor(bossEventSelected.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
 
     let allowedHeroesArray = [];
     let allowedTowersArray = [];
     let bannedArray = [];
+    let towersAllowedAppendix = false;
     let allHeroesAllowed = bossEventMetadata._towers.find((hero) => hero.tower == "ChosenPrimaryHero").max == 99; // This seems to be how to check if all heroes are allowed? Even when this is 99, heroes inconsistently have either a max of 0 or 1, making it hard to tell otherwise
     bossEventMetadata._towers.forEach(tower => {
         let towerIcon = emojis.find(emoji => emoji.name == `BTD6Hero${tower.tower}`);
@@ -109,11 +111,17 @@ export default async ({ elite = false, emojis }) => {
             return allowedHeroesArray.push(heroString);
         } else {
             let towerString = tower.tower;
-            if (tower.path1NumBlockedTiers > 0 || tower.path2NumBlockedTiers || tower.path3NumBlockedTiers) towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`;
             if (tower.max > 0) {
                 towerString += ` (max ${tower.max})`;
+                towersAllowedAppendix = true;
             } else if (tower.max == 0) {
                 return bannedArray.push(towerString);
+            };
+            if (tower.path1NumBlockedTiers > 0 || tower.path2NumBlockedTiers || tower.path3NumBlockedTiers) {
+                // Sometimes allowed tier is -1 when they mean 0, leading to above calculation listing 6. 
+                // We can filter like this because if not all tiers are allowed the paragon can never be made, making 6-6-6 impossible.
+                towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`.replace(/6/g, 0);
+                towersAllowedAppendix = true;
             };
             return allowedTowersArray.push(towerString);
         };
@@ -122,10 +130,12 @@ export default async ({ elite = false, emojis }) => {
     allowedTowersArray = sortTowersToIngame(allowedTowersArray, "towers");
     bannedArray = sortTowersToIngame(bannedArray, "all");
     let allowedHeroesString = allowedHeroesArray.join("\n");
-    if (allowedHeroesArray.length == 0) allowedHeroesString = "None.";
+    if (allowedHeroesArray.length == 0) allowedHeroesString = "No heroes are allowed.";
+    if (allowedHeroesArray.length == heroesOrdered.length) allowedHeroesString = "All heroes are allowed.";
     let allowedTowersString = allowedTowersArray.join("\n");
     let bannedString = bannedArray.join("\n");
-    if (bannedString.length == 0) bannedString = "Nothing.";
+    if (bannedString.length == 0) bannedString = "Nothing is banned.";
+    if (allowedHeroesArray.length == towersOrdered.length && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
 
     let bossEventEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)

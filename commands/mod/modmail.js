@@ -37,7 +37,7 @@ const actionRow2 = new ActionRowBuilder()
 modal.addComponents(actionRow1, actionRow2);
 
 export default async (interaction, messageFlags) => {
-    if (!interaction.guild.features.includes(GuildFeature.Community) || !interaction.guild.publicUpdatesChannel) return sendMessage({ interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nModmail will be sent to the same channel as community updates.", flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!interaction.guild.features.includes(GuildFeature.Community) || !interaction.guild.safetyAlertsChannel) return sendMessage({ interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nModmail will be sent to the same channel as community updates.", flags: messageFlags.add(MessageFlags.Ephemeral) });
     return interaction.showModal(modal);
 };
 

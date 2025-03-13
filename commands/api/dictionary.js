@@ -27,7 +27,7 @@ export default async (interaction, messageFlags) => {
             axios.get(`${api}entries/en/${inputWord}`),
             new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
         ]);
-        wordStatus = wordStatus.data;
+        wordStatus = wordStatus.data[0];
     } catch (e) {
         // console.log(e);
         let errorEmbed = new EmbedBuilder()
@@ -37,52 +37,44 @@ export default async (interaction, messageFlags) => {
         return sendMessage({ interaction: interaction, embeds: errorEmbed });
     };
 
-    let wordMeaning;
-    outerLoop:
-    for (let i = 0; i < wordStatus.length; i++) {
-        if (inputWordType) {
-            for (let meaning of wordStatus[i].meanings) {
-                if (meaning.partOfSpeech.toLowerCase() === inputWordType) { // inputWordType has to be lowercase, but is forced lowercase by choices
-                    wordMeaning = meaning;
-                    break outerLoop;
-                };
-            };
+    let wordString = wordStatus.word;
+    let definitionCount = 0;
+    // .slice(-1)[0] is to get final entry in array in single line
+    let sourceURL = wordStatus.sourceUrls.find((url) => url.split("/").slice(-1)[0].toLowerCase() == wordString.toLowerCase());
+    if (!sourceURL) sourceURL = wordStatus.sourceUrls[0];
+    for await (const meaning of wordStatus.meanings) {
+        if (inputWordType && inputWordType.toLowerCase() !== meaning.partOfSpeech.toLowerCase()) continue;
+        let meaningTypeString = meaning.partOfSpeech.charAt(0).toUpperCase() + meaning.partOfSpeech.slice(1);
+        // Top-level synonym and antonym fields seem to always be empty?
+        for await (const definition of meaning.definitions) {
+            definitionCount++;
+            if (dictionaryEmbed.data.fields?.length === 25) break;
+            let wordExtrasString = "";
+            if (definition.example) wordExtrasString += `Example: ${definition.example}\n`;
+            if (definition.synonyms.length > 0) wordExtrasString += `Synonyms: ${definition.synonyms.join(', ')}\n`;
+            if (definition.antonyms.length > 0) wordExtrasString += `Antonyms: ${definition.antonyms.join(', ')}\n`;
+            if (wordExtrasString.length == 0) wordExtrasString = "No example, synonyms or antonyms.";
+            dictionaryEmbed.addFields({ name: `${meaningTypeString}: ${definition.definition}`, value: wordExtrasString, inline: false });
         };
     };
-    if (!wordMeaning) wordMeaning = wordStatus[0].meanings[0];
-
+    if (definitionCount > 25) dictionaryEmbed.setFooter({ text: "Some defintiions were hidden due to length.\nSpecify the word type if you can't find what you're looking for." });
     let wordPhoneticString = "";
-    if (wordStatus[0].phonetics) {
+    if (wordStatus.phonetics) {
         // Would be cool if this could be attached as a voice notes but this feature is blocked for bots
-        let wordPhoneticsArray = wordStatus[0].phonetics.filter(phonetic => phonetic.text && phonetic.text.length > 0);
+        let wordPhoneticsArray = wordStatus.phonetics.filter(phonetic => phonetic.text && phonetic.text.length > 0);
         let wordPhoneticsArrayAudio = wordPhoneticsArray.filter(phonetic => phonetic.audio && phonetic.audio.length > 0); // Prefer entries with audio available
         if (wordPhoneticsArrayAudio.length > 0) {
             wordPhoneticString = hyperlink(wordPhoneticsArrayAudio[0].text, wordPhoneticsArrayAudio[0].audio);
         } else if (wordPhoneticsArray.length > 0) {
             wordPhoneticString = wordPhoneticsArray[0].text;
         };
-    } else if (wordStatus[0].phonetic) {
-        wordPhoneticString = wordStatus[0].phonetic;
+    } else if (wordStatus.phonetic) {
+        wordPhoneticString = wordStatus.phonetic;
     };
-    let wordStatusTitle = wordStatus[0].word;
-    await wordMeaning.definitions.forEach(definition => {
-        let wordDefinition = definition.definition;
-        let wordExample = definition.example;
-        let wordSynonyms = definition.synonyms;
-        let wordAntonyms = definition.antonyms;
-        let wordDefinitionString = "";
-        if (wordExample) wordDefinitionString += `Example: ${wordExample}\n`;
-        if (wordSynonyms.length > 0) wordDefinitionString += `Synonyms: ${wordSynonyms.join(', ')}\n`;
-        if (wordAntonyms.length > 0) wordDefinitionString += `Antonyms: ${wordAntonyms.join(', ')}\n`;
-        if (wordDefinitionString.length == 0) wordDefinitionString = "No example, synonyms or antonyms found.";
-        dictionaryEmbed.addFields([{ name: wordDefinition, value: wordDefinitionString, inline: false }]);
-    });
-    let wordType = wordMeaning.partOfSpeech;
-    let wordSourceUrls = wordStatus[0].sourceUrls;
 
     dictionaryEmbed
-        .setTitle(`${wordStatusTitle}, ${wordType}`)
-        .setURL(wordSourceUrls[0]);
+        .setTitle(wordString)
+        .setURL(sourceURL);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
     return sendMessage({ interaction: interaction, embeds: dictionaryEmbed });
 };

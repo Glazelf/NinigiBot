@@ -12,7 +12,7 @@ export default async (client, role) => {
         serverApi = await serverApi.default();
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: role.guild.id } });
         if (!logChannel) return;
-        let log = role.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = role.guild.channels.cache.get(logChannel.channel_id);
         if (!log) return;
 
         let botMember = role.guild.members.me;

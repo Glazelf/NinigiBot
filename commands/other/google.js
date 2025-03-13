@@ -9,6 +9,7 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 
 export default async (interaction, messageFlags) => {
+    messageFlags.remove(MessageFlags.Ephemeral);
     let message = interaction.options._hoistedOptions[0].message;
     let input = message.content;
     let questionAskUser = message.author;
@@ -32,7 +33,7 @@ export default async (interaction, messageFlags) => {
 
     let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow, flags: messageFlags.remove(MessageFlags.Ephemeral) });
+    return sendMessage({ interaction: interaction, content: returnString, components: googleActionRow, flags: messageFlags });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()

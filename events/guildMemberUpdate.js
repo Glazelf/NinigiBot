@@ -11,15 +11,15 @@ import formatName from "../util/discord/formatName.js";
 import getBotSubscription from "../util/discord/getBotSubscription.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client, member, newMember) => {
+export default async (client, oldMember, newMember) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMember.guild.id } });
         if (!logChannel) return;
-        let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = oldMember.guild.channels.cache.get(logChannel.channel_id);
         if (!log) return;
-        let botMember = member.guild.members.me;
+        let botMember = oldMember.guild.members.me;
 
         if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (newMember) {
@@ -27,37 +27,43 @@ export default async (client, member, newMember) => {
                 if (newMemberFetch) newMember = newMemberFetch;
             };
             if (!newMember) return;
-            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+            let oldAvatar = oldMember.avatarURL(globalVars.displayAvatarSettings);
+            let avatar = newMember.avatarURL(globalVars.displayAvatarSettings);
+            let displayAvatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+            let oldBanner = oldMember.bannerURL(globalVars.displayAvatarSettings);
+            let banner = newMember.bannerURL(globalVars.displayAvatarSettings);
 
             let updateCase = null;
             let topText = null;
             let changeText = null;
             let image = null;
-            if (!member.premiumSince && newMember.premiumSince) {
+            if (!oldMember.premiumSince && newMember.premiumSince) {
                 // Nitro boost start
                 updateCase = "nitroStart";
-            } else if (member.premiumSince && !newMember.premiumSince) {
+            } else if (oldMember.premiumSince && !newMember.premiumSince) {
                 // Nitro boost end
                 updateCase = "nitroEnd";
-            } else if (member.pending !== newMember.pending) {
+            } else if (oldMember.pending !== newMember.pending) {
                 // Pending?
                 updateCase = null;
-            } else if (!member.communicationDisabledUntilTimestamp && newMember.communicationDisabledUntilTimestamp) {
+            } else if (!oldMember.communicationDisabledUntilTimestamp && newMember.communicationDisabledUntilTimestamp) {
                 updateCase = "timeoutStart";
-            } else if (member.communicationDisabledUntilTimestamp && !newMember.communicationDisabledUntilTimestamp) {
+            } else if (oldMember.communicationDisabledUntilTimestamp && !newMember.communicationDisabledUntilTimestamp) {
                 updateCase = "timeoutEnd";
-            } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
+            } else if (oldMember.guild !== newMember.guild || oldMember.user !== newMember.user) {
                 // I assume this does nothing but I want to be sure because of the weird nickname updates firing
                 updateCase = null;
             } else if (oldAvatar !== avatar) {
                 // Update server avatar
                 updateCase = "guildAvatar";
-            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
+            } else if (oldBanner !== banner) {
+                // Update server banner
+                updateCase = "guildBanner";
+            } else if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
                 // Roles updated
                 // Sometimes old member roles show 0. Not sure why? Might just be shortly after bot boots?
                 updateCase = "rolesUpdate";
-            } else if (member.nickname !== newMember.nickname) {
+            } else if (oldMember.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
             };
@@ -66,60 +72,64 @@ export default async (client, member, newMember) => {
             let fetchedLogs;
             let executor = null;
             try {
-                fetchedLogs = await member.guild.fetchAuditLogs({
+                fetchedLogs = await oldMember.guild.fetchAuditLogs({
                     limit: 1,
                     type: AuditLogEvent.MemberUpdate
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
-                if (executor.id == member.id || (memberUpdateLog && memberUpdateLog.createdTimestamp < (Date.now() - 5000))) executor = null;
+                if (executor.id == oldMember.id || (memberUpdateLog && memberUpdateLog.createdTimestamp < (Date.now() - 5000))) executor = null;
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
             if (!newMember.premiumSince && newMember.permissions && !newMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
-                let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-                let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+                let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: oldMember.guild.id } });
+                let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: oldMember.guild.id, user_id: oldMember.id } });
                 let isSupporter = false;
                 let botSubscription = await getBotSubscription(client.application, newMember.id);
                 if (newMember.guild.id == globalVars.ShinxServerID && botSubscription.entitlement) isSupporter = true;
                 let integrationRoleBool = newMember.roles.cache.some(role => role.tags?.integrationId);
-                if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, member.guild);
+                if (serverID && roleDB && !isSupporter && !integrationRoleBool) await deletePersonalRole(roleDB, oldMember.guild);
             };
 
             switch (updateCase) {
                 case "nickname":
                     topText = "Nickname Changed ⚒️";
-                    if (member.nickname && newMember.nickname) {
-                        changeText = `Old: ${formatName(member.nickname)}\nNew: ${formatName(newMember.nickname)}`;
+                    if (oldMember.nickname && newMember.nickname) {
+                        changeText = `Old: ${formatName(oldMember.nickname)}\nNew: ${formatName(newMember.nickname)}`;
                     } else if (newMember.nickname) {
                         changeText = `New: ${formatName(newMember.nickname)}`;
                     } else {
-                        changeText = `Removed: ${formatName(member.nickname)}`;
+                        changeText = `Removed: ${formatName(oldMember.nickname)}`;
                     };
                     break;
                 case "nitroStart":
                     topText = "Started Nitro Boosting ⚒️";
-                    changeText = `${formatName(member.guild.name)} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                    changeText = `${formatName(oldMember.guild.name)} now has ${oldMember.guild.premiumSubscriptionCount} Nitro Boosts.`;
                     break;
                 case "nitroEnd":
                     topText = "Stopped Nitro Boosting ⚒️";
-                    changeText = `${formatName(member.guild.name)} will lose this Nitro Boost in 3 days.`;
+                    changeText = `${formatName(oldMember.guild.name)} will lose this Nitro Boost in 3 days.`;
                     break;
                 case "guildAvatar":
                     topText = "Updated Server Avatar ⚒️";
                     image = avatar;
                     break;
+                case "guildBanner":
+                    topText = "Updated Server Banner ⚒️";
+                    image = banner;
+                    break;
                 case "rolesUpdate":
-                    let rolesSorted = [...member.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
+                    let rolesSorted = [...oldMember.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
                     let newRolesSorted = [...newMember.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
                     let rolesString = rolesSorted.join(", ");
                     let newRolesString = newRolesSorted.join(", ");
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${formatName(member.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${formatName(oldMember.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
@@ -135,12 +145,12 @@ export default async (client, member, newMember) => {
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(topText)
-                .setThumbnail(oldAvatar)
+                .setThumbnail(displayAvatar)
                 .setImage(image)
-                .setFooter({ text: member.user.username })
+                .setFooter({ text: oldMember.user.username })
                 .setTimestamp();
             if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed.addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: true }]);
+            updateEmbed.addFields([{ name: `User:`, value: `${oldMember} (${oldMember.id})`, inline: true }]);
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 

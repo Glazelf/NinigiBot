@@ -1,5 +1,5 @@
 export default async (roleDB, guild) => {
-    let oldRole = guild.roles.cache.find(r => r.id == roleDB.role_id);
+    let oldRole = guild.roles.cache.get(roleDB.role_id);
     if (oldRole) {
         try {
             await oldRole.delete();

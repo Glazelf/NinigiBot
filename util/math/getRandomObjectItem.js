@@ -1,4 +1,13 @@
+import randomNumber from "./randomNumber.js";
+
 export default (objectList) => {
     let listKeys = Object.keys(objectList);
-    return objectList[listKeys[listKeys.length * Math.random() << 0]];
+    switch (listKeys.length) {
+        case 0:
+            return null;
+        case 1:
+            return objectList[listKeys[0]];
+        default:
+            return objectList[listKeys[randomNumber(0, listKeys.length - 1)]];
+    };
 };

@@ -13,7 +13,8 @@ export default async (interaction, messageFlags) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
-    await interaction.deferReply();
+    messageFlags.remove(MessageFlags.Ephemeral);
+    await interaction.deferReply({ flags: messageFlags });
 
     let interactionName = interaction.options.getString("interaction-name");
     let guildID = interaction.options.getString("guild-id");
@@ -25,7 +26,7 @@ export default async (interaction, messageFlags) => {
     try {
         await interaction.client.application.commands.delete(command.id, guildID);
     } catch (e) {
-        // console.log();
+        // console.log(e);
         return sendMessage({ interaction: interaction, content: `Failed to delete ${inlineCode(interactionName)}.` });
     };
     return sendMessage({ interaction: interaction, content: `Deleted interaction ${inlineCode(interactionName)}.` });

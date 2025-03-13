@@ -13,6 +13,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
 export default async (interaction, messageFlags) => {
+    messageFlags.remove(MessageFlags.Ephemeral);
     let adminBool = isAdmin(interaction.member);
     let slowmodeSupportedChannelTypes = [
         ChannelType.GuildText,
@@ -26,7 +27,7 @@ export default async (interaction, messageFlags) => {
 
     let time = interaction.options.getInteger("time");
     await interaction.channel.setRateLimitPerUser(time);
-    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, flags: messageFlags.remove(MessageFlags.Ephemeral) });
+    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, flags: messageFlags });
 };
 
 // Integer options

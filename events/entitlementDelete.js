@@ -24,7 +24,7 @@ export default async (client, entitlement) => {
         if (!log) return;
 
         let SKUs = await client.application.fetchSKUs();
-        let matchingSKU = Object.entries(SKUs).find(SKU => SKU.id == entitlement.skuId);
+        let matchingSKU = SKUs.find(SKU => SKU.id == entitlement.skuId);
         if (!matchingSKU) return;
 
         const entitlementEmbed = new EmbedBuilder()

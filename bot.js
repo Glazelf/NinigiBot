@@ -6,7 +6,9 @@ import {
     ApplicationCommandType,
     ActivityType,
     InteractionContextType,
-    ApplicationIntegrationType
+    ApplicationIntegrationType,
+    PresenceUpdateStatus,
+    AllowedMentionsTypes
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
@@ -41,7 +43,7 @@ const presenceObject = {
     }, {
         name: "the lake theme",
         type: ActivityType.Listening
-    }], status: "idle"
+    }], status: PresenceUpdateStatus.Idle
 };
 globalVars.presence = presenceObject;
 
@@ -50,7 +52,7 @@ const client = new Client({
     intents: intents,
     partials: partials,
     allowedMentions: {
-        parse: ['users', 'roles'],
+        parse: [AllowedMentionsTypes.User, AllowedMentionsTypes.Role],
         repliedUser: true
     },
     shards: "auto"

@@ -52,7 +52,7 @@ export default async (interaction, messageFlags) => {
 };
 
 const leaderboardScopeChoices = [
-    { name: "This server only", value: "guild" },
+    { name: "Server", value: "guild" },
     { name: "Global", value: "global" },
 ];
 
