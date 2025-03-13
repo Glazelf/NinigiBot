@@ -21,9 +21,8 @@ export default async (interaction, messageFlags) => {
     if (!guildMembers) return;
 
     let roleMembersString = "";
-    let roleMembers = {};
+    let roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
     if (memberListBool === true) {
-        roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
         for (const [id, member] of roleMembers) {
             let stringAddition = member.toString();
             if (roleMembersString.length > 0) stringAddition = `, ${member}`;
@@ -53,6 +52,7 @@ export default async (interaction, messageFlags) => {
         .setFooter({ text: role.id })
         .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
     if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
+    if (memberListBool !== true) roleEmbed.addFields([{ name: "Members:", value: roleMembers.size.toString(), inline: true }]);
     roleEmbed.addFields([
         { name: "Position:", value: role.rawPosition.toString(), inline: true },
         { name: "Properties:", value: roleProperties, inline: false },

@@ -27,18 +27,24 @@ export default async (client, info) => {
         return console.log(info);
     };
     // Build embed
-    let debugEmbed = new EmbedBuilder()
+    let debugEmbeds = [];
+    let debugEmbedsIndex = 0;
+    debugEmbeds[debugEmbedsIndex] = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setDescription(description);
     // Fill fields
-    while (debugEmbed.length <= maxEmbedLength && info[debugInfoIndex]) {
+    while (info[debugInfoIndex]) {
         let fieldValue = info.substring(debugInfoIndex);
         if (fieldValue.length > maxFieldValueLength) fieldValue = info.substring(debugInfoIndex, debugInfoIndex + maxFieldValueLength);
-        let substringRequiredToFit = debugEmbed.length + fieldName.length + fieldValue.length - maxEmbedLength;
-        if (substringRequiredToFit > 0) fieldValue = fieldValue.substring(0, fieldValue.length - substringRequiredToFit);
-        debugEmbed.addFields([{ name: fieldName, value: fieldValue, inline: false }]);
+        let futureEmbedLength = debugEmbeds[debugEmbedsIndex].length + fieldName.length + fieldValue.length;
+        if (futureEmbedLength > maxEmbedLength) {
+            debugEmbedsIndex++;
+            debugEmbeds[debugEmbedsIndex] = new EmbedBuilder()
+                .setColor(globalVars.embedColor);
+        };
+        debugEmbeds[debugEmbedsIndex].addFields([{ name: fieldName, value: fieldValue, inline: false }]);
         debugInfoIndex += maxFieldValueLength;
     };
     // Send embed
-    return debugChannel.send({ embeds: [debugEmbed] });
+    return debugChannel.send({ embeds: debugEmbeds });
 };
