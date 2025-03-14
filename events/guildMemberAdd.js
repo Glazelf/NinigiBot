@@ -39,7 +39,7 @@ export default async (client, member) => {
                 .setTimestamp()
                 .addFields([
                     { name: "User:", value: `${member} (${member.id})`, inline: false },
-                    { name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }
+                    { name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDate), inline: true }
                 ]);
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {

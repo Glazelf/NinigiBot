@@ -35,7 +35,7 @@ export default async (client, role) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Role Created ⭐`)
                 .setDescription(role.toString())
-                .setFooter({ text: role.id })
+                .setFooter({ text: `ID: ${role.id}` })
                 .setTimestamp();
             if (role.permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: role.permissions.toArray().join(', '), inline: false }]);
             if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])

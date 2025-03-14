@@ -114,13 +114,13 @@ export default async (interaction, page, user) => {
             profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
-            profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
+            profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdTimestamp / 1000), TimestampStyles.ShortDate), inline: true }]);
             if (member && guildDataAvailable) {
                 profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedTimestamp / 1000), TimestampStyles.RelativeTime), inline: true }]);
                 if (member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(member.premiumSinceTimestamp / 1000), TimestampStyles.RelativeTime), inline: true }]);
             };
             if (banner) profileEmbed.setImage(banner);
-            profileEmbed.setFooter({ text: user.id });
+            profileEmbed.setFooter({ text: `ID: ${user.id}` });
             break;
         case 1:
             let birthday = user_db.birthday;

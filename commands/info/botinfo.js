@@ -69,7 +69,7 @@ export default async (interaction, messageFlags) => {
         .setColor(globalVars.embedColor)
         .setTitle(interaction.client.user.username)
         .setThumbnail(avatar)
-        .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}.`)
+        .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDate)}.`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
             { name: "Stats:", value: statFieldValue, inline: true },

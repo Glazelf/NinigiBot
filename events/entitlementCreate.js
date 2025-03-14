@@ -20,7 +20,7 @@ export default async (client, entitlement) => {
             .setColor(globalVars.embedColor)
             .setTitle("Entitlemend Started ⭐")
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name)} started.`)
-            .setFooter({ text: entitlement.id })
+            .setFooter({ text: `ID: ${entitlement.id}` })
             .setTimestamp();
         return log.send({ embeds: [entitlementEmbed] });
 

@@ -29,7 +29,7 @@ export default async (interaction, messageFlags) => {
         for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
             let entitlementUser = await entitlement.fetchUser();
             let entitlementStartsAt = Math.floor(entitlement.startsTimestamp / 1000);
-            userList.push(`${entitlementUser.username} (${entitlementUser.id}) ${time(entitlementStartsAt, TimestampStyles.ShortDateTime)}`);
+            userList.push(`${entitlementUser.username} (${entitlementUser.id}) ${time(entitlementStartsAt, TimestampStyles.ShortDate)}`);
         };
         if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${userList.length})`, value: userList.join("\n") }]);
     };
