@@ -44,20 +44,19 @@ export default async (interaction, messageFlags) => {
     let permissionString = "None";
     if (role.permissions.toArray().length > 0) permissionString = role.permissions.toArray().join(", ");
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
+    // Info field
+    let infoString = `Role: ${role}`;
+    if (role.hexColor !== defaultColor) infoString += `\nColor: ${role.hexColor}`;
+    if (memberListBool !== true) infoString += `\nMembers: ${roleMembers.size}`;
+    infoString += `\nPosition: ${role.rawPosition}`;
     // Embed
     let roleEmbed = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(role.name)
+        .setDescription(infoString)
         .setThumbnail(icon)
-        .setFooter({ text: role.id })
-        .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
-    if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
-    if (memberListBool !== true) roleEmbed.addFields([{ name: "Members:", value: roleMembers.size.toString(), inline: true }]);
-    roleEmbed.addFields([
-        { name: "Position:", value: role.rawPosition.toString(), inline: true },
-        { name: "Properties:", value: roleProperties, inline: false },
-        { name: "Permissions:", value: permissionString, inline: false }
-    ]);
+        .setFooter({ text: `ID: ${role.id}` });
+    roleEmbed.addFields([{ name: "Permissions:", value: permissionString, inline: false }]);
     if (memberListBool === true) roleEmbed.addFields([{ name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false }]);
     return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
 };

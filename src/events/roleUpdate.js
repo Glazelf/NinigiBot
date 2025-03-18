@@ -37,7 +37,7 @@ export default async (client, oldRole, newRole) => {
             const updateEmbed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setTitle(`Role Updated ⚒️`)
-                .setFooter({ text: newRole.id })
+                .setFooter({ text: `ID: ${newRole.id}` })
                 .setTimestamp();
             if (oldRole.name !== newRole.name) {
                 updateEmbed.addFields([

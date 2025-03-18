@@ -65,8 +65,8 @@ export default async (client, member) => {
                     .setThumbnail(avatar)
                     .setFooter({ text: member.user.username })
                     .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }])
-                    .addFields([{ name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
-                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedTimestamp / 1000), TimestampStyles.ShortDateTime), inline: true }]);
+                    .addFields([{ name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDate), inline: true }]);
+                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedTimestamp / 1000), TimestampStyles.ShortDate), inline: true }]);
                 if (kicked == true) {
                     leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
                     if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);

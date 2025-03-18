@@ -139,24 +139,22 @@ export default async (interaction, messageFlags) => {
     if (managedEmojis.size > 0) assetString += `\nTwitch Emojis: ${managedEmojis.size}`;
     assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
+    let infoString = `Owner: ${guildOwner} (${guildOwner.user.username})`;
+    if (guild.features.includes(GuildFeature.Community) && guild.preferredLocale) {
+        if (languages[guild.preferredLocale]) infoString += `\nLanguage: ${languages[guild.preferredLocale]}`;
+    };
+    infoString += `\nVerification Level: ${verifLevels[guild.verificationLevel]}\nCreated: ${time(Math.floor(guild.createdTimestamp / 1000), TimestampStyles.ShortDate)}`;
     const serverEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(guild.name)
         .setThumbnail(icon)
-        .setFooter({ text: guild.id });
+        .setFooter({ text: `ID: ${guild.id}` });
     if (guild.description) serverEmbed.setDescription(guild.description);
     serverEmbed.addFields([
         { name: "Links:", value: serverLinks, inline: false },
+        { name: "Info:", value: infoString, inline: true },
         { name: "Stats:", value: statsString, inline: true },
-        { name: "Assets:", value: assetString, inline: true },
-        { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
-    ]);
-    if (guild.features.includes(GuildFeature.Community) && guild.preferredLocale) {
-        if (languages[guild.preferredLocale]) serverEmbed.addFields([{ name: "Language:", value: languages[guild.preferredLocale], inline: true }]);
-    };
-    serverEmbed.addFields([
-        { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-        { name: "Created:", value: time(Math.floor(guild.createdTimestamp / 1000), TimestampStyles.ShortDateTime), inline: false }
+        { name: "Assets:", value: assetString, inline: true }
     ]);
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);

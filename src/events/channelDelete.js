@@ -33,12 +33,11 @@ export default async (client, channel) => {
                 };
             };
             const channelType = channel.constructor.name;
-            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`${channelType} Deleted ❌`)
                 .setDescription(`${channel.name} (${channel.id})`)
-                .setFooter({ text: channel.id })
+                .setFooter({ text: `ID: ${channel.id}` })
                 .setTimestamp();
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [deleteEmbed] });

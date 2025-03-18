@@ -41,7 +41,7 @@ export default async (client, role) => {
                 .setColor(embedColor)
                 .setTitle(`Role Deleted ❌`)
                 .setDescription(role.name)
-                .setFooter({ text: role.id })
+                .setFooter({ text: `ID: ${role.id}` })
                 .setTimestamp();
             if (roleColorText) deleteEmbed.addFields([{ name: 'Color:', value: role.hexColor, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])

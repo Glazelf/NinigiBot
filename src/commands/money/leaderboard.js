@@ -17,8 +17,9 @@ export default async (interaction, messageFlags) => {
         .setColor(globalVars.embedColor);
     let scopeInput = interaction.options.getString("scope");
     let scope = scopeInput;
-    if (!scopeInput || !isGuildDataAvailable(interaction)) scope = "global";
-    console.log(scope)
+    if (!scopeInput) scope = "guild";
+    if (!isGuildDataAvailable(interaction)) scope = "global";
+
     switch (scope) {
         case "global":
             // Global leaderboard
