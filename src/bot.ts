@@ -8,11 +8,12 @@ import {
     InteractionContextType,
     ApplicationIntegrationType,
     PresenceUpdateStatus,
-    AllowedMentionsTypes
+    AllowedMentionsTypes,
+    PresenceData
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
-import globalVars from "./objects/globalVars.json";
+import globalVars from "./objects/globalVars.json" with { type: "json"};
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -35,7 +36,8 @@ const partials = [
 // Presence
 const customStatus = "💤 Chilling in Valor Cavern";
 // When setting multiple activities including a custom status, only the custom status will be displayed which is weird behaviour inconsistent with normal users but it's no big deal for a bot anyways, it's just visual flair.
-const presenceObject = {
+
+const presenceObject: PresenceData = {
     activities: [{
         name: customStatus, // Not visible but a required feel, only visible through the API
         state: customStatus, // This is what shows up on users' clients
@@ -78,13 +80,13 @@ await fs.promises.readdir("./events/").then(async (files) => {
 console.log("Loaded events!");
 
 client.commands = new Collection();
-await walk(`./commands/`);
+await walk(`./commands/`, function () { return; });
 console.log("Loaded commands!");
 
 client.login(process.env.TOKEN);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
-async function walk(dir, callback) {
+async function walk(dir: string, callback: Function) {
     await fs.promises.readdir(dir).then(async (files) => {
         for (const file of files) {
             let filepath = path.join(dir, file);
