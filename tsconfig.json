@@ -1,8 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "module": "ES2022",
-        "moduleResolution": "node",
+        "module": "nodenext",
         "outDir": "./build/",
         "incremental": true, // Remove when rewrite complete
         "allowJs": true, // Remove when rewrite complete
