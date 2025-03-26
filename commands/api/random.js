@@ -41,13 +41,12 @@ export default async (interaction, messageFlags) => {
             let catResponse = await axios.get(`${catAPI}?json=true`).catch(e => { return null; });
             if (!catResponse) return sendMessage({ interaction: interaction, content: errorAPI });
             let catImage = null;
-            let catNameSeed = null;
-            catImage = `${catAPI}/${catResponse.data._id}`;
+            let catImageID = catResponse.data.id;
+            catImage = `${catAPI}/${catImageID}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText).replace(/%20/g, " "))}`; // Double encode to escape periods and slashes. Replace first encode's spaces to show those correctly
-            catNameSeed = catResponse.data._id;
             let catName = uniqueNamesGenerator({
                 dictionaries: [names],
-                seed: catNameSeed
+                seed: catImageID
             });
             randomEmbed
                 .setImage(catImage)
