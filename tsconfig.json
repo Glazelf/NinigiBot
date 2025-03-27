@@ -6,6 +6,7 @@
         "rootDir": "./src",
         "incremental": true, // Remove when rewrite complete
         "allowJs": true, // Remove when rewrite complete
+        "strict": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "removeComments": true,
