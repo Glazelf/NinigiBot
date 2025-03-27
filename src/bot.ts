@@ -61,7 +61,7 @@ const client = new Client({
 });
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-await fs.promises.readdir("./events/").then(async (files) => {
+await fs.promises.readdir("./build/events/").then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
@@ -80,7 +80,7 @@ await fs.promises.readdir("./events/").then(async (files) => {
 console.log("Loaded events!");
 
 client.commands = new Collection();
-await walk(`./commands/`, function () { return; });
+await walk(`./build/commands/`, function () { return; });
 console.log("Loaded commands!");
 
 client.login(process.env.TOKEN);
@@ -94,7 +94,7 @@ async function walk(dir: string, callback: Function) {
                 if (stats.isDirectory()) {
                     await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
-                    let props = await import(`./${filepath}`);
+                    let props = await import(`../${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
                     if (!props.commandObject.contexts) props.commandObject.contexts = [

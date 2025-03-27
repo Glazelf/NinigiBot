@@ -14,8 +14,7 @@ import urlExists from "../../util/urlExists.js";
 import axios from "axios";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-// import packageJSON from "../../../package.json" with { type: "json" }; // Fix later
-const packageJSON = {}; // Delete when above is fixed
+import packageJSON from "../../../package.json" with { type: "json" };
 
 const owner = "glazelf";
 const emojiMax = 2000;
