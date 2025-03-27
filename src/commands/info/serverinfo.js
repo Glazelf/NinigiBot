@@ -152,7 +152,7 @@ export default async (interaction, messageFlags) => {
     if (guild.description) serverEmbed.setDescription(guild.description);
     serverEmbed.addFields([
         { name: "Links:", value: serverLinks, inline: false },
-        { name: "Info:", value: infoString, inline: true },
+        { name: "Info:", value: infoString, inline: false },
         { name: "Stats:", value: statsString, inline: true },
         { name: "Assets:", value: assetString, inline: true }
     ]);
