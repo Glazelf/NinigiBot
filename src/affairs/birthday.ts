@@ -51,7 +51,6 @@ export default async (client: Client) => {
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             // Create embed
-            console.log(globalVars.embedColor)
             const gifEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor as ColorResolvable)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
