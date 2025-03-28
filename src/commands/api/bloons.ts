@@ -8,7 +8,13 @@ import {
     codeBlock,
     ActionRowBuilder,
     SlashCommandSubcommandGroupBuilder,
-    hyperlink
+    hyperlink,
+    ColorResolvable,
+    ChatInputCommandInteraction,
+    MessageFlagsBitFieldSettable,
+    MessageFlagsBitField,
+    MessageFlagsBitFieldDeferrable,
+    AnyComponentBuilder
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
@@ -17,13 +23,13 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
     let oak = interaction.options.getString("oak");
     let apiError = null;
     let btd6Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
-    let btd6ActionRow = new ActionRowBuilder();
-    await interaction.deferReply({ flags: messageFlags });
+        .setColor(globalVars.embedColor as ColorResolvable);
+    let btd6ActionRow = new ActionRowBuilder<AnyComponentBuilder>();
+    await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldDeferrable });
 
     switch (interaction.options.getSubcommand()) {
         case "user":
@@ -87,18 +93,18 @@ export default async (interaction, messageFlags) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
-            .setColor(globalVars.embedColorError)
+            .setColor(globalVars.embedColorError as ColorResolvable)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [btd6Embed], components: [btd6ActionRow], flags: messageFlags });
 };
 
-function getUsageListString(usageObject, emojis) {
+function getUsageListString(usageObject: { [key: string]: number }, emojis: { [key: string]: any }) {
     // Rosalia icon is missing
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
-        let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
+        let heroIcon = emojis.find((emoji: { name: string }) => emoji.name == `BTD6Hero${element[0]}`);
         if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
         usageString += `${element[0]}: ${element[1]}\n`;
     });
