@@ -1,8 +1,10 @@
 import { codeBlock } from 'discord.js';
 import getTime from '../util/getTime.js';
+import croncheck from "../affairs/croncheck.js";
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+
 
 export default async (client) => {
     try {
@@ -14,6 +16,9 @@ export default async (client) => {
                     commandGuildID = command.guildID;
                     if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.DEV_SERVER_ID;
                 };
+
+                
+                
                 await client.application.commands.create(command.commandObject, commandGuildID);
             } catch (e) {
                 console.log(e);
@@ -23,6 +28,7 @@ export default async (client) => {
         // Affairs
         stan(client);
         birthday(client);
+        croncheck(client);
         console.log("Loaded affairs!");
 
         await client.guilds.fetch();
