@@ -74,11 +74,7 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (baseMessage.includes("Missing Permissions")) {
-            try {
-                return interaction.reply(`I lack permissions to perform the requested action.`);
-            } catch (e) {
-                return;
-            };
+            return interaction.reply(`I lack permissions to perform the requested action.`).catch(e => { return null; });
         } else {
             return devChannel.send({ content: baseMessage });
         };
