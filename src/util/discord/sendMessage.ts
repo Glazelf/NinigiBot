@@ -1,5 +1,4 @@
 import {
-    ChatInputCommandInteraction,
     MessageFlagsBitField,
     MessageObject
 } from "discord.js";
