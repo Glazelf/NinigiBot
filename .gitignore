@@ -21,7 +21,6 @@ config.json
 launch.json
 *.dev.js
 /.vscode
-/assets/pkm
 /src/assets/pkm
 # TypeScript
 /build
@@ -31,5 +30,4 @@ launch.json
 *.gb
 *.gba
 *.sav
-/assets/roms/screenshot.* 
 /src/assets/roms/screenshot.*
