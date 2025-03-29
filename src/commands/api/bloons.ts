@@ -23,10 +23,10 @@ const btd6api = "https://data.ninjakiwi.com/btd6/";
 export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
     let oak = interaction.options.getString("oak");
     let apiError = null;
-    let btd6EmbedArray = [];
+    let btd6EmbedArray: EmbedBuilder[] = [];
     let btd6Embed: EmbedBuilder = new EmbedBuilder()
         .setColor(globalVars.embedColor as ColorResolvable);
-    let btd6ActionRowArray = [];
+    let btd6ActionRowArray: EmbedBuilder[] = [];
     await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
     switch (interaction.options.getSubcommand()) {
@@ -96,6 +96,8 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
         btd6EmbedArray.push(btd6Embed);
     };
+    console.log(btd6EmbedArray)
+    console.log(btd6ActionRowArray)
     return sendMessage({ interaction: interaction, embeds: btd6EmbedArray, components: btd6ActionRowArray, flags: messageFlags });
 };
 
