@@ -4,10 +4,11 @@ import {
 } from "discord.js";
 
 declare module "discord.js" {
+    // Adjust Client type to include commands
     export interface Client {
         commands: Collection<any, any>;
     }
 
-    // export type MessageFlagsBitFieldDeferrable = BitFieldResolvable<"Ephemeral", MessageFlags.Ephemeral> // Testing
+    // Create an alternative MessageFlagsBitField that includes just the settable bits
     export type MessageFlagsBitFieldSettable = BitFieldResolvable<"Ephemeral" | "SuppressEmbeds" | "SuppressNotifications", MessageFlags.Ephemeral | MessageFlags.SuppressEmbeds | MessageFlags.SuppressNotifications>
 }
