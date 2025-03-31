@@ -13,6 +13,7 @@ const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master
 const mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
 // Game names
 const mainlineGameNames = { // 3U and 4U are ommitted since they do not have image banner repositories
+    MHWilds: "Monster Hunter Wilds",
     MHRise: "Monster Hunter Rise",
     MHW: "Monster Hunter World",
     MHGU: "Monster Hunter Generations Ultimate"
@@ -27,9 +28,6 @@ export default async (monsterData, emojis) => {
     let gameDBName, monsterIcon, monsterDescription, monsterDanger;
     let monsterBanner = null;
     let gameAppearances = "";
-    let mostRecentMainlineGame = mainlineGameNames.MHRise;
-    let fallbackGame1 = mainlineGameNames.MHW;
-    let fallbackGame2 = mainlineGameNames.MHGU;
     let mainlineGamesMatches = monsterData.games.filter(game => !Object.values(spinoffGameNames).includes(game.game));
     let mostRecentMainlineGameEntry = mainlineGamesMatches[mainlineGamesMatches.length - 1];
 
@@ -39,7 +37,7 @@ export default async (monsterData, emojis) => {
         if (game.danger) gameAppearances += ` (${game.danger}⭐)`;
         gameAppearances += "\n";
         // Works because games are in chronological order
-        if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
+        if (Object.values(mainlineGameNames).includes(game.game)) {
             monsterIcon = `${iconsRepo}${game.image}?raw=true`;
             monsterDescription = game.info;
         };

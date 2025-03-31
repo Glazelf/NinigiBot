@@ -116,7 +116,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let shinyRender = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
     // let shinyRender = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res render
     // April Fools Day sprites
-    let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${pokemon.spriteid}.png`;
+    let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${pokemonSim.spriteid}.png`;
     if (shinyBool) afdSprite = afdSprite.replace("/afd/", "/afd-shiny/");
 
     // let banner = render;
