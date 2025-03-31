@@ -17,7 +17,7 @@
     "minimist": "^1.2.8",
     "owoify-js": "^2.0.0",
     "path": "^0.12.7",
-    "sequelize": "^6.37.6",
+    "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "unique-names-generator": "^4.7.1",
     "xmlhttprequest": "^1.8.0"
