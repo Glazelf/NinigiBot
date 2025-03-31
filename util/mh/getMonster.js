@@ -28,10 +28,6 @@ export default async (monsterData, emojis) => {
     let gameDBName, monsterIcon, monsterDescription, monsterDanger;
     let monsterBanner = null;
     let gameAppearances = "";
-    let mostRecentMainlineGame = mainlineGameNames.MHWs;
-    let fallbackGame1 = mainlineGameNames.MHRise;
-    let fallbackGame2 = mainlineGameNames.MHW;
-    let fallbackGame3 = mainlineGameNames.MHGU;
     let mainlineGamesMatches = monsterData.games.filter(game => !Object.values(spinoffGameNames).includes(game.game));
     let mostRecentMainlineGameEntry = mainlineGamesMatches[mainlineGamesMatches.length - 1];
 
@@ -41,7 +37,7 @@ export default async (monsterData, emojis) => {
         if (game.danger) gameAppearances += ` (${game.danger}⭐)`;
         gameAppearances += "\n";
         // Works because games are in chronological order
-        if ([mostRecentMainlineGame, fallbackGame1, fallbackGame2, fallbackGame3].includes(game.game)) {
+        if (Object.values(mainlineGameNames).includes(game.game)) {
             monsterIcon = `${iconsRepo}${game.image}?raw=true`;
             monsterDescription = game.info;
         };
