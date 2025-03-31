@@ -5,7 +5,6 @@ import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-
 export default async (client) => {
     try {
         // Set interactions
@@ -16,9 +15,6 @@ export default async (client) => {
                     commandGuildID = command.guildID;
                     if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.DEV_SERVER_ID;
                 };
-
-                
-                
                 await client.application.commands.create(command.commandObject, commandGuildID);
             } catch (e) {
                 console.log(e);
