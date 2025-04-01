@@ -5,6 +5,8 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 
 export default async (interaction, messageFlags) => {
+    let SKUs = interaction.client.application.fetchSKUs();
+    console.log(SKUs)
     let commandPing = Math.abs(Date.now() - interaction.createdTimestamp);
     let websocketPing = Math.abs(interaction.client.ws.ping);
     let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;
