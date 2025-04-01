@@ -102,6 +102,7 @@ export default async (interaction, messageFlags) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`https://github.com/${githubURLVars}`);
     // Row 2
+    console.log((await interaction.client.application.fetch()).id)
     const subscriptionButton = new ButtonBuilder()
         .setStyle(ButtonStyle.Premium)
         .setSKUId("1164974692889808999");
