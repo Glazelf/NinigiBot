@@ -110,17 +110,18 @@ async function walk(dir, callback) {
                             if (canUseNinigi) {
                                 return originalFunction(interaction, messageFlags);
                             } else {
-                                const subscriptionButton = new ButtonBuilder()
-                                    .setStyle(ButtonStyle.Premium)
-                                    .setSKUId("1164974692889808999");
+                                // const subscriptionButton = new ButtonBuilder()
+                                //     .setStyle(ButtonStyle.Premium)
+                                //     .setSKUId("1164974692889808999");
 
-                                let botButtons2 = new ActionRowBuilder()
-                                    .addComponents([subscriptionButton]);
+                                // let botButtons2 = new ActionRowBuilder()
+                                //     .addComponents([subscriptionButton]);
                                 sendMessage({
                                     interaction: interaction,
                                     content: `Unlock more features today with a Ninigi Supporter membership! :sparkles:   
-                                \nNinigi's full potential at your command with a quick, easy, simple recurring monthly payment of only **US$1.99**!\n\nClick :arrow_down: below :arrow_down: to learn more!`,
-                                    components: [botButtons2], flags: messageFlags
+                                \nNinigi's full potential at your command with a quick, easy, simple recurring monthly payment of only **US$1.99**!\n\nClick [here](https://discord.com/discovery/applications/592760951103684618/store/1164974692889808999) to learn more!`,
+                                    // components: [botButtons2], 
+                                    flags: messageFlags
                                 });
                             }
                         }
