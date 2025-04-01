@@ -110,21 +110,19 @@ export default async (interaction, messageFlags) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`https://github.com/${githubURLVars}`);
     // Row 2
-    // const subscriptionButton = new ButtonBuilder()
-    //     .setStyle(ButtonStyle.Premium)
-    //     .setSKUId("1164974692889808999");
-    // const donationButton = new ButtonBuilder()
-    //     .setStyle(ButtonStyle.Premium)
-    //     .setSKUId("1232804422585815071");
-    // let botButtons1 = new ActionRowBuilder()
-    //     .addComponents([appDirectoryButton, inviteButton, supportServerButton, githubButton]);
-    // let botButtons2 = new ActionRowBuilder()
-    //     .addComponents([subscriptionButton, donationButton]);
-    // let componentRows = [botButtons1];
-    // if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
-    return sendMessage({ interaction: interaction, embeds: botEmbed
-        // , components: componentRows 
-    });
+    const subscriptionButton = new ButtonBuilder()
+        .setStyle(ButtonStyle.Premium)
+        .setSKUId("1164974692889808999");
+    const donationButton = new ButtonBuilder()
+        .setStyle(ButtonStyle.Premium)
+        .setSKUId("1232804422585815071");
+    let botButtons1 = new ActionRowBuilder()
+        .addComponents([appDirectoryButton, inviteButton, supportServerButton, githubButton]);
+    let botButtons2 = new ActionRowBuilder()
+        .addComponents([subscriptionButton, donationButton]);
+    let componentRows = [botButtons1];
+    if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
+    return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows });
 };
 
 // Boolean options
