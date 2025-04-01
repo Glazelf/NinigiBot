@@ -8,11 +8,18 @@ import {
     InteractionContextType,
     ApplicationIntegrationType,
     PresenceUpdateStatus,
-    AllowedMentionsTypes
+    AllowedMentionsTypes,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    MessageFlags
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
+
+import getBotSubscription from './util/discord/getBotSubscription.js';
+import sendMessage from './util/discord/sendMessage.js';
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -92,7 +99,33 @@ async function walk(dir, callback) {
                 if (stats.isDirectory()) {
                     await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
-                    let props = await import(`./${filepath}`);
+                    let originalProps = await import(`./${filepath}`);
+                    const originalFunction = originalProps.default;
+                    let props = {
+                        ...originalProps, default: async (interaction, messageFlags) => {
+                            let botSubscription = await getBotSubscription(interaction.client.application, interaction.user.id);
+                            let isSubscriber = (typeof botSubscription.entitlement !== "undefined"); // Convert to boolean
+                            const isNOTShinxAppreciationClub = interaction.guild.id != globalVars.ShinxServerID;
+                            const canUseNinigi = isNOTShinxAppreciationClub || interaction.member.id == '301087103008243723' || isSubscriber;
+                            if (canUseNinigi) {
+                                return originalFunction(interaction, messageFlags);
+                            } else {
+                                const subscriptionButton = new ButtonBuilder()
+                                    .setStyle(ButtonStyle.Premium)
+                                    .setSKUId("1164974692889808999");
+
+                                let botButtons2 = new ActionRowBuilder()
+                                    .addComponents([subscriptionButton]);
+                                sendMessage({
+                                    interaction: interaction,
+                                    content: `Unlock more features today with a Ninigi Supporter membership! :sparkles:   
+                                \nNinigi's full potential at your command with a quick, easy, simple recurring monthly payment of only **US$1.99**!\n\nClick :arrow_down: below :arrow_down: to learn more!`,
+                                    components: [botButtons2], flags: messageFlags
+                                });
+                            }
+                        }
+                    };
+
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
                     if (!props.commandObject.contexts) props.commandObject.contexts = [
@@ -111,6 +144,7 @@ async function walk(dir, callback) {
                     ];
                     let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
+                    console.log(props);
                     client.commands.set(commandName, props);
                 };
             });
