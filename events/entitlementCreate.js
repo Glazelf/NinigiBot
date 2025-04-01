@@ -12,7 +12,7 @@ export default async (client, entitlement) => {
         let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;
 
-        let SKUs = client.application.fetchSKUs();
+        let SKUs = await client.application.fetchSKUs();
         let matchingSKU = SKUs.find(SKU => SKU.id == entitlement.skuId);
         if (!matchingSKU) return;
 
