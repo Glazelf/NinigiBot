@@ -38,8 +38,16 @@ export default async (interaction, messageFlags) => {
     let githubMasterExists = urlExists(githubMasterURL);
     let githubRepoResponse = null;
     let githubMasterResponse = null;
-    if (githubRepoExists) githubRepoResponse = await axios.get(githubRepoURL);
-    if (githubMasterExists) githubMasterResponse = await axios.get(githubMasterURL);
+    if (githubRepoExists) githubRepoResponse = await axios.get(githubRepoURL, {
+        'headers': {
+            'Authorization': `token ${process.env.GITHUB_TOKEN}`
+        }
+    });
+    if (githubMasterExists) githubMasterResponse = await axios.get(githubMasterURL, {
+        'headers': {
+            'Authorization': `token ${process.env.GITHUB_TOKEN}`
+        }
+    });
     // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
     let createdAt = Math.floor(interaction.client.user.createdTimestamp / 1000);
     let date = Date.now();
