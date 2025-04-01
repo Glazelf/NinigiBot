@@ -3,6 +3,7 @@ import getTime from '../util/getTime.js';
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+import cronno from "../affairs/cronno.js"
 
 export default async (client) => {
     try {
@@ -22,6 +23,7 @@ export default async (client) => {
         console.log("Loaded interactions!");
         // Affairs
         stan(client);
+        cronno(client);
         birthday(client);
         console.log("Loaded affairs!");
 
