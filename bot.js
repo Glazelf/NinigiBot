@@ -8,18 +8,11 @@ import {
     InteractionContextType,
     ApplicationIntegrationType,
     PresenceUpdateStatus,
-    AllowedMentionsTypes,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    MessageFlags
+    AllowedMentionsTypes
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
-
-import getBotSubscription from './util/discord/getBotSubscription.js';
-import sendMessage from './util/discord/sendMessage.js';
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -145,7 +138,6 @@ async function walk(dir, callback) {
                     ];
                     let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
-                    console.log(props);
                     client.commands.set(commandName, props);
                 };
             });
