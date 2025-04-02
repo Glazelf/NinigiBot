@@ -21,7 +21,7 @@ const emojiMax = 2000;
 const maxServersPerShard = 2500;
 
 export default async (interaction, messageFlags) => {
-    // await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
+    await interaction.deferReply({ flags: messageFlags }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
 
     let DiscordJSVersion = packageJSON.dependencies["discord.js"].substring(1,); // Substring is because string starts with ^
     if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
@@ -121,7 +121,7 @@ export default async (interaction, messageFlags) => {
     let botButtons2 = new ActionRowBuilder()
         .addComponents([subscriptionButton, donationButton]);
     let componentRows = [botButtons1];
-    if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
+    // if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2); // API error
     return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows });
 };
 
