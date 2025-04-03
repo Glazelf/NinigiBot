@@ -35,10 +35,10 @@ export default async (client, member) => {
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
                 .setDescription(`${formatName(member.guild.name)} now has ${member.guild.memberCount} members.`)
-                .setFooter({ text: member.user.username })
+                .setFooter({ text: `ID: ${member.user.username}` })
                 .setTimestamp()
                 .addFields([
-                    { name: "User:", value: `${member} (${member.id})`, inline: false },
+                    { name: "User:", value: `${member} (${member.user.username})`, inline: false },
                     { name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDate), inline: true }
                 ]);
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
