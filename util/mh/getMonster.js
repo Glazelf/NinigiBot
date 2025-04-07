@@ -10,7 +10,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-const mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
+const mhWiki = "https://monsterhunterwiki.org/images/";
 // Game names
 const mainlineGameNames = { // 3U and 4U are ommitted since they do not have image banner repositories
     MHWilds: "Monster Hunter Wilds",
@@ -74,7 +74,7 @@ export default async (monsterData, emojis) => {
     };
     let monsterGameIndicator = gameDBName;
     if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
-    let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replace(/ /g, "_")}_Render_001.png`;
+    let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replace(/ /g, "_")}_Render_001.webp`;
     let monsterRender = getWikiURL(monsterRenderName, mhWiki);
     let renderExists = urlExists(monsterRender);
     if (!renderExists) {
