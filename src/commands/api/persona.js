@@ -23,11 +23,11 @@ const personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace("var", ""));
 let itemMapRoyal, personaMapRoyal, skillMapRoyal;
 // Object including all item names mapped to item type/descriptions
-eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
+eval(fs.readFileSync("./submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
 // Object including all persona data (incl. DLC)
-eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
+eval(fs.readFileSync("./submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
 // Object including all skill AND trait data
-eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
+eval(fs.readFileSync("./submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 
 export default async (interaction, messageFlags) => {
     let buttonArray = [];
