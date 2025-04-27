@@ -33,7 +33,7 @@ export default async ({ interaction, content = "", embeds = [], files = [], comp
                 messageObject.components = [components];
             };
         };
-        if (messageObject.components[0].data.type == ComponentType.Container) flags.add(MessageFlags.IsComponentsV2);
+        if (messageObject.components[0]?.data?.type == ComponentType.Container) flags.add(MessageFlags.IsComponentsV2);
     };
     messageObject.flags = flags;
     messageObject.allowedMentions = { parse: ['users', 'roles'], repliedUser: true };
