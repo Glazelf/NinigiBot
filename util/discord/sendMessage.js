@@ -33,6 +33,8 @@ export default async ({ interaction, content = "", embeds = [], files = [], comp
                 messageObject.components = [components];
             };
         };
+        // if() can be removed when we have moved entirely from embeds to containers
+        // Embeds are exclusive to no IsComponentsV2 while containers are exclusive to IsComponentsV2
         if (messageObject.components[0]?.data?.type == ComponentType.Container) flags.add(MessageFlags.IsComponentsV2);
     };
     messageObject.flags = flags;
