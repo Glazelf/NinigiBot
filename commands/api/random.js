@@ -1,5 +1,9 @@
 import {
-    EmbedBuilder,
+    MessageFlags,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
@@ -20,17 +24,17 @@ const foxAPI = "https://randomfox.ca/floof/";
 const errorAPI = "An error occurred with the API. Please try again later.";
 
 export default async (interaction, messageFlags) => {
-    let randomEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+    let randomContainer = new ContainerBuilder()
+        .setAccentColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
         case "number":
             let lowNumber = interaction.options.getInteger("number-min");
             let highNumber = interaction.options.getInteger("number-max");
             if (lowNumber > highNumber) [lowNumber, highNumber] = [highNumber, lowNumber]; // Flip variables in case lowNumber is higher. randomNumber() does this too but we do it again here to keep the end string sorted from low to high
             let randomValue = randomNumber(lowNumber, highNumber);
-            randomEmbed
-                .setTitle(randomValue.toString())
-                .setFooter({ text: `Min: ${lowNumber}\nMax: ${highNumber}` });
+            let randomTextDisplay = new TextDisplayBuilder()
+                .setContent(`# ${randomValue}\n-# Min: ${lowNumber}\n-# Max: ${highNumber}`);
+            randomContainer.addTextDisplayComponents(randomTextDisplay);
             break;
         case "cat":
             await interaction.deferReply({ flags: messageFlags });
@@ -48,17 +52,28 @@ export default async (interaction, messageFlags) => {
                 dictionaries: [names],
                 seed: catImageID
             });
-            randomEmbed
-                .setImage(catImage)
-                .setFooter({ text: `"${catText}" -${catName}` });
+            let catQuote = new TextDisplayBuilder()
+                .setContent(`"${catText}" -${catName}`);
+            let catImageGalleryItem = new MediaGalleryItemBuilder()
+                .setURL(catImage);
+            let catImageGallery = new MediaGalleryBuilder()
+                .addItems([catImageGalleryItem]);
+            randomContainer
+                .addMediaGalleryComponents(catImageGallery)
+                .addTextDisplayComponents(catQuote)
             break;
         case "fox":
             await interaction.deferReply({ flags: messageFlags });
             let foxResponse = await axios.get(foxAPI);
-            randomEmbed.setImage(foxResponse.data.image);
+            let randomFoxImageGalleryItem = new MediaGalleryItemBuilder()
+                .setURL(foxResponse.data.image);
+            let foxImageGallery = new MediaGalleryBuilder()
+                .addItems([randomFoxImageGalleryItem]);
+            randomContainer
+                .addMediaGalleryComponents(foxImageGallery)
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: randomEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, components: [randomContainer], flags: messageFlags });
 };
 
 // String options
