@@ -1,12 +1,13 @@
 import {
     MessageFlagsBitField,
-    MessageObject
+    MessageObject,
+    Component,
+    AnyComponent
 } from "discord.js";
 
 // @ts-ignore
-export default async (interaction, components = [], flags = new MessageFlagsBitField) => {
+export default async ({ interaction, components = new Array<Component>, flags = new MessageFlagsBitField }) => {
     if (!interaction) return; // Note: interaction can be a message instead
-    interaction = interaction.interaction
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject: MessageObject = {
         flags: flags,
@@ -16,7 +17,8 @@ export default async (interaction, components = [], flags = new MessageFlagsBitF
     // let targetUser = interaction.options.getUser("user");
     // if (targetUser) messageObject.allowedMentions = { users: [targetUser.id] };
     try {
-
+        console.log(messageObject)
+        console.log(components)
         // ts-ignore 
         if (interaction.deferred) return interaction.editReply(messageObject);
         return interaction.reply(messageObject);

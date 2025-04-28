@@ -47,6 +47,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
 
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
+    // @ts-ignore
     if (!inputWord) return sendMessage({ interaction: interaction, content: "Please enter a word." });
 
     let dictionaryEmbed = new EmbedBuilder()
@@ -68,6 +69,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
             .setTitle("Error")
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
         dictionaryEmbedArray.push(errorEmbed);
+        // @ts-ignore
         return sendMessage({ interaction: interaction, embeds: dictionaryEmbedArray });
     };
 
@@ -110,6 +112,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
         .setTitle(wordString)
         .setURL(sourceURL);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
+    // @ts-ignore
     return sendMessage({ interaction: interaction, embeds: [dictionaryEmbed] });
 };
 

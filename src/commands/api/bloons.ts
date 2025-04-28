@@ -99,6 +99,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     };
     console.log(btd6EmbedArray)
     console.log(btd6ActionRowArray)
+    // @ts-ignore
     return sendMessage({ interaction: interaction, embeds: btd6EmbedArray, components: btd6ActionRowArray, flags: messageFlags });
 };
 
