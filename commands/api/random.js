@@ -24,6 +24,7 @@ const foxAPI = "https://randomfox.ca/floof/";
 const errorAPI = "An error occurred with the API. Please try again later.";
 
 export default async (interaction, messageFlags) => {
+    messageFlags.add(MessageFlags.IsComponentsV2);
     let randomContainer = new ContainerBuilder()
         .setAccentColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
