@@ -52,7 +52,7 @@ export default async (client: Client) => {
             const randomGif = await getRandomGif(gifTags);
             // Create embed
             const gifEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor as ColorResolvable)
+                .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
             channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });

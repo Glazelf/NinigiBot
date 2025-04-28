@@ -25,7 +25,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     let apiError = null;
     let btd6EmbedArray: EmbedBuilder[] = [];
     let btd6Embed: EmbedBuilder = new EmbedBuilder()
-        .setColor(globalVars.embedColor as ColorResolvable);
+        .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
     let btd6ActionRowArray: EmbedBuilder[] = [];
     await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
@@ -92,7 +92,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
-            .setColor(globalVars.embedColorError as ColorResolvable)
+            .setColor(globalVars.embedColorError as [number, number, number] as ColorResolvable)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
         btd6EmbedArray.push(btd6Embed);
     };

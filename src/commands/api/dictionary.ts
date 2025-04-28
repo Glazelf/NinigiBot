@@ -49,7 +49,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     if (!inputWord) return sendMessage({ interaction: interaction, content: "Please enter a word." });
 
     let dictionaryEmbed = new EmbedBuilder()
-        .setColor(globalVars.embedColor as ColorResolvable);
+        .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
     let dictionaryEmbedArray: EmbedBuilder[] = [];
 
     let wordData: WordData;
@@ -63,7 +63,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     } catch (e) {
         // console.log(e);
         let errorEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColorError as ColorResolvable)
+            .setColor(globalVars.embedColorError as [number, number, number] as ColorResolvable)
             .setTitle("Error")
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
         dictionaryEmbedArray.push(errorEmbed);
