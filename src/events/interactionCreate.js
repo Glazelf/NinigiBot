@@ -90,6 +90,7 @@ const giAPI = `https://genshin.jmp.blue/`;
 export default async (client, interaction) => {
     try {
         let messageFlags = new MessageFlagsBitField;
+        messageFlags.add(MessageFlags.IsComponentsV2);
         // ID split
         let customIdSplit = null;
         if (interaction.customId) customIdSplit = interaction.customId.split("|");
