@@ -27,6 +27,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     let btd6Embed: EmbedBuilder = new EmbedBuilder()
         .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
     let btd6ActionRowArray: EmbedBuilder[] = [];
+    // @ts-ignore
     await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
     switch (interaction.options.getSubcommand()) {

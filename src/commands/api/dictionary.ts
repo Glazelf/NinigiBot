@@ -42,6 +42,7 @@ interface WordData {
 const api = "https://api.dictionaryapi.dev/api/v2/";
 
 export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
+    // @ts-ignore
     await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
     let inputWord = interaction.options.getString("word");
