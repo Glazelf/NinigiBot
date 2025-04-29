@@ -83,7 +83,6 @@ export async function hasEventTrophy(user_id, trophy_id) {
         }]
     });
     if (!usereventtrophy || !usereventtrophy.EventTrophies || usereventtrophy.EventTrophies.length === 0) {
-        console.log('f bro');
         return false;
     }
     return true;
@@ -97,7 +96,6 @@ export async function addEventTrophy(user_id, trophy_id) {
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
     );
     if (!(await hasEventTrophy(user_id, trophy_id))) {
-        console.log('adding ' + trophy_id)
         await user.addEventTrophy(trophy_id);
     };
 };
