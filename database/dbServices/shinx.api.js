@@ -63,26 +63,30 @@ export async function changeAutoFeed(id, mode) {
     return shinx.setAutoFeed(mode);
 };
 
-export async function addExperience(id, experience) {
-    let shinx = await getShinx(id, ['user_id', 'experience']);
-    const res = await shinx.addExperienceAndLevelUp(experience);
-    if (res.pre != res.post) {
-        if (res.post >= 5) await addEventTrophy(id, 'Bronze Trophy');
-        if (res.post >= 15) await addEventTrophy(id, 'Silver Trophy');
-        if (res.post >= 30) await addEventTrophy(id, 'Gold Trophy');
-        if (res.post >= 50) await addEventTrophy(id, 'Shiny Charm');
-    };
+export async function checkBattleTrophies(id, level) {
+    if (level >= 5) await addEventTrophy(id, 'Bronze Trophy');
+    if (level >= 15) await addEventTrophy(id, 'Silver Trophy');
+    if (level >= 30) await addEventTrophy(id, 'Gold Trophy');
+    if (level >= 2) await addEventTrophy(id, 'Shiny Charm');
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
+    const { User } = await userdataModel(userdata);
+
     let user = await getUser(user_id, ['user_id']);
-    let trophy_id_t = trophy_id.toLowerCase();
-    const trophy = await EventTrophy.findOne(
-        { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
-    );
-    let res = await user.hasEventTrophy(trophy);
-    return res;
+    const usereventtrophy = await User.findOne({
+        where: { user_id: user_id },
+        include: [{
+          model: EventTrophy,
+          where: { trophy_id: trophy_id }
+        }]
+    });
+    if (!usereventtrophy || !usereventtrophy.EventTrophies || usereventtrophy.EventTrophies.length === 0) {
+        console.log('f bro');
+        return false;
+    }
+    return true;
 };
 
 export async function addEventTrophy(user_id, trophy_id) {
@@ -92,7 +96,10 @@ export async function addEventTrophy(user_id, trophy_id) {
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
     );
-    if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
+    if (!(await hasEventTrophy(user_id, trophy_id))) {
+        console.log('adding ' + trophy_id)
+        await user.addEventTrophy(trophy_id);
+    };
 };
 
 export async function feedShinx(id) {
