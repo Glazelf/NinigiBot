@@ -67,7 +67,7 @@ export async function checkBattleTrophies(id, level) {
     if (level >= 5) await addEventTrophy(id, 'Bronze Trophy');
     if (level >= 15) await addEventTrophy(id, 'Silver Trophy');
     if (level >= 30) await addEventTrophy(id, 'Gold Trophy');
-    if (level >= 2) await addEventTrophy(id, 'Shiny Charm');
+    if (level >= 50) await addEventTrophy(id, 'Shiny Charm');
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
