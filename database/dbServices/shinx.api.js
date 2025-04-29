@@ -67,10 +67,10 @@ export async function addExperience(id, experience) {
     let shinx = await getShinx(id, ['user_id', 'experience']);
     const res = await shinx.addExperienceAndLevelUp(experience);
     if (res.pre != res.post) {
-        if (hasPassedLevel(res.pre, res.post, 5)) await addEventTrophy(id, 'Bronze Trophy');
-        if (hasPassedLevel(res.pre, res.post, 15)) await addEventTrophy(id, 'Silver Trophy');
-        if (hasPassedLevel(res.pre, res.post, 30)) await addEventTrophy(id, 'Gold Trophy');
-        if (hasPassedLevel(res.pre, res.post, 50)) await addEventTrophy(id, 'Shiny Charm');
+        if (res.post >= 5) await addEventTrophy(id, 'Bronze Trophy');
+        if (res.post >= 15) await addEventTrophy(id, 'Silver Trophy');
+        if (res.post >= 30) await addEventTrophy(id, 'Gold Trophy');
+        if (res.post >= 50) await addEventTrophy(id, 'Shiny Charm');
     };
 };
 
@@ -107,6 +107,13 @@ export async function feedShinx(id) {
     await shinx.feedAndExp(feed_amount);
     return 'Ok';
 };
+
+export async function setShinxLevel(id, lvl) {
+    let shinx = await getShinx(id, ['user_id', 'experience']);
+    await shinx.setLevel(lvl)
+    return 'Ok';
+};
+
 
 export async function getShinxAutofeed(id) {
     let shinx = await getShinx(id, ['auto_feed'])
