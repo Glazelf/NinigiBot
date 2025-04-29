@@ -97,6 +97,7 @@ async function walk(dir, callback) {
                     await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     if(file.endsWith('.debug.js') && !debugMode) return;
+                    if(file.endsWith('.debug.js')) console.log(`Debug command ${file} added!`);
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
