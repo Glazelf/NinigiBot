@@ -10,7 +10,6 @@ import {
 } from "../dbConnection/dbConnection.js";
 import userdataModel from "../../database/dbObjects/userdata.model.js";
 import serverdataModel from "../../database/dbObjects/serverdata.model.js";
-import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";
 import checkFormat from "../../util/string/checkFormat.js";
 
 export async function getShinx(id, attributes = null) {
@@ -63,26 +62,29 @@ export async function changeAutoFeed(id, mode) {
     return shinx.setAutoFeed(mode);
 };
 
-export async function addExperience(id, experience) {
-    let shinx = await getShinx(id, ['user_id', 'experience']);
-    const res = await shinx.addExperienceAndLevelUp(experience);
-    if (res.pre != res.post) {
-        if (hasPassedLevel(res.pre, res.post, 5)) await addEventTrophy(id, 'Bronze Trophy');
-        if (hasPassedLevel(res.pre, res.post, 15)) await addEventTrophy(id, 'Silver Trophy');
-        if (hasPassedLevel(res.pre, res.post, 30)) await addEventTrophy(id, 'Gold Trophy');
-        if (hasPassedLevel(res.pre, res.post, 50)) await addEventTrophy(id, 'Shiny Charm');
-    };
+export async function checkBattleTrophies(id, level) {
+    if (level >= 5) await addEventTrophy(id, 'Bronze Trophy');
+    if (level >= 15) await addEventTrophy(id, 'Silver Trophy');
+    if (level >= 30) await addEventTrophy(id, 'Gold Trophy');
+    if (level >= 50) await addEventTrophy(id, 'Shiny Charm');
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
+    const { User } = await userdataModel(userdata);
+
     let user = await getUser(user_id, ['user_id']);
-    let trophy_id_t = trophy_id.toLowerCase();
-    const trophy = await EventTrophy.findOne(
-        { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
-    );
-    let res = await user.hasEventTrophy(trophy);
-    return res;
+    const usereventtrophy = await User.findOne({
+        where: { user_id: user_id },
+        include: [{
+            model: EventTrophy,
+            where: { trophy_id: trophy_id }
+        }]
+    });
+    if (!usereventtrophy || !usereventtrophy.EventTrophies || usereventtrophy.EventTrophies.length === 0) {
+        return false;
+    }
+    return true;
 };
 
 export async function addEventTrophy(user_id, trophy_id) {
@@ -92,7 +94,9 @@ export async function addEventTrophy(user_id, trophy_id) {
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
     );
-    if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
+    if (!(await hasEventTrophy(user_id, trophy_id))) {
+        await user.addEventTrophy(trophy_id);
+    };
 };
 
 export async function feedShinx(id) {
@@ -107,6 +111,13 @@ export async function feedShinx(id) {
     await shinx.feedAndExp(feed_amount);
     return 'Ok';
 };
+
+export async function setShinxLevel(id, lvl) {
+    let shinx = await getShinx(id, ['user_id', 'experience']);
+    await shinx.setLevel(lvl)
+    return 'Ok';
+};
+
 
 export async function getShinxAutofeed(id) {
     let shinx = await getShinx(id, ['auto_feed'])

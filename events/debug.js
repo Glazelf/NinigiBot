@@ -12,7 +12,7 @@ const debugChannelID = "1325890140517826580"; // Replace ID with specific debug 
 const fieldName = "​";
 
 export default async (client, info) => {
-    // return; // Comment out to enable debugging, uncomment to disable
+    if (process.env.DEBUG !== 1) return;
     // Format strings
     let description = info;
     if (info.length > maxDescriptionLength) description = info.substring(0, maxDescriptionLength);

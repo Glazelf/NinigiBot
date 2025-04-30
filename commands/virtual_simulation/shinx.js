@@ -33,8 +33,9 @@ import {
     nameShinx,
     getShinxShininess,
     isTrainerMale,
-    // hasEventTrophy,
+    hasEventTrophy,
     switchShininessAndGet,
+    checkBattleTrophies,
     saveBattle
 } from "../../database/dbServices/shinx.api.js";
 import { buyFood } from "../../database/dbServices/user.api.js";
@@ -302,7 +303,7 @@ export default async (interaction, messageFlags) => {
         case "shiny":
             // This command is currently broken due to missing checks to see if user has Shiny Charm and possibly broken level-up rewards
             res = null;
-            // res = await hasEventTrophy(master.id, 'Shiny Charm');
+            res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
                 const is_shiny = await switchShininessAndGet(master.id);
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
@@ -473,6 +474,7 @@ export default async (interaction, messageFlags) => {
                             text += addLine(`${formatName(nicks[h])} won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
                                 text += addLine(`${formatName(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
+                                await checkBattleTrophies(trainers[h].id, shinxes[h].level);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
@@ -600,7 +602,7 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(playSubcommand)
     .addSubcommand(talkSubcommand)
     .addSubcommand(nicknameSubcommand)
-    // .addSubcommand(shinySubcommand) // Disabled untill https://github.com/Glazelf/NinigiBot/issues/838 is fixed
+    .addSubcommand(shinySubcommand)
     .addSubcommand(buyfoodSubcommand)
     .addSubcommand(autofeedSubcommand)
     .addSubcommand(battleSubcommand)
