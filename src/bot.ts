@@ -80,6 +80,10 @@ await fs.promises.readdir("./build/events/").then(async (files) => {
 console.log("Loaded events!");
 
 client.commands = new Collection();
+
+const debugMode = process.env.DEBUG as unknown as number == 1 ? true : false;
+if (debugMode) console.log("Debug mode enabled!");
+
 await walk(`./build/commands/`, function () { return; });
 console.log("Loaded commands!");
 
@@ -94,6 +98,8 @@ async function walk(dir: string, callback: Function) {
                 if (stats.isDirectory()) {
                     await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
+                    if (file.endsWith('.debug.js') && !debugMode) return;
+                    if (file.endsWith('.debug.js')) console.log(`Debug command ${file} added!`);
                     let props = await import(`../${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler

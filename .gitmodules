@@ -9,4 +9,4 @@
 	url = https://github.com/Leanny/splat3
 [submodule "submodules/pokemon-tcg-data"]
 	path = submodules/pokemon-tcg-data
-	url = https://github.com/PokemonTCG/pokemon-tcg-data
+	url = https://github.com/tkfnetwork/pokemon-tcg-data
