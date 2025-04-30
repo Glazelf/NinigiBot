@@ -71,6 +71,12 @@ export default (sequelize, DataTypes) => {
             this.save({ fields: ["belly", "lastmeet"] });
         };
     };
+    // Debug
+    Shinx.prototype.setLevel = function (lvl) {
+        this.experience = Math.pow(lvl, 3);
+        this.save({ fields: ["experience"] });
+    };
+
     //  Experience
     Shinx.prototype.addExperienceGeneric = function (experience) {
         this.experience += Math.ceil(experience);
