@@ -300,9 +300,7 @@ export default async (interaction, messageFlags) => {
                 flags: messageFlags || (res != 'Ok')
             });
         case "shiny":
-            // This command is currently broken due to missing checks to see if user has Shiny Charm and possibly broken level-up rewards
-            res = null;
-            // res = await hasEventTrophy(master.id, 'Shiny Charm');
+            res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
                 const is_shiny = await switchShininessAndGet(master.id);
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
