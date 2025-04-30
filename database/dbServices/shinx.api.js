@@ -10,7 +10,6 @@ import {
 } from "../dbConnection/dbConnection.js";
 import userdataModel from "../../database/dbObjects/userdata.model.js";
 import serverdataModel from "../../database/dbObjects/serverdata.model.js";
-import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";
 import checkFormat from "../../util/string/checkFormat.js";
 
 export async function getShinx(id, attributes = null) {
@@ -78,8 +77,8 @@ export async function hasEventTrophy(user_id, trophy_id) {
     const usereventtrophy = await User.findOne({
         where: { user_id: user_id },
         include: [{
-          model: EventTrophy,
-          where: { trophy_id: trophy_id }
+            model: EventTrophy,
+            where: { trophy_id: trophy_id }
         }]
     });
     if (!usereventtrophy || !usereventtrophy.EventTrophies || usereventtrophy.EventTrophies.length === 0) {

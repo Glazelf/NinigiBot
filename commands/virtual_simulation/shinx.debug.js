@@ -21,18 +21,15 @@ import { incrementCombatAmount } from "../../database/dbServices/history.api.js"
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-
 export default async (interaction, messageFlags) => {
     // Every subcommand here except maybe "play" should be accessible in DMs honestly but I don't feel like rewriting them significantly for now to actually allow for that
-    let shinx, res, time, canvas, ctx, img;
+    let shinx;
     let returnString = "";
-    let messageFile = null;
     // Only create userFinder if guild data exists
     let userFinder = null;
     let guildDataAvailable = isGuildDataAvailable(interaction);
     if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
-    const now = new Date();
     let master = interaction.user;
     // Auto feed
     let auto_feed = await getShinxAutofeed(master.id);
@@ -63,11 +60,11 @@ export default async (interaction, messageFlags) => {
             messageFlags.remove(MessageFlags.Ephemeral);
 
             globalVars.battling.yes = true;
-            let text = '';    
+            let text = '';
 
             const nicks = [];
             for (let i = 0; i < 2; i++) nicks.push(`${shinxes[i].owner.username}'s ${shinxes[i].nick}`);
-        
+
             i = 0;
             text += addLine(`${formatName(nicks[(i + 1) % 2])} fainted!`);
             for (let h = 0; h < 2; h++) {
@@ -81,7 +78,6 @@ export default async (interaction, messageFlags) => {
             for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
             globalVars.battling.yes = false;
             return sendMessage({ interaction: interaction, content: text });
-
     };
 };
 
@@ -101,12 +97,10 @@ const levelSubcommand = new SlashCommandSubcommandBuilder()
     .setName("setlevel")
     .setDescription("Set your shinx to specific level.")
     .addIntegerOption(levelOption);
-
 const battleWonSubcommand = new SlashCommandSubcommandBuilder()
     .setName("battlewon")
     .setDescription("Simulate a battle won.")
     .addUserOption(userOption);
-
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("shinxdebug")
