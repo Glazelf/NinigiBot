@@ -49,26 +49,28 @@ export default async (monsterData, emojis) => {
         if (!monsterDanger) monsterDanger = mostRecentMainlineGameEntry.danger;
     };
     // Get MHRise-Database image
-    let isInImageDBGame = gameAppearances.includes(mainlineGameNames.MHRise) || gameAppearances.includes(mainlineGameNames.MHW) || gameAppearances.includes(mainlineGameNames.MHGU);
-    let isOnlyInGU = !gameAppearances.includes(mainlineGameNames.MHRise) && !gameAppearances.includes(mainlineGameNames.MHW) && gameAppearances.includes(mainlineGameNames.MHGU);
-    let newestGameIsWorld = !gameAppearances.includes(mainlineGameNames.MHRise) && gameAppearances.includes(mainlineGameNames.MHW);
+    let isInImageDBGame = gameApperances.includes(mainlineGameNames.MHWilds) || gameAppearances.includes(mainlineGameNames.MHRise) || gameAppearances.includes(mainlineGameNames.MHW) || gameAppearances.includes(mainlineGameNames.MHGU);
+    let isOnlyInGU = !gameAppearances.includes(mainlineGameNames.MHWilds) && !gameAppearances.includes(mainlineGameNames.MHRise) && !gameAppearances.includes(mainlineGameNames.MHW) && gameAppearances.includes(mainlineGameNames.MHGU);
+    let newestGameIsWorld = !gameAppearances.includes(mainlineGameNames.MHWilds) && !gameAppearances.includes(mainlineGameNames.MHRise) && gameAppearances.includes(mainlineGameNames.MHW);
+    let newestGameIsRise = !gameAppearances.includes(mainlineGameNames.MHWilds) && gameAppearances.includes(mainlineGameNames.MHRise);
     if (isInImageDBGame) {
-        gameDBName = "MHRise";
+        gameDBName = "MHWilds";
         let gameDBBranchName = "main";
         let monsterSize = "monster";
         if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
         let monsterURLName = monsterData.name;
         if (!isOnlyInGU) monsterURLName = monsterURLName.replace(/ /g, "_");
         if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
-        if (isOnlyInGU) {
+        if (isOnlyInGU) { // Use GU HZV
             gameDBName = "MHGU";
             gameDBBranchName = "master";
         };
-        if (newestGameIsWorld) {
+        if (newestGameIsWorld) { // Use World HZV
             gameDBName = "MHW";
             gameDBBranchName = "gh-pages";
             monsterURLName = `${monsterURLName}_HZV`;
         };
+        if (newestGameIsRise) gameDBName = "MHRise"; // Use Rise HZV
         if (gameAppearances.includes(mainlineGameNames.MHRise)) monsterURLName = `${monsterURLName}_HZV`;
         monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
     };
