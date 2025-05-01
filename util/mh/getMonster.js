@@ -59,8 +59,9 @@ export default async (monsterData, emojis) => {
         let monsterSize = "monster";
         if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
         let monsterURLName = monsterData.name;
-        if (!isOnlyInGU) monsterURLName = monsterURLName.replace(/ /g, "_");
-        if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
+        if (!isOnlyInGU) monsterURLName = `${monsterURLName.replace(/ /g, "_")}_HZV`;
+        const incorrectNarwaName = "Narwa_the_Allmother";
+        if (monsterURLName.includes(incorrectNarwaName)) monsterURLName = monsterURLName.replace(incorrectNarwaName, "Narwa_The_Allmother"); // wack as fuck
         if (isOnlyInGU) { // Use GU HZV
             gameDBName = "MHGU";
             gameDBBranchName = "master";
