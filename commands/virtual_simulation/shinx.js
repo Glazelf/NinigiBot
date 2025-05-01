@@ -307,7 +307,7 @@ export default async (interaction, messageFlags) => {
             res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
                 const is_shiny = await switchShininessAndGet(master.id);
-                returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
+                returnString = is_shiny ? `Your Shinx is shiny now.` : `Your Shinx is no longer shiny.`;
                 canvas = Canvas.createCanvas(255, 192);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/shinx/sky.png');
@@ -335,7 +335,7 @@ export default async (interaction, messageFlags) => {
             let modeNumber = interaction.options.getInteger("mode");
             res = await changeAutoFeed(master.id, modeNumber);
             let modeString = autoFeedModes[modeNumber].name;
-            returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
+            returnString = res ? `Changed autofeed to: ${modeString}.` : `Autofeed already set to: ${modeString}.`;
             return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
         case "release":
             messageFlags.add(MessageFlags.Ephemeral);
