@@ -49,7 +49,7 @@ export default async (monsterData, emojis) => {
         if (!monsterDanger) monsterDanger = mostRecentMainlineGameEntry.danger;
     };
     // Get MHRise-Database image
-    let isInImageDBGame = gameApperances.includes(mainlineGameNames.MHWilds) || gameAppearances.includes(mainlineGameNames.MHRise) || gameAppearances.includes(mainlineGameNames.MHW) || gameAppearances.includes(mainlineGameNames.MHGU);
+    let isInImageDBGame = gameAppearances.includes(mainlineGameNames.MHWilds) || gameAppearances.includes(mainlineGameNames.MHRise) || gameAppearances.includes(mainlineGameNames.MHW) || gameAppearances.includes(mainlineGameNames.MHGU);
     let isOnlyInGU = !gameAppearances.includes(mainlineGameNames.MHWilds) && !gameAppearances.includes(mainlineGameNames.MHRise) && !gameAppearances.includes(mainlineGameNames.MHW) && gameAppearances.includes(mainlineGameNames.MHGU);
     let newestGameIsWorld = !gameAppearances.includes(mainlineGameNames.MHWilds) && !gameAppearances.includes(mainlineGameNames.MHRise) && gameAppearances.includes(mainlineGameNames.MHW);
     let newestGameIsRise = !gameAppearances.includes(mainlineGameNames.MHWilds) && gameAppearances.includes(mainlineGameNames.MHRise);
