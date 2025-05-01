@@ -301,10 +301,10 @@ export default async (interaction, messageFlags) => {
                 flags: messageFlags || (res != 'Ok')
             });
         case "shiny":
+            shinx = await getShinx(master.id);
+            await checkBattleTrophies(master.id, shinx.getLevel());
             res = await hasEventTrophy(master.id, 'Shiny Charm');
-            if (res) {
-                shinx = await getShinx(master.id);
-                await checkBattleTrophies(master.id, shinx.getLevel());
+            if (res) {    
                 const is_shiny = await switchShininessAndGet(master.id);
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
                 canvas = Canvas.createCanvas(255, 192);
@@ -320,7 +320,7 @@ export default async (interaction, messageFlags) => {
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
             } else {
                 messageFlags.add(MessageFlags.Ephemeral);
-                returnString = 'You need to obtain the Shiny Charm trophy to change your Shinx\'s shininess.\n\n💡 you might get it if you level up your Shinx during battle to level 50 or above.';
+                returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                 messageFile = null;
             };
             return sendMessage({ interaction: interaction, content: returnString, files: messageFile, flags: messageFlags });
