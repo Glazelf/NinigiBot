@@ -269,13 +269,13 @@ export default async (interaction, messageFlags) => {
             messageFile = null;
             switch (res) {
                 case 'TooShort':
-                    returnString = `Could not rename because provided nickname was empty`;
+                    returnString = `Could not rename because provided nickname was empty.`;
                     break;
                 case 'TooLong':
-                    returnString = `Could not rename because provided nickname length was greater than 12`;
+                    returnString = `Could not rename because provided nickname length was greater than 12.`;
                     break;
                 case 'InvalidChars':
-                    returnString = `Could not rename because provided nickname was not alphanumeric`;
+                    returnString = `Could not rename because provided nickname was not alphanumeric.`;
                     break;
                 case 'Ok':
                     const is_shiny = await getShinxShininess(master.id);
