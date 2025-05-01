@@ -124,7 +124,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
-                    console.log(`${interaction.user.username}: ${commandName}`); // Find infinite loop #1033
+                    if (process.env.DEBUG == 1) console.log(`${interaction.user.username}: ${commandName}`);
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
