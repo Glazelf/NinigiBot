@@ -65,14 +65,13 @@ export default async (monsterData, emojis) => {
         if (isOnlyInGU) { // Use GU HZV
             gameDBName = "MHGU";
             gameDBBranchName = "master";
+            monsterURLName = monsterURLName.replace("_HZV", "");
         };
         if (newestGameIsWorld) { // Use World HZV
             gameDBName = "MHW";
             gameDBBranchName = "gh-pages";
-            monsterURLName = `${monsterURLName}_HZV`;
         };
         if (newestGameIsRise) gameDBName = "MHRise"; // Use Rise HZV
-        if (gameAppearances.includes(mainlineGameNames.MHRise)) monsterURLName = `${monsterURLName}_HZV`;
         monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
         console.log(monsterBanner)
     };
