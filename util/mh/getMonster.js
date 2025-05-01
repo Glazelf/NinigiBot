@@ -73,6 +73,7 @@ export default async (monsterData, emojis) => {
         if (newestGameIsRise) gameDBName = "MHRise"; // Use Rise HZV
         if (gameAppearances.includes(mainlineGameNames.MHRise)) monsterURLName = `${monsterURLName}_HZV`;
         monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
+        console.log(monsterBanner)
     };
     let monsterGameIndicator = gameDBName;
     if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
