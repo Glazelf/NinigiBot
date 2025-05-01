@@ -318,7 +318,7 @@ export default async (interaction, messageFlags) => {
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
             } else {
                 messageFlags.add(MessageFlags.Ephemeral);
-                returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
+                returnString = 'You need to obtain the Shiny Charm trophy to change your Shinx\'s shininess.\n\n💡 you might get it if you level up your Shinx during battle to level 50 or above.';
                 messageFile = null;
             };
             return sendMessage({ interaction: interaction, content: returnString, files: messageFile, flags: messageFlags });

@@ -33,7 +33,7 @@ fs.readdir("./submodules/splat3/data/language/", (err, files) => {
         const fileName = file.split(".")[0];
         if (!fileName.endsWith("_full")) return; // Skip to next iteration, only count full language files
         const languageKey = fileName.split("_")[0];
-        const languageJSON = await import(`../../../submodules/splat3/data/language/${file}`, { assert: { type: "json" } });
+        const languageJSON = await import(`../../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
         globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
     });
 });

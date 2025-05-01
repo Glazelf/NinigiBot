@@ -69,7 +69,7 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
     files.forEach(async (file) => {
         const fileName = file.split(".")[0];
         if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
-        const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${file}`, { assert: { type: "json" } });
+        const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${file}`, { with: { type: "json" } });
         setJSON.default.forEach(card => {
             pokemonCardsBySet[fileName].push(card);
             pokemonCardsAll.push(card);
@@ -791,14 +791,14 @@ export default async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
-                                    case "shoptrophy":
+                                    case "buy":
                                         const buyable_items = await getBuyableShopTrophies(interaction.user.id);
                                         buyable_items.forEach(trophy => {
                                             choices.push({ name: trophy, value: trophy });
                                         });
                                         // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                         break;
-                                    case "trophy":
+                                    case "info":
                                         let trophies = await getShopTrophies();
                                         let temp = '';
                                         trophies.forEach(trophy => {
