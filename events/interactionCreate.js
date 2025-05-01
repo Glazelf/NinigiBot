@@ -790,14 +790,14 @@ export default async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
-                                    case "shoptrophy":
+                                    case "buy":
                                         const buyable_items = await getBuyableShopTrophies(interaction.user.id);
                                         buyable_items.forEach(trophy => {
                                             choices.push({ name: trophy, value: trophy });
                                         });
                                         // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                         break;
-                                    case "trophy":
+                                    case "info":
                                         let trophies = await getShopTrophies();
                                         let temp = '';
                                         trophies.forEach(trophy => {
