@@ -303,6 +303,8 @@ export default async (interaction, messageFlags) => {
         case "shiny":
             res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
+                shinx = await getShinx(master.id);
+                await checkBattleTrophies(master.id, shinx.getLevel());
                 const is_shiny = await switchShininessAndGet(master.id);
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
                 canvas = Canvas.createCanvas(255, 192);
@@ -472,7 +474,6 @@ export default async (interaction, messageFlags) => {
                             text += addLine(`${formatName(nicks[h])} won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
                                 text += addLine(`${formatName(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
-                                await checkBattleTrophies(trainers[h].id, shinxes[h].level);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
