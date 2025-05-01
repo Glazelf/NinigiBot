@@ -69,6 +69,8 @@ export async function checkBattleTrophies(id, level) {
     if (level >= 50) await addEventTrophy(id, 'Shiny Charm');
 };
 
+
+
 export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
     const { User } = await userdataModel(userdata);
@@ -98,6 +100,11 @@ export async function addEventTrophy(user_id, trophy_id) {
         await user.addEventTrophy(trophy_id);
     };
 };
+
+export async function addExperience(id, experience) {
+    let shinx = await getShinx(id, ['user_id', 'experience']);
+    await shinx.addExperienceAndLevelUp(experience);
+}
 
 export async function feedShinx(id) {
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
