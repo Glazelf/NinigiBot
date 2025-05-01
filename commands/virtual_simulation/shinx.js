@@ -301,10 +301,11 @@ export default async (interaction, messageFlags) => {
                 flags: messageFlags || (res != 'Ok')
             });
         case "shiny":
+            messageFlags.add(MessageFlags.Ephemeral);
             shinx = await getShinx(master.id);
             await checkBattleTrophies(master.id, shinx.getLevel());
             res = await hasEventTrophy(master.id, 'Shiny Charm');
-            if (res) {    
+            if (res) {
                 const is_shiny = await switchShininessAndGet(master.id);
                 returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
                 canvas = Canvas.createCanvas(255, 192);
@@ -319,7 +320,6 @@ export default async (interaction, messageFlags) => {
                 };
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
             } else {
-                messageFlags.add(MessageFlags.Ephemeral);
                 returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                 messageFile = null;
             };
