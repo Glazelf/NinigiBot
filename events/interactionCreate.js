@@ -69,7 +69,7 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
     files.forEach(async (file) => {
         const fileName = file.split(".")[0];
         if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
-        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { assert: { type: "json" } });
+        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { with: { type: "json" } });
         setJSON.default.forEach(card => {
             pokemonCardsBySet[fileName].push(card);
             pokemonCardsAll.push(card);
