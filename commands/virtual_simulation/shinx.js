@@ -476,7 +476,7 @@ export default async (interaction, messageFlags) => {
                                 text += addLine(`${formatName(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
                             };
                         };
-                        for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
+                        for (let p = 0; p < 2; p++) await saveBattle(shinxes[p]);
                         globalVars.battling.yes = false;
                         messageFile = new AttachmentBuilder(canvas.toBuffer());
                         return sendMessage({ interaction: interaction, content: text, files: messageFile });
@@ -604,5 +604,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(shinySubcommand)
     .addSubcommand(buyfoodSubcommand)
     .addSubcommand(autofeedSubcommand)
-    // .addSubcommand(battleSubcommand)
+    .addSubcommand(battleSubcommand)
     .addSubcommand(releaseSubcommand);
