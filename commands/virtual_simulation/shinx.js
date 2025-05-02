@@ -604,5 +604,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(shinySubcommand)
     .addSubcommand(buyfoodSubcommand)
     .addSubcommand(autofeedSubcommand)
-    // .addSubcommand(battleSubcommand)
+    .addSubcommand(battleSubcommand)
     .addSubcommand(releaseSubcommand);
