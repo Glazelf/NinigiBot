@@ -69,8 +69,6 @@ export async function checkBattleTrophies(id, level) {
     if (level >= 50) await addEventTrophy(id, 'Shiny Charm');
 };
 
-
-
 export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
     const { User } = await userdataModel(userdata);

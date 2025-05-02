@@ -269,13 +269,13 @@ export default async (interaction, messageFlags) => {
             messageFile = null;
             switch (res) {
                 case 'TooShort':
-                    returnString = `Could not rename because provided nickname was empty`;
+                    returnString = `Could not rename because provided nickname was empty.`;
                     break;
                 case 'TooLong':
-                    returnString = `Could not rename because provided nickname length was greater than 12`;
+                    returnString = `Could not rename because provided nickname length was greater than 12.`;
                     break;
                 case 'InvalidChars':
-                    returnString = `Could not rename because provided nickname was not alphanumeric`;
+                    returnString = `Could not rename because provided nickname was not alphanumeric.`;
                     break;
                 case 'Ok':
                     const is_shiny = await getShinxShininess(master.id);
@@ -301,12 +301,13 @@ export default async (interaction, messageFlags) => {
                 flags: messageFlags || (res != 'Ok')
             });
         case "shiny":
+            messageFlags.add(MessageFlags.Ephemeral);
+            shinx = await getShinx(master.id);
+            await checkBattleTrophies(master.id, shinx.getLevel());
             res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
-                shinx = await getShinx(master.id);
-                await checkBattleTrophies(master.id, shinx.getLevel());
                 const is_shiny = await switchShininessAndGet(master.id);
-                returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
+                returnString = is_shiny ? `Your Shinx is shiny now.` : `Your Shinx is no longer shiny.`;
                 canvas = Canvas.createCanvas(255, 192);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/shinx/sky.png');
@@ -319,8 +320,7 @@ export default async (interaction, messageFlags) => {
                 };
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
             } else {
-                messageFlags.add(MessageFlags.Ephemeral);
-                returnString = 'You need to obtain the Shiny Charm trophy to change your Shinx\'s shininess.\n\n💡 you might get it if you level up your Shinx during battle to level 50 or above.';
+                returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                 messageFile = null;
             };
             return sendMessage({ interaction: interaction, content: returnString, files: messageFile, flags: messageFlags });
@@ -335,7 +335,7 @@ export default async (interaction, messageFlags) => {
             let modeNumber = interaction.options.getInteger("mode");
             res = await changeAutoFeed(master.id, modeNumber);
             let modeString = autoFeedModes[modeNumber].name;
-            returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
+            returnString = res ? `Changed autofeed to: ${modeString}.` : `Autofeed already set to: ${modeString}.`;
             return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
         case "release":
             messageFlags.add(MessageFlags.Ephemeral);
@@ -604,5 +604,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(shinySubcommand)
     .addSubcommand(buyfoodSubcommand)
     .addSubcommand(autofeedSubcommand)
-    .addSubcommand(battleSubcommand)
+    // .addSubcommand(battleSubcommand)
     .addSubcommand(releaseSubcommand);
