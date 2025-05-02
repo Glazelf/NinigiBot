@@ -183,7 +183,7 @@ export async function isTrainerMale(id) {
     return shinx.user_male
 };
 
-export async function saveBattle(shinxBattleData, wins) {
+export async function saveBattle(shinxBattleData) {
     let shinx = await getShinx(shinxBattleData.owner.id);
-    await shinx.saveBattle(shinxBattleData, wins);
+    await shinx.saveBattle(shinxBattleData);
 };
