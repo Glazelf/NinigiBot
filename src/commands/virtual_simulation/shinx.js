@@ -269,13 +269,13 @@ export default async (interaction, messageFlags) => {
             messageFile = null;
             switch (res) {
                 case 'TooShort':
-                    returnString = `Could not rename because provided nickname was empty`;
+                    returnString = `Could not rename because provided nickname was empty.`;
                     break;
                 case 'TooLong':
-                    returnString = `Could not rename because provided nickname length was greater than 12`;
+                    returnString = `Could not rename because provided nickname length was greater than 12.`;
                     break;
                 case 'InvalidChars':
-                    returnString = `Could not rename because provided nickname was not alphanumeric`;
+                    returnString = `Could not rename because provided nickname was not alphanumeric.`;
                     break;
                 case 'Ok':
                     const is_shiny = await getShinxShininess(master.id);
@@ -307,7 +307,7 @@ export default async (interaction, messageFlags) => {
             res = await hasEventTrophy(master.id, 'Shiny Charm');
             if (res) {
                 const is_shiny = await switchShininessAndGet(master.id);
-                returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
+                returnString = is_shiny ? `Your Shinx is shiny now.` : `Your Shinx is no longer shiny.`;
                 canvas = Canvas.createCanvas(255, 192);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/shinx/sky.png');
@@ -335,7 +335,7 @@ export default async (interaction, messageFlags) => {
             let modeNumber = interaction.options.getInteger("mode");
             res = await changeAutoFeed(master.id, modeNumber);
             let modeString = autoFeedModes[modeNumber].name;
-            returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
+            returnString = res ? `Changed autofeed to: ${modeString}.` : `Autofeed already set to: ${modeString}.`;
             return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
         case "release":
             messageFlags.add(MessageFlags.Ephemeral);
@@ -476,7 +476,7 @@ export default async (interaction, messageFlags) => {
                                 text += addLine(`${formatName(nicks[h])} grew to level ${bold(shinxes[h].level)}!`);
                             };
                         };
-                        for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
+                        for (let p = 0; p < 2; p++) await saveBattle(shinxes[p]);
                         globalVars.battling.yes = false;
                         messageFile = new AttachmentBuilder(canvas.toBuffer());
                         return sendMessage({ interaction: interaction, content: text, files: messageFile });

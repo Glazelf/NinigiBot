@@ -164,8 +164,8 @@ export default (sequelize, DataTypes) => {
         return this.user_male;
     };
     // Battle
-    Shinx.prototype.saveBattle = function (shinxBattle, wins) {
-        this.experience = Math.floor(shinxBattle.exp * (1 + wins * 0.2));
+    Shinx.prototype.saveBattle = function (shinxBattle) {
+        this.experience = Math.floor(shinxBattle.exp);
         this.save({ fields: ["experience"] });
     };
     // Auto feed

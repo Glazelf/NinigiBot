@@ -69,8 +69,6 @@ export async function checkBattleTrophies(id, level) {
     if (level >= 50) await addEventTrophy(id, 'Shiny Charm');
 };
 
-
-
 export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
     const { User } = await userdataModel(userdata);
@@ -183,7 +181,7 @@ export async function isTrainerMale(id) {
     return shinx.user_male
 };
 
-export async function saveBattle(shinxBattleData, wins) {
+export async function saveBattle(shinxBattleData) {
     let shinx = await getShinx(shinxBattleData.owner.id);
-    await shinx.saveBattle(shinxBattleData, wins);
+    await shinx.saveBattle(shinxBattleData);
 };
