@@ -1,8 +1,7 @@
 import {
     MessageFlagsBitField,
     MessageObject,
-    Component,
-    AnyComponent
+    Component
 } from "discord.js";
 
 // @ts-ignore
