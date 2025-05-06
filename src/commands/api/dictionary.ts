@@ -48,7 +48,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     let inputWord = interaction.options.getString("word");
     let inputWordType = interaction.options.getString("wordtype");
     // @ts-ignore
-    if (!inputWord) return sendMessage({ interaction: interaction, content: "Please enter a word." });
+    if (!inputWord) return sendMessage(interaction, "Please enter a word.");
 
     let dictionaryEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
@@ -70,7 +70,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
         dictionaryEmbedArray.push(errorEmbed);
         // @ts-ignore
-        return sendMessage({ interaction: interaction, embeds: dictionaryEmbedArray });
+        return sendMessage(interaction, dictionaryEmbedArray);
     };
 
     let wordString = wordData.word;
@@ -113,7 +113,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
         .setURL(sourceURL);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
     // @ts-ignore
-    return sendMessage({ interaction: interaction, embeds: [dictionaryEmbed] });
+    return sendMessage(interaction, [dictionaryEmbed]);
 };
 
 const wordTypeChoices = [

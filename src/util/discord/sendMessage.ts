@@ -1,28 +1,27 @@
 import {
     MessageFlagsBitField,
     MessageObject,
-    Component
+    Component,
+    Interaction,
+    AutocompleteInteraction
 } from "discord.js";
 
-// @ts-ignore
-export default async ({ interaction, components = new Array<Component>, flags = new MessageFlagsBitField }) => {
-    if (!interaction) return; // Note: interaction can be a message instead
+export default async (interaction: Interaction, components: Array<Component>, flags: MessageFlagsBitField) => {
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject: MessageObject = {
         flags: flags,
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
     };
+    console.log(components)
     if (components.length > 0) messageObject.components = components as [];
     // let targetUser = interaction.options.getUser("user");
     // if (targetUser) messageObject.allowedMentions = { users: [targetUser.id] };
-    try {
-        console.log(messageObject)
-        console.log(components)
-        // ts-ignore 
-        if (interaction.deferred) return interaction.editReply(messageObject);
-        return interaction.reply(messageObject);
-    } catch (e) {
-        // console.log(e);
+
+    if (interaction instanceof AutocompleteInteraction) {
+        if (!interaction.channel || !interaction.channel.isSendable()) return;
         return interaction.channel.send(messageObject);
+    } else {
+        if (!(interaction instanceof AutocompleteInteraction) && interaction.deferred) return interaction.editReply(messageObject);
+        return interaction.reply(messageObject);
     };
 };

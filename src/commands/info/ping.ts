@@ -13,7 +13,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     let replyTextComponent = new TextDisplayBuilder()
         .setContent(`Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`);
     // @ts-ignore
-    return sendMessage({ interaction: interaction, components: [replyTextComponent], flags: messageFlags.add(MessageFlags.Ephemeral) });
+    return sendMessage(interaction, [replyTextComponent], messageFlags.add(MessageFlags.Ephemeral));
 };
 
 export const commandObject = new SlashCommandBuilder()

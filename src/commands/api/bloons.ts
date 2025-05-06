@@ -100,7 +100,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     console.log(btd6EmbedArray)
     console.log(btd6ActionRowArray)
     // @ts-ignore
-    return sendMessage({ interaction: interaction, embeds: btd6EmbedArray, components: btd6ActionRowArray, flags: messageFlags });
+    return sendMessage(interaction, btd6EmbedArray, btd6ActionRowArray, messageFlags);
 };
 
 function getUsageListString(usageObject: { [key: string]: number }, emojis: { [key: string]: any }) {
