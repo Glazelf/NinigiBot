@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandBooleanOption
@@ -76,6 +77,7 @@ export const commandObject = new SlashCommandBuilder()
     .setName("restart")
     .setDescription("Restart bot and reload all files.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addBooleanOption(resetInteractionsOptions)
     .addBooleanOption(npmInstallOption)
     .addBooleanOption(dbInitOption);

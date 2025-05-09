@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -103,5 +104,6 @@ export const commandObject = new SlashCommandBuilder()
     .setName("send")
     .setDescription("Sends a message to a channel or user.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand(channelSubcommand)
     .addSubcommand(userSubcommand);

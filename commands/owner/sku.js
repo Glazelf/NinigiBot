@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -33,7 +34,6 @@ export default async (interaction, messageFlags) => {
         };
         if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${userList.length})`, value: userList.join("\n") }]);
     };
-
     return sendMessage({ interaction: interaction, embeds: entitlementEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
 };
 
@@ -48,4 +48,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("sku")
     .setDescription("Interact with SKUs.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand(infoSubcommand);

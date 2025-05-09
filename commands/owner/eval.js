@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption
@@ -54,4 +55,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("eval")
     .setDescription("Execute JS.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption(inputOption);

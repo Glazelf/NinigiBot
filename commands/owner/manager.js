@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -119,5 +120,6 @@ export const commandObject = new SlashCommandBuilder()
     .setName("manager")
     .setDescription("Manage multiple aspects about Ninigi Virtual Simulation Core.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand(addShopTrophySubcommand)
     .addSubcommand(deleteShopTrophySubcommand);

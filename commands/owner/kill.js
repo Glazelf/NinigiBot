@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
@@ -58,4 +59,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("kill")
     .setDescription("Shuts down bot.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addBooleanOption(removeInteractionsOption);
