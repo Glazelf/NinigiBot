@@ -29,7 +29,7 @@ export default async (interaction, messageFlags) => {
     let dbinitArg = interaction.options.getBoolean("dbinit");
     if (dbinitArg === true) dbinit = dbinitArg;
     let timestamp = getTime();
-    console.log(`Restarting for ${formatName(interaction.user.username)}. (${timestamp})`);
+    console.log(`Restarting for ${formatName(interaction.user.username, false)}. (${timestamp})`);
     let installResult = "";
     // Run commands
     if (npmInstall) {

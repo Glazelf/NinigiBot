@@ -98,20 +98,20 @@ export default async (client, oldMember, newMember) => {
                 case "nickname":
                     topText = "Nickname Changed ⚒️";
                     if (oldMember.nickname && newMember.nickname) {
-                        changeText = `Old: ${formatName(oldMember.nickname)}\nNew: ${formatName(newMember.nickname)}`;
+                        changeText = `Old: ${formatName(oldMember.nickname, true)}\nNew: ${formatName(newMember.nickname, true)}`;
                     } else if (newMember.nickname) {
-                        changeText = `New: ${formatName(newMember.nickname)}`;
+                        changeText = `New: ${formatName(newMember.nickname, true)}`;
                     } else {
-                        changeText = `Removed: ${formatName(oldMember.nickname)}`;
+                        changeText = `Removed: ${formatName(oldMember.nickname, true)}`;
                     };
                     break;
                 case "nitroStart":
                     topText = "Started Nitro Boosting ⚒️";
-                    changeText = `${formatName(oldMember.guild.name)} now has ${oldMember.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                    changeText = `${formatName(oldMember.guild.name, true)} now has ${oldMember.guild.premiumSubscriptionCount} Nitro Boosts.`;
                     break;
                 case "nitroEnd":
                     topText = "Stopped Nitro Boosting ⚒️";
-                    changeText = `${formatName(oldMember.guild.name)} will lose this Nitro Boost in 3 days.`;
+                    changeText = `${formatName(oldMember.guild.name, true)} will lose this Nitro Boost in 3 days.`;
                     break;
                 case "guildAvatar":
                     topText = "Updated Server Avatar ⚒️";
@@ -129,7 +129,7 @@ export default async (client, oldMember, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${formatName(oldMember.user.username)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for ${formatName(oldMember.user.username, true)} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";

@@ -22,7 +22,7 @@ export default async (client, guild) => {
             .setColor(globalVars.embedColor)
             .setTitle(`Guild Left ❌`)
             .setThumbnail(icon)
-            .setDescription(`${formatName(client.user.username)} is now in ${client.guilds.cache.size} servers.`)
+            .setDescription(`${formatName(client.user.username, true)} is now in ${client.guilds.cache.size} servers.`)
             .setFooter({ text: `ID: ${guild.id}` })
             .setTimestamp()
             .addFields([{ name: `Name:`, value: guild.name, inline: true }]);

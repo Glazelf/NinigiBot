@@ -34,7 +34,7 @@ export default async (client, member) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
-                .setDescription(`${formatName(member.guild.name)} now has ${member.guild.memberCount} members.`)
+                .setDescription(`${formatName(member.guild.name, true)} now has ${member.guild.memberCount} members.`)
                 .setFooter({ text: `ID: ${member.user.username}` })
                 .setTimestamp()
                 .addFields([

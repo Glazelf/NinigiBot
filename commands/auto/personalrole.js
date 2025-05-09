@@ -27,7 +27,7 @@ export default async (interaction, messageFlags) => {
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
     let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
-    let guildNameFormatted = formatName(interaction.guild.name);
+    let guildNameFormatted = formatName(interaction.guild.name, true);
     if (!serverID) return sendMessage({ interaction: interaction, content: `Personal Roles are disabled in ${guildNameFormatted}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     await interaction.deferReply({ flags: messageFlags });

@@ -41,7 +41,7 @@ export default async (interaction, messageFlags) => {
     } catch (e) {
         console.log(e);
     };
-    console.log(`Bot killed by ${formatName(interaction.user.username)}. (${timestamp})`);
+    console.log(`Bot killed by ${formatName(interaction.user.username, false)}. (${timestamp})`);
 
     await interaction.client.destroy();
     return process.exit();

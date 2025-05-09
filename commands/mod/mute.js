@@ -53,10 +53,10 @@ export default async (interaction, messageFlags) => {
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
     let botRole = interaction.guild.members.me.roles.highest;
-    let usernameFormatted = formatName(user.username);
-    if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name)}.` });
-    if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
-    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
+    let usernameFormatted = formatName(user.username, true);
+    if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name, true)}.` });
+    if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).` });
+    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not mute ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to mine (${formatName(botRole.name, true)}).` });
     if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I can not mute this user. This might be because I lack the ${inlineCode(requiredPermissionName)} permission.` });
 
     let reason = "Not specified.";
@@ -72,8 +72,8 @@ export default async (interaction, messageFlags) => {
         };
     };
     let time = getTime();
-    let reasonInfo = `-${interaction.user.username.replace(/\*/g, "")} (${time})`;
-    let dmString = `You got muted in ${formatName(interaction.guild.name)} for ${bold(displayMuteTime)} by ${formatName(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
+    let reasonInfo = `-${formatName(interaction.user.username, false)} (${time})`;
+    let dmString = `You got muted in ${formatName(interaction.guild.name, true)} for ${bold(displayMuteTime)} by ${formatName(interaction.user.username, true)} for the following reason: ${reasonCodeBlock}`;
     // Timeout logic
     try {
         await member.timeout(muteTime, `${reason} ${reasonInfo}`);
@@ -86,7 +86,6 @@ export default async (interaction, messageFlags) => {
         return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${usernameFormatted}. I probably lack permissions.` });
     };
 };
-
 
 // String options
 const reasonOption = new SlashCommandStringOption()
