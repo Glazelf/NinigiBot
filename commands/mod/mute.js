@@ -3,12 +3,12 @@ import {
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
+    bold,
+    inlineCode,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
     SlashCommandUserOption,
-    bold,
-    inlineCode
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -72,7 +72,7 @@ export default async (interaction, messageFlags) => {
         };
     };
     let time = getTime();
-    let reasonInfo = `-${interaction.user.username} (${time})`;
+    let reasonInfo = `-${interaction.user.username.replace(/\*/g, "")} (${time})`;
     let dmString = `You got muted in ${formatName(interaction.guild.name)} for ${bold(displayMuteTime)} by ${formatName(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
     // Timeout logic
     try {

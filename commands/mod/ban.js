@@ -3,13 +3,13 @@ import {
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
+    inlineCode,
+    userMention,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandUserOption,
-    userMention,
-    inlineCode
+    SlashCommandUserOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -48,7 +48,7 @@ export default async (interaction, messageFlags) => {
 
     let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
     let time = getTime();
-    let reasonInfo = `-${executorNameFormatted} (${time})`;
+    let reasonInfo = `-${executorNameFormatted.replace(/\*/g, "")} (${time})`;
     // If member is found
     if (member) {
         let usernameFormatted = formatName(user.username);

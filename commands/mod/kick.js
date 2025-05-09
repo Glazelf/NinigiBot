@@ -3,10 +3,10 @@ import {
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
+    inlineCode,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandUserOption,
-    inlineCode
+    SlashCommandUserOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -47,7 +47,7 @@ export default async (interaction, messageFlags) => {
     let reasonCodeBlock = codeBlock("fix", reason);
 
     let time = getTime();
-    let reasonInfo = `-${interaction.user.username} (${time})`;
+    let reasonInfo = `-${interaction.user.username.replace(/\*/g, "")} (${time})`;
     // Kick
     let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
     await user.send({ content: `You've been kicked from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}` })
