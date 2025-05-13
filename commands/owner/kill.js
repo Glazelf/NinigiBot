@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
@@ -41,7 +42,7 @@ export default async (interaction, messageFlags) => {
     } catch (e) {
         console.log(e);
     };
-    console.log(`Bot killed by ${formatName(interaction.user.username)}. (${timestamp})`);
+    console.log(`Bot killed by ${formatName(interaction.user.username, false)}. (${timestamp})`);
 
     await interaction.client.destroy();
     return process.exit();
@@ -58,4 +59,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("kill")
     .setDescription("Shuts down bot.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addBooleanOption(removeInteractionsOption);

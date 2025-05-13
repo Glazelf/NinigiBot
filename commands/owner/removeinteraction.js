@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandStringOption,
     inlineCode
@@ -47,5 +48,6 @@ export const commandObject = new SlashCommandBuilder()
     .setName("removeinteraction")
     .setDescription("Remove an interaction.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption(interactionNameOption)
     .addStringOption(guildIDOption);

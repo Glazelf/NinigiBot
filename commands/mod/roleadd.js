@@ -32,7 +32,7 @@ export default async (interaction, messageFlags) => {
         if (description.length > selectDescriptionCharacterLimit) return sendMessage({ interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
     };
 
-    let roleNameFormatted = formatName(role.name);
+    let roleNameFormatted = formatName(role.name, true);
     if (role.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage the ${roleNameFormatted} role because it is being automatically managed by an integration.` });
     if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage the ${roleNameFormatted} role because it is above my highest role.` });
     if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to make the ${roleNameFormatted} role selfassignable.` });

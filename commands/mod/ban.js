@@ -3,13 +3,13 @@ import {
     InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
+    inlineCode,
+    userMention,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandUserOption,
-    userMention,
-    inlineCode
+    SlashCommandUserOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
@@ -41,24 +41,24 @@ export default async (interaction, messageFlags) => {
     let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
     let deleteMessageSeconds = deleteMessageDays * 86_400; // Why is this in seconds now??
 
-    let executorNameFormatted = formatName(interaction.user.username);
+    let executorNameFormatted = formatName(interaction.user.username, true);
     let banReturn = null;
     let banFailString = `Ban failed. This might be because the specified user isn not in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
-    let dmString = `You've been banned from ${formatName(interaction.guild.name)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
+    let dmString = `You've been banned from ${formatName(interaction.guild.name, true)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });
     let time = getTime();
-    let reasonInfo = `-${executorNameFormatted} (${time})`;
+    let reasonInfo = `-${formatName(interaction.user.username, false)} (${time})`;
     // If member is found
     if (member) {
-        let usernameFormatted = formatName(user.username);
+        let usernameFormatted = formatName(user.username, true);
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         let botRole = interaction.guild.members.me.roles.highest;
-        if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name)}.` });
-        if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not ban ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to yours (${formatName(userRole.name)}).` });
-        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name)}) is higher than or equal to mine (${formatName(botRole.name)}).` });
+        if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name, true)}.` });
+        if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not ban ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).` });
+        if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not ban ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to mine (${formatName(botRole.name, true)}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
         if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${usernameFormatted} (${member.id}) is already banned.` });

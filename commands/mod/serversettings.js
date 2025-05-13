@@ -32,7 +32,7 @@ export default async (interaction, messageFlags) => {
     if (disableArg === true) disableBool = disableArg;
     let channelArg = interaction.options.getChannel("channel");
     let textChannelInvalidString = null;
-    let guildNameFormatted = formatName(interaction.guild.name);
+    let guildNameFormatted = formatName(interaction.guild.name, true);
     if (channelArg) textChannelInvalidString = `No text can be sent to ${channelArg}'s type (${ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
     let disableString = `Disabled ${interaction.options.getSubcommand()} functionality in ${guildNameFormatted}.`;
     let argRequiredString = "At least one argument is required for this command.";

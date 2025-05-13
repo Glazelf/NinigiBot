@@ -16,6 +16,7 @@ import getBossEvent from "../../util/bloons/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
+const btd6AchievementsTotal = 151;
 
 export default async (interaction, messageFlags) => {
     let oak = interaction.options.getString("oak");
@@ -48,7 +49,7 @@ export default async (interaction, messageFlags) => {
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
             if (saveData.achievementsClaimed.length > 0) {
                 let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
-                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/150`; // Total achievement amount is hardcoded, doesn't seem to be a way to reverse engineer it from the data received. Make sure to update if more achievements are added!
+                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${btd6AchievementsTotal}`; // Total achievement amount is hardcoded, doesn't seem to be a way to reverse engineer it from the data received. Make sure to update if more achievements are added!
                 if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
             };
             if (saveData.lifetimeTrophies > 0) {
