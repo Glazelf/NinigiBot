@@ -99,7 +99,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
-        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // Find infinite loop #1033
+        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // #1033, add "if (process.env.DEBUG == 1)" when fixed
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -123,7 +123,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
-                    if (process.env.DEBUG == 1) console.log(`${interaction.user.username}: ${commandName}`);
+                    console.log(`${interaction.user.username}: ${commandName}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -442,7 +442,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
-                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // Find infinite loop #1033
+                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
