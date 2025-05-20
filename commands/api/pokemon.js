@@ -321,7 +321,7 @@ export default async (interaction, messageFlags) => {
                 };
                 pokemonEmbed.setDescription(learnInfo);
             } else {
-                learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                learnAuthor = `${pokemon.name} does not learn ${move.name}.`;
             };
             pokemonEmbed.setTitle(learnAuthor);
             break;
