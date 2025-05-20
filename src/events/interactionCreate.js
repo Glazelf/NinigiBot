@@ -100,7 +100,7 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
-        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // Find infinite loop #1033
+        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // #1033, add "if (process.env.DEBUG == 1)" when fixed
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -124,7 +124,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
-                    if (process.env.DEBUG == 1) console.log(`${interaction.user.username}: ${commandName}`);
+                    console.log(`${interaction.user.username}: ${commandName}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -443,7 +443,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
-                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // Find infinite loop #1033
+                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
@@ -888,7 +888,7 @@ export default async (client, interaction) => {
 
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
                         await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
-                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name)}.`, embeds: [modMailEmbed] })
+                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name, true)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
                         return sendMessage({ interaction: interaction, content: modmailReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });

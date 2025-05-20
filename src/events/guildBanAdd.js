@@ -51,7 +51,7 @@ export default async (client, guildBan) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
-                .setDescription(`${formatName(guildBan.guild.name)} now has ${guildBan.guild.memberCount} members.`)
+                .setDescription(`${formatName(guildBan.guild.name, true)} now has ${guildBan.guild.memberCount} members.`)
                 .setFooter({ text: target.username })
                 .setTimestamp()
                 .addFields([

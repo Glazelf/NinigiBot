@@ -4,7 +4,9 @@ import {
     escapeUnderline
 } from "discord.js";
 
-export default (input) => {
+export default (input, boldBool) => {
     if (!input || typeof input !== "string") return "";
-    return bold(escapeItalic(escapeUnderline(input)));
+    let output = escapeItalic(escapeUnderline(input));
+    if (boldBool == true) output = bold(output);
+    return output;
 };

@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandBooleanOption
@@ -29,7 +30,7 @@ export default async (interaction, messageFlags) => {
     let dbinitArg = interaction.options.getBoolean("dbinit");
     if (dbinitArg === true) dbinit = dbinitArg;
     let timestamp = getTime();
-    console.log(`Restarting for ${formatName(interaction.user.username)}. (${timestamp})`);
+    console.log(`Restarting for ${formatName(interaction.user.username, false)}. (${timestamp})`);
     let installResult = "";
     // Run commands
     if (npmInstall) {
@@ -76,6 +77,7 @@ export const commandObject = new SlashCommandBuilder()
     .setName("restart")
     .setDescription("Restart bot and reload all files.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addBooleanOption(resetInteractionsOptions)
     .addBooleanOption(npmInstallOption)
     .addBooleanOption(dbInitOption);

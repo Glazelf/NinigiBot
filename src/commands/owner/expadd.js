@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandUserOption
@@ -39,5 +40,6 @@ export const commandObject = new SlashCommandBuilder()
     .setName("expadd")
     .setDescription("Add experience to a user's Shinx.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(userOption)
     .addIntegerOption(amountOption);

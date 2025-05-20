@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandBooleanOption,
     inlineCode
@@ -57,4 +58,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("clean")
     .setDescription("Runs clean up routine of the database files.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addBooleanOption(confirmOption);

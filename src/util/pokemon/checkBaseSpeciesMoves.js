@@ -1,10 +1,12 @@
+import { Dex } from '@pkmn/dex';
+
 export default async ({ genData, pokemon, learnset }) => {
     let baseSpecies = null;
     let baseSpeciesLearnset = null;
     let hasBaseSpecies = (pokemon.baseSpecies !== pokemon.name);
     if (!pokemon || !genData) return learnset;
     if (hasBaseSpecies) {
-        baseSpecies = genData.species.get(pokemon.baseSpecies);
+        baseSpecies = Dex.species.get(pokemon.baseSpecies);
         baseSpeciesLearnset = await genData.learnsets.get(pokemon.baseSpecies);
     };
     if ((!learnset || !learnset.learnset) && (hasBaseSpecies && baseSpecies.exists)) {

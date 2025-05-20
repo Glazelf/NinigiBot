@@ -43,7 +43,7 @@ export default async (interaction, messageFlags) => {
             let messages = Object.values(Object.fromEntries(messagesFilteredUser)).slice(0, amount);
             await interaction.channel.bulkDelete(messages, filterOldMessages)
                 .then(messagesDeleted => {
-                    returnString = `Deleted ${messagesDeleted.size} messages from ${formatName(user.username)} within the last ${amountDisplay} message(s).`;
+                    returnString = `Deleted ${messagesDeleted.size} messages from ${formatName(user.username, true)} within the last ${amountDisplay} message(s).`;
                     if (messagesDeleted.size < amountDisplay) returnString += missingMessagesString;
                     return sendMessage({ interaction: interaction, content: returnString });
                 });

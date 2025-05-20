@@ -30,7 +30,7 @@ export default async (client, entitlement) => {
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle("Entitlemend Ended ❌")
-            .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name)} ended.`)
+            .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name, true)} ended.`)
             .setFooter({ text: `ID: ${entitlement.id}` })
             .setTimestamp();
         return log.send({ embeds: [entitlementEmbed] });

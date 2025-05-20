@@ -1,6 +1,7 @@
 import {
     MessageFlags,
     InteractionContextType,
+    PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandAttachmentOption
 } from "discord.js";
@@ -16,7 +17,6 @@ export default async (interaction, messageFlags) => {
 
     let avatarArg = interaction.options.getAttachment("avatar");
     let iconImg = avatarArg.url;
-    let iconSize = Math.ceil(avatarArg.size / 1000);
     let fileIsImg = false;
     if (avatarArg.contentType.includes('image')) fileIsImg = true;
 
@@ -42,4 +42,5 @@ export const commandObject = new SlashCommandBuilder()
     .setName("setavatar")
     .setDescription("Set this bot's avatar.")
     .setContexts([InteractionContextType.Guild])
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addAttachmentOption(avatarOption);

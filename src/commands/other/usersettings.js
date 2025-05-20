@@ -36,7 +36,7 @@ export default async (interaction, messageFlags) => {
             let invalidString = `Please specify a valid Nintendo Switch friend code.`;
             // Present code if no code is supplied as an argument
             if (!switchFC) {
-                if (switchCodeGet) return sendMessage({ interaction: interaction, content: `${formatName(interaction.user.username)}'s Nintendo Switch friend code is ${bold(switchCodeGet)}.`, flags: messageFlags });
+                if (switchCodeGet) return sendMessage({ interaction: interaction, content: `${formatName(interaction.user.username, true)}'s Nintendo Switch friend code is ${bold(switchCodeGet)}.`, flags: messageFlags });
                 return sendMessage({ interaction: interaction, content: invalidString, flags: messageFlags });
             };
             // Check and sanitize input
