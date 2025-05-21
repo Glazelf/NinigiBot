@@ -35,7 +35,7 @@ export default async (client, member) => {
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
                 .setDescription(`${formatName(member.guild.name, true)} now has ${member.guild.memberCount} members.`)
-                .setFooter({ text: `ID: ${member.user.username}` })
+                .setFooter({ text: `ID: ${member.id}` })
                 .setTimestamp()
                 .addFields([
                     { name: "User:", value: `${member} (${member.user.username})`, inline: false },
