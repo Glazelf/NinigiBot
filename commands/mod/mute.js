@@ -53,6 +53,7 @@ export default async (interaction, messageFlags) => {
     let memberManageNoPermissionString = checkMemberManagePermissions({ interaction: interaction, member: member, action: "mute" });
     if (memberManageNoPermissionString.length > 0) return sendMessage({ interaction: interaction, content: memberManageNoPermissionString });
 
+    let usernameFormatted = formatName(member.user.username, true);
     let reason = "Not specified.";
     let reasonArg = interaction.options.getString("reason");
     if (reasonArg) reason = reasonArg;
