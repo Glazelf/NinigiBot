@@ -22,10 +22,10 @@ export default ({ interaction, member, action }) => {
         reasonString = `You can not ${action} yourself.`;
     } else if (member.id == interaction.guild.ownerId) {
         reasonString = `I can not ${action} ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name, true)}.`;
-    } else if (targetRole.position >= userRole.position) {
-        reasonString = `You can not ${action} ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).`;
     } else if (targetRole.position >= botRole.position) {
         reasonString = `I can not ${action} ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to mine (${formatName(botRole.name, true)}).`;
+    } else if (targetRole.position >= userRole.position && member.id != interaction.guild.ownerId) {
+        reasonString = `You can not ${action} ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).`;
     } else if (!member.moderatable) {
         reasonString = `I can not ${action} this user. This might be because I lack the ${inlineCode(requiredPermissionName)} permission.`;
     };
