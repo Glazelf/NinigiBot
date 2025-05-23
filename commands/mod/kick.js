@@ -9,6 +9,7 @@ import {
     SlashCommandUserOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
+import checkMemberManagePermissions from "../../util/discord/perms/checkMemberManagePermissions.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
 import getEnumName from "../../util/discord/getEnumName.js";
@@ -33,12 +34,8 @@ export default async (interaction, messageFlags) => {
 
     let kickFailString = `Kick failed. This might be because the specified user is not in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     // Check permissions
-    let userRole = interaction.member.roles.highest;
-    let targetRole = member.roles.highest;
-    let botRole = interaction.guild.members.me.roles.highest;
-    if (member.id == interaction.guild.ownerId) return sendMessage({ interaction: interaction, content: `I can not kick ${usernameFormatted} (${member.id}) because they are the owner of ${formatName(interaction.guild.name, true)}.` });
-    if (targetRole.position >= userRole.position) return sendMessage({ interaction: interaction, content: `You can not kick ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).` });
-    if (targetRole.position >= botRole.position) return sendMessage({ interaction: interaction, content: `I can not kick ${usernameFormatted} (${user.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to mine (${formatName(botRole.name, true)}).` });
+    let memberManageNoPermissionString = checkMemberManagePermissions({ interaction: interaction, member: member, action: "mute" });
+    if (memberManageNoPermissionString.length > 0) return sendMessage({ interaction: interaction, content: memberManageNoPermissionString });
     if (!member.kickable) return sendMessage({ interaction: interaction, content: kickFailString });
 
     let reason = "Not specified.";
