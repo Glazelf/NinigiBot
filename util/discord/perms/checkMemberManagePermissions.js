@@ -2,7 +2,7 @@ import {
     PermissionFlagsBits,
     inlineCode
 } from "discord.js";
-import formatName from "../formatName";
+import formatName from "../formatName.js";
 
 export default ({ interaction, member, action }) => {
     let requiredAction = PermissionFlagsBits.ModerateMembers; // Required for muting
