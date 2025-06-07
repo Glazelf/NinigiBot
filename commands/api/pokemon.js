@@ -854,5 +854,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
     .addSubcommand(cardSubcommand)
-    .addSubcommand(cardSetSubcommand)
+    // .addSubcommand(cardSetSubcommand) // Gives errors with sv10, needs testing after vacation.
     .addSubcommand(whosThatSubcommand);
