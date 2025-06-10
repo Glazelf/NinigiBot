@@ -3,9 +3,11 @@ import {
     inlineCode
 } from "discord.js";
 import formatName from "../formatName.js";
+import getEnumName from "../getEnumName.js";
 
 export default ({ interaction, member, action }) => {
     let requiredAction = PermissionFlagsBits.ModerateMembers; // Required for muting
+
     switch (action) {
         case "ban":
             requiredAction = PermissionFlagsBits.BanMembers;
@@ -13,6 +15,7 @@ export default ({ interaction, member, action }) => {
         case "kick":
             requiredAction = PermissionFlagsBits.KickMembers;
     };
+    let requiredActionName = getEnumName(requiredAction, PermissionFlagsBits);
     let userRole = interaction.member.roles.highest;
     let targetRole = member.roles.highest;
     let botRole = interaction.guild.members.me.roles.highest;
@@ -27,7 +30,7 @@ export default ({ interaction, member, action }) => {
     } else if (targetRole.position >= userRole.position && member.id != interaction.guild.ownerId) {
         reasonString = `You can not ${action} ${usernameFormatted} (${member.id}) because their highest role (${formatName(targetRole.name, true)}) is higher than or equal to yours (${formatName(userRole.name, true)}).`;
     } else if (!member.moderatable) {
-        reasonString = `I can not ${action} this user. This might be because I lack the ${inlineCode(requiredPermissionName)} permission.`;
+        reasonString = `I can not ${action} this user. This might be because I lack the ${inlineCode(requiredActionName)} permission.`;
     };
     return reasonString;
 };
