@@ -546,16 +546,6 @@ export default async (client, interaction) => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
                                         break;
-                                    case "cardset":
-                                        pokemonCardSetsJSON.forEach(set => {
-                                            const setReleaseDateSplit = set.releaseDate.split("/");
-                                            const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
-                                            if (normalizeString(set.name).includes(normalizeString(focusedOption.value))) {
-                                                valuesByDate[set.id] = setReleaseDate;
-                                                choices.push({ name: set.name, value: set.id });
-                                            };
-                                        });
-                                        break;
                                 };
                                 break;
                             case "format":

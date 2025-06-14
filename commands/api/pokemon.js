@@ -538,25 +538,6 @@ export default async (interaction, messageFlags) => {
                     break;
             };
             break;
-        case "cardset":
-            const setData = pokemonCardSetsJSON.find(element => element.id == nameInput);
-            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
-                return null;
-            });
-            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options.", flags: messageFlags.add(MessageFlags.Ephemeral) });
-            let setFooter = `${setData.releaseDate}\n`;
-            if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
-            let setDescription = "";
-            setJSON.default.forEach(card => {
-                setDescription += `\n${card.number} ${card.name}`;
-            });
-            pokemonEmbed
-                .setAuthor({ name: `${setData.printedTotal} cards` })
-                .setTitle(setData.name)
-                .setThumbnail(setData.images.logo)
-                .setDescription(setDescription)
-                .setFooter({ text: setFooter, iconURL: setData.images.symbol });
-            break;
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -731,11 +712,6 @@ const cardImageOption = new SlashCommandStringOption()
     .setName("image")
     .setDescription("Set the size of the image.")
     .setChoices(cardImageChoices)
-const cardSetOption = new SlashCommandStringOption()
-    .setName("name")
-    .setDescription("Specify set by name.")
-    .setAutocomplete(true)
-    .setRequired(true);
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
@@ -831,11 +807,6 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(cardOption)
     .addStringOption(cardImageOption)
     .addBooleanOption(ephemeralOption);
-const cardSetSubcommand = new SlashCommandSubcommandBuilder()
-    .setName("cardset")
-    .setDescription("Get info on a card set.")
-    .addStringOption(cardSetOption)
-    .addBooleanOption(ephemeralOption);
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
@@ -854,5 +825,4 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
     .addSubcommand(cardSubcommand)
-    // .addSubcommand(cardSetSubcommand) // Gives errors with sv10, needs testing after vacation.
     .addSubcommand(whosThatSubcommand);
