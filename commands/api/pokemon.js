@@ -166,6 +166,7 @@ export default async (interaction, messageFlags) => {
                 if (isIdenticalForm(pokemon.name) ||
                     pokemon.name.startsWith("Terapagos-") ||
                     pokemon.name.startsWith("Ogerpon-") ||
+                    pokemon.name.startsWith("Hoopa-") ||
                     (pokemon.name.startsWith("Deoxys-") && generation > 3) || // Deoxys forms can't be changed in gen 3 so displaying them is usefull
                     pokemon.name.endsWith("-Origin") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
