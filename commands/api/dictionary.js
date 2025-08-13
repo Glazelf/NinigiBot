@@ -49,12 +49,12 @@ export default async (interaction, messageFlags) => {
         for await (const definition of meaning.definitions) {
             definitionCount++;
             if (dictionaryEmbed.data.fields?.length === 25) break;
-            let wordExtrasString = "";
+            let wordExtrasString = `${definition.definition}\n`;
             if (definition.example) wordExtrasString += `Example: ${definition.example}\n`;
             if (definition.synonyms.length > 0) wordExtrasString += `Synonyms: ${definition.synonyms.join(', ')}\n`;
             if (definition.antonyms.length > 0) wordExtrasString += `Antonyms: ${definition.antonyms.join(', ')}\n`;
             if (wordExtrasString.length == 0) wordExtrasString = "No example, synonyms or antonyms.";
-            dictionaryEmbed.addFields({ name: `${meaningTypeString}: ${definition.definition}`, value: wordExtrasString, inline: false });
+            dictionaryEmbed.addFields({ name: meaningTypeString, value: wordExtrasString, inline: false });
         };
     };
     if (definitionCount > 25) dictionaryEmbed.setFooter({ text: "Some defintiions were hidden due to length.\nSpecify the word type if you can't find what you're looking for." });
