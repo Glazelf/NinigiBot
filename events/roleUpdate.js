@@ -47,9 +47,7 @@ export default async (client, oldRole, newRole) => {
             if (oldRole.rawPosition !== newRole.rawPosition) {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
-            let oldRoleColorsArray = [oldRole.colors.primaryColor, oldRole.colors.secondaryColor, oldRole.colors.tertiaryColor];
-            let newRoleColorsArray = [newRole.colors.primaryColor, newRole.colors.secondaryColor, newRole.colors.tertiaryColor];
-            if (oldRoleColorsArray !== newRoleColorsArray) {
+            if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
                 // FIXME: Display primary and secondary color OR holographic
                 updateEmbed.addFields([{ name: `Colors:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
             };
