@@ -70,6 +70,7 @@ export default async (interaction, messageFlags) => {
     // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
     // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
     if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
+    // FIXME: Rework color arguments
     if (roleColor) {
         roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
         roleColor = roleColor.toLowerCase();
@@ -144,6 +145,7 @@ export default async (interaction, messageFlags) => {
         if (!colorArg) roleColor = 0;
         // Create role
         try {
+            // FIXME: Rework color arguments
             await interaction.guild.roles.create({
                 name: interaction.user.username,
                 color: roleColor,

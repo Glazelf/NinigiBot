@@ -46,6 +46,7 @@ export default async (interaction, messageFlags) => {
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
     // Info field
     let infoString = `Role: ${role}`;
+    // FIXME: Display color gradients / holographic correctly
     if (role.hexColor !== defaultColor) infoString += `\nColor: ${role.hexColor}`;
     if (memberListBool !== true) infoString += `\nMembers: ${roleMembers.size}`;
     infoString += `\nPosition: ${role.rawPosition}`;
