@@ -7,7 +7,8 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandAttachmentOption,
-    inlineCode
+    inlineCode,
+    Constants
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/discord/sendMessage.js";
@@ -15,8 +16,10 @@ import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
 import getBotSubscription from "../../util/discord/getBotSubscription.js";
+import filterToAlphanumeric from "../../util/string/filterToAlphanumeric.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+
+const defaultColorStyle = { primaryColor: 0, secondaryColor: null };
 
 export default async (interaction, messageFlags) => {
     messageFlags.add(MessageFlags.Ephemeral);
@@ -33,15 +36,23 @@ export default async (interaction, messageFlags) => {
     await interaction.deferReply({ flags: messageFlags });
 
     let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
-    let colorArg = interaction.options.getString('color-hex');
+    let colorArg = interaction.options.getString("color") || 0;
+    let colorGradientArg = interaction.options.getString("color-gradient");
+    let colorStyleArg = interaction.options.getString("color-style");
     let iconArg = interaction.options.getAttachment("icon");
 
-    let roleColor = null;
+    let roleColors = {};
     let iconImg = null;
     let deleteBool = false;
     let fileIsImg = false;
     let iconSize = 0;
-    if (colorArg) roleColor = colorArg;
+    if (colorArg || colorGradientArg || colorStyleArg) {
+        if (colorArg) colorArg = filterToAlphanumeric(colorArg).toLowerCase();
+        if (colorGradientArg) colorGradientArg = filterToAlphanumeric(colorGradientArg).toLowerCase();
+        roleColors = { primaryColor: colorArg, secondaryColor: colorGradientArg };
+        if (colorStyleArg == "holographic") roleColors = Constants.HolographicStyle;
+        if (colorStyleArg == "default") roleColors = defaultColorStyle
+    };
     if (iconArg) {
         // Object seems to be structured differently between ephemeral and public messages, or I may be stupid
         iconImg = iconArg.attachment.url;
@@ -69,13 +80,6 @@ export default async (interaction, messageFlags) => {
     // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
     // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
     if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
-    if (roleColor) {
-        roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
-        roleColor = roleColor.toLowerCase();
-        if (colorHexes[roleColor]) roleColor = colorHexes[roleColor];
-        if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
-        while (roleColor.length < 6) roleColor = "0" + roleColor;
-    };
     if (deleteBool == true) return deleteRole({
         interaction: interaction,
         roleDB: roleDB,
@@ -95,13 +99,25 @@ export default async (interaction, messageFlags) => {
         let editReturnString = `Updated your role.`;
         let personalRole = interaction.guild.roles.cache.get(roleDB.role_id);
         if (!personalRole) return createRole();
-        if (!colorArg) roleColor = personalRole.color;
-        if (roleColor != personalRole.color) editReturnString += `\n- Color set to ${inlineCode(`#${roleColor}`)}.`;
-
+        // FIXME: Rework color arguments
+        if (!colorArg && !colorGradientArg && !colorStyleArg) roleColors = personalRole.colors;
+        if (JSON.stringify(roleColors) != JSON.stringify(personalRole.colors)) {
+            editReturnString += `\n- Color set to `;
+            if (colorStyleArg == "default") {
+                editReturnString += `${inlineCode("Default")}.`;
+            } else if (colorStyleArg == "holographic") {
+                editReturnString += `${inlineCode("Holographic")}.`;
+            } else {
+                if (roleColors.secondaryColor) roleColorsReturnStringHexes
+                editReturnString += `\n- Color set to ${inlineCode(`#${roleColors.primaryColor.toString(16)}`)}`;
+                if (roleColors.secondaryColor) editReturnString += ` & ${inlineCode(`#${roleColors.secondaryColor.toString(16)}`)}`;
+                editReturnString += ".";
+            };
+        };
         try {
             await personalRole.edit({
                 name: interaction.user.username,
-                color: roleColor,
+                colors: roleColors,
                 position: personalRolePosition,
                 permissions: []
             });
@@ -139,12 +155,12 @@ export default async (interaction, messageFlags) => {
         // Clean up possible old entry
         let oldEntry = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
         if (oldEntry) await oldEntry.destroy();
-        if (!colorArg) roleColor = 0;
+        if (!colorArg && !colorGradientArg && !colorStyleArg) roleColors = defaultColorStyle;
         // Create role
         try {
             await interaction.guild.roles.create({
                 name: interaction.user.username,
-                color: roleColor,
+                colors: roleColors,
                 position: personalRolePosition,
                 reason: `Personal role for ${interaction.user.username} (${interaction.user.id}).`,
                 permissions: []
@@ -179,11 +195,23 @@ async function deleteRole({ interaction, roleDB, successString, failString }) {
 };
 
 // String options
-const colorHexOption = new SlashCommandStringOption()
-    .setName("color-hex")
-    .setDescription("Specify a color.")
+const colorOption = new SlashCommandStringOption()
+    .setName("color")
+    .setDescription("Specify a color in hexadecimal.")
     .setMinLength(6)
     .setMaxLength(6);
+const colorGradientOption = new SlashCommandStringOption()
+    .setName("color-gradient")
+    .setDescription("Specify a color in hexadecimal for a gradient.")
+    .setMinLength(6)
+    .setMaxLength(6);
+const colorStyleOption = new SlashCommandStringOption()
+    .setName("color-style")
+    .setDescription("Pick a role color style. Overrides other color options.")
+    .addChoices([
+        { name: "Holographic", value: "holographic" },
+        { name: "Default", value: "default" }
+    ]);
 // Attachment options
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")
@@ -192,7 +220,9 @@ const iconOption = new SlashCommandAttachmentOption()
 const editSubcommand = new SlashCommandSubcommandBuilder()
     .setName("edit")
     .setDescription("Edit or create your personal role.")
-    .addStringOption(colorHexOption)
+    .addStringOption(colorOption)
+    .addStringOption(colorGradientOption)
+    .addStringOption(colorStyleOption)
     .addAttachmentOption(iconOption);
 const deleteSubcommand = new SlashCommandSubcommandBuilder()
     .setName("delete")

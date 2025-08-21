@@ -4,6 +4,8 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
+import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldRole, newRole) => {
@@ -30,8 +32,8 @@ export default async (client, oldRole, newRole) => {
                 executor = updateExecutor;
             };
             // Role color
-            let embedColor = newRole.hexColor;
-            if (embedColor == "#000000") embedColor = globalVars.embedColor;
+            let embedColor = newRole.colors.primaryColor;
+            if (isRoleDefaultColors(newRole.colors)) embedColor = globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new EmbedBuilder()
@@ -47,8 +49,23 @@ export default async (client, oldRole, newRole) => {
             if (oldRole.rawPosition !== newRole.rawPosition) {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
-            if (oldRole.color !== newRole.color) {
-                updateEmbed.addFields([{ name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
+            if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
+                let roleOldColorsChangesString = `Old: ${oldRole.colors.primaryColor.toString(16)}`;
+                let roleNewColorsChangesString = `New: ${newRole.colors.primaryColor.toString(16)}`;
+                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += `& #${oldRole.colors.secondaryColor.toString(16)}`;
+                if (newRole.colors.secondaryColor) roleNewColorsChangesString += `& #${newRole.colors.secondaryColor.toString(16)}`;
+                if (isRoleDefaultColors(oldRole.colors)) {
+                    roleOldColorsChangesString = "Old: Default";
+                } else if (isRoleHolographic(oldRole.colors)) {
+                    roleOldColorsChangesString = "Old: Holographic";
+                };
+                if (isRoleDefaultColors(newRole.colors)) {
+                    roleOldColorsChangesString = "New: Default";
+                } else if (isRoleHolographic(newRole.colors)) {
+                    roleNewColorsChangesString = "New: Holographic";
+                };
+                roleOldColorsChangesString += "\n";
+                updateEmbed.addFields([{ name: "Colors", value: `${roleOldColorsChangesString}${roleNewColorsChangesString}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field

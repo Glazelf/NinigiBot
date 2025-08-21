@@ -4,6 +4,8 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
+import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, role) => {
@@ -30,20 +32,22 @@ export default async (client, role) => {
                 executor = deleteExecutor;
             };
             // Role color
-            let embedColor = role.hexColor;
-            let roleColorText = role.hexColor;
-            if (!embedColor || embedColor == "#000000") {
+            let embedColor = role.colors.primaryColor;
+            let roleColorText = "";
+            if (isRoleDefaultColors(role.colors)) {
                 embedColor = globalVars.embedColor;
-                roleColorText = null;
+            } else {
+                roleColorText = `#${role.colors.primaryColor.toString(16)}`;
+                if (role.colors.secondaryColor) roleColorText += ` & #${role.colors.secondaryColor.toString(16)}`;
+                if (isRoleHolographic(role.colors)) roleColorText = "Holographic";
             };
-
             const deleteEmbed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setTitle(`Role Deleted ❌`)
                 .setDescription(role.name)
                 .setFooter({ text: `ID: ${role.id}` })
                 .setTimestamp();
-            if (roleColorText) deleteEmbed.addFields([{ name: 'Color:', value: role.hexColor, inline: true }]);
+            if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: `#${role.colors.primaryColor.toString(16)}`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
