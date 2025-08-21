@@ -118,7 +118,6 @@ export default async (interaction, messageFlags) => {
                 editReturnString += ".";
             };
         };
-        console.log(roleColors)
         try {
             await personalRole.edit({
                 name: interaction.user.username,
@@ -127,7 +126,7 @@ export default async (interaction, messageFlags) => {
                 permissions: []
             });
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             return sendMessage({ interaction: interaction, content: `An error occurred.` });
         };
 
