@@ -51,8 +51,12 @@ export default async (interaction, messageFlags) => {
         if (colorArg) colorArg = filterToAlphanumeric(colorArg).toLowerCase();
         if (colorGradientArg) colorGradientArg = filterToAlphanumeric(colorGradientArg).toLowerCase();
         roleColors = { primaryColor: colorArg, secondaryColor: colorGradientArg };
-        if (colorStyleArg == "holographic") roleColors = Constants.HolographicStyle;
-        if (colorStyleArg == "default") roleColors = defaultColorStyle
+        if (colorStyleArg == "holographic") {
+            roleColors.primaryColor = Constants.HolographicStyle.Primary;
+            roleColors.secondaryColor = Constants.HolographicStyle.Secondary;
+            roleColors.tertiaryColor = Constants.HolographicStyle.Tertiary;
+        };
+        if (colorStyleArg == "default") roleColors = defaultColorStyle;
     };
     if (iconArg) {
         // Object seems to be structured differently between ephemeral and public messages, or I may be stupid
