@@ -122,7 +122,7 @@ export default async (interaction, messageFlags) => {
                 permissions: []
             });
         } catch (e) {
-            // console.log(e);
+            console.log(e);
             return sendMessage({ interaction: interaction, content: `An error occurred.` });
         };
 
