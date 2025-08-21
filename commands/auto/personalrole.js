@@ -104,7 +104,6 @@ export default async (interaction, messageFlags) => {
         let editReturnString = `Updated your role.`;
         let personalRole = interaction.guild.roles.cache.get(roleDB.role_id);
         if (!personalRole) return createRole();
-        // FIXME: Rework color arguments
         if (!colorArg && !colorGradientArg && !colorStyleArg) roleColors = personalRole.colors;
         if (JSON.stringify(roleColors) != JSON.stringify(personalRole.colors)) {
             editReturnString += `\n- Color set to `;
