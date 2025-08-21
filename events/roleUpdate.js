@@ -6,6 +6,7 @@ import {
 import logger from "../util/logger.js";
 import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
 import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
+import numberToHex from "../util/math/numberToHex.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldRole, newRole) => {
@@ -50,10 +51,10 @@ export default async (client, oldRole, newRole) => {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
             if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
-                let roleOldColorsChangesString = `Old: ${oldRole.colors.primaryColor.toString(16)}`;
-                let roleNewColorsChangesString = `New: ${newRole.colors.primaryColor.toString(16)}`;
-                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += `& #${oldRole.colors.secondaryColor.toString(16)}`;
-                if (newRole.colors.secondaryColor) roleNewColorsChangesString += `& #${newRole.colors.secondaryColor.toString(16)}`;
+                let roleOldColorsChangesString = `Old: ${numberToHex(oldRole.colors.primaryColor)}`;
+                let roleNewColorsChangesString = `New: ${numberToHex(newRole.colors.primaryColor)}`;
+                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += `& #${numberToHex(oldRole.colors.secondaryColor)}`;
+                if (newRole.colors.secondaryColor) roleNewColorsChangesString += `& #${numberToHex(newRole.colors.secondaryColor)}`;
                 if (isRoleDefaultColors(oldRole.colors)) {
                     roleOldColorsChangesString = "Old: Default";
                 } else if (isRoleHolographic(oldRole.colors)) {

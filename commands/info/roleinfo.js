@@ -8,6 +8,7 @@ import {
 import sendMessage from "../../util/discord/sendMessage.js";
 import isRoleDefaultColors from "../../util/discord/roles/isRoleDefaultColors.js";
 import isRoleHolographic from "../../util/discord/roles/isRoleHolographic.js";
+import numberToHex from "../../util/math/numberToHex.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
@@ -52,8 +53,8 @@ export default async (interaction, messageFlags) => {
         if (isRoleHolographic(role.colors)) {
             infoString += `\nColor: Holographic`;
         } else {
-            infoString += `\nColors: #${role.colors.primaryColor.toString(16)}`
-            if (role.colors.secondaryColor) infoString += ` & #${role.colors.secondaryColor.toString(16)}`;
+            infoString += `\nColors: #${numberToHex(role.colors.primaryColor)}`
+            if (role.colors.secondaryColor) infoString += ` & #${numberToHex(role.colors.secondaryColor)}`;
         };
     };
     if (memberListBool !== true) infoString += `\nMembers: ${roleMembers.size}`;

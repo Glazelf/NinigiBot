@@ -17,6 +17,7 @@ import deletePersonalRole from "../../util/db/deletePersonalRole.js";
 import formatName from "../../util/discord/formatName.js";
 import getBotSubscription from "../../util/discord/getBotSubscription.js";
 import filterToAlphanumeric from "../../util/string/filterToAlphanumeric.js";
+import numberToHex from "../../util/math/numberToHex.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const defaultColorStyle = { primaryColor: 0, secondaryColor: null };
@@ -109,8 +110,8 @@ export default async (interaction, messageFlags) => {
                 editReturnString += `${inlineCode("Holographic")}.`;
             } else {
                 if (roleColors.secondaryColor) roleColorsReturnStringHexes
-                editReturnString += `\n- Color set to ${inlineCode(`#${roleColors.primaryColor.toString(16)}`)}`;
-                if (roleColors.secondaryColor) editReturnString += ` & ${inlineCode(`#${roleColors.secondaryColor.toString(16)}`)}`;
+                editReturnString += `\n- Color set to ${inlineCode(`#${numberToHex(roleColors.primaryColor)}`)}`;
+                if (roleColors.secondaryColor) editReturnString += ` & ${inlineCode(`#${numberToHex(roleColors.secondaryColor)}`)}`;
                 editReturnString += ".";
             };
         };

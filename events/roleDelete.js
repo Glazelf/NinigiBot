@@ -6,6 +6,7 @@ import {
 import logger from "../util/logger.js";
 import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
 import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
+import numberToHex from "../util/math/numberToHex.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, role) => {
@@ -37,8 +38,8 @@ export default async (client, role) => {
             if (isRoleDefaultColors(role.colors)) {
                 embedColor = globalVars.embedColor;
             } else {
-                roleColorText = `#${role.colors.primaryColor.toString(16)}`;
-                if (role.colors.secondaryColor) roleColorText += ` & #${role.colors.secondaryColor.toString(16)}`;
+                roleColorText = `#${numberToHex(role.colors.primaryColor)}`;
+                if (role.colors.secondaryColor) roleColorText += ` & #${numberToHex(role.colors.secondaryColor)}`;
                 if (isRoleHolographic(role.colors)) roleColorText = "Holographic";
             };
             const deleteEmbed = new EmbedBuilder()
@@ -47,7 +48,7 @@ export default async (client, role) => {
                 .setDescription(role.name)
                 .setFooter({ text: `ID: ${role.id}` })
                 .setTimestamp();
-            if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: `#${role.colors.primaryColor.toString(16)}`, inline: true }]);
+            if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: `#${numberToHex(role.colors.primaryColor)}`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
