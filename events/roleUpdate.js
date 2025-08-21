@@ -47,8 +47,11 @@ export default async (client, oldRole, newRole) => {
             if (oldRole.rawPosition !== newRole.rawPosition) {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
-            if (oldRole.color !== newRole.color) {
-                updateEmbed.addFields([{ name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
+            let oldRoleColorsArray = [oldRole.colors.primaryColor, oldRole.colors.secondaryColor, oldRole.colors.tertiaryColor];
+            let newRoleColorsArray = [newRole.colors.primaryColor, newRole.colors.secondaryColor, newRole.colors.tertiaryColor];
+            if (oldRoleColorsArray !== newRoleColorsArray) {
+                // FIXME: Display primary and secondary color OR holographic
+                updateEmbed.addFields([{ name: `Colors:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field

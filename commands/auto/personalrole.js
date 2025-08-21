@@ -7,6 +7,7 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandAttachmentOption,
+    SlashCommandBooleanOption,
     inlineCode
 } from "discord.js";
 import logger from "../../util/logger.js";
@@ -95,6 +96,7 @@ export default async (interaction, messageFlags) => {
         let editReturnString = `Updated your role.`;
         let personalRole = interaction.guild.roles.cache.get(roleDB.role_id);
         if (!personalRole) return createRole();
+        // FIXME: Rework color arguments
         if (!colorArg) roleColor = personalRole.color;
         if (roleColor != personalRole.color) editReturnString += `\n- Color set to ${inlineCode(`#${roleColor}`)}.`;
 
@@ -179,20 +181,30 @@ async function deleteRole({ interaction, roleDB, successString, failString }) {
 };
 
 // String options
-const colorHexOption = new SlashCommandStringOption()
-    .setName("color-hex")
-    .setDescription("Specify a color.")
+const colorOption = new SlashCommandStringOption()
+    .setName("color")
+    .setDescription("Specify a color in hexadecimal.")
+    .setMinLength(6)
+    .setMaxLength(6);
+const colorGradientOption = new SlashCommandStringOption()
+    .setName("color-gradient")
+    .setDescription("Specify a color in hexadecimal for a gradient.")
     .setMinLength(6)
     .setMaxLength(6);
 // Attachment options
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")
     .setDescription("Role icon to use. Requires sufficient boosts.");
+const holographicOption = new SlashCommandBooleanOption()
+    .setName("holographic")
+    .setDescription("Whether this role should be holographic. Ignores other color arguments.");
 // Subcommands
 const editSubcommand = new SlashCommandSubcommandBuilder()
     .setName("edit")
     .setDescription("Edit or create your personal role.")
-    .addStringOption(colorHexOption)
+    .addStringOption(colorOption)
+    .addStringOption(colorGradientOption)
+    .addBooleanOption(holographicOption)
     .addAttachmentOption(iconOption);
 const deleteSubcommand = new SlashCommandSubcommandBuilder()
     .setName("delete")
