@@ -48,7 +48,7 @@ export default async (client, role) => {
                 .setDescription(role.name)
                 .setFooter({ text: `ID: ${role.id}` })
                 .setTimestamp();
-            if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: `#${numberToHex(role.colors.primaryColor)}`, inline: true }]);
+            if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: roleColorText, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
