@@ -51,8 +51,8 @@ export default async (client, oldRole, newRole) => {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
             if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
-                let roleOldColorsChangesString = `Old: ${numberToHex(oldRole.colors.primaryColor)}`;
-                let roleNewColorsChangesString = `New: ${numberToHex(newRole.colors.primaryColor)}`;
+                let roleOldColorsChangesString = `Old: #${numberToHex(oldRole.colors.primaryColor)}`;
+                let roleNewColorsChangesString = `New: #${numberToHex(newRole.colors.primaryColor)}`;
                 if (oldRole.colors.secondaryColor) roleOldColorsChangesString += `& #${numberToHex(oldRole.colors.secondaryColor)}`;
                 if (newRole.colors.secondaryColor) roleNewColorsChangesString += `& #${numberToHex(newRole.colors.secondaryColor)}`;
                 if (isRoleDefaultColors(oldRole.colors)) {
