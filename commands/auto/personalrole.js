@@ -114,6 +114,7 @@ export default async (interaction, messageFlags) => {
                 editReturnString += ".";
             };
         };
+        console.log(roleColors)
         try {
             await personalRole.edit({
                 name: interaction.user.username,
