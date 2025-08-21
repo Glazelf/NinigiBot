@@ -48,7 +48,7 @@ export default async (interaction, messageFlags) => {
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
     // Info field
     let infoString = `Role: ${role}`;
-    if (isRoleDefaultColorsBool) {
+    if (!isRoleDefaultColorsBool) {
         if (isRoleHolographic(role.colors)) {
             infoString += `\nColor: Holographic`;
         } else {
