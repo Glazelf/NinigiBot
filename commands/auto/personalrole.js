@@ -109,7 +109,7 @@ export default async (interaction, messageFlags) => {
             } else if (colorStyleArg == "holographic") {
                 editReturnString += `${inlineCode("Holographic")}.`;
             } else {
-                editReturnString += `\n- Color set to ${inlineCode(`#${numberToHex(roleColors.primaryColor)}`)}`;
+                editReturnString += ` ${inlineCode(`#${numberToHex(roleColors.primaryColor)}`)}`;
                 if (roleColors.secondaryColor) editReturnString += ` & ${inlineCode(`#${numberToHex(roleColors.secondaryColor)}`)}`;
                 editReturnString += ".";
             };
