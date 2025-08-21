@@ -3,7 +3,8 @@ import {
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
-    SlashCommandRoleOption
+    SlashCommandRoleOption,
+    Constants // FIXME: guess on usage
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -13,9 +14,9 @@ export default async (interaction, messageFlags) => {
     let memberListBool = interaction.options.getBoolean("memberlist");
     // Role visuals
     let icon = role.iconURL(globalVars.displayAvatarSettings);
-    let defaultColor = "#000000";
-    let embedColor = role.hexColor;
-    if (embedColor == defaultColor) embedColor = globalVars.embedColor;
+    let defaultColors = { primaryColor: 0, secondaryColor: 0 }; // FIXME: check defaults
+    let embedColor = role.colors.primaryColor;
+    if (role.colors == defaultColors) embedColor = globalVars.embedColor;
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
@@ -46,8 +47,13 @@ export default async (interaction, messageFlags) => {
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
     // Info field
     let infoString = `Role: ${role}`;
-    // FIXME: Display color gradients / holographic correctly
-    if (role.hexColor !== defaultColor) infoString += `\nColor: ${role.hexColor}`;
+    if (role.colors !== defaultColors) {
+        if (role.colors == Constants.HolographicStyle) {
+            infoString += `\nColor: Holographic`;
+        } else {
+            infoString += `\nColors: ${role.colors.primaryColor} & ${role.colors.secondaryColor}`;
+        };
+    };
     if (memberListBool !== true) infoString += `\nMembers: ${roleMembers.size}`;
     infoString += `\nPosition: ${role.rawPosition}`;
     // Embed
