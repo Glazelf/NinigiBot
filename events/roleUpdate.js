@@ -1,7 +1,9 @@
 import {
     EmbedBuilder,
     PermissionFlagsBits,
-    AuditLogEvent
+    AuditLogEvent,
+    // FIXME: check for correct constants usage
+    Constants
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -48,8 +50,14 @@ export default async (client, oldRole, newRole) => {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
             if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
-                // FIXME: Display primary and secondary color OR holographic
-                updateEmbed.addFields([{ name: `Colors:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
+                let roleOldColorsChangesString = `Old:\nPrimary: ${oldRole.colors.primaryColor}\n`;
+                let roleNewColorsChangesString = `New:\nPrimary: ${newRole.colors.primaryColor}\n`;
+                if (oldRole.colors.secondaryColor && oldRole.colors.secondaryColor > 0) roleOldColorsChangesString += `Secondary: ${oldRole.colors.secondaryColor}\n`;
+                if (newRole.colors.secondaryColor && newRole.colors.secondaryColor > 0) roleNewColorsChangesString += `Secondary: ${newRole.colors.secondaryColor}\n`;
+                if (oldRole.colors == Constants.HolographicStyle) roleOldColorsChangesString = "Old: Holographic";
+                if (newRole.colors == Constants.HolographicStyle) roleNewColorsChangesString = "New: Holographic";
+                roleOldColorsChangesString += "\n";
+                updateEmbed.addFields([{ name: `${roleOldColorsChangesString}${roleNewColorsChangesString}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field
