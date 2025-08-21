@@ -3,10 +3,11 @@ import {
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
-    SlashCommandRoleOption,
-    Constants // FIXME: guess on usage
+    SlashCommandRoleOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
+import isRoleDefaultColors from "../../util/discord/roles/isRoleDefaultColors.js";
+import isRoleHolographic from "../../util/discord/roles/isRoleHolographic.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
@@ -14,9 +15,9 @@ export default async (interaction, messageFlags) => {
     let memberListBool = interaction.options.getBoolean("memberlist");
     // Role visuals
     let icon = role.iconURL(globalVars.displayAvatarSettings);
-    let defaultColors = { primaryColor: 0, secondaryColor: 0 }; // FIXME: check defaults
+    let isRoleDefaultColorsBool = isRoleDefaultColors(role.colors);
     let embedColor = role.colors.primaryColor;
-    if (role.colors == defaultColors) embedColor = globalVars.embedColor;
+    if (isRoleDefaultColorsBool) embedColor = globalVars.embedColor;
 
     let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
     if (!guildMembers) return;
@@ -47,11 +48,12 @@ export default async (interaction, messageFlags) => {
     if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
     // Info field
     let infoString = `Role: ${role}`;
-    if (role.colors !== defaultColors) {
-        if (role.colors == Constants.HolographicStyle) {
+    if (isRoleDefaultColorsBool) {
+        if (isRoleHolographic(role.colors)) {
             infoString += `\nColor: Holographic`;
         } else {
-            infoString += `\nColors: ${role.colors.primaryColor} & ${role.colors.secondaryColor}`;
+            infoString += `\nColors: #${role.colors.primaryColor.toString(16)}`
+            if (role.colors.secondaryColor) infoString += ` & #${role.colors.secondaryColor.toString(16)}`;
         };
     };
     if (memberListBool !== true) infoString += `\nMembers: ${roleMembers.size}`;
