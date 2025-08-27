@@ -95,7 +95,6 @@ export default async (interaction, messageFlags) => {
 };
 
 function getUsageListString(usageObject, emojis) {
-    // Rosalia icon is missing
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
