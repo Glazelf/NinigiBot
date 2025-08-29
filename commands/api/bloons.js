@@ -49,7 +49,7 @@ export default async (interaction, messageFlags) => {
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
             if (saveData.achievementsClaimed.length > 0) {
                 let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
-                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.achievementsClaimed.default.length}`;
+                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.parameters.achievementsClaimed.default.length}`;
                 if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
             };
             if (saveData.lifetimeTrophies > 0) {
