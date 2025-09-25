@@ -67,7 +67,7 @@ export default async (interaction, messageFlags) => {
                 .setDescription(userDescription)
                 .setThumbnail(userData.avatarURL)
                 .setImage(userData.bannerURL)
-                .setFooter({ text: `Profile Version: v${saveData.latestGameVersion} | Use creator code: "Glaze"!` })
+                .setFooter({ text: `Profile Version: v${saveData.latestGameVersion}\nUse creator code: "Glaze"!` })
                 .addFields([
                     { name: "Heroes Placed:", value: heroesByUsageString, inline: true },
                     { name: "Towers Placed:", value: towersByUsageString, inline: true }
