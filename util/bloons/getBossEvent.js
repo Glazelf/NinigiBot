@@ -15,6 +15,7 @@ const heroesOrdered = [
     "Gwendolin",
     "StrikerJones",
     "ObynGreenfoot",
+    "Silas",
     "Rosalia",
     "CaptainChurchill",
     "Benjamin",
