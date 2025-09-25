@@ -143,7 +143,7 @@ export default async ({ elite = false, emojis }) => {
         .setDescription(bossEventDescription)
         .setThumbnail(bossEventMetadata.mapURL)
         .setImage(bossEventSelected.bossTypeURL)
-        .setFooter({ text: "Use creator code \"Glaze\"!" })
+        .setFooter({ text: "Creator Code: Glaze" })
         .addFields([
             { name: "Banned:", value: bannedString, inline: false },
             { name: "Allowed Heroes:", value: allowedHeroesString, inline: true },
