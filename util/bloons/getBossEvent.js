@@ -7,54 +7,10 @@ import {
     TimestampStyles
 } from "discord.js";
 import axios from "axios";
+import towersOrdered from "../../objects/bloons/towersOrdered.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
-const heroesOrdered = [
-    "Quincy",
-    "Gwendolin",
-    "StrikerJones",
-    "ObynGreenfoot",
-    "Silas",
-    "Rosalia",
-    "CaptainChurchill",
-    "Benjamin",
-    "PatFusty",
-    "Ezili",
-    "Adora",
-    "Etienne",
-    "Sauda",
-    "AdmiralBrickell",
-    "Psi",
-    "Geraldo",
-    "Corvus"
-];
-const towersOrdered = [
-    "DartMonkey",
-    "BoomerangMonkey",
-    "BombShooter",
-    "TackShooter",
-    "IceMonkey",
-    "GlueGunner",
-    "SniperMonkey",
-    "MonkeySub",
-    "MonkeyBuccaneer",
-    "MonkeyAce",
-    "HeliPilot",
-    "MortarMonkey",
-    "DartlingGunner",
-    "WizardMonkey",
-    "SuperMonkey",
-    "NinjaMonkey",
-    "Alchemist",
-    "Druid",
-    "Mermonkey",
-    "BananaFarm",
-    "SpikeFactory",
-    "MonkeyVillage",
-    "EngineerMonkey",
-    "BeastHandler"
-];
 
 export default async ({ elite = false, emojis }) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
@@ -132,11 +88,11 @@ export default async ({ elite = false, emojis }) => {
     bannedArray = sortTowersToIngame(bannedArray, "all");
     let allowedHeroesString = allowedHeroesArray.join("\n");
     if (allowedHeroesArray.length == 0) allowedHeroesString = "No heroes are allowed.";
-    if (allowedHeroesArray.length == heroesOrdered.length) allowedHeroesString = "All heroes are allowed.";
+    if (allowedHeroesArray.length == towersOrdered.heroes.length) allowedHeroesString = "All heroes are allowed.";
     let allowedTowersString = allowedTowersArray.join("\n");
     let bannedString = bannedArray.join("\n");
     if (bannedString.length == 0) bannedString = "Nothing is banned.";
-    if (allowedHeroesArray.length == towersOrdered.length && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
+    if (allowedHeroesArray.length == towersOrdered.towers.length && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
 
     let bossEventEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
@@ -176,13 +132,13 @@ function sortTowersToIngame(towerList, type) {
     let comparisonArray = null;
     switch (type) {
         case "towers":
-            comparisonArray = towersOrdered;
+            comparisonArray = towersOrdered.towers;
             break;
         case "heroes":
-            comparisonArray = heroesOrdered;
+            comparisonArray = towersOrdered.heroes;
             break;
         case "all":
-            comparisonArray = heroesOrdered.concat(towersOrdered);
+            comparisonArray = towersOrdered.heroes.concat(towersOrdered.towers);
             break;
     };
     let sortedArray = towerList.sort((a, b) => {
