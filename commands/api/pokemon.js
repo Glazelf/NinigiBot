@@ -68,6 +68,8 @@ export default async (interaction, messageFlags) => {
     // Dex.species.get() is so that data in the object is consistent when delivered to later functions
     // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
     if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
+    nameInput = replaceSynonyms(nameInput);
+    pokemonInput = replaceSynonyms(pokemonInput);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
@@ -615,6 +617,13 @@ function isIdenticalForm(pokemonName) {
         pokemonName.endsWith("-Artisan") || // Poltchageist
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
+};
+
+// Replace synonymous spelling to allow for intended correctness
+function replaceSynonyms(name) {
+    if (typeof name !== "string") return;
+    name = name.replace(/gigantamax/i, "gmax");
+    return name;
 };
 
 // Get weakness/resistance string from dataset's array format
