@@ -57,6 +57,8 @@ export default async (interaction, messageFlags) => {
     let generation = generationInput || Dex.gen;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+    nameInput = replaceSynonyms(nameInput);
+    pokemonInput = replaceSynonyms(pokemonInput);
     // Used for pokemon and learn
     if (nameInput) {
         pokemon = Dex.species.get(nameInput);
@@ -68,8 +70,6 @@ export default async (interaction, messageFlags) => {
     // Dex.species.get() is so that data in the object is consistent when delivered to later functions
     // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
     if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
-    nameInput = replaceSynonyms(nameInput);
-    pokemonInput = replaceSynonyms(pokemonInput);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
@@ -620,11 +620,9 @@ function isIdenticalForm(pokemonName) {
 
 // Replace synonymous spelling to allow for intended correctness
 function replaceSynonyms(str) {
-    console.log(str)
     if (typeof str == "string") {
         str = str.replace(/gigantamax/i, "gmax");
     };
-    console.log(str)
     return str;
 };
 
