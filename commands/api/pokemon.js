@@ -104,7 +104,6 @@ export default async (interaction, messageFlags) => {
                 if (!isIdenticalForm(match.name)) abilityMatchesArray.push(match.name);
             });
             let abilityMatchesString = abilityMatchesArray.join(", ");
-
             if (abilityMatchesString.length == 0) abilityMatchesString = `No Pokémon has this ability in generation ${generation}.`;
 
             pokemonEmbed
@@ -620,10 +619,13 @@ function isIdenticalForm(pokemonName) {
 };
 
 // Replace synonymous spelling to allow for intended correctness
-function replaceSynonyms(name) {
-    if (typeof name !== "string") return;
-    name = name.replace(/gigantamax/i, "gmax");
-    return name;
+function replaceSynonyms(str) {
+    console.log(str)
+    if (typeof str == "string") {
+        str = str.replace(/gigantamax/i, "gmax");
+    };
+    console.log(str)
+    return str;
 };
 
 // Get weakness/resistance string from dataset's array format
@@ -638,8 +640,8 @@ function getCardMatchupString(matchupArray, emojis) {
 };
 
 // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
-function mapUsageString(string, seperator) {
-    return string.split(seperator).map(function (x) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
+function mapUsageString(str, seperator) {
+    return str.split(seperator).map(function (x) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
 };
 
 // Check if month is below 1, return older month and decrease year by one
