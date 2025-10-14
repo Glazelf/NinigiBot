@@ -893,7 +893,7 @@ export default async (client, interaction) => {
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         // Getting from dex allows aliases
-                        const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+                        const pkmQuizModalGuess = replacePokemonSynonyms(interaction.fields.getTextInputValue(pkmQuizButtonID));
                         // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
                         const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
 
@@ -917,4 +917,12 @@ export default async (client, interaction) => {
     } catch (e) {
         logger({ exception: e, interaction: interaction });
     };
+};
+
+// Replace synonymous spelling to allow for intended correctness
+function replacePokemonSynonyms(str) {
+    if (typeof str == "string") {
+        str = str.replace(/gigantamax/i, "gmax");
+    };
+    return str;
 };

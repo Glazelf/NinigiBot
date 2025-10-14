@@ -57,8 +57,6 @@ export default async (interaction, messageFlags) => {
     let generation = generationInput || Dex.gen;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
-    nameInput = replaceSynonyms(nameInput);
-    pokemonInput = replaceSynonyms(pokemonInput);
     // Used for pokemon and learn
     if (nameInput) {
         pokemon = Dex.species.get(nameInput);
@@ -616,14 +614,6 @@ function isIdenticalForm(pokemonName) {
         pokemonName.endsWith("-Artisan") || // Poltchageist
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
-};
-
-// Replace synonymous spelling to allow for intended correctness
-function replaceSynonyms(str) {
-    if (typeof str == "string") {
-        str = str.replace(/gigantamax/i, "gmax");
-    };
-    return str;
 };
 
 // Get weakness/resistance string from dataset's array format
