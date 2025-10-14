@@ -21,6 +21,7 @@ import { Generations } from '@pkmn/data';
 import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
+import replacePokemonNameSynonyms from "../../util/pokemon/replacePokemonNameSynonyms.js";
 import getTypeEmojis from "../../util/pokemon/getTypeEmojis.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import leadingZeros from "../../util/leadingZeros.js";
@@ -57,6 +58,8 @@ export default async (interaction, messageFlags) => {
     let generation = generationInput || Dex.gen;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+    nameInput = replacePokemonNameSynonyms(nameInput);
+    pokemonInput = replacePokemonNameSynonyms(pokemonInput);
     // Used for pokemon and learn
     if (nameInput) {
         pokemon = Dex.species.get(nameInput);
