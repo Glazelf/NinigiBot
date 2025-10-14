@@ -621,7 +621,9 @@ function isIdenticalForm(pokemonName) {
 // Replace synonymous spelling to allow for intended correctness
 function replaceSynonyms(str) {
     if (typeof str == "string") {
-        str = str.replace(/gigantamax/i, "gmax");
+        str = str
+            .replace(/gigantamax/i, "gmax")
+            .replace(/-incarnate/i, "");
     };
     return str;
 };
