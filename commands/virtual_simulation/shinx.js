@@ -399,7 +399,7 @@ export default async (interaction, messageFlags) => {
                 trainer_answer = null;
             };
             if (!trainer_answer) {
-                return sendMessage({ interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] });
+                return sendMessage({ interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] }).catch(e => { return null; });
             } else if (trainer_answer.customId === 'battleNo') {
                 return sendMessage({ interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
             };
