@@ -291,7 +291,7 @@ export default async (interaction, messageFlags) => {
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
             if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called ${inlineCode(nameInput)}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             // Set variables
-            let learnAuthor = `${pokemon.name} learns ${move.name}`;
+            let learnAuthor = `${pokemon.name} learns ${move.name}.`;
             let learnInfo = "";
 
             let prevo = Dex.species.get(pokemon.prevo);
