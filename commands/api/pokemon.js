@@ -794,7 +794,7 @@ const learnSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Check if a Pokémon can learn a move")
     .addStringOption(pokemonOptionRequired)
     .addStringOption(moveOption)
-    .addBooleanOption(ephemeralOption)
+    .addBooleanOption(ephemeralOption);
 const usageSubcommand = new SlashCommandSubcommandBuilder()
     .setName("usage")
     .setDescription("Shows Smogon usage data.")
