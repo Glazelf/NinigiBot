@@ -201,7 +201,7 @@ export default async (interaction, messageFlags) => {
             if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
             let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
             let moveCategoryString = move.category;
-            if (moveCategoryEmoji) moveCategoryString = moveCategoryEmoji + moveCategoryString;
+            if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji}${moveCategoryString}`;
 
             pokemonEmbed
                 .setTitle(moveTitle)
