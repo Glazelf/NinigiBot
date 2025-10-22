@@ -186,7 +186,6 @@ export default async (interaction, messageFlags) => {
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
             let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
-            let category = move.category;
             let ppString = moveGen.pp.toString();
             let ppMax = Math.floor(moveGen.pp * 1.6);
             if (moveGen.pp !== ppMax) ppString += ` (${ppMax})`; // Only add max PP in brackets if max PP is actually different from base PP
@@ -200,6 +199,9 @@ export default async (interaction, messageFlags) => {
             let moveTitle = moveGen.name;
             if (moveGen.isMax) moveTitle = `${moveGen.name} (Max Move)`;
             if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
+            let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
+            let moveCategoryString = move.category;
+            if (moveCategoryEmoji) moveCategoryString = moveCategoryEmoji + moveCategoryString;
 
             pokemonEmbed
                 .setTitle(moveTitle)
@@ -209,7 +211,7 @@ export default async (interaction, messageFlags) => {
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
-                { name: "Category:", value: category, inline: true },
+                { name: "Category:", value: moveCategoryString, inline: true },
                 { name: "Target:", value: target, inline: true }
             ]);
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
