@@ -516,23 +516,14 @@ export default async (client, interaction) => {
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            // Also filter out typed hidden powers
-                                            let moves = pokemonFilterStandard(dexModified.moves.all()).filter(move =>
-                                                !move.name.startsWith("Hidden Power ")
-                                            ).sort((a, b) => a.name.localeCompare(b.name));
-                                            // Ignore "Future" tag if gen is most recent
-                                            if (Dex.gen !== generationInput) moves = pokemonFilterFuture(moves);
+                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
                                             break;
                                         } else {
                                             // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                            let pokemonSpecies = pokemonFilterStandard(dexModified.species.all()).filter(species =>
-                                                species.num > 0
-                                            );
-                                            if (Dex.gen !== generationInput) pokemonSpecies = pokemonFilterFuture(pokemonSpecies);
-                                            pokemonSpecies.sort((a, b) => a.num - b.num);
+                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen).sort((a, b) => a.num - b.num);
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
@@ -543,18 +534,14 @@ export default async (client, interaction) => {
                                         };
                                     case "ability":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let abilities = pokemonFilterStandard(dexModified.abilities.all()).filter(ability =>
-                                            ability.name !== "No Ability"
-                                        ).sort((a, b) => a.name.localeCompare(b.name));
-                                        if (Dex.gen !== generationInput) abilities = pokemonFilterFuture(abilities);
+                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                         abilities.forEach(ability => {
                                             if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
                                         });
                                         break;
                                     case "item":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let items = pokemonFilterStandard(dexModified.items.all()).sort((a, b) => a.name.localeCompare(b.name));
-                                        if (Dex.gen !== generationInput) items = pokemonFilterFuture(items);
+                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                         items.forEach(item => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
@@ -931,13 +918,13 @@ export default async (client, interaction) => {
     };
 };
 
-function pokemonFilterStandard(item) {
-    return item.filter(item2 =>
-        item2.exists &&
-        item2.isNonstandard !== "CAP"
+function pokemonAutocompleteFilter(object, inputGen, currentGen) {
+    return object.filter(item =>
+        item.exists &&
+        item.isNonstandard !== "CAP" &&
+        (inputGen === currentGen || item.isNonstandard !== "Future") && // Allow future in current gen
+        !item.name.startsWith("Hidden Power ") && // Exclude typed Hidden Power moves
+        !item.name !== "No Ability" && // Lack of ability
+        (item.num === undefined || item.num > 0) // Pokémon dex number >0
     );
-};
-
-function pokemonFilterFuture(item) {
-    return item.filter(item2 => item2.isNonstandard !== "Future");
 };
