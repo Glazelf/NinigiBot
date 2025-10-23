@@ -341,7 +341,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         4: new ActionRowBuilder()
     };
     let pokemonForms = [];
-    let baseSpecies = pokemon.name;
+    let baseSpecies = pokemon;
 
     if (pokemon.name !== pokemon.baseSpecies) {
         baseSpecies = Dex.species.get(pokemon.baseSpecies);
@@ -366,6 +366,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         if (pokemonForms.length > 0) {
             for (let i = 0; i < pokemonForms.length; i++) {
                 let formData = Dex.species.get(pokemonForms[i]);
+                if (formData.name == pokemon.name) continue;
                 if (formData.gen > generation) continue;
                 if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
                 const formButton = new ButtonBuilder()
