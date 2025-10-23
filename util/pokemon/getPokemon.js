@@ -341,10 +341,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         4: new ActionRowBuilder()
     };
     let pokemonForms = [];
-    let baseSpecies = pokemon;
+    let baseSpecies = pokemon; // Default is pokemon == baseSpecies
 
     if (pokemon.name !== pokemon.baseSpecies) {
-        baseSpecies = Dex.species.get(pokemon.baseSpecies);
+        baseSpecies = Dex.species.get(pokemon.baseSpecies); // Update baseSpecies variable so form buttons are added correctly later
         const baseSpeciesButton = new ButtonBuilder()
             .setCustomId(`pkmbase|${buttonAppend}`)
             .setLabel(pokemon.baseSpecies)
@@ -360,6 +360,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
 
     // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. 
     // Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
+    // Use baseSpecies variable since forms are only appended to the base species and not to each individual form
     if (baseSpecies.otherFormes && baseSpecies.otherFormes.length > 0) pokemonForms = [...baseSpecies.otherFormes];
     if (baseSpecies.canGigantamax) pokemonForms.push(`${baseSpecies.name}-Gmax`);
     if (pokemonForms && pokemonForms.length > 0) {
