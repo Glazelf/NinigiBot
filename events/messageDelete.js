@@ -40,7 +40,7 @@ export default async (client, message) => {
                 if (deleteLog.extra.channel != message.channel || deleteLog.target.id != message.member.id || deleteLog.createdTimestamp < (Date.now() - 5000)) executor = null;
             };
         } catch (e) {
-            // console.log(e);
+            console.log(e);
             executor = null;
         };
         // Check message content
@@ -90,7 +90,7 @@ export default async (client, message) => {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
-                // console.log(e);
+                console.log(e);
                 return;
             };
         } else {
