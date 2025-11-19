@@ -25,6 +25,7 @@ export default async (client, message) => {
         let log = message.guild.channels.cache.get(logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
         if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.get(globalVars.sysbotLogChannelID);
+        console.log(log.id)
         if (!log) return;
         let executor = null;
         try {
