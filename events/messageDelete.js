@@ -45,7 +45,6 @@ export default async (client, message) => {
         };
         // Check message content
         let botMember = message.guild.members.me;
-
         if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
