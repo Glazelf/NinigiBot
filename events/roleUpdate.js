@@ -7,6 +7,7 @@ import logger from "../util/logger.js";
 import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
 import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
 import numberToHex from "../util/math/numberToHex.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldRole, newRole) => {
@@ -19,7 +20,7 @@ export default async (client, oldRole, newRole) => {
         if (!log) return;
 
         let botMember = newRole.guild.members.me;
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
                 type: AuditLogEvent.RoleUpdate
@@ -88,7 +89,7 @@ export default async (client, oldRole, newRole) => {
             updateEmbed.setDescription(updateDescription);
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

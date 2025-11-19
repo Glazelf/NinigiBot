@@ -1,9 +1,11 @@
 import {
-    EmbedBuilder
+    EmbedBuilder,
+    PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, entitlement) => {
@@ -17,7 +19,7 @@ export default async (client, entitlement) => {
         let member = await guild.members.fetch(entitlement.userId);
         if (!member) return;
         let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: guild.id, user_id: entitlement.userId } });
-        if (!member.premiumSince && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, guild);
+        if (!member.premiumSince && roleDB && !checkPermissions({ member: member, permissions: [PermissionFlagsBits.ManageRoles] })) await deletePersonalRole(roleDB, guild);
 
         if (!user) return;
         let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);

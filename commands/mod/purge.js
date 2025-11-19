@@ -9,7 +9,7 @@ import {
     inlineCode
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import isAdmin from "../../util/discord/perms/isAdmin.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import getEnumName from "../../util/discord/getEnumName.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -19,8 +19,7 @@ const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBi
 const filterOldMessages = true;
 
 export default async (interaction, messageFlags) => {
-    let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let deferralResponse = await interaction.deferReply({ flags: messageFlags, withResponse: true });
     let resultMessage = deferralResponse.resource?.message;

@@ -9,6 +9,7 @@ import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
 import getBotSubscription from "../util/discord/getBotSubscription.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldMember, newMember) => {
@@ -20,8 +21,7 @@ export default async (client, oldMember, newMember) => {
         let log = oldMember.guild.channels.cache.get(logChannel.channel_id);
         if (!log) return;
         let botMember = oldMember.guild.members.me;
-
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             if (newMember) {
                 let newMemberFetch = await newMember.fetch({ force: true }).catch(e => { return; });
                 if (newMemberFetch) newMember = newMemberFetch;
@@ -84,7 +84,7 @@ export default async (client, oldMember, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            if (!newMember.premiumSince && newMember.permissions && !newMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
+            if (!newMember.premiumSince && !checkPermissions({ member: newMember, permissions: [PermissionFlagsBits.ManageRoles] })) {
                 let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: oldMember.guild.id } });
                 let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: oldMember.guild.id, user_id: oldMember.id } });
                 let isSupporter = false;
@@ -154,7 +154,7 @@ export default async (client, oldMember, newMember) => {
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

@@ -15,6 +15,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
@@ -104,7 +105,7 @@ export default async (interaction, messageFlags) => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
         if (channel.type == ChannelType.GuildThread) threadCount += 1;
         // Get archived threads?
-        // if (channel.threads && channel.type == ChannelType.GuildText && botMember.permissions.has(PermissionFlagsBits.Administrator)) {
+        // if (channel.threads && channel.type == ChannelType.GuildText && checkPermissions({ member: botMember, permissions: [PermissionFlagsBits.Administrator] })) {
         //     let archivedThreads = await channel.threads.fetchArchived();
         //     threadCount += archivedThreads.threads.entries().length;
         // };
@@ -121,7 +122,7 @@ export default async (interaction, messageFlags) => {
     };
     // Doesn't consider canary or ptb
     let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-    if (guild.rulesChannel && (interaction.member.permissions.has(PermissionFlagsBits.ViewGuildInsights) || adminBool)) {
+    if (guild.rulesChannel && checkPermissions({ member: interaction.member, permissions: [PermissionFlagsBits.ViewGuildInsights] })) {
         const insightsButton = new ButtonBuilder()
             .setLabel("Insights")
             .setStyle(ButtonStyle.Link)

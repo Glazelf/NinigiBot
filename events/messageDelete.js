@@ -4,6 +4,7 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, message) => {
@@ -25,9 +26,7 @@ export default async (client, message) => {
         let log = message.guild.channels.cache.get(logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
         if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.get(globalVars.sysbotLogChannelID);
-        console.log(log.id)
         if (!log) return;
-        console.log("checkpoint 1")
         let executor = null;
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
@@ -45,9 +44,9 @@ export default async (client, message) => {
             executor = null;
         };
         // Check message content
-        console.log("checkpoint 2")
         let botMember = message.guild.members.me;
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
@@ -56,7 +55,6 @@ export default async (client, message) => {
 
             let isReply = false;
             let replyMessage;
-            console.log("checkpoint 3")
             if (message.reference) isReply = true;
             if (isReply) {
                 try {
@@ -85,21 +83,18 @@ export default async (client, message) => {
             if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
-            console.log("checkpoint 4")
             deleteEmbed
                 .setFooter({ text: message.author.username, iconURL: avatar })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
-                console.log("checkpoint 5")
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;
             };
         } else {
-            console.log("checkpoint 6")
             return;
         };
 

@@ -11,6 +11,7 @@ import {
     Constants
 } from "discord.js";
 import logger from "../../util/logger.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
 import deletePersonalRole from "../../util/db/deletePersonalRole.js";
@@ -27,7 +28,7 @@ export default async (interaction, messageFlags) => {
     let serverApi = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default();
     let adminBool = isAdmin(interaction.member);
-    let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
+    let modBool = checkPermissions({ member: interaction.member, permissions: [PermissionFlagsBits.ManageRoles] });
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
     let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
