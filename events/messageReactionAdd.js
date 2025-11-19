@@ -1,5 +1,7 @@
+import { PermissionFlagsBits } from "discord.js";
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 const starboardEmote = "⭐";
@@ -14,7 +16,7 @@ export default async (client, messageReaction) => {
         if (!messageReaction.count) messageReaction = await messageReaction.fetch().catch(e => { return null; });
         if (!messageReaction) return;
         // Check if message is reacting to nostar in Shinx server
-        const isInShinxServer = (messageReaction.message.guildId == globalVars.ShinxServerID);
+        const isInShinxServer = (messageReaction.message.guild.id == globalVars.ShinxServerID);
         let isNoStar = (isInShinxServer && messageReaction.emoji.id === altboardEmoteID);
         if (!messageReaction.emoji.id) isNoStar = (isInShinxServer && messageReaction.emoji.name == altboardEmote);
         if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
@@ -69,7 +71,7 @@ export default async (client, messageReaction) => {
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit(starboardMessage);
             // Try to pin messages with double stars
-            if (messageReaction.count >= starLimit * 2) starMessage.pin().catch(e => {
+            if (messageReaction.count >= starLimit * 2 && checkPermissions({ member: messageReaction.message.guild.members.me, channel: starChannel, permissions: [PermissionFlagsBits.PinMessages] })) starMessage.pin().catch(e => {
                 // console.log(e);
                 return;
             });
