@@ -15,7 +15,7 @@ export default async (client, messages) => {
         messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and order it chronologically
         for await (const message of messages) {
             // Currently starboarded messages that get purged aren't removed from starboard as this would require a silly amount of database calls
-            if (!guild) guild = message.guildId;
+            if (!guild) guild = message.guild.id;
             let addString = `${message.author}:`;
             if (message.content) addString += ` ${message.content}\n`;
             if (messagesContent.length + addString.length > 1024) {
