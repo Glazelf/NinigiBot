@@ -1,6 +1,7 @@
 import isAdmin from "./isAdmin.js";
 
 export default ({ member, permissions, channel }) => {
+    console.log(isAdmin(member))
     if (isAdmin(member)) return true;
     let passedPermissions = [];
     for (let permission of permissions) {
@@ -12,5 +13,7 @@ export default ({ member, permissions, channel }) => {
             continue;
         };
     };
+    console.log(permissions)
+    console.log(passedPermissions)
     return (permissions.length === passedPermissions.length);
 };
