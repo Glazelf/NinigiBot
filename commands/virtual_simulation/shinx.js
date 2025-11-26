@@ -76,7 +76,6 @@ export default async (interaction, messageFlags) => {
     // Only create userFinder if guild data exists
     let userFinder = null;
     let guildDataAvailable = isGuildDataAvailable(interaction);
-    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
     const now = new Date();
     let master = interaction.user;
@@ -165,6 +164,7 @@ export default async (interaction, messageFlags) => {
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
+                    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
                     for (let i = 0; i < guests.length; i++) {
                         const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
@@ -212,6 +212,7 @@ export default async (interaction, messageFlags) => {
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
+            if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
 
             for (let i = 0; i < guests.length; i++) {
                 const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
