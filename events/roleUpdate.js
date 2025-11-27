@@ -54,8 +54,8 @@ export default async (client, oldRole, newRole) => {
             if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
                 let roleOldColorsChangesString = `Old: #${numberToHex(oldRole.colors.primaryColor)}`;
                 let roleNewColorsChangesString = `New: #${numberToHex(newRole.colors.primaryColor)}`;
-                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += `& #${numberToHex(oldRole.colors.secondaryColor)}`;
-                if (newRole.colors.secondaryColor) roleNewColorsChangesString += `& #${numberToHex(newRole.colors.secondaryColor)}`;
+                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += ` & #${numberToHex(oldRole.colors.secondaryColor)}`;
+                if (newRole.colors.secondaryColor) roleNewColorsChangesString += ` & #${numberToHex(newRole.colors.secondaryColor)}`;
                 if (isRoleDefaultColors(oldRole.colors)) {
                     roleOldColorsChangesString = "Old: Default";
                 } else if (isRoleHolographic(oldRole.colors)) {
