@@ -29,8 +29,8 @@ export default async (interaction, messageFlags) => {
         .setAccentColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
         case "number":
-            let lowNumber = interaction.options.getInteger("number-min");
-            let highNumber = interaction.options.getInteger("number-max");
+            let lowNumber = interaction.options.getInteger("min");
+            let highNumber = interaction.options.getInteger("max");
             if (lowNumber > highNumber) [lowNumber, highNumber] = [highNumber, lowNumber]; // Flip variables in case lowNumber is higher. randomNumber() does this too but we do it again here to keep the end string sorted from low to high
             let randomValue = randomNumber(lowNumber, highNumber);
             let randomTextDisplay = new TextDisplayBuilder()
@@ -83,11 +83,11 @@ const captionOption = new SlashCommandStringOption()
     .setDescription("Text to put over the image.");
 // Integer options
 const minNumberOption = new SlashCommandIntegerOption()
-    .setName("number-min")
+    .setName("min")
     .setDescription("Minimum number.")
     .setRequired(true);
 const maxNumberOption = new SlashCommandIntegerOption()
-    .setName("number-max")
+    .setName("max")
     .setDescription("Maximum number.")
     .setRequired(true);
 // Boolean options
