@@ -6,9 +6,12 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     codeBlock,
-    ActionRowBuilder,
     SlashCommandSubcommandGroupBuilder,
-    hyperlink
+    hyperlink,
+    ColorResolvable,
+    ChatInputCommandInteraction,
+    MessageFlagsBitFieldSettable,
+    MessageFlagsBitField
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
@@ -17,13 +20,15 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
     let oak = interaction.options.getString("oak");
     let apiError = null;
-    let btd6Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
-    let btd6ActionRow = new ActionRowBuilder();
-    await interaction.deferReply({ flags: messageFlags });
+    let btd6EmbedArray: EmbedBuilder[] = [];
+    let btd6Embed: EmbedBuilder = new EmbedBuilder()
+        .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
+    let btd6ActionRowArray: EmbedBuilder[] = [];
+    // @ts-ignore
+    await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
     switch (interaction.options.getSubcommand()) {
         case "user":
@@ -72,6 +77,7 @@ export default async (interaction, messageFlags) => {
                     { name: "Heroes Placed:", value: heroesByUsageString, inline: true },
                     { name: "Towers Placed:", value: towersByUsageString, inline: true }
                 ]);
+            btd6EmbedArray.push(btd6Embed);
             break;
         case "boss-event":
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
@@ -79,8 +85,8 @@ export default async (interaction, messageFlags) => {
                 apiError = bossEventMessageObject;
                 break;
             };
-            btd6Embed = bossEventMessageObject.embeds;
-            btd6ActionRow = bossEventMessageObject.components;
+            btd6EmbedArray = bossEventMessageObject.embeds;
+            btd6ActionRowArray = bossEventMessageObject.components;
             break;
     };
     // Handle API errors
@@ -88,17 +94,21 @@ export default async (interaction, messageFlags) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed
             .setTitle("Error")
-            .setColor(globalVars.embedColorError)
+            .setColor(globalVars.embedColorError as [number, number, number] as ColorResolvable)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
+        btd6EmbedArray.push(btd6Embed);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
+    console.log(btd6EmbedArray)
+    console.log(btd6ActionRowArray)
+    // @ts-ignore
+    return sendMessage(interaction, btd6EmbedArray, btd6ActionRowArray, messageFlags);
 };
 
-function getUsageListString(usageObject, emojis) {
+function getUsageListString(usageObject: { [key: string]: number }, emojis: { [key: string]: any }) {
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
-        let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
+        let heroIcon = emojis.find((emoji: { name: string }) => emoji.name == `BTD6Hero${element[0]}`);
         if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
         usageString += `${element[0]}: ${element[1]}\n`;
     });
