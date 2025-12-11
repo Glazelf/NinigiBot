@@ -7,14 +7,13 @@ import {
     SlashCommandIntegerOption
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import isAdmin from "../../util/discord/perms/isAdmin.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
 export default async (interaction, messageFlags) => {
     messageFlags.remove(MessageFlags.Ephemeral);
-    let adminBool = isAdmin(interaction.member);
     let slowmodeSupportedChannelTypes = [
         ChannelType.GuildText,
         ChannelType.PublicThread,
@@ -22,7 +21,7 @@ export default async (interaction, messageFlags) => {
         ChannelType.GuildStageVoice,
         ChannelType.GuildVoice
     ];
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
     if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     let time = interaction.options.getInteger("time");

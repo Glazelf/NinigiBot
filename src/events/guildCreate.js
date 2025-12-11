@@ -25,8 +25,8 @@ export default async (client, guild) => {
             .setDescription(`${formatName(client.user.username, true)} is now in ${client.guilds.cache.size} servers.`)
             .setFooter({ text: `ID: ${guild.id}` })
             .setTimestamp()
-            .addFields([{ name: `Name:`, value: guild.name, inline: true }]);
-        if (guildOwner.user) guildEmbed.addFields([{ name: `Owner:`, value: `${guildOwner.user.username} (${guildOwner.id})`, inline: false }]);
+            .addFields([{ name: `Name:`, value: formatName(guild.name, false), inline: true }]);
+        if (guildOwner.user) guildEmbed.addFields([{ name: `Owner:`, value: `${formatName(guildOwner.user.username, false)} (${guildOwner.id})`, inline: false }]);
         guildEmbed.addFields([{ name: `Members:`, value: guild.memberCount.toString(), inline: false }])
         return log.send({ embeds: [guildEmbed] });
 

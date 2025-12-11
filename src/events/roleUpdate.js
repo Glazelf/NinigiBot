@@ -4,6 +4,10 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import isRoleDefaultColors from "../util/discord/roles/isRoleDefaultColors.js";
+import isRoleHolographic from "../util/discord/roles/isRoleHolographic.js";
+import numberToHex from "../util/math/numberToHex.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldRole, newRole) => {
@@ -16,7 +20,7 @@ export default async (client, oldRole, newRole) => {
         if (!log) return;
 
         let botMember = newRole.guild.members.me;
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
                 type: AuditLogEvent.RoleUpdate
@@ -30,8 +34,8 @@ export default async (client, oldRole, newRole) => {
                 executor = updateExecutor;
             };
             // Role color
-            let embedColor = newRole.hexColor;
-            if (embedColor == "#000000") embedColor = globalVars.embedColor;
+            let embedColor = newRole.colors.primaryColor;
+            if (isRoleDefaultColors(newRole.colors)) embedColor = globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new EmbedBuilder()
@@ -47,8 +51,23 @@ export default async (client, oldRole, newRole) => {
             if (oldRole.rawPosition !== newRole.rawPosition) {
                 updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
-            if (oldRole.color !== newRole.color) {
-                updateEmbed.addFields([{ name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
+            if (JSON.stringify(oldRole.colors) !== JSON.stringify(newRole.colors)) {
+                let roleOldColorsChangesString = `Old: #${numberToHex(oldRole.colors.primaryColor)}`;
+                let roleNewColorsChangesString = `New: #${numberToHex(newRole.colors.primaryColor)}`;
+                if (oldRole.colors.secondaryColor) roleOldColorsChangesString += ` & #${numberToHex(oldRole.colors.secondaryColor)}`;
+                if (newRole.colors.secondaryColor) roleNewColorsChangesString += ` & #${numberToHex(newRole.colors.secondaryColor)}`;
+                if (isRoleDefaultColors(oldRole.colors)) {
+                    roleOldColorsChangesString = "Old: Default";
+                } else if (isRoleHolographic(oldRole.colors)) {
+                    roleOldColorsChangesString = "Old: Holographic";
+                };
+                if (isRoleDefaultColors(newRole.colors)) {
+                    roleOldColorsChangesString = "New: Default";
+                } else if (isRoleHolographic(newRole.colors)) {
+                    roleNewColorsChangesString = "New: Holographic";
+                };
+                roleOldColorsChangesString += "\n";
+                updateEmbed.addFields([{ name: "Colors", value: `${roleOldColorsChangesString}${roleNewColorsChangesString}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field
@@ -70,7 +89,7 @@ export default async (client, oldRole, newRole) => {
             updateEmbed.setDescription(updateDescription);
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

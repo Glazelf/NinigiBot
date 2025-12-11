@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import normalizeString from "../util/string/normalizeString.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import {
     getMoney,
@@ -69,7 +70,7 @@ export default async (client, message) => {
             let dmLogObject = { content: message.author.id, embeds: dmEmbeds, components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type === ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has(PermissionFlagsBits.SendMessages)) return;
+        if (!message.channel.type === ChannelType.GuildForum && !checkPermissions({ member: message.guild.members.me, channel: message.channel, permissions: [PermissionFlagsBits.SendMessages] })) return;
         if (!message.member) return;
 
         let memberRoles = 0;

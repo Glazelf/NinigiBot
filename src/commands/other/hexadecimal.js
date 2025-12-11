@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import leadingZeros from "../../util/leadingZeros.js";
+import numberToHex from "../../util/math/numberToHex.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, messageFlags) => {
@@ -16,7 +17,7 @@ export default async (interaction, messageFlags) => {
     switch (interaction.options.getSubcommand()) {
         case "tohex":
             input = interaction.options.getInteger("input");
-            let hexString = input.toString(16).toUpperCase();
+            let hexString = numberToHex(input).toUpperCase();
             hexString = leadingZeros(hexString, 6);
             let returnString = codeBlock("js", `0x${hexString}`)
             return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });

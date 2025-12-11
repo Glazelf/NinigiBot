@@ -8,8 +8,8 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-
 
 export default async (client, guildBan) => {
     try {
@@ -26,8 +26,7 @@ export default async (client, guildBan) => {
         });
 
         let botMember = guildBan.guild.members.me;
-
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             let banLog = fetchedLogs.entries.first();
             if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
@@ -61,7 +60,7 @@ export default async (client, guildBan) => {
                 ]);
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

@@ -1,26 +1,27 @@
-.env
-/node_modules
+# Environment
 /.idea
 /.vs
+/.vscode
 *.log
-npm-debug.log*
-pids
-*.pid
-*.seed
-build/Release
-jspm_packages
 .npm
 .node_repl_history
 init
-.channels
-*.bak
-*.db
-*sqlite
+# Environment specific files
+.env
+*.dev.js
+.node-xmlhttprequest-sync-*
+npm-debug.log*
+build/Release
 ffmpeg.exe
 config.json
 launch.json
-*.dev.js
-/.vscode
+*.bak
+*.db
+*sqlite
+# Dependencies
+/node_modules
+jspm_packages
+/assets/pkm
 /src/assets/pkm
 # TypeScript
 /build
@@ -30,4 +31,10 @@ launch.json
 *.gb
 *.gba
 *.sav
+/assets/roms/screenshot.* 
 /src/assets/roms/screenshot.*
+# Other
+pids
+*.pid
+*.seed
+.channels

@@ -13,8 +13,8 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import checkMemberManagePermissions from "../../util/discord/perms/checkMemberManagePermissions.js";
-import isAdmin from "../../util/discord/perms/isAdmin.js";
 import getTime from "../../util/getTime.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import getEnumName from "../../util/discord/getEnumName.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -23,8 +23,7 @@ const requiredPermission = PermissionFlagsBits.BanMembers;
 const requiredPermissionName = getEnumName(requiredPermission, PermissionFlagsBits);
 
 export default async (interaction, messageFlags) => {
-    let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     messageFlags.remove(MessageFlags.Ephemeral);
     await interaction.deferReply({ flags: messageFlags });

@@ -3,8 +3,8 @@ import {
     PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../util/discord/perms/isAdmin.js";
 
 export default async (client, oldMessage, newMessage) => {
     try {
@@ -23,9 +23,8 @@ export default async (client, oldMessage, newMessage) => {
 
         let botMember = oldMessage.guild.members.me;
         let updateEmbeds = []; // Max embeds is 10, max images is also 10, so this doesn't need to be size limited
-        let adminBool = isAdmin(botMember);
 
-        if ((log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) || adminBool) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             // Attachments
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
@@ -78,7 +77,7 @@ export default async (client, oldMessage, newMessage) => {
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
             updateEmbeds.unshift(updateEmbed);
             return log.send({ embeds: updateEmbeds });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

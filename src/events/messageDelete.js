@@ -4,6 +4,7 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, message) => {
@@ -11,7 +12,6 @@ export default async (client, message) => {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
-        console.log
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
@@ -45,7 +45,7 @@ export default async (client, message) => {
         };
         // Check message content
         let botMember = message.guild.members.me;
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
@@ -53,7 +53,7 @@ export default async (client, message) => {
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
 
             let isReply = false;
-            let replyMessage
+            let replyMessage;
             if (message.reference) isReply = true;
             if (isReply) {
                 try {
@@ -86,7 +86,7 @@ export default async (client, message) => {
                 .setFooter({ text: message.author.username, iconURL: avatar })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

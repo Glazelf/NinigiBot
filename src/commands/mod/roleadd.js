@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isAdmin from "../../util/discord/perms/isAdmin.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
@@ -20,7 +21,7 @@ export default async (interaction, messageFlags) => {
     serverApi = await serverApi.default();
     let adminBoolBot = isAdmin(interaction.guild.members.me);
     let adminBoolUser = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
     await interaction.deferReply({ flags: messageFlags });
 

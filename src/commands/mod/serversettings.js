@@ -11,7 +11,7 @@ import {
     AutoModerationActionType
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import isAdmin from "../../util/discord/perms/isAdmin.js";
+import checkPermissions from "../../util/discord/perms/checkPermissions.js";
 import formatName from "../../util/discord/formatName.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
@@ -20,8 +20,7 @@ const requiredPermission = PermissionFlagsBits.ManageGuild;
 
 export default async (interaction, messageFlags) => {
     messageFlags.add(MessageFlags.Ephemeral);
-    let adminBool = isAdmin(interaction.member);
-    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
     await interaction.deferReply({ flags: messageFlags });
 
     let serverApi = await import("../../database/dbServices/server.api.js");

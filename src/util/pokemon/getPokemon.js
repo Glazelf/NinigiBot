@@ -341,23 +341,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         4: new ActionRowBuilder()
     };
     let pokemonForms = [];
-    if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
-    if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
-    if (pokemonForms && pokemonForms.length > 0) {
-        if (pokemonForms.length > 0) {
-            for (let i = 0; i < pokemonForms.length; i++) {
-                let formData = Dex.species.get(pokemonForms[i]);
-                if (formData.gen > generation) continue;
-                if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
-                const formButton = new ButtonBuilder()
-                    .setCustomId(`pkmForm${i}|${buttonAppend}`)
-                    .setLabel(pokemonForms[i])
-                    .setStyle(ButtonStyle.Secondary);
-                formButtonsObject[formButtonsComponentsCounter].addComponents(formButton);
-            };
-        };
-    };
+    let baseSpecies = pokemon; // Default is pokemon == baseSpecies
+
     if (pokemon.name !== pokemon.baseSpecies) {
+        baseSpecies = Dex.species.get(pokemon.baseSpecies); // Update baseSpecies variable so form buttons are added correctly later
         const baseSpeciesButton = new ButtonBuilder()
             .setCustomId(`pkmbase|${buttonAppend}`)
             .setLabel(pokemon.baseSpecies)
@@ -367,6 +354,27 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             if (formButtonsObject[i].components.length < 5) {
                 formButtonsObject[i].addComponents(baseSpeciesButton);
                 break;
+            };
+        };
+    };
+
+    // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. 
+    // Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
+    // Use baseSpecies variable since forms are only appended to the base species and not to each individual form
+    if (baseSpecies.otherFormes && baseSpecies.otherFormes.length > 0) pokemonForms = [...baseSpecies.otherFormes];
+    if (baseSpecies.canGigantamax) pokemonForms.push(`${baseSpecies.name}-Gmax`);
+    if (pokemonForms && pokemonForms.length > 0) {
+        if (pokemonForms.length > 0) {
+            for (let i = 0; i < pokemonForms.length; i++) {
+                let formData = Dex.species.get(pokemonForms[i]);
+                if (formData.name == pokemon.name) continue;
+                if (formData.gen > generation) continue;
+                if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
+                const formButton = new ButtonBuilder()
+                    .setCustomId(`pkmForm${i}|${buttonAppend}`)
+                    .setLabel(pokemonForms[i])
+                    .setStyle(ButtonStyle.Secondary);
+                formButtonsObject[formButtonsComponentsCounter].addComponents(formButton);
             };
         };
     };

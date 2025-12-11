@@ -3,6 +3,7 @@ import {
     PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
+import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, messages) => {
@@ -14,7 +15,7 @@ export default async (client, messages) => {
         messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and order it chronologically
         for await (const message of messages) {
             // Currently starboarded messages that get purged aren't removed from starboard as this would require a silly amount of database calls
-            if (!guild) guild = message.guildId;
+            if (!guild) guild = message.guild.id;
             let addString = `${message.author}:`;
             if (message.content) addString += ` ${message.content}\n`;
             if (messagesContent.length + addString.length > 1024) {
@@ -35,7 +36,7 @@ export default async (client, messages) => {
         if (!log) return;
 
         let botMember = guild.members.me;
-        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] })) {
             if (messagesContent.length > 1024) messagesContent = `...${messagesContent.substring(messagesContent.length - 1021, messagesContent.length)}`;
             if (messagesContent.length < 1) return;
 
@@ -45,7 +46,7 @@ export default async (client, messages) => {
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
             return log.send({ embeds: [purgeEmbed] });
-        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
+        } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

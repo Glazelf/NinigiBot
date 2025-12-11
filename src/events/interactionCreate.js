@@ -26,6 +26,7 @@ import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
+import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
 import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
@@ -58,6 +59,8 @@ import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 import normalizeString from "../util/string/normalizeString.js";
 import formatName from "../util/discord/formatName.js";
+// Debugging
+import getTime from "../util/getTime.js";
 
 // Pokémon
 const pokemonGenerations = new Generations(Dex);
@@ -100,7 +103,9 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         let valuesByDate = {}; // Values that need to be timesorted
-        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${interaction.user.username}: ${interaction.customId}`);  // #1033, add "if (process.env.DEBUG == 1)" when fixed
+        // Debugging
+        let debugPrefix = `${getTime()} ${interaction.user.username}: `;
+        if (![InteractionType.ApplicationCommand, InteractionType.ApplicationCommandAutocomplete].includes(interaction.type)) console.log(`${debugPrefix}${interaction.customId}`);  // #1033, add "if (process.env.DEBUG == 1)" when fixed
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -124,7 +129,7 @@ export default async (client, interaction) => {
                             if (ephemeralDefault !== false) messageFlags.add(MessageFlags.Ephemeral);
                             break;
                     };
-                    console.log(`${interaction.user.username}: ${commandName}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
+                    console.log(`${debugPrefix}${commandName}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                     await cmd.default(interaction, messageFlags);
                     return;
                 } else {
@@ -443,7 +448,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
-                console.log(`${interaction.user.username}: ${interaction.commandName} | ${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
+                console.log(`${debugPrefix}${interaction.commandName} | ${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
@@ -516,15 +521,14 @@ export default async (client, interaction) => {
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                             // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            // Also filter out typed hidden powers
-                                            let moves = dexModified.moves.all().filter(move => move.exists && !move.name.startsWith("Hidden Power ") && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
                                             break;
                                         } else {
                                             // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                            let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
+                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen).sort((a, b) => a.num - b.num);
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
@@ -535,26 +539,16 @@ export default async (client, interaction) => {
                                         };
                                     case "ability":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                         abilities.forEach(ability => {
                                             if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
                                         });
                                         break;
                                     case "item":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
                                         items.forEach(item => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
-                                        });
-                                        break;
-                                    case "cardset":
-                                        pokemonCardSetsJSON.forEach(set => {
-                                            const setReleaseDateSplit = set.releaseDate.split("/");
-                                            const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
-                                            if (normalizeString(set.name).includes(normalizeString(focusedOption.value))) {
-                                                valuesByDate[set.id] = setReleaseDate;
-                                                choices.push({ name: set.name, value: set.id });
-                                            };
                                         });
                                         break;
                                 };
@@ -904,7 +898,7 @@ export default async (client, interaction) => {
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         // Getting from dex allows aliases
-                        const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+                        const pkmQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(pkmQuizButtonID));
                         // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
                         const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
 
@@ -924,8 +918,18 @@ export default async (client, interaction) => {
             default:
                 return;
         };
-
     } catch (e) {
         logger({ exception: e, interaction: interaction });
     };
+};
+
+function pokemonAutocompleteFilter(object, inputGen, currentGen) {
+    return object.filter(item =>
+        item.exists &&
+        item.isNonstandard !== "CAP" &&
+        (inputGen === currentGen || item.isNonstandard !== "Future") && // Allow future in current gen
+        !item.name.startsWith("Hidden Power ") && // Exclude typed Hidden Power moves
+        !item.name !== "No Ability" && // Lack of ability
+        (item.num === undefined || item.num > 0) // Pokémon dex number >0
+    );
 };
