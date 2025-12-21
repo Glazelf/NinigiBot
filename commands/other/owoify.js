@@ -32,7 +32,7 @@ const severityChoices = [
 const inputOption = new SlashCommandStringOption()
     .setName("input")
     .setDescription("Text to OwOify.")
-    .setMaxLength(1950) // Set limit shortly under 2000 character limit to avoid going over with code block text etc.
+    .setMaxLength(1000) // OwOify makes the string significantly longer, so putting the max length close to 2000 risks overflowing
     .setRequired(true);
 const severityOption = new SlashCommandStringOption()
     .setName("severity")
