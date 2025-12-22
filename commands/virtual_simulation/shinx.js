@@ -212,7 +212,8 @@ export default async (interaction, messageFlags) => {
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
-            if (guildDataAvailable) userFinder = await interaction.guild.members.fetch().catch(e => { return; });
+            console.log(guildDataAvailable)
+            if (guildDataAvailable) userFinder = await interaction.guild.members.fetch().catch(e => { return console.log(e); });
 
             for (let i = 0; i < guests.length; i++) {
                 const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
