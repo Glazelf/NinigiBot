@@ -100,7 +100,7 @@ export default async (interaction, messageFlags) => {
             ctx.drawImage(img, 0, 0);
             if (shinx.shiny) {
                 const cap = await Canvas.loadImage('./assets/shinx/shiny.png');
-                ctx.drawImage(cap, 97, 202);
+                ctx.drawImage(cap, 93, 210);
             };
             img = await Canvas.loadImage('./assets/shinx/owner.png');
             ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125, 59 - 5 * !is_user_male, 49);
