@@ -159,27 +159,30 @@ export default async (interaction, messageFlags) => {
                     img = await Canvas.loadImage('./assets/shinx/dining.png');
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
-                    let guests = [];
-                    if (guildDataAvailable) guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
+
                     ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
-                    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch().catch(e => { return; });
-
-                    for (let i = 0; i < guests.length; i++) {
-                        const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                        ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
-                        for (let k = nick.length - 1; 0 <= k; k--) {
-                            ctx.font = applyText(canvas, nick[k], 16, 51);
-                            ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
+                    let guests = [];
+                    if (guildDataAvailable) {
+                        guests = await getRandomShinx(2, shinx.user_id, interaction.guild); // []
+                        userFinder = await interaction.guild.members.fetch().catch(e => { return; });
+                        for (let i = 0; i < guests.length; i++) {
+                            const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                            ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
+                            for (let k = nick.length - 1; 0 <= k; k--) {
+                                ctx.font = applyText(canvas, nick[k], 16, 51);
+                                ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
+                            };
                         };
                     };
+
                     img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
-
                     for (let i = 0; i < guests.length; i++) {
                         ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
                     };
+
                     img = await Canvas.loadImage('./assets/shinx/reactions.png');
                     ctx.drawImage(img, 10 + 30 * reactionFeed[1], 8, 30, 32, 202, 115, 30, 32);
 
@@ -206,29 +209,30 @@ export default async (interaction, messageFlags) => {
             };
             ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
             const layout = getRandomVisitorPosition();
-            let guests = [];
-            if (guildDataAvailable) guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
             img = await Canvas.loadImage('./assets/shinx/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
-            console.log(guildDataAvailable)
-            if (guildDataAvailable) userFinder = await interaction.guild.members.fetch().catch(e => { return console.log(e); });
-
-            for (let i = 0; i < guests.length; i++) {
-                const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
-                for (let k = nick.length - 1; 0 <= k; k--) {
-                    ctx.font = applyText(canvas, nick[k], 18, 51);
-                    ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
+            let guests = [];
+            if (guildDataAvailable) {
+                guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+                userFinder = await interaction.guild.members.fetch().catch(e => { return console.log(e); });
+                for (let i = 0; i < guests.length; i++) {
+                    const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
+                    for (let k = nick.length - 1; 0 <= k; k--) {
+                        ctx.font = applyText(canvas, nick[k], 18, 51);
+                        ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
+                    };
                 };
             };
+
             img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
             ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
-
             for (let i = 0; i < guests.length; i++) {
                 ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
             };
+
             let reactionPlay = playing_reaction();
             if (shinx.belly < 0.2) reactionPlay = playing_reaction(0);
 
