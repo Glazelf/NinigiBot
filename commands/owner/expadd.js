@@ -20,7 +20,7 @@ export default async (interaction, messageFlags) => {
     if (!userArg) return sendMessage({ interaction: interaction, content: `Could not find user.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
     let expArg = interaction.options.getInteger("amount");
     await addExperience(userArg.id, expArg);
-    returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
+    let returnString = `Added ${expArg} points to ${userArg}'s Shinx!`;
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags });
 };
 
