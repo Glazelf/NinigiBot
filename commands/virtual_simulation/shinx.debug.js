@@ -28,7 +28,10 @@ export default async (interaction, messageFlags) => {
     // Only create userFinder if guild data exists
     let userFinder = null;
     let guildDataAvailable = isGuildDataAvailable(interaction);
-    if (guildDataAvailable) userFinder = await interaction.guild.members.fetch();
+    if (guildDataAvailable) {
+        userFinder = await interaction.guild.members.fetch().catch(e => { return null; });
+        if (!userFinder) userFinder = interaction.guild.members.cache;
+    };
 
     let master = interaction.user;
     // Auto feed

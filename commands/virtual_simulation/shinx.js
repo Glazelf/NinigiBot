@@ -166,7 +166,8 @@ export default async (interaction, messageFlags) => {
                     let guests = [];
                     if (guildDataAvailable) {
                         guests = await getRandomShinx(2, shinx.user_id, interaction.guild); // []
-                        userFinder = await interaction.guild.members.fetch().catch(e => { return; });
+                        userFinder = await interaction.guild.members.fetch().catch(e => { return null; });
+                        if (!userFinder) userFinder = interaction.guild.members.cache;
                         for (let i = 0; i < guests.length; i++) {
                             const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
                             ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
@@ -216,7 +217,8 @@ export default async (interaction, messageFlags) => {
             let guests = [];
             if (guildDataAvailable) {
                 guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
-                userFinder = await interaction.guild.members.fetch().catch(e => { return console.log(e); });
+                userFinder = await interaction.guild.members.fetch().catch(e => { return null });
+                if (!userFinder) userFinder = interaction.guild.members.cache;
                 for (let i = 0; i < guests.length; i++) {
                     const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
                     ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);

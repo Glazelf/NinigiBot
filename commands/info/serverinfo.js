@@ -34,10 +34,9 @@ const boosterRequirementTier2 = 7;
 const boosterRequirementTier3 = 14;
 
 export default async (interaction, messageFlags) => {
-    let adminBool = isAdmin(interaction.member);
     let guild = interaction.guild;
-    await guild.members.fetch();
-    await guild.channels.fetch();
+    await guild.members.fetch().catch(e => { return; }); // Ignore if rate limited, this rate limit is pretty strict for big guilds
+    await guild.channels.fetch().catch(e => { return; }); // Ignore if rate limited
     let guildOwner = await guild.fetchOwner();
     let botMembers = guild.members.cache.filter(member => member.user.bot);
     // let humanMemberCount = guild.members.cache.size - botMembers.size;

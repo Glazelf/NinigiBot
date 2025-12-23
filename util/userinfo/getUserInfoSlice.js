@@ -165,7 +165,7 @@ export default async (interaction, page, user) => {
 
 async function getJoinRank(user, guild) {
     if (!user) return;
-    await guild.members.fetch();
+    await guild.members.fetch().catch(e => { return null; });
     // Sort all users by join time
     let arr = [...guild.members.cache.values()];
     arr.sort((a, b) => a.joinedAt - b.joinedAt);
