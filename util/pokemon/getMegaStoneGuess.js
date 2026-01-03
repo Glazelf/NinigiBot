@@ -21,7 +21,6 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let pokemon = null;
     let embedColor = globalVars.embedColor;
     if (!stoneList && stone) {
-        console.log(stone)
         pokemon = Dex.species.get(stone.megaEvolves); // In case a Pokémon is passed instead of a list. This happens if the user guesses correctly.
         if (winner) {
             let pokemonSim = DexSim.species.get(stone.megaEvolves);
