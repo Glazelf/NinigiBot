@@ -81,7 +81,6 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         ctx.globalCompositeOperation = "source-in";
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
-        // Create local file if doesn't exist yet
         // Add buttons
         const quizGuessButton = new ButtonBuilder()
             .setCustomId(`pkmQuizGuess|${pokemon.name}`)
