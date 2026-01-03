@@ -11,7 +11,8 @@ import {
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle,
-    inlineCode
+    inlineCode,
+    LabelBuilder
 } from "discord.js";
 import axios from "axios";
 axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
@@ -27,6 +28,7 @@ import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
+import getMegaStoneGuess from "../util/pokemon/getMegaStoneGuess.js";
 import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
@@ -64,6 +66,13 @@ import getTime from "../util/getTime.js";
 
 // Pokémon
 const pokemonGenerations = new Generations(Dex);
+const allPokemonByLength = Dex.species.all().filter(pokemon => pokemon.isNonstandard !== "CAP").sort((a, b) => a.name.length - b.name.length);
+const pokemonNameLengthShortest = allPokemonByLength[0].name.length;
+const pokemonNameLengthLongest = allPokemonByLength[allPokemonByLength.length - 1].name.length;
+const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => a.megaEvolves.length - b.megaEvolves.length);
+const megaStoneNameLengthShortest = allMegaStonesByLength[0].megaEvolves.length;
+const megaStoneNameLengthLongest = allMegaStonesByLength[allMegaStonesByLength.length - 1].megaEvolves.length;
+
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
 let pokemonCardsAll = [];
@@ -101,6 +110,8 @@ export default async (client, interaction) => {
         if (inCommandInteractions.includes(interaction.customId)) return;
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
+        let megaQuizModalId = 'megaQuizModal';
+        let guessLabel = "Put in your guess!";
         let valuesByDate = {}; // Values that need to be timesorted
         // Debugging
         let debugPrefix = `${getTime()} ${interaction.user.username}: `;
@@ -151,8 +162,6 @@ export default async (client, interaction) => {
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
-
-                        let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
@@ -168,17 +177,39 @@ export default async (client, interaction) => {
                                 .setCustomId(pkmQuizModalId)
                                 .setTitle("Who's That Pokémon?");
                             const pkmQuizModalGuessInput = new TextInputBuilder()
-                                .setCustomId(pkmQuizModalGuessId)
-                                .setLabel("Put in your guess!")
+                                .setCustomId(`pkmQuizModalGuess|${customIdSplit[1]}`)
                                 .setPlaceholder("Azelf-Mega-Y")
                                 .setStyle(TextInputStyle.Short)
-                                .setMinLength(2) // Mew, Muk etc. are the shortest names at 3 characters. Set to 2 to allow for 2 character aliases like p2, pz.
-                                .setMaxLength(25) // Urshifu-Rapid-Strike-Gmax and Dudunsparce-Three-Segment are the longest names at 25 characters
+                                .setMinLength(pokemonNameLengthShortest)
+                                .setMaxLength(pokemonNameLengthLongest)
                                 .setRequired(true);
-                            const pkmQuizActionRow = new ActionRowBuilder()
-                                .addComponents(pkmQuizModalGuessInput);
-                            pkmQuizModal.addComponents(pkmQuizActionRow);
-                            return interaction.showModal(pkmQuizModal);
+                            const pkmQuizModalGuessLabel = new LabelBuilder()
+                                .setLabel(guessLabel)
+                                .setTextInputComponent(pkmQuizModalGuessInput);
+                            pkmQuizModal.addLabelComponents(pkmQuizModalGuessLabel);
+                            return interaction.showModal(pkmQuizModal).catch(e => console.log(e));
+                        } else if (interaction.customId.startsWith("megaQuizReveal")) {
+                            if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
+                            let megaQuizRevealCorrectAnswer = Dex.items.get(interaction.message.components[0].components[0].customId.split("|")[1]);
+                            let megaQuizRevealMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: megaQuizRevealCorrectAnswer, reveal: true });
+                            embedsReturn = megaQuizRevealMessageObject.embeds;
+                            componentsReturn = megaQuizRevealMessageObject.components;
+                        } else if (interaction.customId.startsWith("megaQuizGuess")) {
+                            const megaQuizModal = new ModalBuilder()
+                                .setCustomId(megaQuizModalId)
+                                .setTitle("Who uses this mega stone?");
+                            const megaQuizModalGuessInput = new TextInputBuilder()
+                                .setCustomId(`megaQuizModalGuess|${customIdSplit[1]}`)
+                                .setPlaceholder("Azelf")
+                                .setStyle(TextInputStyle.Short)
+                                .setMinLength(megaStoneNameLengthShortest)
+                                .setMaxLength(megaStoneNameLengthLongest)
+                                .setRequired(true);
+                            const megaQuizModalGuessLabel = new LabelBuilder()
+                                .setLabel(guessLabel)
+                                .setTextInputComponent(megaQuizModalGuessInput);
+                            megaQuizModal.addLabelComponents(megaQuizModalGuessLabel);
+                            return interaction.showModal(megaQuizModal).catch(e => console.log(e));
                         } else if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
                             let newPokemonName = null;
@@ -447,7 +478,7 @@ export default async (client, interaction) => {
                 };
             case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
-                console.log(`${debugPrefix}${interaction.commandName} | ${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
+                console.log(`${debugPrefix}${interaction.commandName}|${focusedOption.name}`); // #1033, add "if (process.env.DEBUG == 1)" when fixed
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
@@ -839,6 +870,9 @@ export default async (client, interaction) => {
                 return;
             case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                let deletedModalString = "The message this modal belongs to has been deleted.";
+                let gameEndedString = "This game has ended already.";
+                let guessedIncorrectlyString = `${interaction.user} guessed incorrectly: `;
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report
@@ -887,11 +921,11 @@ export default async (client, interaction) => {
                         return sendMessage({ interaction: interaction, content: modmailReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case pkmQuizModalId:
                         messageFlags.remove(MessageFlags.Ephemeral);
-                        if (!interaction.message) return sendMessage({ interaction: interaction, content: "The message this modal belongs to has been deleted.", flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: deletedModalString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
-                        let messageDescription = interaction.message.embeds[0].data.description;
-                        if (messageDescription && messageDescription.length > 0) return sendMessage({ interaction: interaction, content: "This game has ended already.", flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        let pkmQuizMessageDescription = interaction.message.embeds[0].data.description;
+                        if (pkmQuizMessageDescription && pkmQuizMessageDescription.length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
@@ -900,7 +934,6 @@ export default async (client, interaction) => {
                         const pkmQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(pkmQuizButtonID));
                         // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
                         const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
-
                         if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch(e => {
@@ -909,7 +942,28 @@ export default async (client, interaction) => {
                                 return null;
                             });
                         } else {
-                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: ${inlineCode(pkmQuizModalGuess)}.`, flags: messageFlags });
+                            return sendMessage({ interaction: interaction, content: `${guessedIncorrectlyString}${inlineCode(pkmQuizModalGuess)}.`, flags: messageFlags });
+                        };
+                        break;
+                    case megaQuizModalId:
+                        // Most checks here are copied from the above pkmQuizModal logic, i'll make this cleaner later, surely.
+                        messageFlags.remove(MessageFlags.Ephemeral);
+                        if (!interaction.message) return sendMessage({ interaction: interaction, content: deletedModalString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        let megaQuizMessageDescription = interaction.message.embeds[0].data.description;
+                        if (megaQuizMessageDescription && megaQuizMessageDescription.length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
+                        let megaQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
+                        let correctMegaStone = Dex.items.get(megaQuizButtonID.split("|")[1]);
+                        const megaQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(megaQuizButtonID));
+                        const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
+
+                        if (megaQuizModalGuessFormatted == correctMegaStone.megaEvolves) {
+                            let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
+                            interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
+                                return null;
+                            });
+                        } else {
+                            return sendMessage({ interaction: interaction, content: `${guessedIncorrectlyString}${inlineCode(megaQuizModalGuess)}.`, flags: messageFlags });
                         };
                         break;
                 };
