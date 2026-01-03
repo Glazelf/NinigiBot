@@ -41,7 +41,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: megaQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
-        quizDescription += `\nThe answer was ${bold(stone.megaEvolves)}.\nThe item shown was the ${bold(stone.name)}.`;
+        quizDescription += `\nThe answer was ${bold(stone.megaEvolves)}.\nThe item shown is the ${bold(stone.name)}.`;
         messageObject.files = [];
         messageObject.components = [];
     } else {
