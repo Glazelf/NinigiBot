@@ -1,8 +1,10 @@
 import leadingZeros from "../leadingZeros.js";
 import correctionID from "../../objects/pokemon/correctionID.json" with { type: "json"};
 
+const megaFormString = "mega";
+const megaFormSuffix = "-m";
 const formSuffixes = {
-    "-Primal": "-m",
+    "-Primal": megaFormSuffix,
     "-Totem": "-t",
     "-Gmax": "-gi"
 };
@@ -15,8 +17,19 @@ export default (pokemon) => {
     if (formKey) {
         pokemonID += formSuffixes[formKey];
     } else {
-        const formPart = pokemonName.split("-")[1];
-        if (formPart) pokemonID += `-${formPart.charAt(0).toLowerCase()}`;
+        const pokemonNameSplit = pokemonName.toLowerCase().split("-");
+        if (pokemonNameSplit.includes(megaFormString) && pokemonNameSplit.length > 2) {
+            pokemonID += megaFormSuffix;
+            let megaIndex = pokemonNameSplit.indexOf(megaFormString);
+            for (const formIndicator of pokemonNameSplit) {
+                if ([0, megaIndex].includes(pokemonNameSplit.indexOf(formIndicator))) continue;
+                console.log(formIndicator)
+                pokemonID += formIndicator.charAt(0);
+            }
+        } else {
+            const formPart = pokemonNameSplit[1];
+            if (formPart) pokemonID += `-${formPart.charAt(0)}`;
+        };
     };
 
     // Second check is to avoid using (bad) normal type art instead of the (good) generic art
