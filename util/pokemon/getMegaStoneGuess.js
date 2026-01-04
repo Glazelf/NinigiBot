@@ -35,7 +35,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
             quizDescription = `${winner} chose to reveal the answer.`;
         } else {
             // Format winning message update for correct guess
-            let megaQuizPrize = 10;
+            let megaQuizPrize = 25;
             quizDescription = `${winner} guessed correctly and won ${megaQuizPrize}${globalVars.currency}.`;
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: megaQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
