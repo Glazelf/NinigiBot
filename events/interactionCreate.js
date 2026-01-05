@@ -906,6 +906,8 @@ export default async (client, interaction) => {
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescription = interaction.fields.getTextInputValue('modMailDescription');
+                        const modMailFiles = interaction.fields.getUploadedFiles('modMailFile');
+                        let modMailEmbedArray = [];
                         const profileButton = new ButtonBuilder()
                             .setLabel("Profile")
                             .setStyle(ButtonStyle.Link)
@@ -914,13 +916,30 @@ export default async (client, interaction) => {
                             .addComponents(profileButton);
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
-                            .setTitle(`Mod Mail 💌`)
-                            .setTitle(modMailTitle)
+                            .setAuthor({ name: `Mod Mail 💌\n${modMailTitle}` })
                             .setDescription(modMailDescription)
+                            .setURL("https://discord.gg")
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
-
+                        if (modMailFiles !== null) {
+                            let modMailFilesString = "";
+                            let modMailFileLoopIndex = 0;
+                            for (let file of modMailFiles) {
+                                modMailFilesString += `${file[1].proxyURL}\n`;
+                                if (modMailFileLoopIndex > 0) {
+                                    let modMailImageEmbed = new EmbedBuilder()
+                                        .setImage(file[1].proxyURL)
+                                        .setURL("https://discord.gg")
+                                    modMailEmbedArray.push(modMailImageEmbed);
+                                };
+                                modMailFileLoopIndex += 1;
+                            };
+                            modMailEmbed
+                                .addFields([{ name: `Attachments: (${modMailFiles.size})`, value: modMailFilesString }])
+                                .setImage(modMailFiles.first().proxyURL);
+                        };
+                        modMailEmbedArray.unshift(modMailEmbed);
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
-                        await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
+                        await interaction.guild.safetyAlertsChannel.send({ embeds: modMailEmbedArray, components: [profileButtons] });
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name, true)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
