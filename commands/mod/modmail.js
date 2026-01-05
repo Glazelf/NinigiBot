@@ -49,7 +49,7 @@ const userLabel = new LabelBuilder()
     .setLabel("Does this concern a specific user or users?")
     .setUserSelectMenuComponent(userInput);
 const fileLabel = new LabelBuilder()
-    .setLabel("Upload a screenshot.")
+    .setLabel("Upload screenshots or other files.")
     .setFileUploadComponent(fileInput);
 modal.addLabelComponents(titleLabel, descriptionLabel, userLabel, fileLabel);
 
