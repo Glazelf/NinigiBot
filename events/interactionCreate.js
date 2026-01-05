@@ -936,7 +936,7 @@ export default async (client, interaction) => {
                             for (let [id, user] of modMailUsers) {
                                 modMailUsersString += `${user} (${user.id})\n`;
                             };
-                            modMailEmbed.addFields([{ name: `Mentioned users: (${modMailUsers.size})`, value: modMailUsersString }]);
+                            modMailEmbed.addFields([{ name: `Mentioned Users: (${modMailUsers.size})`, value: modMailUsersString }]);
                         };
                         if (modMailFiles !== null) {
                             let modMailFilesString = "";
