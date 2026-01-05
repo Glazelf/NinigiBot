@@ -69,7 +69,13 @@ const pokemonGenerations = new Generations(Dex);
 const allPokemonByLength = Dex.species.all().filter(pokemon => pokemon.isNonstandard !== "CAP").sort((a, b) => a.name.length - b.name.length);
 const pokemonNameLengthShortest = allPokemonByLength[0].name.length;
 const pokemonNameLengthLongest = allPokemonByLength[allPokemonByLength.length - 1].name.length;
-const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => a.megaEvolves.length - b.megaEvolves.length);
+const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => {
+    let aMega = a.megaEvolves;
+    let bMega = b.megaEvolves;
+    if (Array.isArray(a.megaEvolves)) aMega = a.megaEvolves[0];
+    if (Array.isArray(b.megaEvolves)) bMega = b.megaEvolves[0];
+    return aMega.length - bMega.length;
+});
 const megaStoneNameLengthShortest = allMegaStonesByLength[0].megaEvolves.length;
 const megaStoneNameLengthLongest = allMegaStonesByLength[allMegaStonesByLength.length - 1].megaEvolves.length;
 
@@ -957,7 +963,7 @@ export default async (client, interaction) => {
                         const megaQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(megaQuizButtonID));
                         const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
 
-                        if (megaQuizModalGuessFormatted == correctMegaStone.megaEvolves) {
+                        if (megaQuizModalGuessFormatted == correctMegaStone.itemUser[0]) {
                             let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
                             interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
                                 return null;
