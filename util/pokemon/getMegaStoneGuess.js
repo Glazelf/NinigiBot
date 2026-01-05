@@ -12,6 +12,7 @@ import rewardMoney from "../db/rewardMoney.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
+// A lot of the code below is copied from getPokemon.js
 // Winner = person who ended the game, either through reveal or guessing correctly
 export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let messageObject = {};
@@ -21,7 +22,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let pokemon = null;
     let embedColor = globalVars.embedColor;
     if (!stoneList && stone) {
-        pokemon = Dex.species.get(stone.itemUser[0]); // In case a Pokémon is passed instead of a list. This happens if the user guesses correctly.
+        pokemon = Dex.species.get(stone.itemUser[0]);
         if (winner) {
             let pokemonSim = DexSim.species.get(stone.itemUser[0]);
             embedColor = colorHexes[pokemonSim.color.toLowerCase()];
