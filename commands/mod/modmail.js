@@ -24,10 +24,10 @@ const titleInput = new TextInputBuilder()
     .setRequired(true);
 const descriptionInput = new TextInputBuilder()
     .setCustomId('modMailDescription')
-    .setPlaceholder("User BigYoshi28 (748199267725869127) is calling me a stinky nerd!")
+    .setPlaceholder("BigYoshi28 is calling me a stinky nerd!")
     .setStyle(TextInputStyle.Paragraph)
     .setMinLength(10)
-    .setMaxLength(500)
+    .setMaxLength(1000)
     .setRequired(true);
 const userInput = new UserSelectMenuBuilder()
     .setCustomId("modMailUsers")
@@ -40,16 +40,19 @@ const fileInput = new FileUploadBuilder()
     .setMaxValues(4) // Limited to 4 to not overload attachments field later. Also good visibility for mods
     .setRequired(false);
 const titleLabel = new LabelBuilder()
-    .setLabel("Title your mail!")
+    .setLabel("Title your mail.")
     .setTextInputComponent(titleInput);
 const descriptionLabel = new LabelBuilder()
     .setLabel("Elaborate on your problem.")
+    .setDescription("Go into detail. The moderators will contact you if they need more information.")
     .setTextInputComponent(descriptionInput);
 const userLabel = new LabelBuilder()
     .setLabel("Does this concern a specific user or users?")
+    .setDescription("Optional. This can help moderators find the specific user you're talking about.")
     .setUserSelectMenuComponent(userInput);
 const fileLabel = new LabelBuilder()
     .setLabel("Upload screenshots or other files.")
+    .setDescription("Optional. Only upload relevant files, abuse of modmail can be punished.")
     .setFileUploadComponent(fileInput);
 modal.addLabelComponents(titleLabel, descriptionLabel, userLabel, fileLabel);
 
