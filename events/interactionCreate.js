@@ -38,6 +38,7 @@ import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { ty
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // BTD
+import BTD6getUser from "../util/bloons/getUser.js";
 import getBossEvent from "../util/bloons/getBossEvent.js";
 // Minesweeper
 import createBoard from "../util/minesweeper/createBoard.js";
@@ -906,6 +907,7 @@ export default async (client, interaction) => {
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescription = interaction.fields.getTextInputValue('modMailDescription');
+                        const modMailUsers = interaction.fields.getSelectedUsers('modMailUsers');
                         const modMailFiles = interaction.fields.getUploadedFiles('modMailFile');
                         let modMailEmbedArray = [];
                         const profileButton = new ButtonBuilder()
@@ -920,14 +922,21 @@ export default async (client, interaction) => {
                             .setDescription(modMailDescription)
                             .setURL("https://discord.gg")
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
+                        if (modMailUsers !== null) {
+                            let modMailUsersString = "";
+                            for (let [id, user] of modMailUsers) {
+                                modMailUsersString += `${user} (${user.id})\n`;
+                            };
+                            modMailEmbed.addFields([{ name: `Mentioned users: (${modMailUsers.size})`, value: modMailUsersString }]);
+                        };
                         if (modMailFiles !== null) {
                             let modMailFilesString = "";
                             let modMailFileLoopIndex = 0;
-                            for (let file of modMailFiles) {
-                                modMailFilesString += `${file[1].proxyURL}\n`;
+                            for (let [id, file] of modMailFiles) {
+                                modMailFilesString += `${file.proxyURL}\n`;
                                 if (modMailFileLoopIndex > 0) {
                                     let modMailImageEmbed = new EmbedBuilder()
-                                        .setImage(file[1].proxyURL)
+                                        .setImage(file.proxyURL)
                                         .setURL("https://discord.gg")
                                     modMailEmbedArray.push(modMailImageEmbed);
                                 };

@@ -7,7 +7,8 @@ import {
     TextInputStyle,
     SlashCommandBuilder,
     LabelBuilder,
-    FileUploadBuilder
+    FileUploadBuilder,
+    UserSelectMenuBuilder
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 
@@ -18,31 +19,39 @@ const titleInput = new TextInputBuilder()
     .setCustomId('modMailTitle')
     .setPlaceholder("Someone is harassing me.")
     .setStyle(TextInputStyle.Short)
-    .setMinLength(5)
-    .setMaxLength(256)
+    .setMinLength(3)
+    .setMaxLength(50)
     .setRequired(true);
 const descriptionInput = new TextInputBuilder()
     .setCustomId('modMailDescription')
     .setPlaceholder("User BigYoshi28 (748199267725869127) is calling me a stinky nerd!")
     .setStyle(TextInputStyle.Paragraph)
     .setMinLength(10)
-    .setMaxLength(1024)
+    .setMaxLength(500)
     .setRequired(true);
+const userInput = new UserSelectMenuBuilder()
+    .setCustomId("modMailUsers")
+    .setMinValues(1)
+    .setMaxValues(5)
+    .setRequired(false);
 const fileInput = new FileUploadBuilder()
     .setCustomId("modMailFile")
     .setMinValues(1)
-    .setMaxValues(4) // Limited to 4 to not overload attachments field later. Also good visibility
-    .setRequired(false); // This is true by default
+    .setMaxValues(4) // Limited to 4 to not overload attachments field later. Also good visibility for mods
+    .setRequired(false);
 const titleLabel = new LabelBuilder()
     .setLabel("Title your mail!")
     .setTextInputComponent(titleInput);
 const descriptionLabel = new LabelBuilder()
     .setLabel("Elaborate on your problem.")
     .setTextInputComponent(descriptionInput);
+const userLabel = new LabelBuilder()
+    .setLabel("Does this concern a specific user or users?")
+    .setUserSelectMenuComponent(userInput);
 const fileLabel = new LabelBuilder()
     .setLabel("Upload a screenshot.")
     .setFileUploadComponent(fileInput);
-modal.addLabelComponents(titleLabel, descriptionLabel, fileLabel);
+modal.addLabelComponents(titleLabel, descriptionLabel, userLabel, fileLabel);
 
 const noCommunityString = "This server has Community features disabled.\nThese are required for this command to work properly.\nModmail will be sent to the same channel as community updates.";
 
