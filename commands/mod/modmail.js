@@ -5,7 +5,6 @@ import {
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle,
-    ActionRowBuilder,
     SlashCommandBuilder,
     LabelBuilder
 } from "discord.js";
