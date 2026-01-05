@@ -963,7 +963,8 @@ export default async (client, interaction) => {
                         const megaQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(megaQuizButtonID));
                         const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
 
-                        if (megaQuizModalGuessFormatted == correctMegaStone.itemUser[0]) {
+                        // We can check more leniently if the input includes the correct answer since we don't need to be strict about forms
+                        if (megaQuizModalGuessFormatted.includes(correctMegaStone.itemUser[0])) {
                             let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
                             interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
                                 return null;
