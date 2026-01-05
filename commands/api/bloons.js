@@ -23,16 +23,27 @@ const btd6UserModal = new ModalBuilder()
     .setTitle("Bloons TD 6 User Info 🎈");
 const oakInput = new TextInputBuilder()
     .setCustomId("btd6UserModalOak")
-    .setPlaceholder("oak_ab4816c401d194fe13cb (This OAK is fake)")
     .setStyle(TextInputStyle.Short)
+    .setPlaceholder("oak_ab4816c401d194fe13cb")
     .setMinLength(24)
     .setMaxLength(24)
     .setRequired(true);
+const oakInfoInput = new TextInputBuilder()
+    .setCustomId("btd6UserModalOakInfo")
+    .setStyle(TextInputStyle.Paragraph)
+    .setPlaceholder(btd6oakHelp)
+    .setValue(btd6oakHelp)
+    .setMaxLength(btd6oakHelp.length) // No min length, causes confusing display
+    .setRequired(false);
 const oakLabel = new LabelBuilder()
-    .setLabel("Input your OAK.")
-    .setDescription(`OAK info: ${btd6oakHelp}`)
+    .setLabel("Input Your OAK")
+    .setDescription("The placeholder OAK below is fake. Please do not send unnecessary API requests by trying to use it.")
     .setTextInputComponent(oakInput);
-btd6UserModal.addLabelComponents(oakLabel);
+const oakInfoLabel = new LabelBuilder()
+    .setLabel("OAK Info")
+    .setDescription("Copy and visit the link below to learn more about OAKs.")
+    .setTextInputComponent(oakInfoInput);
+btd6UserModal.addLabelComponents(oakLabel, oakInfoLabel);
 
 export default async (interaction, messageFlags) => {
     let apiError = null;
