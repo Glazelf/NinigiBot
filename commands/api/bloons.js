@@ -37,7 +37,7 @@ const oakInfoInput = new TextInputBuilder()
     .setRequired(false);
 const oakLabel = new LabelBuilder()
     .setLabel("Input Your OAK")
-    .setDescription("The placeholder OAK below is fake. Please do not send unnecessary API requests by trying to use it.")
+    .setDescription("The placeholder OAK is fake. Please do not send unnecessary API requests by trying to use it.")
     .setTextInputComponent(oakInput);
 const oakInfoLabel = new LabelBuilder()
     .setLabel("OAK Info")
