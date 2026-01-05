@@ -880,6 +880,15 @@ export default async (client, interaction) => {
                 let deletedModalString = "The message this modal belongs to has been deleted.";
                 let gameEndedString = "This game has ended already.";
                 let guessedIncorrectlyString = `${interaction.user} guessed incorrectly: `;
+                // Custom ID for BTD6 user hides ephemeral flag, so can't be in the switch statement below
+                if (interaction.customId.startsWith("btd6UserModal")) {
+                    let oakInput = interaction.fields.getTextInputValue("btd6UserModalOak");
+                    // Ephemerality is seperated because this comes through a modal first
+                    let ephemeralBooleanInput = interaction.customId.split("|")[1]; // Convert to boolean
+                    if (!ephemeralBooleanInput || ephemeralBooleanInput !== "false") messageFlags.add(MessageFlags.Ephemeral);
+                    let btd6UserMessageObject = await BTD6getUser({ interaction: interaction, oak: oakInput, messageFlags: messageFlags });
+                    return sendMessage({ interaction: interaction, embeds: btd6UserMessageObject.embeds, flags: btd6UserMessageObject.messageFlags });
+                };
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report

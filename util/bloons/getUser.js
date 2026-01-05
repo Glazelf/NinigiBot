@@ -1,0 +1,74 @@
+import {
+    EmbedBuilder,
+    MessageFlags
+} from "discord.js";
+import axios from "axios";
+import getAPIErrorMessageObject from "./getAPIErrorMessageObject.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+const btd6api = "https://data.ninjakiwi.com/btd6/";
+
+export default async ({ interaction, oak, messageFlags }) => {
+    const btd6Embed = new EmbedBuilder()
+        .setColor(globalVars.embedColor);
+    let saveResponse = await axios.get(`${btd6api}save/${oak}`);
+    let userResponse = await axios.get(`${btd6api}users/${oak}`);
+    if (!userResponse.data.success || !saveResponse.data.success) {
+        // Embed is copied from bloons command and should be kept consistent
+        let APIErrorMessageObject = getAPIErrorMessageObject(userResponse.data.error);
+        messageFlags.add(MessageFlags.Ephemeral);
+        return { embeds: APIErrorMessageObject.embeds, messageFlags: messageFlags };
+    };
+    let saveData = saveResponse.data.body;
+    let saveModel = saveResponse.data.model;
+    let userData = userResponse.data.body;
+    // Rank string
+    let rankString = "\nLevel: ";
+    if (userData.veteranRank > 0) {
+        let veteranEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6LevelVeteran");
+        rankString += userData.veteranRank;
+        if (veteranEmoji) rankString += ` ${veteranEmoji}`;
+    } else {
+        rankString += userData.rank;
+    };
+    // General stats
+    let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
+    if (saveData.achievementsClaimed.length > 0) {
+        let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
+        userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.parameters.achievementsClaimed.default.length}`;
+        if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
+    };
+    if (saveData.lifetimeTrophies > 0) {
+        let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
+        userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
+        if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
+    };
+    if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
+    // Hero and tower usage
+    let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache);
+    let towersByUsageString = getUsageListString(userData.towersPlaced, interaction.client.application.emojis.cache);
+    // Build user embed
+    btd6Embed
+        .setTitle(userData.displayName)
+        .setDescription(userDescription)
+        .setThumbnail(userData.avatarURL)
+        .setImage(userData.bannerURL)
+        .setFooter({ text: `Profile Version: v${saveData.latestGameVersion}\nCreator Code: Glaze` })
+        .addFields([
+            { name: "Heroes Placed:", value: heroesByUsageString, inline: true },
+            { name: "Towers Placed:", value: towersByUsageString, inline: true }
+        ]);
+    console.log(messageFlags)
+    return { embeds: [btd6Embed], messageFlags: messageFlags };
+};
+
+function getUsageListString(usageObject, emojis) {
+    let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
+    let usageString = "";
+    usageArray.forEach(element => {
+        let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
+        if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
+        usageString += `${element[0]}: ${element[1]}\n`;
+    });
+    return usageString;
+};
