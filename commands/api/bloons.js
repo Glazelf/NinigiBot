@@ -41,7 +41,7 @@ const oakLabel = new LabelBuilder()
     .setTextInputComponent(oakInput);
 const oakInfoLabel = new LabelBuilder()
     .setLabel("OAK Info")
-    .setDescription("Copy and visit the link below to learn more about OAKs.")
+    .setDescription("Copy and visit this URL to learn more about OAKs.")
     .setTextInputComponent(oakInfoInput);
 btd6UserModal.addLabelComponents(oakLabel, oakInfoLabel);
 
