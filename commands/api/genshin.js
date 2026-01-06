@@ -45,8 +45,8 @@ export default async (interaction, messageFlags) => {
             };
             giEmbed
                 .setAuthor({ name: `${character.name} - ${character.affiliation}`, iconURL: `${giAPICharacter}/icon-side` })
-                .setThumbnail(`${giAPICharacter}/constellation-shape`)
-                .setImage(`${giAPICharacter}/gacha-splash`)
+                .setThumbnail(`${giAPICharacter}/gacha-splash`)
+                .setImage(`${giAPICharacter}/constellation-shape`)
                 .addFields([
                     { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
                     { name: "Vision:", value: character.vision, inline: true },
