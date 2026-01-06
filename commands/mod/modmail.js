@@ -48,11 +48,11 @@ const descriptionLabel = new LabelBuilder()
     .setTextInputComponent(descriptionInput);
 const userLabel = new LabelBuilder()
     .setLabel("Does this concern a specific user or users?")
-    .setDescription("Optional. This can help moderators find the specific user you're talking about.")
+    .setDescription("This can help moderators find the specific user you're talking about.")
     .setUserSelectMenuComponent(userInput);
 const fileLabel = new LabelBuilder()
     .setLabel("Upload screenshots or other files.")
-    .setDescription("Optional. Only upload relevant files, abuse of modmail can be punished.")
+    .setDescription("Only upload relevant files, abuse of modmail can be punished.")
     .setFileUploadComponent(fileInput);
 modal.addLabelComponents(titleLabel, descriptionLabel, userLabel, fileLabel);
 
