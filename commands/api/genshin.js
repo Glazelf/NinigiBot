@@ -44,9 +44,9 @@ export default async (interaction, messageFlags) => {
                 characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
             };
             giEmbed
-                .setAuthor({ name: `${character.name} - ${character.affiliation}`, iconURL: `${giAPICharacter}/icon-side` })
-                .setThumbnail(`${giAPICharacter}/gacha-splash`)
-                .setImage(`${giAPICharacter}/constellation-shape`)
+                .setAuthor({ name: `${character.name} - ${character.affiliation}`, iconURL: `${giAPICharacter}/constellation-shape` })
+                .setThumbnail(`${giAPICharacter}/icon-side`)
+                .setImage(`${giAPICharacter}/gacha-splash`)
                 .addFields([
                     { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
                     { name: "Vision:", value: character.vision, inline: true },
