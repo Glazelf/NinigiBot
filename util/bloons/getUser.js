@@ -32,7 +32,10 @@ export default async ({ interaction, oak, messageFlags }) => {
         rankString += userData.rank;
     };
     // General stats
-    let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nBloons Popped: ${userData.bloonsPopped.bloonsPopped}\nGames Played: ${saveData.gamesPlayed}`;
+    let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nBloons Popped: ${userData.bloonsPopped.bloonsPopped}`;
+    let redBloonEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6RedBloon");
+    if (redBloonEmoji) userDescription += ` ${redBloonEmoji}`;
+    userDescription += `\nGames Played: ${saveData.gamesPlayed}`;
     if (saveData.lifetimeTrophies > 0) {
         let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
         userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
