@@ -33,16 +33,24 @@ export default async ({ interaction, oak, messageFlags }) => {
     };
     // General stats
     let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
-    if (saveData.achievementsClaimed.length > 0) {
-        let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
-        userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.parameters.achievementsClaimed.default.length}`;
-        if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
-    };
     if (saveData.lifetimeTrophies > 0) {
         let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
         userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
         if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
     };
+    if (saveData.achievementsClaimed.length > 0) {
+        let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
+        userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.parameters.achievementsClaimed.default.length}`;
+        if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
+    };
+    //// "Maps Completed" is confusing. Does it mean any map beaten at least once or black bordered? Work out black border checks sometime.
+    //// Logic below just checks if a map has been beaten at least once
+    // let realMaps = Object.entries(saveData.mapProgress).filter(map => map[0] !== "Tutorial");
+    // userDescription += `\nMaps Completed: ${realMaps.filter(map => map[1].complete === true).length}/${realMaps.length}`;
+    let questEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Quest");
+    userDescription += `\nQuests Completed: ${saveData.quests.filter(quest => quest.complete === true).length}/${saveData.quests.length}`;
+    if (questEmoji) userDescription += ` ${questEmoji}`;
+
     if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
     // Hero and tower usage
     let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache);
@@ -58,7 +66,6 @@ export default async ({ interaction, oak, messageFlags }) => {
             { name: "Heroes Placed:", value: heroesByUsageString, inline: true },
             { name: "Towers Placed:", value: towersByUsageString, inline: true }
         ]);
-    console.log(messageFlags)
     return { embeds: [btd6Embed], messageFlags: messageFlags };
 };
 
