@@ -218,7 +218,7 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed.addFields([{ name: "Target:", value: target, inline: true }]);
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
-            if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority > 0 ? moveGen.priority.toString : `+${moveGen.priority}`, inline: true }]);
+            if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority <= 0 ? moveGen.priority.toString() : `+${moveGen.priority}`, inline: true }]);
             if (moveGen.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
             if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
             if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
