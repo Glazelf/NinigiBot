@@ -209,13 +209,13 @@ export default async (interaction, messageFlags) => {
                 .setTitle(moveTitle)
                 .setDescription(description)
                 .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
-            if (moveGen.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: moveGen.basePower.toString(), inline: true }]);
-            if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
                 { name: "Category:", value: moveCategoryString, inline: true },
-                { name: "Target:", value: target, inline: true }
             ]);
+            if (moveGen.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: moveGen.basePower.toString(), inline: true }]);
+            if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
+            pokemonEmbed.addFields([{ name: "Target:", value: target, inline: true }]);
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
             if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority > 0 ? moveGen.priority.toString : `+${moveGen.priority}`, inline: true }]);
