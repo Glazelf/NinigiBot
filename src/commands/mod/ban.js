@@ -43,7 +43,7 @@ export default async (interaction, messageFlags) => {
 
     let executorNameFormatted = formatName(interaction.user.username, true);
     let banReturn = null;
-    let banFailString = `Ban failed. This might be because the specified user isn not in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
+    let banFailString = `Ban failed. This might be because the specified user is not in the server or I lack the ${inlineCode(requiredPermissionName)} permission.`;
     let dmString = `You've been banned from ${formatName(interaction.guild.name, true)} by ${executorNameFormatted} for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = await interaction.guild.bans.fetch().catch(e => { return null; });

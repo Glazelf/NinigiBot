@@ -9,6 +9,6 @@ Our recommendation to use this bot is to just <a href="https://discord.com/oauth
 If you want to make a new feature, create a PR! User installs existing further invalidates the need for selfhosting.  
 You can reach out for questions and are welcome to try as long as you follow the license.  
 ## Credit
-Profile avatar are made by [baronessfaron](https://sprites.pmdcollab.org/#/0482).  
-Banner comes from the Azelf card in the Astral Radiance set.  
+Profile avatar frames come from [PMDCollab](https://sprites.pmdcollab.org/#/0482).  
+Banner comes from [this Azelf card](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/swsh10/67/).  
 For API/data credit please check the relevant files.

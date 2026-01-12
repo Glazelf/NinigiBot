@@ -26,6 +26,7 @@ export default async (interaction, messageFlags) => {
     let roleMembersString = "";
     let roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
     if (memberListBool === true) {
+        await interaction.deferReply({ flags: messageFlags });
         for (const [id, member] of roleMembers) {
             let stringAddition = member.toString();
             if (roleMembersString.length > 0) stringAddition = `, ${member}`;

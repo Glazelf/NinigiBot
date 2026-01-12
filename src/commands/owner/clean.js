@@ -25,7 +25,8 @@ export default async (interaction, messageFlags) => {
     await sendMessage({ interaction: interaction, content: 'Deleting outdated entries...', flags: messageFlags });
     const users = await getAllUsers();
     if (users.length == 0) return sendMessage({ interaction: interaction, content: 'Database is already empty!', flags: messageFlags });
-    let server_users = await interaction.guild.members.fetch();
+    let server_users = await interaction.guild.members.fetch().catch(e => { return null });
+    if (!server_users) server_users = interaction.guild.members.cache;
     server_users = server_users.map(user => user.id);
     const pre_length = users.length;
     const deleted_users = [];

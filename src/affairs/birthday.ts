@@ -30,7 +30,7 @@ export default async (client: Client) => {
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
             let cuties = [];
             let cutiesUsernames = [];
-            await guild.members.fetch();
+            await guild.members.fetch().catch(e => { return null; });
             // For every member check 
             for (const m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];

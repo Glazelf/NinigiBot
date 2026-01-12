@@ -28,6 +28,7 @@ import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/math/getRandomObjectItem.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
+import getMegaStoneGuess from "../../util/pokemon/getMegaStoneGuess.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import pokemonCardSetsJSON from "../../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
@@ -37,6 +38,7 @@ const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
+const allMegaStones = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP");
 
 export default async (interaction, messageFlags) => {
     // Bools
@@ -201,22 +203,22 @@ export default async (interaction, messageFlags) => {
             if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
             let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
             let moveCategoryString = move.category;
-            if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji}${moveCategoryString}`;
+            if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji} ${moveCategoryString}`;
 
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
                 .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
-            if (moveGen.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: moveGen.basePower.toString(), inline: true }]);
-            if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
                 { name: "Category:", value: moveCategoryString, inline: true },
-                { name: "Target:", value: target, inline: true }
             ]);
+            if (moveGen.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: moveGen.basePower.toString(), inline: true }]);
+            if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
+            pokemonEmbed.addFields([{ name: "Target:", value: target, inline: true }]);
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
-            if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority.toString(), inline: true }]);
+            if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority <= 0 ? moveGen.priority.toString() : `+${moveGen.priority}`, inline: true }]);
             if (moveGen.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
             if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
             if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
@@ -455,24 +457,6 @@ export default async (interaction, messageFlags) => {
                     ]);
             };
             break;
-        // Who's That Pokémon quiz
-        case "whosthat":
-            await interaction.deferReply({ flags: messageFlags });
-            let allowedPokemonList = allPokemon;
-            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
-            allowedPokemonList = allowedPokemonList.filter(pokemon =>
-                !isIdenticalForm(pokemon.name) &&
-                !pokemon.name.startsWith("Basculin-") &&
-                !pokemon.name.startsWith("Basculegion-") &&
-                !pokemon.name.endsWith("-Totem") &&
-                !pokemon.name.endsWith("-Starter") && // Let's Go Eevee & Pikachu starter forms
-                !pokemon.name.endsWith("-Bond") // Greninja
-            );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
-            pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
-            pokemonFiles = whosThatPokemonMessageObject.files;
-            pokemonButtons = whosThatPokemonMessageObject.components;
-            break;
         // Card
         case "card":
             const cardInput = interaction.options.getString("card");
@@ -542,6 +526,30 @@ export default async (interaction, messageFlags) => {
                     };
                     break;
             };
+            break;
+        // Who's That Pokémon quiz
+        case "whosthat":
+            await interaction.deferReply({ flags: messageFlags });
+            let allowedPokemonList = allPokemon;
+            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
+            allowedPokemonList = allowedPokemonList.filter(pokemon =>
+                !isIdenticalForm(pokemon.name) &&
+                !pokemon.name.startsWith("Basculin-") &&
+                !pokemon.name.startsWith("Basculegion-") &&
+                !pokemon.name.endsWith("-Totem") &&
+                !pokemon.name.endsWith("-Starter") && // Let's Go Eevee & Pikachu starter forms
+                !pokemon.name.endsWith("-Bond") // Greninja
+            );
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
+            pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
+            pokemonFiles = whosThatPokemonMessageObject.files;
+            pokemonButtons = whosThatPokemonMessageObject.components;
+            break;
+        // Guess mega stone minigame
+        case "guessmega":
+            let guessMegaStoneMessageObject = await getMegaStoneGuess({ interaction: interaction, stoneList: allMegaStones });
+            pokemonEmbed = guessMegaStoneMessageObject.embeds[0];
+            pokemonButtons = guessMegaStoneMessageObject.components;
             break;
         // Pokémon
         case "pokemon":
@@ -819,6 +827,10 @@ const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Who's that Pokémon?")
     .addIntegerOption(generationOption)
     .addBooleanOption(ephemeralOption);
+const guessMegaSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("guessmega")
+    .setDescription("Guess the mega corresponding to the stone.")
+    .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("pokemon")
@@ -832,4 +844,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
     .addSubcommand(cardSubcommand)
-    .addSubcommand(whosThatSubcommand);
+    .addSubcommand(whosThatSubcommand)
+    .addSubcommand(guessMegaSubcommand);

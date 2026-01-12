@@ -35,9 +35,10 @@ export default async (interaction, messageFlags) => {
             break;
         case "guild":
             // Server leaderboard
-            let memberFetch = await interaction.guild.members.fetch();
+            let guildMembers = await interaction.guild.members.fetch().catch(e => { return null; });
+            if (!guildMembers) guildMembers = interaction.guild.members.cache;
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            let leaderboardString = money_db.filter(user => interaction.client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
+            let leaderboardString = money_db.filter(user => interaction.client.users.cache.get(user.user_id) && guildMembers.get(user.user_id))
                 .filter(user => !interaction.client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
                 .map((user, position) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)

@@ -2,84 +2,67 @@ import {
     MessageFlags,
     EmbedBuilder,
     SlashCommandBuilder,
-    SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    codeBlock,
     SlashCommandSubcommandGroupBuilder,
-    hyperlink,
     ColorResolvable,
     ChatInputCommandInteraction,
     MessageFlagsBitFieldSettable,
-    MessageFlagsBitField
+    MessageFlagsBitField,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    LabelBuilder
 } from "discord.js";
-import axios from "axios";
 import sendMessage from "../../util/discord/sendMessage.js";
 import getBossEvent from "../../util/bloons/getBossEvent.js";
+import getAPIErrorMessageObject from "../../util/bloons/getAPIErrorMessageObject.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-const btd6api = "https://data.ninjakiwi.com/btd6/";
+const btd6oakHelp = "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API";
+const btd6UserModalIdBase = "btd6UserModal";
+const btd6UserModal = new ModalBuilder()
+    .setCustomId(btd6UserModalIdBase)
+    .setTitle("Bloons TD 6 User Info 🎈");
+const oakInput = new TextInputBuilder()
+    .setCustomId("btd6UserModalOak")
+    .setStyle(TextInputStyle.Short)
+    .setPlaceholder("oak_ab4816c401d194fe13cb")
+    .setMinLength(24)
+    .setMaxLength(24)
+    .setRequired(true);
+const oakInfoInput = new TextInputBuilder()
+    .setCustomId("btd6UserModalOakInfo")
+    .setStyle(TextInputStyle.Paragraph)
+    .setPlaceholder(btd6oakHelp)
+    .setValue(btd6oakHelp)
+    .setMaxLength(btd6oakHelp.length) // No min length, causes confusing display
+    .setRequired(false);
+const oakLabel = new LabelBuilder()
+    .setLabel("Input Your OAK")
+    .setDescription("The placeholder OAK is fake. Please do not send unnecessary API requests by trying to use it.")
+    .setTextInputComponent(oakInput);
+const oakInfoLabel = new LabelBuilder()
+    .setLabel("OAK Info")
+    .setDescription("Copy and visit this URL to learn more about OAKs.")
+    .setTextInputComponent(oakInfoInput);
+btd6UserModal.addLabelComponents(oakLabel, oakInfoLabel);
 
 export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
-    let oak = interaction.options.getString("oak");
     let apiError = null;
     let btd6EmbedArray: EmbedBuilder[] = [];
     let btd6Embed: EmbedBuilder = new EmbedBuilder()
         .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
     let btd6ActionRowArray: EmbedBuilder[] = [];
-    // @ts-ignore
-    await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
 
     switch (interaction.options.getSubcommand()) {
         case "user":
-            let saveResponse = await axios.get(`${btd6api}save/${oak}`);
-            let userResponse = await axios.get(`${btd6api}users/${oak}`);
-            if (!userResponse.data.success || !saveResponse.data.success) {
-                apiError = userResponse.data.error;
-                break;
-            };
-            let saveData = saveResponse.data.body;
-            let saveModel = saveResponse.data.model;
-            let userData = userResponse.data.body;
-            // Rank string
-            let rankString = "\nLevel: ";
-            if (userData.veteranRank > 0) {
-                let veteranEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6LevelVeteran");
-                rankString += userData.veteranRank;
-                if (veteranEmoji) rankString += ` ${veteranEmoji}`;
-            } else {
-                rankString += userData.rank;
-            };
-            // General stats
-            let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
-            if (saveData.achievementsClaimed.length > 0) {
-                let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
-                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/${saveModel.parameters.achievementsClaimed.default.length}`;
-                if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
-            };
-            if (saveData.lifetimeTrophies > 0) {
-                let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
-                userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
-                if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
-            };
-            if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
-            // Hero and tower usage
-            let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache);
-            let towersByUsageString = getUsageListString(userData.towersPlaced, interaction.client.application.emojis.cache);
-            // Build user embed
-            btd6Embed
-                .setTitle(userData.displayName)
-                .setDescription(userDescription)
-                .setThumbnail(userData.avatarURL)
-                .setImage(userData.bannerURL)
-                .setFooter({ text: `Profile Version: v${saveData.latestGameVersion}\nCreator Code: Glaze` })
-                .addFields([
-                    { name: "Heroes Placed:", value: heroesByUsageString, inline: true },
-                    { name: "Towers Placed:", value: towersByUsageString, inline: true }
-                ]);
-            btd6EmbedArray.push(btd6Embed);
+            btd6UserModal.setCustomId(`${btd6UserModalIdBase}|${interaction.options.getBoolean("ephemeral")}`);
+            return interaction.showModal(btd6UserModal);
             break;
         case "boss-event":
+            // @ts-ignore
+            await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
@@ -92,10 +75,7 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     // Handle API errors
     if (apiError) {
         messageFlags.add(MessageFlags.Ephemeral);
-        btd6Embed
-            .setTitle("Error")
-            .setColor(globalVars.embedColorError as [number, number, number] as ColorResolvable)
-            .setDescription(`The following error occurred while getting data from the API:${codeBlock("fix", apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) ${hyperlink("here", "https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API")}.`);
+        btd6Embed = getAPIErrorMessageObject(apiError).embeds[0];
         btd6EmbedArray.push(btd6Embed);
     };
     console.log(btd6EmbedArray)
@@ -104,22 +84,6 @@ export default async (interaction: ChatInputCommandInteraction, messageFlags: Me
     return sendMessage(interaction, btd6EmbedArray, btd6ActionRowArray, messageFlags);
 };
 
-function getUsageListString(usageObject: { [key: string]: number }, emojis: { [key: string]: any }) {
-    let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
-    let usageString = "";
-    usageArray.forEach(element => {
-        let heroIcon = emojis.find((emoji: { name: string }) => emoji.name == `BTD6Hero${element[0]}`);
-        if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
-        usageString += `${element[0]}: ${element[1]}\n`;
-    });
-    return usageString;
-};
-
-// String options
-const oakOption = new SlashCommandStringOption()
-    .setName("oak")
-    .setDescription("Specify Open Access Key.")
-    .setRequired(true);
 // Boolean options
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
@@ -128,7 +92,6 @@ const ephemeralOption = new SlashCommandBooleanOption()
 const userSubcommand = new SlashCommandSubcommandBuilder()
     .setName("user")
     .setDescription("See information on a user.")
-    .addStringOption(oakOption)
     .addBooleanOption(ephemeralOption);
 const bossEventSubcommand = new SlashCommandSubcommandBuilder()
     .setName("boss-event")

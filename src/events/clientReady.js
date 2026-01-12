@@ -27,10 +27,6 @@ export default async (client) => {
 
         await client.guilds.fetch();
         await client.application.emojis.fetch();
-        // List and fetch servers the bot is connected to
-        // await client.guilds.cache.forEach(async (guild) => {
-        //     await guild.members.fetch();
-        // });
 
         let timestamp = getTime();
         let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
