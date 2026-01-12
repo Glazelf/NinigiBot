@@ -4,8 +4,11 @@ import {
     SlashCommandBuilder,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    ActionRowBuilder,
     SlashCommandSubcommandGroupBuilder,
+    ColorResolvable,
+    ChatInputCommandInteraction,
+    MessageFlagsBitFieldSettable,
+    MessageFlagsBitField,
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle,
@@ -45,33 +48,40 @@ const oakInfoLabel = new LabelBuilder()
     .setTextInputComponent(oakInfoInput);
 btd6UserModal.addLabelComponents(oakLabel, oakInfoLabel);
 
-export default async (interaction, messageFlags) => {
+export default async (interaction: ChatInputCommandInteraction, messageFlags: MessageFlagsBitField) => {
     let apiError = null;
-    let btd6ActionRow = new ActionRowBuilder();
-    let btd6Embed = new EmbedBuilder()
-        .setColor(globalVars.embedColor);
+    let btd6EmbedArray: EmbedBuilder[] = [];
+    let btd6Embed: EmbedBuilder = new EmbedBuilder()
+        .setColor(globalVars.embedColor as [number, number, number] as ColorResolvable);
+    let btd6ActionRowArray: EmbedBuilder[] = [];
+
     switch (interaction.options.getSubcommand()) {
         case "user":
             btd6UserModal.setCustomId(`${btd6UserModalIdBase}|${interaction.options.getBoolean("ephemeral")}`);
             return interaction.showModal(btd6UserModal);
             break;
         case "boss-event":
-            await interaction.deferReply({ flags: messageFlags });
+            // @ts-ignore
+            await interaction.deferReply({ flags: messageFlags as MessageFlagsBitFieldSettable });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
                 break;
             };
-            btd6Embed = bossEventMessageObject.embeds;
-            btd6ActionRow = bossEventMessageObject.components;
+            btd6EmbedArray = bossEventMessageObject.embeds;
+            btd6ActionRowArray = bossEventMessageObject.components;
             break;
     };
     // Handle API errors
     if (apiError) {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed = getAPIErrorMessageObject(apiError).embeds[0];
+        btd6EmbedArray.push(btd6Embed);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
+    console.log(btd6EmbedArray)
+    console.log(btd6ActionRowArray)
+    // @ts-ignore
+    return sendMessage(interaction, btd6EmbedArray, btd6ActionRowArray, messageFlags);
 };
 
 // Boolean options
