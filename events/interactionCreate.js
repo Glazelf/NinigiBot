@@ -70,6 +70,7 @@ const pokemonGenerations = new Generations(Dex);
 const allPokemonByLength = Dex.species.all().filter(pokemon => pokemon.isNonstandard !== "CAP").sort((a, b) => a.name.length - b.name.length);
 const pokemonNameLengthShortest = allPokemonByLength[0].name.length;
 const pokemonNameLengthLongest = allPokemonByLength[allPokemonByLength.length - 1].name.length;
+console.log(Dex.items.get("Banettite"))
 const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => {
     let aMega = a.megaEvolves;
     let bMega = b.megaEvolves;
