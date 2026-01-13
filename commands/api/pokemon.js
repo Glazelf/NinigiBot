@@ -38,7 +38,7 @@ const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
-const allMegaStones = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP");
+const allMegaStones = Dex.items.all().filter(item => item.megaStone && item.isNonstandard !== "CAP");
 
 export default async (interaction, messageFlags) => {
     // Bools

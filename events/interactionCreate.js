@@ -70,16 +70,13 @@ const pokemonGenerations = new Generations(Dex);
 const allPokemonByLength = Dex.species.all().filter(pokemon => pokemon.isNonstandard !== "CAP").sort((a, b) => a.name.length - b.name.length);
 const pokemonNameLengthShortest = allPokemonByLength[0].name.length;
 const pokemonNameLengthLongest = allPokemonByLength[allPokemonByLength.length - 1].name.length;
-console.log(Dex.items.get("Banettite"))
-const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => {
-    let aMega = a.megaEvolves;
-    let bMega = b.megaEvolves;
-    if (Array.isArray(a.megaEvolves)) aMega = a.megaEvolves[0];
-    if (Array.isArray(b.megaEvolves)) bMega = b.megaEvolves[0];
+const allMegaStonesByLength = Dex.items.all().filter(item => item.megaStone && item.isNonstandard !== "CAP").sort((a, b) => {
+    let aMega = Object.keys(a.megaStone)[0];
+    let bMega = Object.keys(b.megaStone)[0];
     return aMega.length - bMega.length;
 });
-const megaStoneNameLengthShortest = allMegaStonesByLength[0].megaEvolves.length;
-const megaStoneNameLengthLongest = allMegaStonesByLength[allMegaStonesByLength.length - 1].megaEvolves.length;
+const megaStoneNameLengthShortest = Object.keys(allMegaStonesByLength[0].megaStone)[0].length;
+const megaStoneNameLengthLongest = Object.keys(allMegaStonesByLength[allMegaStonesByLength.length - 1].megaStone)[0].length;
 
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
@@ -1002,7 +999,7 @@ export default async (client, interaction) => {
                         const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
 
                         // We can check more leniently if the input includes the correct answer since we don't need to be strict about forms
-                        if (megaQuizModalGuessFormatted.includes(correctMegaStone.itemUser[0])) {
+                        if (megaQuizModalGuessFormatted.includes(Object.keys(correctMegaStone.megaStone)[0])) {
                             let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
                             interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
                                 return null;

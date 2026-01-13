@@ -22,9 +22,9 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let pokemon = null;
     let embedColor = globalVars.embedColor;
     if (!stoneList && stone) {
-        pokemon = Dex.species.get(stone.itemUser[0]);
+        pokemon = Dex.species.get(Object.keys(stone.megaStone)[0]);
         if (winner) {
-            let pokemonSim = DexSim.species.get(stone.itemUser[0]);
+            let pokemonSim = DexSim.species.get(Object.keys(stone.megaStone)[0]);
             embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         };
     };
@@ -41,7 +41,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: megaQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
-        quizDescription += `\nThe answer was ${bold(stone.itemUser[0])}.\nThe item shown is the ${bold(stone.name)}.`;
+        quizDescription += `\nThe answer was ${bold(Object.keys(stone.megaStone)[0])}.\nThe item shown is the ${bold(stone.name)}.`;
         messageObject.files = [];
         messageObject.components = [];
     } else {
