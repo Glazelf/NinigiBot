@@ -9,6 +9,7 @@ import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import rewardMoney from "../db/rewardMoney.js";
+import formatNumber from "../math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
@@ -37,7 +38,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
         } else {
             // Format winning message update for correct guess
             let megaQuizPrize = 20;
-            quizDescription = `${winner} guessed correctly and won ${megaQuizPrize}${globalVars.currency}.`;
+            quizDescription = `${winner} guessed correctly and won ${formatNumber(megaQuizPrize, interaction.locale)}${globalVars.currency}.`;
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: megaQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };

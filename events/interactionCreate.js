@@ -20,6 +20,7 @@ import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/discord/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
+import formatNumber from "../util/math/formatNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 // Pokémon
 import { Dex } from '@pkmn/dex';
@@ -378,14 +379,14 @@ export default async (client, interaction) => {
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
                                 // Bet doesn't need to be subtracted, this is already done when setting up the bet
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
+                                if (mineBet > 0) contentReturn += `\nYou lost ${formatNumber(mineBet, interaction.locale)}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You won! Congratulations!\n`;
                                 if (mineBet > 0) {
-                                    contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
+                                    contentReturn += `You bet ${formatNumber(mineBet, interaction.locale)}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
                                 contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.`;

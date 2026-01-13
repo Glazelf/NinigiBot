@@ -15,6 +15,7 @@ import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import rewardMoney from "../db/rewardMoney.js";
+import formatNumber from "../math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
@@ -51,7 +52,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         } else {
             // Format winning message update for correct guess
             let pkmQuizPrize = 10;
-            quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}.`;
+            quizDescription = `${winner} guessed correctly and won ${formatNumber(pkmQuizPrize, interaction.locale)}${globalVars.currency}.`;
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: pkmQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };

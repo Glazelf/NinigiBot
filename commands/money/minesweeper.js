@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import increaseByPercentageForEach from "../../util/math/increaseByPercentageForEach.js";
+import formatNumber from "../../util/math/formatNumber.js";
 import {
     getMoney,
     addMoney
@@ -52,7 +53,7 @@ export default async (interaction, messageFlags) => {
         if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
         betGain = increaseByPercentageForEach(bet, mines, profitPerMine);
         addMoney(interaction.user.id, -bet);
-        correctionString += `\nYou bet ${bet}${globalVars.currency}.\nIf you win you will receive ${betGain}${globalVars.currency}.`;
+        correctionString += `\nYou bet ${formatNumber(bet, interaction.locale)}${globalVars.currency}.\nIf you win you will receive ${formatNumber(betGain, interaction.locale)}${globalVars.currency}.`;
     } else {
         bet = 0;
     };
