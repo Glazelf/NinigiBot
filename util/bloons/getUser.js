@@ -33,13 +33,13 @@ export default async ({ interaction, oak, messageFlags }) => {
         rankString += userData.rank;
     };
     // General stats
-    let userDescription = `${rankString}\nTotal EXP: ${formatNumber(interaction.locale, saveData.xp + saveData.veteranXp)}\nBloons Popped: ${formatNumber(interaction.locale, userData.bloonsPopped.bloonsPopped)}`;
+    let userDescription = `${rankString}\nTotal EXP: ${formatNumber(saveData.xp + saveData.veteranXp, interaction.locale)}\nBloons Popped: ${formatNumber(userData.bloonsPopped.bloonsPopped, interaction.locale)}`;
     let redBloonEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6RedBloon");
     if (redBloonEmoji) userDescription += ` ${redBloonEmoji}`;
-    userDescription += `\nGames Played: ${formatNumber(interaction.locale, saveData.gamesPlayed)}`;
+    userDescription += `\nGames Played: ${formatNumber(saveData.gamesPlayed, interaction.locale)}`;
     if (saveData.lifetimeTrophies > 0) {
         let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
-        userDescription += `\nTrophies Earned: ${formatNumber(interaction.locale, saveData.lifetimeTrophies)}`;
+        userDescription += `\nTrophies Earned: ${formatNumber(saveData.lifetimeTrophies, interaction.locale)}`;
         if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
     };
     if (saveData.achievementsClaimed.length > 0) {
@@ -79,7 +79,7 @@ function getUsageListString(usageObject, emojis, locale) {
     usageArray.forEach(element => {
         let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
         if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
-        usageString += `${element[0]}: ${formatNumber(locale, element[1])}\n`;
+        usageString += `${element[0]}: ${formatNumber(element[1], locale)}\n`;
     });
     return usageString;
 };
