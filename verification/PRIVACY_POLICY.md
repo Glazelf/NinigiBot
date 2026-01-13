@@ -9,4 +9,4 @@ Data is exclusively collected to maintain features like leaderboards, logging et
 For the moment, user IDs are stored permanently. In the future we plan to clean up data of users who haven't interacted with the bot in a long time.
 
 ## I want to delete all my data
-Either create an issue here or shoot the host of the bot instance a dm on Discord. You can see the bot host's tag by using `/botinfo`.
+Either create an issue here or shoot me (`glazelf`) a message on Discord. You can see the bot owner's username by using `/botinfo`.
