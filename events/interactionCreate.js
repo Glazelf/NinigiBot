@@ -555,33 +555,30 @@ export default async (client, interaction) => {
                                     case "move":
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
-                                            // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen);
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
                                             break;
                                         } else {
-                                            // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen).sort((a, b) => a.num - b.num);
+                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen);
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                                if ((normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value)))
-                                                    && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
+                                                let identifierIncludesInput = (normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value).replace(/ /g, "-")))
+                                                let isNotGmaxUsage = !(usageBool && species.name.endsWith("-Gmax"));
+                                                if (identifierIncludesInput && isNotGmaxUsage) choices.push({ name: pokemonIdentifier, value: species.name });
                                             });
                                             break;
                                         };
                                     case "ability":
-                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen);
                                         abilities.forEach(ability => {
                                             if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
                                         });
                                         break;
                                     case "item":
-                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen);
                                         items.forEach(item => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
