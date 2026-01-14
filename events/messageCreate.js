@@ -29,7 +29,7 @@ export default async (client, message) => {
             let DMChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             let dmEmbeds = [];
-            let embedURL = message.url
+            let embedURL = message.url;
 
             const profileButton = new ButtonBuilder()
                 .setLabel("Profile")
