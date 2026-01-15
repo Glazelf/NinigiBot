@@ -14,6 +14,7 @@ import {
     inlineCode,
     LabelBuilder
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import axios from "axios";
 axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
 import fs from "fs";
@@ -108,7 +109,7 @@ eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "ut
 // Genshin Impact
 const giAPI = `https://genshin.jmp.blue/`;
 
-export default async (client: any, interaction) => {
+export default async (client: ExtendedClient, interaction) => {
     try {
         let messageFlags = new MessageFlagsBitField;
         // ID split

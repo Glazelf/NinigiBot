@@ -6,6 +6,7 @@ import {
     ChannelType,
     PermissionFlagsBits
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
 import normalizeString from "../util/string/normalizeString.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
@@ -17,7 +18,7 @@ import {
 
 const talkedRecently = new Set();
 
-export default async (client: any, message) => {
+export default async (client: ExtendedClient, message) => {
     try {
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;

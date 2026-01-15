@@ -10,7 +10,9 @@ import numberToHex from "../util/math/numberToHex.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, role) => {
+import type { ExtendedClient } from '../types/global.js';
+
+export default async (client: ExtendedClient, role) => {
     try {
         let serverApi: any = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default() as any;

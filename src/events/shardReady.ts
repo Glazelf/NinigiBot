@@ -1,7 +1,8 @@
+import type { ExtendedClient } from '../types/global.js';
 import getTime from "../util/getTime.js";
 import logger from "../util/logger.js";
 
-export default async (client: any, id) => {
+export default async (client: ExtendedClient, id) => {
     try {
         let timestamp = getTime();
         // const storedBalances = await Users.findAll();

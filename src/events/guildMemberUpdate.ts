@@ -5,6 +5,7 @@ import {
     time,
     TimestampStyles
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/db/deletePersonalRole.js";
 import formatName from "../util/discord/formatName.js";
@@ -12,7 +13,7 @@ import getBotSubscription from "../util/discord/getBotSubscription.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, oldMember, newMember) => {
+export default async (client: ExtendedClient, oldMember, newMember) => {
     try {
         let serverApi: any = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default() as any;

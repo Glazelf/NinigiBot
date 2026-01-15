@@ -1,6 +1,7 @@
+import type { ExtendedClient } from '../types/global.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, id) => {
+export default async (client: ExtendedClient, id) => {
     try {
         // Set bot status
         client.user.setPresence(globalVars.presence);

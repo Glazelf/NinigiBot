@@ -2,11 +2,12 @@ import {
     EmbedBuilder,
     PermissionFlagsBits
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, messages) => {
+export default async (client: ExtendedClient, messages) => {
     try {
         if (!messages) return;
         // Find a good way to check executor for this sometime

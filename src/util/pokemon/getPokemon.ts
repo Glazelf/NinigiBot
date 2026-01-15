@@ -8,6 +8,8 @@ import {
 } from "discord.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
+import type { Generation } from '@pkmn/data';
+import type { Species } from '@pkmn/dex-types';
 import urlExists from "../urlExists.js";
 import convertMeterFeet from "../math/convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
@@ -17,13 +19,13 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const allPokemon = Dex.species.all().filter((pokemon: Species) => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
+export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }: { pokemon: Species; learnsetBool?: boolean; shinyBool?: boolean; genData: Generation; emojis: any }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex.gen;
-    let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+    let allPokemonGen = Array.from(genData.species).filter((pokemon: any) => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
@@ -194,10 +196,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
     if (learnsetBool && pokemonLearnset && pokemonAvailable) {
         pokemonLearnset = await checkBaseSpeciesMoves({ genData: genData, pokemon: pokemon, learnset: pokemonLearnset });
-        for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
+        for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset as any)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
-            for (let moveLearnData of learnData) {
+            for (let moveLearnData of (learnData as any)) {
                 let moveLearnGen = moveLearnData[0];
                 if (moveLearnGen > generation) {
                     continue;
@@ -229,10 +231,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         if (prevoDataMoves && prevoDataMoves.name) {
             let pokemonPrevoLearnset = await genData.learnsets.get(prevoDataMoves.name);
             if (pokemonPrevoLearnset && pokemonPrevoLearnset.learnset) {
-                for (let [moveName, learnData] of Object.entries(pokemonPrevoLearnset.learnset)) {
+                for (let [moveName, learnData] of Object.entries(pokemonPrevoLearnset.learnset as any)) {
                     let moveData = genData.moves.get(moveName);
                     if (moveData) moveName = moveData.name;
-                    for (let moveLearnData of learnData) {
+                    for (let moveLearnData of (learnData as any)) {
                         if (moveLearnData.startsWith(`${generation}E`)) eggMoves.push(moveName);
                     };
                 };
@@ -264,12 +266,12 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let previousPokemon = null;
     let nextPokemon = null;
     let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
-    let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
+    let maxPkmID = (allPokemonGen[allPokemonGen.length - 1] as any).num;
     let previousPokemonID = pokemon.num - 1;
     let nextPokemonID = pokemon.num + 1;
     if (previousPokemonID < 1) previousPokemonID = maxPkmID;
     if (nextPokemonID > maxPkmID) nextPokemonID = 1;
-    previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
+    previousPokemon = allPokemon.filter((pokemon: Species) => pokemon.num == previousPokemonID)[0];
     nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
     // Add species buttons
     let pkmButtons = new ActionRowBuilder();

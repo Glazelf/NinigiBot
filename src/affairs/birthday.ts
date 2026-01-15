@@ -1,4 +1,5 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, TextChannel } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import cron from "cron";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/math/getRandomGif.js";
@@ -12,7 +13,7 @@ const guildID = globalVars.ShinxServerID;
 const channelID = globalVars.eventChannelID;
 const birthdayRoleID = "744719808058228796";
 
-export default async (client: any) => {
+export default async (client: ExtendedClient) => {
     try {
         if (client.user.id != globalVars.NinigiID) return;
         // Create cron job
@@ -43,6 +44,7 @@ export default async (client: any) => {
             };
             if (cuties.length < 1) return;
             let channel = guild.channels.cache.get(channelID);
+            if (!channel || !channel.isTextBased()) return;
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             // Create embed
@@ -50,7 +52,7 @@ export default async (client: any) => {
                 .setColor(globalVars.embedColor as [number, number, number])
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
-            channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });
+            (channel as TextChannel).send({ embeds: [gifEmbed], content: cuties.join(' ') });
         }, timezone, true);
 
     } catch (e: any) {

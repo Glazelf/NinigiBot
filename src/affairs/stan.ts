@@ -1,4 +1,5 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, TextChannel } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import cron from "cron";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/math/getRandomGif.js";
@@ -15,7 +16,7 @@ const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
 const guildID = globalVars.ShinxServerID;
 const stanRoleID = "743144948328562729";
 
-export default async (client: any) => {
+export default async (client: ExtendedClient) => {
     try {
         if (client.user.id != globalVars.NinigiID) return;
         // Create cronjob
@@ -35,12 +36,13 @@ export default async (client: any) => {
             if (!randomGif) return;
 
             let channel = guild.channels.cache.get(globalVars.eventChannelID);
+            if (!channel || !channel.isTextBased()) return;
 
             const gifEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor as [number, number, number])
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);
-            channel.send({
+            (channel as TextChannel).send({
                 content: candidateRandom.toString(), embeds: [gifEmbed],
                 // allowedMentions: { parse: ['users'] }
             });

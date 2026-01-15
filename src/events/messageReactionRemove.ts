@@ -1,3 +1,4 @@
+import type { ExtendedClient } from '../types/global.js';
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -7,7 +8,7 @@ const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
-export default async (client: any, messageReaction) => {
+export default async (client: ExtendedClient, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message reaction counts are valid and that reaction is a star, different check from messageReactionAdd because count can be 0 here

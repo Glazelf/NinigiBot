@@ -1,4 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
@@ -9,7 +10,7 @@ const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = "<:nostar:780198211913646130>"; // Escaped emoji (i.e. <emoji:123>) or plain unicode emote
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, ""); // Empty and unused for plain emojis
 
-export default async (client: any, messageReaction) => {
+export default async (client: ExtendedClient, messageReaction) => {
     try {
         let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star

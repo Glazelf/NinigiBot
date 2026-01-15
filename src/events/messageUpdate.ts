@@ -2,11 +2,12 @@ import {
     EmbedBuilder,
     PermissionFlagsBits
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
 import checkPermissions from "../util/discord/perms/checkPermissions.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, oldMessage, newMessage) => {
+export default async (client: ExtendedClient, oldMessage, newMessage) => {
     try {
         if (!oldMessage || !oldMessage.guild || !oldMessage.author || oldMessage.author.bot || oldMessage.author.system) return;
         if (oldMessage.content === newMessage.content) return;

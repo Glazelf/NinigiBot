@@ -5,7 +5,9 @@ import logger from "../util/logger.js";
 import formatName from "../util/discord/formatName.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-export default async (client: any, guild) => {
+import type { ExtendedClient } from '../types/global.js';
+
+export default async (client: ExtendedClient, guild) => {
     try {
         let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         if (!log) return;

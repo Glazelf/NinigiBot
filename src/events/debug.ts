@@ -1,6 +1,7 @@
 import {
     EmbedBuilder
 } from "discord.js";
+import type { ExtendedClient } from '../types/global.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 const maxEmbedLength = 6000;
@@ -11,7 +12,7 @@ const debugChannelID = "1325890140517826580"; // Replace ID with specific debug 
 // It is usefull pretty much only here, where we want to paste one uninterrupted string for as long as possible, as close to 6000 characters as we can get.
 const fieldName = "​";
 
-export default async (client: any, info) => {
+export default async (client: ExtendedClient, info) => {
     if (process.env.DEBUG !== 1) return;
     // Format strings
     let description = info;
