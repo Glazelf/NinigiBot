@@ -175,7 +175,7 @@ export default async (client: any, interaction) => {
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemonList: null, pokemon: pkmQuizRevealCorrectAnswer, reveal: true });
                             contentReturn = pkmQuizRevealMessageObject.content;
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
                             filesReturn = pkmQuizRevealMessageObject.files;
@@ -200,7 +200,7 @@ export default async (client: any, interaction) => {
                         } else if (interaction.customId.startsWith("megaQuizReveal")) {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
                             let megaQuizRevealCorrectAnswer = Dex.items.get(interaction.message.components[0].components[0].customId.split("|")[1]);
-                            let megaQuizRevealMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: megaQuizRevealCorrectAnswer, reveal: true });
+                            let megaQuizRevealMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stoneList: null, stone: megaQuizRevealCorrectAnswer, reveal: true });
                             embedsReturn = megaQuizRevealMessageObject.embeds;
                             componentsReturn = megaQuizRevealMessageObject.components;
                         } else if (interaction.customId.startsWith("megaQuizGuess")) {
@@ -235,7 +235,7 @@ export default async (client: any, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
+                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -329,13 +329,13 @@ export default async (client: any, interaction) => {
 
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
-                                    const buttonCopy = ButtonBuilder.from(button);
+                                    const buttonCopy = ButtonBuilder.from(button as any);
                                     if (isFirstButton) {
-                                        buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
+                                        buttonCopy.setCustomId((buttonCopy.data as any).custom_id.replace(spoilerEmoji, matrix[rowIndex][columnIndex])); // Replace placeholder emoji with generated emoji from above
                                     };
-                                    let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
+                                    let buttonEmoji = (buttonCopy.data as any).custom_id.split("-")[2];
                                     if (gameOver) buttonCopy.setDisabled(true);
-                                    if (button.data.custom_id == interaction.customId) {
+                                    if ((button as any).data.custom_id == interaction.customId) {
                                         // Regenerate board if first button is a bomb or spoiler
                                         let bannedStartingCells = [bombEmoji, spoilerEmoji];
                                         while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
@@ -547,7 +547,7 @@ export default async (client: any, interaction) => {
                         break;
                     case "pokemon":
                         let generationInput = interaction.options.getInteger("generation") || Dex.gen;
-                        let dexModified = Dex.mod(`gen${generationInput}`);
+                        let dexModified = Dex.mod(`gen${generationInput}` as any);
                         switch (focusedOption.name) {
                             case "pokemon":
                             case "move":
@@ -774,20 +774,23 @@ export default async (client: any, interaction) => {
                                         break;
                                     case "skill":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                            const skillValue = value as any;
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
-                                                value.element !== "trait") choices.push({ name: key, value: key });
+                                                skillValue.element !== "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "trait":
                                         for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                            const skillValue = value as any;
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
-                                                value.element == "trait") choices.push({ name: key, value: key });
+                                                skillValue.element == "trait") choices.push({ name: key, value: key });
                                         };
                                         break;
                                     case "item":
                                         for await (const [key, value] of Object.entries(itemMapRoyal)) {
+                                            const itemValue = value as any;
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value)) &&
-                                                !value.skillCard) choices.push({ name: key, value: key });
+                                                !itemValue.skillCard) choices.push({ name: key, value: key });
                                         };
                                         break;
                                 };
@@ -800,7 +803,8 @@ export default async (client: any, interaction) => {
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);
                                 let planetsData = planetsResponse.data;
                                 for await (const [key, value] of Object.entries(planetsData)) {
-                                    if (normalizeString(value.name).includes(normalizeString(focusedOption.value))) choices.push({ name: value.name, value: value.name });
+                                    const planetValue = value as any;
+                                    if (normalizeString(planetValue.name).includes(normalizeString(focusedOption.value))) choices.push({ name: planetValue.name, value: planetValue.name });
                                 };
                                 break;
                         };
@@ -967,7 +971,7 @@ export default async (client: any, interaction) => {
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
                         let pkmQuizMessageDescription = interaction.message.embeds[0].data.description;
-                        if (pkmQuizMessageDescription && pkmQuizMessageDescription.length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (pkmQuizMessageDescription && (pkmQuizMessageDescription as string).split && (pkmQuizMessageDescription as string).split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
@@ -977,7 +981,7 @@ export default async (client: any, interaction) => {
                         // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
                         const pkmQuizModalGuessFormatted = Dex.species.get(pkmQuizModalGuess).name;
                         if (pkmQuizModalGuessFormatted == pkmQuizCorrectAnswer) {
-                            let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemon: pkmQuizCorrectAnswer });
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: interaction.user, pokemonList: null, pokemon: pkmQuizCorrectAnswer, reveal: false });
                             interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components }).catch(e => {
                                 // Only saw this be necessary once when edit got blocked by AutoMod, but it caused a crash so still worth catching
                                 // Can't reply or followUp because the interaction counts as handled after the above update fails
@@ -992,7 +996,7 @@ export default async (client: any, interaction) => {
                         messageFlags.remove(MessageFlags.Ephemeral);
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: deletedModalString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         let megaQuizMessageDescription = interaction.message.embeds[0].data.description;
-                        if (megaQuizMessageDescription && megaQuizMessageDescription.length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (megaQuizMessageDescription && (megaQuizMessageDescription as string).split && (megaQuizMessageDescription as string).split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         let megaQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let correctMegaStone = Dex.items.get(megaQuizButtonID.split("|")[1]);
@@ -1001,7 +1005,7 @@ export default async (client: any, interaction) => {
 
                         // We can check more leniently if the input includes the correct answer since we don't need to be strict about forms
                         if (megaQuizModalGuessFormatted.includes(Object.keys(correctMegaStone.megaStone)[0])) {
-                            let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
+                            let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stoneList: null, stone: correctMegaStone, reveal: false });
                             interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
                                 return null;
                             });
@@ -1015,7 +1019,7 @@ export default async (client: any, interaction) => {
                 return;
         };
     } catch (e: any) {
-        logger({ exception: e, interaction: interaction });
+        logger({ exception: e, client: interaction.client, interaction: interaction });
     };
 };
 
@@ -1025,7 +1029,7 @@ function pokemonAutocompleteFilter(object, inputGen, currentGen) {
         item.isNonstandard !== "CAP" &&
         (inputGen === currentGen || item.isNonstandard !== "Future") && // Allow future in current gen
         !item.name.startsWith("Hidden Power ") && // Exclude typed Hidden Power moves
-        !item.name !== "No Ability" && // Lack of ability
+        item.name !== "No Ability" && // Lack of ability
         (item.num === undefined || item.num > 0) // Pokémon dex number >0
     );
 };

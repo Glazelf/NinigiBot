@@ -27,10 +27,26 @@ import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoH
 import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
 import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
-// import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
-// import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
+
+// Type definitions for Splatoon 3 data
+interface GearInfo {
+    __RowId: string;
+    Rarity: number;
+    HowToGet: string;
+    Price: number;
+    Brand: string;
+    Skill: string;
+}
+
+interface WeaponInfo {
+    __RowId: string;
+    GameActor: string;
+    SpecialWeapon: string;
+    SubWeapon: string;
+    SpecialPoint: number;
+    ShopUnlockRank: number;
+    UIParam: Array<{ Type: string; Value: number }>;
+}
 
 // Import language files
 fs.readdir("./submodules/splat3/data/language/", (err: any, files: any) => {
@@ -114,7 +130,7 @@ export default async (interaction: any, messageFlags: any) => {
                 default:
                     return sendMessage(clothingFailedMessageObject);
             };
-            let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
+            let clothingObject = Object.values(selectedClothesJSON).find((clothing: unknown) => (clothing as GearInfo).__RowId.includes(inputID)) as GearInfo | undefined;
             if (!clothingObject) return sendMessage(clothingFailedMessageObject);
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
@@ -145,16 +161,16 @@ export default async (interaction: any, messageFlags: any) => {
                 ]);
             break;
         case "weapon":
-            let weaponObject = Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
+            let weaponObject = Object.values(WeaponInfoMainJSON).find((weapon: unknown) => (weapon as WeaponInfo).GameActor.includes(inputID)) as WeaponInfo | undefined;
             if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
 
             let weaponAuthor = languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID];
             if (!weaponAuthor) weaponAuthor = inputID;
             let weaponStats = "";
-            let specialID = weaponObject.SpecialWeapon.split("/");
-            specialID = specialID[specialID.length - 1].split(".")[0];
-            let subID = weaponObject.SubWeapon.split("/");
-            subID = subID[subID.length - 1].split(".")[0];
+            let specialIDArray = weaponObject.SpecialWeapon.split("/");
+            let specialID = specialIDArray[specialIDArray.length - 1].split(".")[0];
+            let subIDArray = weaponObject.SubWeapon.split("/");
+            let subID = subIDArray[subIDArray.length - 1].split(".")[0];
 
             weaponObject.UIParam.forEach(stat => {
                 weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
@@ -186,12 +202,13 @@ export default async (interaction: any, messageFlags: any) => {
                 ]);
             break;
         case "subweapon":
-            let subweaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
-                let weaponSubID = weapon.SubWeapon.split("/");
-                weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
-                if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
+            let subweaponMatches = Object.values(WeaponInfoMainJSON).filter((weapon: unknown) => {
+                const w = weapon as WeaponInfo;
+                let weaponSubIDArray = w.SubWeapon.split("/");
+                let weaponSubID = weaponSubIDArray[weaponSubIDArray.length - 1].split(".")[0];
+                if (w.__RowId.endsWith("_Coop") || w.__RowId.endsWith("_Msn") || w.__RowId.includes("_Rival") && w.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSubID) return true;
-            });
+            }) as WeaponInfo[];
             if (subweaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSubweaponMatchesNames = "";
             subweaponMatches.forEach(subweapon => {
@@ -212,12 +229,13 @@ export default async (interaction: any, messageFlags: any) => {
                 .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }]);
             break;
         case "special":
-            let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
-                let weaponSpecialID = weapon.SpecialWeapon.split("/");
-                weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
-                if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
+            let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter((weapon: unknown) => {
+                const w = weapon as WeaponInfo;
+                let weaponSpecialIDArray = w.SpecialWeapon.split("/");
+                let weaponSpecialID = weaponSpecialIDArray[weaponSpecialIDArray.length - 1].split(".")[0];
+                if (w.__RowId.endsWith("_Coop") || w.__RowId.endsWith("_Msn") || w.__RowId.includes("_Rival") && w.__RowId.includes("_AMB_")) return false;
                 if (inputID == weaponSpecialID) return true;
-            });
+            }) as WeaponInfo[];
             if (specialWeaponMatches.length < 1) return sendMessage({ interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
             let allSpecialWeaponMatchesNames = "";
             specialWeaponMatches.forEach(specialWeaponEntry => {
@@ -471,9 +489,15 @@ export default async (interaction: any, messageFlags: any) => {
             let userTitle = interaction.user.displayName;
             if (isGuildDataAvailable(interaction)) userTitle = interaction.member.displayName;
 
-            let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
+            let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter((adjective: unknown) => {
+                const adj = adjective as string;
+                return !adj.includes("[") && adj !== "";
+            }) as string[];
             let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
-            let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => !subject.includes("[") && subject !== "");
+            let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter((subject: unknown) => {
+                const subj = subject as string;
+                return !subj.includes("[") && subj !== "";
+            }) as string[];
             let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
 
             let reversedLanguages = ["EUfr", "EUes", "EUit"];

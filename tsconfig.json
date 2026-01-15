@@ -38,6 +38,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": false,
     "noImplicitOverride": false,
+    "noEmitOnError": false,
     
     /* Completeness */
     "skipLibCheck": true

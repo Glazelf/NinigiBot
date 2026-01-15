@@ -94,7 +94,7 @@ export default async (interaction: any, messageFlags: any) => {
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
             if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
-                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(abilityFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: [errorEmbed.setDescription(abilityFailString)], flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -130,7 +130,7 @@ export default async (interaction: any, messageFlags: any) => {
                 generationFooter = Dex.gen;
             };
             if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) {
-                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(itemFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: [errorEmbed.setDescription(itemFailString)], flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -163,7 +163,7 @@ export default async (interaction: any, messageFlags: any) => {
             let moveFailString = `I could not find that move in generation ${generation}.`;
             if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
-                return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(moveFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
+                return sendMessage({ interaction: interaction, embeds: [errorEmbed.setDescription(moveFailString)], flags: messageFlags.add(MessageFlags.Ephemeral) });
             };
 
             let moveLearnPool = [];
@@ -175,7 +175,7 @@ export default async (interaction: any, messageFlags: any) => {
                     (pokemon.name.startsWith("Deoxys-") && generation > 3) || // Deoxys forms can't be changed in gen 3 so displaying them is usefull
                     pokemon.name.endsWith("-Origin") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
-                if (DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
+                if (DexSim.forGen(generation).species.getMovePool(pokemon.id as any).has(move.id as any)) moveLearnPool.push(pokemon.name);
             };
             let moveLearnPoolString = moveLearnPool.join(", ");
             if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
@@ -200,8 +200,8 @@ export default async (interaction: any, messageFlags: any) => {
             if (target == "Normal") target = "Any Adjacent";
 
             let moveTitle = moveGen.name;
-            if (moveGen.isMax) moveTitle = `${moveGen.name} (Max Move)`;
-            if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
+            if ((moveGen as any).isMax) moveTitle = `${moveGen.name} (Max Move)`;
+            if ((moveGen as any).isZ) moveTitle = `${moveGen.name} (Z-Move)`;
             let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
             let moveCategoryString = move.category;
             if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji} ${moveCategoryString}`;
@@ -220,7 +220,7 @@ export default async (interaction: any, messageFlags: any) => {
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
             if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority <= 0 ? moveGen.priority.toString() : `+${moveGen.priority}`, inline: true }]);
-            if (moveGen.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
+            if ((moveGen as any).contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: (moveGen as any).contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
             if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
             if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
             if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
@@ -404,9 +404,9 @@ export default async (interaction: any, messageFlags: any) => {
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
-                usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
+                usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%`;
                 usageRank = genericDataSplitPokemon[0].split("|");
-                usageRank = usageRank[usageRank.length - 2].trim();
+                usageRank = parseInt(usageRank[usageRank.length - 2].trim());
                 // Not all formats and months have tera types. Counters list exists everywhere but can be empty.
                 let teraTypesString = "";
                 let movesEndsplit = "Teammates";
@@ -445,7 +445,7 @@ export default async (interaction: any, messageFlags: any) => {
                     // Percentage determination copied from generic usage data parsing for specific pokemon
                     genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
-                    usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
+                    usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%`;
                     usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
@@ -465,7 +465,6 @@ export default async (interaction: any, messageFlags: any) => {
             const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
-// @ts-expect-error - Submodule JSON not initialized
             const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
@@ -542,14 +541,14 @@ export default async (interaction: any, messageFlags: any) => {
                 !pokemon.name.endsWith("-Starter") && // Let's Go Eevee & Pikachu starter forms
                 !pokemon.name.endsWith("-Bond") // Greninja
             );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, pokemonList: allowedPokemonList });
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ interaction: interaction, winner: null, pokemonList: allowedPokemonList, pokemon: null, reveal: false });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
             break;
         // Guess mega stone minigame
         case "guessmega":
-            let guessMegaStoneMessageObject = await getMegaStoneGuess({ interaction: interaction, stoneList: allMegaStones });
+            let guessMegaStoneMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: null, stoneList: allMegaStones, stone: null, reveal: false });
             pokemonEmbed = guessMegaStoneMessageObject.embeds[0];
             pokemonButtons = guessMegaStoneMessageObject.components;
             break;
@@ -572,10 +571,10 @@ export default async (interaction: any, messageFlags: any) => {
     // Color check for non-Pokémon commands
     if (pokemonEmbed) {
         const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
-        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
+        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()] as [number, number, number];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: pokemonButtons, files: pokemonFiles, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: pokemonButtons ? [pokemonButtons] : [], files: pokemonFiles, flags: messageFlags });
 };
 
 function getLearnData(learnData) {

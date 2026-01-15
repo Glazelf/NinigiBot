@@ -11,8 +11,27 @@ import {
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
-export default async ({ page, region }) => {
-    let splatfestMessageObject = {};
+interface SplatfestMessageObject {
+    content?: string;
+    embeds?: EmbedBuilder[];
+    components?: any;
+}
+
+interface PointValue {
+    first: number;
+    second?: number;
+}
+
+interface PointValues {
+    vote: PointValue;
+    horagai: PointValue;
+    regular: PointValue;
+    challenge: PointValue;
+    tricolor?: PointValue;
+}
+
+export default async ({ page, region }): Promise<SplatfestMessageObject> => {
+    let splatfestMessageObject: SplatfestMessageObject = {};
     let splat3Embed = new EmbedBuilder()
         .setTitle("Splatfests")
         .setColor(globalVars.embedColor as [number, number, number])
@@ -30,7 +49,7 @@ export default async ({ page, region }) => {
     let splatfestData = responseSplatfest.data[region].data.festRecords.nodes;
     let splatfestBanner = null;
     let isUpcomingOrOngoingSplatfest = false;
-    let pointValues = {
+    let pointValues: PointValues = {
         vote: { // Popularity
             first: 10
         },
@@ -47,7 +66,7 @@ export default async ({ page, region }) => {
     splatfestData = await splatfestData.sort((a: any, b: any) => Date.parse(b.endTime) - Date.parse(a.endTime));
     await splatfestData.forEach(async (splatfest) => {
         if (splatfest.title.length < 1) splatfest.title = "Unknown Splatfest (API error)"; // In case no valid name in API return
-        let currentSplatfestPointValues = pointValues;
+        let currentSplatfestPointValues: PointValues = pointValues;
         // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
         // 00003 = Spicy|Sweet|Sour
         if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00003").startTime) currentSplatfestPointValues = {
@@ -159,16 +178,16 @@ export default async ({ page, region }) => {
             if (team.result && team.result.isWinner) {
                 splatfestDescription += bold(team.teamName);
                 if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote.first;
-                if (team.result.isVoteRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.vote.second;
+                if (team.result.isVoteRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.vote.second || 0;
                 if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai.first;
-                if (team.result.isHoragaiRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.horagai.second;
+                if (team.result.isHoragaiRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.horagai.second || 0;
                 if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular.first;
-                if (team.result.isRegularContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second;
+                if (team.result.isRegularContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second || 0;
                 if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge.first;
-                if (team.result.isChallengeContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second;
-                if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.first;
-                if (team.result.isTricolorContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.second;
-                splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
+                if (team.result.isChallengeContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.challenge.second || 0;
+                if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor?.first || 0;
+                if (team.result.isTricolorContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.tricolor?.second || 0;
+                splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints.toString());
             } else if (team.result && team.result.isSecondWinner) {
                 splatfestDescription += italic(team.teamName);
             } else {
