@@ -26,6 +26,22 @@ export default async (client: ExtendedClient) => {
         birthday(client);
         console.log("Loaded affairs!");
 
+        // Load Splatoon 3 language files
+        try {
+            const fs = await import('fs');
+            const files = await fs.promises.readdir("./submodules/splat3/data/language/");
+            for (const file of files) {
+                const fileName = file.split(".")[0];
+                if (!fileName.endsWith("_full")) continue; // Only count full language files
+                const languageKey = fileName.split("_")[0];
+                const languageJSON = await import(`../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
+                globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
+            }
+            console.log("Loaded Splatoon 3 language files!");
+        } catch (e: any) {
+            console.error("Error loading Splatoon 3 language files:", e);
+        }
+
         await client.guilds.fetch();
         await client.application.emojis.fetch();
 

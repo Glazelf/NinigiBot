@@ -48,25 +48,8 @@ interface WeaponInfo {
     UIParam: Array<{ Type: string; Value: number }>;
 }
 
-// Lazy-load language files on first use to avoid blocking module import
-let languageFilesLoaded = false;
-async function loadLanguageFiles() {
-    if (languageFilesLoaded) return;
-    
-    try {
-        const files = await fs.promises.readdir("./submodules/splat3/data/language/");
-        for (const file of files) {
-            const fileName = file.split(".")[0];
-            if (!fileName.endsWith("_full")) continue; // Skip, only load full language files
-            const languageKey = fileName.split("_")[0];
-            const languageJSON = await import(`../../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
-            globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
-        }
-        languageFilesLoaded = true;
-    } catch (err) {
-        console.error("Error loading Splatoon 3 language files:", err);
-    }
-}
+// Language files are loaded in clientReady event to avoid blocking module import
+// This prevents the bot from hanging during startup
 
 const splatoon3Languages = [
     { name: "English", value: "EUen" },
@@ -98,9 +81,6 @@ const replayAPI = "https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/re
 const replayLookupGithub = "https://github.com/samuelthomas2774/splatoon3-replay-lookup";
 
 export default async (interaction: any, messageFlags: any) => {
-    // Lazy-load language files on first command execution
-    await loadLanguageFiles();
-    
     // Game data
     let versionLatest = version;
     if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
