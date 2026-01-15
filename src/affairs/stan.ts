@@ -43,8 +43,9 @@ export default async (client: ExtendedClient) => {
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);
             (channel as TextChannel).send({
-                content: candidateRandom.toString(), embeds: [gifEmbed],
-                // allowedMentions: { parse: ['users'] }
+                content: candidateRandom.toString(),
+                embeds: [gifEmbed],
+                allowedMentions: { parse: ['users'] }
             });
         }, timezone, true);
 

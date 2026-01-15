@@ -52,7 +52,10 @@ export default async (client: ExtendedClient) => {
                 .setColor(globalVars.embedColor as [number, number, number])
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
-            (channel as TextChannel).send({ embeds: [gifEmbed], content: cuties.join(' ') });
+            (channel as TextChannel).send({
+                content: cuties.join(' '),
+                embeds: [gifEmbed]
+            });
         }, timezone, true);
 
     } catch (e: any) {
