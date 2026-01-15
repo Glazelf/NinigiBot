@@ -29,7 +29,7 @@ export default async (interaction: any, page: any, user: any) => {
     if (serverAvatar == avatar) avatar = null; // Null tiny avatar if bigger avatar is identical
 
     const profileEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as [number, number, number])
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
     let profileButtons = new ActionRowBuilder();
@@ -59,7 +59,7 @@ export default async (interaction: any, page: any, user: any) => {
             // Roles
             let memberRoles = null;
             if (member && guildDataAvailable) memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
-            let rolesSorted = "None";
+            let rolesSorted: any = "None";
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
                 rolesSorted = await memberRoles.sort((r: any, r2: any) => r2.position - r.position);

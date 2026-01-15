@@ -60,7 +60,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     };
 
     let quizEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as [number, number, number])
         .setTitle(quizTitle)
         .setDescription(quizDescription)
         .setImage(`https://www.serebii.net/itemdex/sprites/za/${stone.id}.png`);

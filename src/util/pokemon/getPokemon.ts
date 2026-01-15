@@ -417,7 +417,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Embed color, mostly for buttons
     let embedColor = globalVars.embedColor;
     if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
-    pkmEmbed.setColor(embedColor);
+    pkmEmbed.setColor(embedColor as [number, number, number]);
     messageObject = { embeds: [pkmEmbed], components: [buttonArray] };
     return messageObject;
 };

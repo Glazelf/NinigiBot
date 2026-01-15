@@ -99,7 +99,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
     };
 
     let quizEmbed = new EmbedBuilder()
-        .setColor(embedColor)
+        .setColor(embedColor as [number, number, number])
         .setTitle(quizTitle)
         .setDescription(quizDescription)
         .setImage(embedImage);
