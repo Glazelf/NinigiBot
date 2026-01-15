@@ -31,7 +31,7 @@ import urlExists from "../../util/urlExists.js";
 import getMegaStoneGuess from "../../util/pokemon/getMegaStoneGuess.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
+// @ts-ignore - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import pokemonCardSetsJSON from "../../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();

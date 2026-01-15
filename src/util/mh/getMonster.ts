@@ -7,7 +7,7 @@ import {
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
+// @ts-ignore - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import monstersJSON from "../../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";

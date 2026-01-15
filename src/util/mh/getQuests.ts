@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import normalizeString from "../string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
+// @ts-ignore - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import questsJSON from "../../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ gameName, page }) => {
