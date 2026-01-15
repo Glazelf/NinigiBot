@@ -13,9 +13,9 @@ import getQuests from "../../util/mh/getQuests.js";
 import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
-import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import monstersJSON from "../../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
-import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+import questsJSON from "../../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 const mhRiseString = "Monster Hunter Rise";
 const mhWorldString = "Monster Hunter World";

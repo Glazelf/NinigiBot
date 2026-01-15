@@ -9,7 +9,7 @@ import {
 import normalizeString from "../string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
-import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+import questsJSON from "../../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ gameName, page }) => {
     let messageObject: any = {};

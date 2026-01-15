@@ -32,7 +32,7 @@ import getMegaStoneGuess from "../../util/pokemon/getMegaStoneGuess.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
-import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+import pokemonCardSetsJSON from "../../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);

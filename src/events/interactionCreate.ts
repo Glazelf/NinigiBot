@@ -33,14 +33,14 @@ import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
 import getMegaStoneGuess from "../util/pokemon/getMegaStoneGuess.js";
 // @ts-expect-error - Submodule JSON not initialized
-import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
 // @ts-expect-error - Submodule JSON not initialized
-import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import MHMonstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 // @ts-expect-error - Submodule JSON not initialized
-import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+import MHQuestsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // BTD
@@ -92,7 +92,7 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err: any, files: any) => {
     files.forEach(async (file) => {
         const fileName = file.split(".")[0];
         if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
-        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { with: { type: "json" } });
+        const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${file}`, { with: { type: "json" } });
         setJSON.default.forEach(card => {
             pokemonCardsBySet[fileName].push(card);
             pokemonCardsAll.push(card);
