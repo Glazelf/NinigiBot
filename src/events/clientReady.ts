@@ -8,7 +8,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 export default async (client: ExtendedClient) => {
     try {
         // Set interactions
-        await client.commands.forEach(async (command) => {
+        for (const [, command] of client.commands) {
             try {
                 let commandGuildID = null;
                 if (command.guildID) {
@@ -19,7 +19,7 @@ export default async (client: ExtendedClient) => {
             } catch (e: any) {
                 console.log(e);
             };
-        });
+        }
         console.log("Loaded interactions!");
         // Affairs
         stan(client);
