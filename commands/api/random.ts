@@ -26,7 +26,7 @@ const errorAPI = "An error occurred with the API. Please try again later.";
 export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.IsComponentsV2);
     let randomContainer = new ContainerBuilder()
-        .setAccentColor(globalVars.embedColor);
+        .setAccentColor(globalVars.embedColor as [number, number, number]);
     switch (interaction.options.getSubcommand()) {
         case "number":
             let lowNumber = interaction.options.getInteger("min");

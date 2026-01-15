@@ -7,6 +7,7 @@ import {
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";

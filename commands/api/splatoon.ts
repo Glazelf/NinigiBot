@@ -19,11 +19,17 @@ import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
+// @ts-expect-error - Submodule JSON not initialized
 import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 // import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
+// @ts-expect-error - Submodule JSON not initialized
 // import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
 
 // Import language files
