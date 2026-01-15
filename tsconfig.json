@@ -5,10 +5,11 @@
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "node",
+    "types": ["node"],
     
     /* Emit */
-    "outDir": "./dist",
-    "rootDir": "./",
+    "outDir": "./build",
+    "rootDir": "./src",
     "sourceMap": true,
     "removeComments": false,
     "declaration": false,
@@ -42,8 +43,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.js"
+    "src/**/*.ts",
+    "src/**/*.js"
   ],
   "exclude": [
     "node_modules",
