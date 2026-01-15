@@ -34,7 +34,7 @@ export default async (interaction: any, messageFlags: any) => {
             .setColor(globalVars.embedColorError as [number, number, number])
             .setTitle("Error")
             .setDescription(`Word ${inlineCode(inputWord)} not found.`);
-        return sendMessage({ interaction: interaction, embeds: errorEmbed });
+        return sendMessage({ interaction: interaction, embeds: [errorEmbed] });
     };
 
     let wordString = wordStatus.word;
@@ -77,7 +77,7 @@ export default async (interaction: any, messageFlags: any) => {
         .setTitle(wordString)
         .setURL(sourceURL);
     if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
-    return sendMessage({ interaction: interaction, embeds: dictionaryEmbed });
+    return sendMessage({ interaction: interaction, embeds: [dictionaryEmbed] });
 };
 
 const wordTypeChoices = [

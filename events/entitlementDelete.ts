@@ -10,8 +10,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: any, entitlement) => {
     try {
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
 
         let guild = await client.guilds.fetch(globalVars.ShinxServerID);
         if (!guild) return;

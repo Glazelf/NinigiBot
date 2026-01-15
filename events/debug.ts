@@ -46,5 +46,5 @@ export default async (client: any, info) => {
         debugInfoIndex += maxFieldValueLength;
     };
     // Send embed
-    return debugChannel.send({ embeds: debugEmbeds });
+    return debugChannel.send({ embeds: [debugEmbeds] });
 };

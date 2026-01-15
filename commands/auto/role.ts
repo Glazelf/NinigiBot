@@ -14,8 +14,8 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
-    let serverApi = await import("../../database/dbServices/server.api.js");
-    serverApi = await serverApi.default();
+    let serverApi: any = await import("../../database/dbServices/server.api.js");
+    serverApi = await serverApi.default() as any;
     let roleArgument = interaction.options.getString('role');
     let requestRole = null;
     if (roleArgument) requestRole = roleArgument;
@@ -85,7 +85,7 @@ export default async (interaction: any, messageFlags: any) => {
 
             let returnString = `Choose roles to toggle:`;
             if (messageFlags.has(MessageFlags.Ephemeral)) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
-            return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects });
+            return sendMessage({ interaction: interaction, content: returnString, components: [rolesSelects] });
         };
         // Help menu
         for (let i = 0; i < roleText.length; i++) {
@@ -99,7 +99,7 @@ export default async (interaction: any, messageFlags: any) => {
             .setColor(globalVars.embedColor as [number, number, number])
             .setTitle(`Available roles:`)
             .setDescription(roleHelpMessage);
-        return sendMessage({ interaction: interaction, embeds: rolesHelp });
+        return sendMessage({ interaction: interaction, embeds: [rolesHelp] });
     } else {
         const roleCommandName = "role";
         const roleCommandId = commands.find(c => c.name == roleCommandName)?.id;

@@ -126,7 +126,7 @@ export default (sequelize: any, DataTypes: any) => {
     };
     // Belly
     Shinx.prototype.feedGeneric = function (amount) {
-        this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + amount);
+        this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly as any) + amount);
     }
     Shinx.prototype.feed = function (amount) {
         this.feedGeneric(amount);
@@ -134,23 +134,23 @@ export default (sequelize: any, DataTypes: any) => {
     };
 
     Shinx.prototype.unfeedGeneric = function (amount) {
-        this.belly = Math.max(0, this.belly - amount);
+        this.belly = Math.max(0, this.belly as any - amount);
     };
     Shinx.prototype.unfeed = function (amount) {
         this.unfeedGeneric(amount);
         this.save({ fields: ["belly"] });
     };
     Shinx.prototype.getHunger = function () {
-        return MAX_RANGE - this.belly;
+        return MAX_RANGE - this.belly as any;
     };
     Shinx.prototype.getBelly = () => {
-        return this.belly;
+        return this.belly as any;
     };
     Shinx.prototype.getBellyPercent = function () {
-        return Math.round(this.belly * 100 / MAX_RANGE).toString() + "%"
+        return Math.round(this.belly as any * 100 / MAX_RANGE).toString() + "%"
     };
     Shinx.prototype.getBellyProportion = function () {
-        return this.belly / MAX_RANGE
+        return this.belly as any / MAX_RANGE
     };
     // Nickname
     Shinx.prototype.changeNick = function (nick) {

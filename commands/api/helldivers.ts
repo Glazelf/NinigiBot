@@ -42,7 +42,7 @@ export default async (interaction: any, messageFlags: any) => {
             if (campaignStatusPlanet) {
                 campaignStatusString = `${liberationString} vs. ${campaignStatusPlanet.faction}`;
                 if (campaignStatusPlanet.defense == true) campaignStatusString = campaignStatusString.replace(liberationString, defenseString);
-                campaignStatusString += `\nProgress: ${Math.round(campaignStatusPlanet.percentage * 100) / 100}%\nHelldivers: ${campaignStatusPlanet.players}`;
+                campaignStatusString += `\nProgress: ${Math.round(campaignStatusPlanet.percent * 100) / 100}%\nHelldivers: ${campaignStatusPlanet.players}`;
                 if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal ${time(Math.floor(campaignStatusPlanet.expireDateTime), TimestampStyles.RelativeTime)}`;
             };
             let planetBiome = null;
@@ -70,7 +70,7 @@ export default async (interaction: any, messageFlags: any) => {
                 if (planet.majorOrder) planetStatusTitle += ` (Major Order)`;
                 let planetStatusString = `${liberationString} vs. ${planet.faction}`;
                 if (planet.defense == true) planetStatusString = planetStatusString.replace(liberationString, defenseString);
-                planetStatusString += `\nProgress: ${Math.round(planet.percentage * 100) / 100}%\nHelldivers: ${planet.players}`;
+                planetStatusString += `\nProgress: ${Math.round(planet.percent * 100) / 100}%\nHelldivers: ${planet.players}`;
                 if (planet.expireDateTime) planetStatusString += `\nWithdrawal ${time(Math.floor(planet.expireDateTime), TimestampStyles.RelativeTime)}`;
                 // Only add field if there are no fields or fields are under 25
                 if (!helldiversEmbed.data.fields || helldiversEmbed.data.fields.length < 25) {
@@ -82,7 +82,7 @@ export default async (interaction: any, messageFlags: any) => {
             helldiversEmbed.setTitle("Campaign Status");
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: helldiversEmbed });
+    return sendMessage({ interaction: interaction, embeds: [helldiversEmbed] });
 };
 
 // String options

@@ -11,7 +11,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ gameName, page }) => {
-    let messageObject = {};
+    let messageObject: any = {};
     // Add quests matching game title to an array
     const gameNameLowercase = normalizeString(gameName); // LowerCase once instead of inside filter, might save performance
     let questsTotal = questsJSON.quests.filter(quest => normalizeString(quest.game) == gameNameLowercase);

@@ -13,8 +13,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: any, guildBan) => {
     try {
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
         let log = guildBan.guild.channels.cache.get(logChannel.channel_id);
@@ -58,7 +58,7 @@ export default async (client: any, guildBan) => {
                     { name: `Reason:`, value: reason, inline: false },
                     { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
                 ]);
-            return log.send({ embeds: [banEmbed], components: [banButtons] });
+            return log.send({ embeds: [banEmbed], components: [banButtons] as any });
 
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {

@@ -28,5 +28,5 @@ export default async (offset: any) => {
         .setEmoji('➡️');
     if (!trophy_list.buttons.includes("R")) rightButton.setDisabled(true);
     navigation_buttons.addComponents(rightButton);
-    return { embed: embed, components: navigation_buttons };
+    return { embed: embed, components: [navigation_buttons] };
 };

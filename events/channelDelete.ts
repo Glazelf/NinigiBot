@@ -9,8 +9,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: any, channel) => {
     try {
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         if (!channel.guild) return;
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;

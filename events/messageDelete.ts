@@ -9,8 +9,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: any, message) => {
     try {
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {

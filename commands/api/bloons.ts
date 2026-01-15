@@ -71,7 +71,7 @@ export default async (interaction: any, messageFlags: any) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed = getAPIErrorMessageObject(apiError).embeds[0];
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [btd6Embed], components: [btd6ActionRow], flags: messageFlags });
 };
 
 // Boolean options

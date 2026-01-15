@@ -7,7 +7,7 @@ import {
 export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
-    let messageObject = {};
+    let messageObject: any = {};
     if (content) messageObject.content = content;
     if (embeds) {
         if (Array.isArray(embeds)) {

@@ -61,7 +61,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setDescription(elementalMatchup)
                 .setImage(personaImage)
                 .addFields([
-                    { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level}\n${personaStats}`, inline: true },
+                    { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level as any}\n${personaStats}`, inline: true },
                     { name: "Skills:", value: personaSkills, inline: true },
                     { name: "Item:", value: personaItem, inline: false },
                     { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
@@ -103,7 +103,7 @@ export default async (interaction: any, messageFlags: any) => {
             };
             p5Embed.setTitle(nameInput);
     };
-    return sendMessage({ interaction: interaction, embeds: p5Embed, components: buttonArray, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [p5Embed], components: [buttonArray], flags: messageFlags });
 };
 
 function getWeaknessString(string) {

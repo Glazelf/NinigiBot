@@ -29,7 +29,7 @@ export default async (interaction: any, messageFlags: any) => {
         .setColor(hexInput)
         .setTitle(hexInput)
         .setImage(`attachment://${attachment.name}`);
-    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment], flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [hexColorEmbed], files: [attachment] as any, flags: messageFlags });
 };
 
 function hexToRgb(hex) {

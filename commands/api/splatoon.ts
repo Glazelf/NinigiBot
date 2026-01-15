@@ -489,7 +489,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setFooter({ text: discriminatorRandom.toString(), iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: splat3Embed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [splat3Embed], flags: messageFlags });
 };
 
 function getGearString(gear, type) {

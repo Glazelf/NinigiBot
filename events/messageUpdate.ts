@@ -12,8 +12,8 @@ export default async (client: any, oldMessage, newMessage) => {
         if (oldMessage.content === newMessage.content) return;
 
         await oldMessage.guild.fetch();
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMessage.guild.id } });
         if (!logChannel) return;
         let log = oldMessage.guild.channels.cache.get(logChannel.channel_id);
@@ -76,7 +76,7 @@ export default async (client: any, oldMessage, newMessage) => {
             if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
             updateEmbeds.unshift(updateEmbed);
-            return log.send({ embeds: updateEmbeds });
+            return log.send({ embeds: [updateEmbeds] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

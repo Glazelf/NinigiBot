@@ -69,7 +69,7 @@ export default async (interaction: any, messageFlags: any) => {
         .setFooter({ text: `ID: ${role.id}` });
     roleEmbed.addFields([{ name: "Permissions:", value: permissionString, inline: false }]);
     if (memberListBool === true) roleEmbed.addFields([{ name: `Members: (${roleMembers.size})`, value: roleMembersString, inline: false }]);
-    return sendMessage({ interaction: interaction, embeds: roleEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [roleEmbed], flags: messageFlags });
 };
 
 // Role options

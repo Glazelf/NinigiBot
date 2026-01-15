@@ -71,7 +71,7 @@ export default async (interaction: any, messageFlags: any) => {
             { name: "Long Date/Time", value: `${inlineCode(longDateTime)} ➡ ${longDateTime}`, inline: false },
             { name: "Relative Time", value: `${inlineCode(relativeTime)} ➡ ${relativeTime}`, inline: false }
         ]);
-    return sendMessage({ interaction: interaction, embeds: timestampEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [timestampEmbed], flags: messageFlags });
 };
 
 // Integer options

@@ -17,8 +17,8 @@ const selectDescriptionCharacterLimit = 50;
 
 export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
-    let serverApi = await import("../../database/dbServices/server.api.js");
-    serverApi = await serverApi.default();
+    let serverApi: any = await import("../../database/dbServices/server.api.js");
+    serverApi = await serverApi.default() as any;
     let adminBoolBot = isAdmin(interaction.guild.members.me);
     let adminBoolUser = isAdmin(interaction.member);
     if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });

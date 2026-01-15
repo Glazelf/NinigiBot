@@ -159,7 +159,7 @@ export default async (interaction: any, messageFlags: any) => {
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);
     if (banner) serverEmbed.setImage(banner);
-    return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [serverEmbed], components: [serverButtons], flags: messageFlags });
 };
 
 // Boolean options

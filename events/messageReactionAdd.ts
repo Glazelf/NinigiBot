@@ -26,8 +26,8 @@ export default async (client: any, messageReaction) => {
         if (!targetMessage) return;
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel, starboard;
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         if (isNoStar) { // Find altboard channel
             boardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);

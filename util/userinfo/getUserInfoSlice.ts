@@ -159,7 +159,7 @@ export default async (interaction: any, page: any, user: any) => {
     return {
         interaction: interaction,
         embeds: profileEmbed,
-        components: profileButtons
+        components: [profileButtons]
     };
 };
 

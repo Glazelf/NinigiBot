@@ -164,7 +164,7 @@ export default async (monsterData: any, emojis: any) => {
     //     .setImage(monsterRender);
     // mhEmbed.setURL("https://discord.com/") // Not clickable since embed has no title, used to display two big images)
 
-    let messageObject = { embeds: [mhEmbed], components: buttonArray };
+    let messageObject = { embeds: [mhEmbed], components: [buttonArray] };
     return messageObject;
 };
 

@@ -51,7 +51,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setThumbnail(icon);
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [leaderboardEmbed], flags: messageFlags });
 };
 
 const leaderboardScopeChoices = [

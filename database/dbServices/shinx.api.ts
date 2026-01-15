@@ -40,7 +40,7 @@ export async function getRandomShinx(amount, exclude, guild) {
     return results.map(res => res.dataValues);
 };
 
-export async function getShinxShininess(id) {
+export async function getShinxShininess(id: any) {
     let shinx = await getShinx(id, ['shiny'])
     return shinx.shiny;
 };
@@ -52,7 +52,7 @@ export async function getRandomReaction() {
     return result;
 };
 
-export async function switchShininessAndGet(id) {
+export async function switchShininessAndGet(id: any) {
     let shinx = await getShinx(id, ['user_id', 'shiny']);
     return shinx.switchShininessAndGet();
 };
@@ -104,7 +104,7 @@ export async function addExperience(id, experience) {
     await shinx.addExperienceAndLevelUp(experience);
 }
 
-export async function feedShinx(id) {
+export async function feedShinx(id: any) {
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger()
     if (shinx_hunger == 0) return 'NoHungry';
@@ -124,12 +124,12 @@ export async function setShinxLevel(id, lvl) {
 };
 
 
-export async function getShinxAutofeed(id) {
+export async function getShinxAutofeed(id: any) {
     let shinx = await getShinx(id, ['auto_feed'])
     return shinx.auto_feed;
 };
 
-export async function autoFeedShinx1(id) {
+export async function autoFeedShinx1(id: any) {
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
@@ -141,7 +141,7 @@ export async function autoFeedShinx1(id) {
     await shinx.feedAndExp(feed_amount);
 };
 
-export async function autoFeedShinx2(id) {
+export async function autoFeedShinx2(id: any) {
     let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
@@ -176,7 +176,7 @@ export async function nameShinx(id, nick) {
     return check;
 };
 
-export async function isTrainerMale(id) {
+export async function isTrainerMale(id: any) {
     let shinx = await getShinx(id, ['user_male']);
     return shinx.user_male
 };

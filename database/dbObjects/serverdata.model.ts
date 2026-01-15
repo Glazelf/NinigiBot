@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-export default async (sequelize: any) => {
+export default async (sequelize: any): Promise<any> => {
     const shinxQuoteModel = await import("./models/server/shinxQuote.model.js");
     const eligibleRolesModel = await import("./models/server/eligibleRoles.model.js");
     const personalRolesModel = await import("./models/server/personalRoles.model.js");

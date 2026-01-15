@@ -236,7 +236,7 @@ export default async (interaction: any, messageFlags: any) => {
             };
 
             let reactionPlay = playing_reaction();
-            if (shinx.belly < 0.2) reactionPlay = playing_reaction(0);
+            if (shinx.belly as any < 0.2) reactionPlay = playing_reaction(0);
 
             img = await Canvas.loadImage('./assets/shinx/reactions.png');
             ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
@@ -397,7 +397,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setLabel("Refuse");
             const answer_buttons = new ActionRowBuilder()
                 .addComponents([battleAcceptButton, battleRefuseButton]);
-            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
+            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] as any });
 
             const filter = (interaction: any) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
             let trainer_answer;
@@ -415,9 +415,9 @@ export default async (interaction: any, messageFlags: any) => {
             globalVars.battling.yes = true;
             let text = '';
 
-            await sendMessage({ interaction: interaction, components: [] as any, content: 'Let the battle begin!', files: [messageFile] });
+            await sendMessage({ interaction: interaction, components: [] as any, content: 'Let the battle begin!', files: [messageFile] as any });
             await wait();
-            // await interaction.channel.send({ files: [messageFile] });
+            // await interaction.channel.send({ files: [messageFile] as any });
             canvas = Canvas.createCanvas(240, 168);
             ctx = canvas.getContext('2d');
             background = await Canvas.loadImage('./assets/shinx/battleUI.png');
@@ -444,7 +444,7 @@ export default async (interaction: any, messageFlags: any) => {
             const geassoff = await Canvas.loadImage('./assets/shinx/geassoff.png');
 
             for (let i = 0; i < 2; i++) {
-                if (shinxes[i].geass > 0) {
+                if (shinxes[i].geass as any > 0) {
                     text += addLine(`${bold("...?")}\nThe power of love remains!\n${formatName(`${nicks[i]} entered geass mode!`, true)}`);
                     ctx.drawImage(geasson, 52 + 35 * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
@@ -478,10 +478,10 @@ export default async (interaction: any, messageFlags: any) => {
                         text += addLine(`${formatName(nicks[(i + 1) % 2], true)} fainted!`);
                         for (let h = 0; h < 2; h++) {
                             await incrementCombatAmount(trainers[h].id, i == h);
-                            const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
+                            const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level as any, i !== h);
                             text += addLine(`${formatName(nicks[h], true)} won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
-                                text += addLine(`${formatName(nicks[h], true)} grew to level ${bold(shinxes[h].level)}!`);
+                                text += addLine(`${formatName(nicks[h], true)} grew to level ${bold(shinxes[h].level as any)}!`);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p]);
@@ -494,8 +494,8 @@ export default async (interaction: any, messageFlags: any) => {
                         };
                     };
                 };
-                let shinxHP0 = await hp(shinxes[0].percent);
-                let shinxHP1 = await hp(shinxes[1].percent);
+                let shinxHP0 = await hp(shinxes[0].percent as any);
+                let shinxHP1 = await hp(shinxes[1].percent as any);
                 const hps = [shinxHP0, shinxHP1];
                 for (let i = 0; i < 2; i++) {
                     if (!isNaN(hps[i][0])) {
@@ -524,7 +524,7 @@ export default async (interaction: any, messageFlags: any) => {
                     };
                 };
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
-                await sendMessage({ interaction: interaction, content: text, files: [messageFile] });
+                await sendMessage({ interaction: interaction, content: text, files: [messageFile] as any });
                 await wait();
             };
     };

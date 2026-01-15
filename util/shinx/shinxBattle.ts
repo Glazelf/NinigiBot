@@ -34,36 +34,36 @@ export default class ShinxBattle {
         this.percent = 0;
         this.exp = shinxData.experience
         this.level = shinxData.getLevel();
-        this.belly = shinxData.belly / 10;
+        this.belly = shinxData.belly as any / 10;
         this.geass = 0;
     };
 
     gainExperience(enemyLevel, loses) {
         const experience = Math.ceil(gainedExp(enemyLevel) * ((1 / 2) ** (loses)));
         this.exp += experience;
-        const old_level = this.level;
+        const old_level = this.level as any;
         this.level = getLevelFromExp(this.exp);
-        return [experience, this.level - old_level];
+        return [experience, this.level as any - old_level];
     };
 
     takeDamage(move) {
-        this.percent = Math.max(0, this.percent + (move[1] - this.belly / 10));
-        const knockout = this.percent * move[2];
+        this.percent = Math.max(0, this.percent as any + (move[1] - this.belly as any / 10));
+        const knockout = this.percent as any * move[2];
         const random = Math.random();
         return random <= knockout;
     };
 
     attack() {
         if (this.knocked) return false;
-        const rawMove = getMove(Math.min(Math.max(0, Math.random() + 0.5 - (this.level / 100)), 1));
+        const rawMove = getMove(Math.min(Math.max(0, Math.random() + 0.5 - (this.level as any / 100)), 1));
         const move = [rawMove[0]];
-        move.push(rawMove[1] * (2 - this.belly));
-        move.push(rawMove[2] * (1 + this.belly) * (1 + (this.geass > 0) / 2));
+        move.push(rawMove[1] * (2 - this.belly as any));
+        move.push(rawMove[2] * (1 + this.belly as any) * (1 + (this.geass as any > 0) / 2));
         return move;
     };
 
     reduceGeass() {
-        if (this.geass > 0) {
+        if (this.geass as any > 0) {
             this.geass--;
             return this.geass === 0;
         };
@@ -71,7 +71,7 @@ export default class ShinxBattle {
     };
 
     geassMode() {
-        if (this.geass < 1) {
+        if (this.geass as any < 1) {
             const geass_activated_chance = Math.random();
             if (geass_activated_chance < 0.2) {
                 this.geass = 3;

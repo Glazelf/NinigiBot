@@ -25,8 +25,8 @@ const defaultColorStyle = { primaryColor: 0, secondaryColor: null };
 
 export default async (interaction: any, messageFlags: any) => {
     messageFlags.add(MessageFlags.Ephemeral);
-    let serverApi = await import("../../database/dbServices/server.api.js");
-    serverApi = await serverApi.default();
+    let serverApi: any = await import("../../database/dbServices/server.api.js");
+    serverApi = await serverApi.default() as any;
     let adminBool = isAdmin(interaction.member);
     let modBool = checkPermissions({ member: interaction.member, permissions: [PermissionFlagsBits.ManageRoles] });
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles

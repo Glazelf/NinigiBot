@@ -43,7 +43,7 @@ export default async (interaction: any, messageFlags: any) => {
             .setURL(messageURL)
             .setColor(globalVars.embedColorError as [number, number, number])
             .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
-        return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
+        return sendMessage({ interaction: interaction, embeds: [quoteEmbed], flags: messageFlags.add(MessageFlags.Ephemeral) });
     };
 
     let messageImage = null;
@@ -60,7 +60,7 @@ export default async (interaction: any, messageFlags: any) => {
         .setTimestamp(message.createdTimestamp);
     if (message.content.length > 0) quoteEmbed.setDescription(message.content);
     previousQuoteTime = now;
-    return sendMessage({ interaction: interaction, embeds: quoteEmbed, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [quoteEmbed], flags: messageFlags });
 };
 
 export const guildID = globalVars.ShinxServerID;

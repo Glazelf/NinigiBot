@@ -14,8 +14,8 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: any, oldMember, newMember) => {
     try {
-        let serverApi = await import("../database/dbServices/server.api.js");
-        serverApi = await serverApi.default();
+        let serverApi: any = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default() as any;
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: oldMember.guild.id } });
         if (!logChannel) return;
         let log = oldMember.guild.channels.cache.get(logChannel.channel_id);

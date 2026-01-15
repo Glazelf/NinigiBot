@@ -26,7 +26,7 @@ export async function getHistory(id, attributes = null) {
     return history;
 };
 
-export async function incrementStanAmount(id) {
+export async function incrementStanAmount(id: any) {
     let history = await getHistory(id, ['user_id']);
     await history.increment('stan_amount');
 };

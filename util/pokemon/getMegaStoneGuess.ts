@@ -16,7 +16,7 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 // A lot of the code below is copied from getPokemon.js
 // Winner = person who ended the game, either through reveal or guessing correctly
 export default async ({ interaction, winner, stoneList, stone, reveal }) => {
-    let messageObject = {};
+    let messageObject: any = {};
     let pokemonButtons = new ActionRowBuilder();
     let quizTitle = "Who uses this mega stone?";
     let quizDescription = null;

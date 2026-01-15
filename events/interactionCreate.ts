@@ -428,14 +428,14 @@ export default async (client: any, interaction) => {
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
                             try {
-                                await interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                                await interaction.update({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
                             } catch (e: any) {
                                 // console.log(e);
                                 return;
                             };
                         } else {
                             try {
-                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                                await interaction.reply({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn, flags: messageFlags.add(MessageFlags.Ephemeral) });
                             } catch (e: any) {
                                 // console.log(e);
                                 return;
@@ -444,8 +444,8 @@ export default async (client: any, interaction) => {
                         return;
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
-                            let serverApi = await import("../database/dbServices/server.api.js");
-                            serverApi = await serverApi.default();
+                            let serverApi: any = await import("../database/dbServices/server.api.js");
+                            serverApi = await serverApi.default() as any;
                             // Toggle selected role
                             const rolesArray = [];
                             for await (const value of interaction.values) {
@@ -518,8 +518,8 @@ export default async (client: any, interaction) => {
                     case "role":
                         switch (focusedOption.name) {
                             case "role":
-                                let serverApi = await import("../database/dbServices/server.api.js");
-                                serverApi = await serverApi.default();
+                                let serverApi: any = await import("../database/dbServices/server.api.js");
+                                serverApi = await serverApi.default() as any;
                                 let dbRoles = await serverApi.EligibleRoles.findAll();
                                 let roleIDs = [];
                                 let roleObject = [];
@@ -953,7 +953,7 @@ export default async (client: any, interaction) => {
                         };
                         modMailEmbedArray.unshift(modMailEmbed);
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
-                        await interaction.guild.safetyAlertsChannel.send({ embeds: modMailEmbedArray, components: [profileButtons] });
+                        await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbedArray], components: [profileButtons] as any });
                         await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name, true)}.`, embeds: [modMailEmbed] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");

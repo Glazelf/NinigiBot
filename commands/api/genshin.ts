@@ -103,7 +103,7 @@ export default async (interaction: any, messageFlags: any) => {
             };
             break;
     };
-    return sendMessage({ interaction: interaction, content: returnString, embeds: giEmbed });
+    return sendMessage({ interaction: interaction, content: returnString, embeds: [giEmbed] });
 };
 
 function getCharacterAttributeFields(attribute, type, embedCharacterLength) {

@@ -23,8 +23,8 @@ export default async (interaction: any, messageFlags: any) => {
     if (!checkPermissions({ member: interaction.member, permissions: [requiredPermission] })) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, flags: messageFlags.add(MessageFlags.Ephemeral) });
     await interaction.deferReply({ flags: messageFlags });
 
-    let serverApi = await import("../../database/dbServices/server.api.js");
-    serverApi = await serverApi.default();
+    let serverApi: any = await import("../../database/dbServices/server.api.js");
+    serverApi = await serverApi.default() as any;
 
     let disableBool = false;
     let disableArg = interaction.options.getBoolean("disable");
