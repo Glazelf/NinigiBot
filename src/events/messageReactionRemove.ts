@@ -1,4 +1,5 @@
 import type { ExtendedClient } from '../types/global.js';
+import { TextChannel } from "discord.js";
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -41,7 +42,7 @@ export default async (client: ExtendedClient, messageReaction) => {
             // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             if (starChannel && starChannel.isTextBased() && 'messages' in starChannel) {
-                await (starChannel as any).messages.fetch(messageDB.starboard_message_id).then(m => {
+                await (starChannel as TextChannel).messages.fetch(messageDB.starboard_message_id).then(m => {
                     m.delete();
                 });
             }

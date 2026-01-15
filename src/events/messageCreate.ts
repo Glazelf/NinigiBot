@@ -4,7 +4,8 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChannelType,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    TextChannel
 } from "discord.js";
 import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
@@ -70,7 +71,7 @@ export default async (client: ExtendedClient, message) => {
             dmEmbeds.unshift(dmEmbed);
             let dmLogObject = { content: message.author.id, embeds: [dmEmbeds], components: [profileButtons] as any };
             if (DMChannel?.isTextBased()) {
-                return (DMChannel as any).send(dmLogObject);
+                return (DMChannel as TextChannel).send(dmLogObject);
             }
         };
         if (message.channel.type !== ChannelType.GuildForum && !checkPermissions({ member: message.guild.members.me, channel: message.channel, permissions: [PermissionFlagsBits.SendMessages] })) return;

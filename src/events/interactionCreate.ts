@@ -12,7 +12,8 @@ import {
     TextInputBuilder,
     TextInputStyle,
     inlineCode,
-    LabelBuilder
+    LabelBuilder,
+    TextChannel
 } from "discord.js";
 import type { ExtendedClient } from '../types/global.js';
 import axios from "axios";
@@ -915,7 +916,7 @@ export default async (client: ExtendedClient, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
                         if (DMChannel?.isTextBased()) {
-                            await (DMChannel as any).send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                            await (DMChannel as TextChannel).send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         }
                         return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case "modMailModal":
