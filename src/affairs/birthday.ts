@@ -54,7 +54,7 @@ export default async (client: ExtendedClient) => {
                 .setImage(randomGif);
             (channel as TextChannel).send({
                 content: cuties.join(' '),
-                embeds: [gifEmbed]
+                embeds: [gifEmbed.toJSON()]
             });
         }, timezone, true);
 
