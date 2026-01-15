@@ -13,11 +13,18 @@ export default async (client: ExtendedClient) => {
                 let commandGuildID = null;
                 if (command.guildID) {
                     commandGuildID = command.guildID;
-                    if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.DEV_SERVER_ID;
+                    if (client.user.id != globalVars.NinigiID) {
+                        commandGuildID = process.env.DEV_SERVER_ID;
+                        // Skip guild commands if DEV_SERVER_ID is not set for non-production bots
+                        if (!commandGuildID) {
+                            console.log(`Skipping guild command ${command.commandObject.name} - DEV_SERVER_ID not set`);
+                            continue;
+                        }
+                    }
                 };
                 await client.application.commands.create(command.commandObject as any, commandGuildID);
             } catch (e: any) {
-                console.log(e);
+                console.log(`Error registering command ${command.commandObject?.name}:`, e.message || e);
             };
         }
         console.log("Loaded interactions!");
