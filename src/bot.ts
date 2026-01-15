@@ -85,7 +85,11 @@ if (debugMode) console.log("Debug mode enabled!");
 await walk(`./build/commands/`);
 console.log("Loaded commands!");
 
-client.login(process.env.TOKEN);
+console.log("Attempting to log in to Discord...");
+client.login(process.env.TOKEN).catch((error: any) => {
+    console.error("Failed to log in:", error);
+    process.exit(1);
+});
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 async function walk(dir: string, callback?: any): Promise<void> {
