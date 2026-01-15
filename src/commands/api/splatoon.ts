@@ -48,8 +48,23 @@ interface WeaponInfo {
     UIParam: Array<{ Type: string; Value: number }>;
 }
 
-// Language files are loaded in clientReady event to avoid blocking module import
-// This prevents the bot from hanging during startup
+// Import language files using dynamic imports to avoid blocking module loading
+// Using setTimeout to defer execution until after module import completes
+setTimeout(async () => {
+    try {
+        const files = fs.readdirSync("./submodules/splat3/data/language/");
+        for (const file of files) {
+            const fileName = file.split(".")[0];
+            if (!fileName.endsWith("_full")) continue; // Only count full language files
+            const languageKey = fileName.split("_")[0];
+            const languageJSON = await import(`../../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
+            globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
+        }
+        console.log("Loaded Splatoon 3 language files!");
+    } catch (err) {
+        console.error("Error loading Splatoon 3 language files:", err);
+    }
+}, 0)
 
 const splatoon3Languages = [
     { name: "English", value: "EUen" },
