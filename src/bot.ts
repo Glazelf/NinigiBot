@@ -63,7 +63,7 @@ const client = new Client({
 await fs.promises.readdir("./build/events/").then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
-        if (!file.endsWith(".js")) return;
+        if (!file.endsWith(".js")) continue;
         // Load the event file itself
         let event = await import(`./events/${file}`);
         event = event.default;
