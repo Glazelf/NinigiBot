@@ -15,7 +15,7 @@ import axios from "axios";
 import isOwner from "../../util/discord/perms/isOwner.js";
 import formatNumber from "../../util/math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import packageJSON from "../../package.json" with { type: "json" };
+import packageJSON from "../../../package.json" with { type: "json" };
 
 const owner = "glazelf";
 const emojiMax = 2000;

@@ -18,6 +18,19 @@ const api = "https://helldiverstrainingmanual.com/api/v1/";
 const liberationString = "Liberation";
 const defenseString = "Defense";
 
+interface PlanetData {
+    name: string;
+    sector: string;
+    biome?: {
+        slug: string;
+        description: string;
+    };
+    environmentals?: Array<{
+        name: string;
+        description: string;
+    }>;
+}
+
 export default async (interaction: any, messageFlags: any) => {
     await interaction.deferReply({ flags: messageFlags });
     // Can be split off to only proc on successfull data retrievals but this is cleaner for now. 
@@ -31,11 +44,11 @@ export default async (interaction: any, messageFlags: any) => {
             let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
-            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString(value.name) == normalizeString(inputPlanet));
+            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString((value as PlanetData).name) == normalizeString(inputPlanet)) as [string, PlanetData] | undefined;
             if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
             let planetIndex = planetObject[0];
-            planetObject = planetObject[1];
-            let planetSector = `${planetObject.sector} Sector`;
+            let planet = planetObject[1];
+            let planetSector = `${planet.sector} Sector`;
             // Campaign status data is of all planets, so always requested and then checked if requested planet is in the data
             let campaignStatusPlanet = campaignStatus.data.find(planet => planet.planetIndex == planetIndex);
             let campaignStatusString = "";
@@ -46,25 +59,25 @@ export default async (interaction: any, messageFlags: any) => {
                 if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal ${time(Math.floor(campaignStatusPlanet.expireDateTime), TimestampStyles.RelativeTime)}`;
             };
             let planetBiome = null;
-            if (planetObject.biome) {
-                planetBiome = planetObject.biome.slug.charAt(0).toUpperCase() + planetObject.biome.slug.slice(1); // Capitalize first letter
-                helldiversEmbed.addFields([{ name: `${planetBiome} Biome:`, value: planetObject.biome.description, inline: false }]);
+            if (planet.biome) {
+                planetBiome = planet.biome.slug.charAt(0).toUpperCase() + planet.biome.slug.slice(1); // Capitalize first letter
+                helldiversEmbed.addFields([{ name: `${planetBiome} Biome:`, value: planet.biome.description, inline: false }]);
             };
             // Environmental effects like earthquakes, extreme weather effects etc.
             let environmentals = "None.";
-            if (planetObject.environmentals && planetObject.environmentals.length > 0) {
+            if (planet.environmentals && planet.environmentals.length > 0) {
                 environmentals = "";
-                planetObject.environmentals.forEach(environmental => {
+                planet.environmentals.forEach(environmental => {
                     environmentals += `${bold(`${environmental.name}:`)} ${environmental.description}\n`;
                 });
             };
             helldiversEmbed
-                .setTitle(`${planetObject.name} - ${planetSector}`)
+                .setTitle(`${planet.name} - ${planetSector}`)
                 .addFields([{ name: "Environmentals:", value: environmentals, inline: true }]);
             if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
             break;
         case "campaign":
-            campaignStatus = campaignStatus.data;
+            campaignStatus = campaignStatus.data as any[];
             await campaignStatus.forEach(async planet => {
                 let planetStatusTitle = planet.name;
                 if (planet.majorOrder) planetStatusTitle += ` (Major Order)`;

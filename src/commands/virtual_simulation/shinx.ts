@@ -92,6 +92,7 @@ export default async (interaction: any, messageFlags: any) => {
         case "info":
             shinx = await getShinx(master.id);
             const is_user_male = shinx.user_male;
+            const is_user_male_num = is_user_male ? 0 : 1;
 
             canvas = Canvas.createCanvas(791, 441);
             ctx = canvas.getContext('2d');
@@ -103,7 +104,7 @@ export default async (interaction: any, messageFlags: any) => {
                 ctx.drawImage(cap, 93, 210);
             };
             img = await Canvas.loadImage('./assets/shinx/owner.png');
-            ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125, 59 - 5 * !is_user_male, 49);
+            ctx.drawImage(img, 59 * is_user_male_num, 71, 59 - 5 * is_user_male_num, 49, 403, 125, 59 - 5 * is_user_male_num, 49);
             ctx.font = applyText(canvas, shinx.nickname, 45, 266);
             ctx.fillStyle = '#FFFFFF';
 
@@ -160,7 +161,8 @@ export default async (interaction: any, messageFlags: any) => {
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
 
-                    ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
+                    const shinx_user_male_num = shinx.user_male ? 0 : 1;
+                    ctx.drawImage(img, 51 * shinx_user_male_num, 0, 51, 72, 120, 126, 51, 72);
                     ctx.font = 'normal bold 16px Arial';
                     ctx.fillStyle = '#ffffff';
                     let guests = [];
@@ -170,7 +172,8 @@ export default async (interaction: any, messageFlags: any) => {
                         if (!userFinder) userFinder = interaction.guild.members.cache;
                         for (let i = 0; i < guests.length; i++) {
                             const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                            ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
+                            const guest_user_male_num = guests[i].user_male ? 0 : 1;
+                            ctx.drawImage(img, 51 * guest_user_male_num, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
                             for (let k = nick.length - 1; 0 <= k; k--) {
                                 ctx.font = applyText(canvas, nick[k], 16, 51);
                                 ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
@@ -211,7 +214,8 @@ export default async (interaction: any, messageFlags: any) => {
             ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
             const layout = getRandomVisitorPosition();
             img = await Canvas.loadImage('./assets/shinx/mc.png');
-            ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
+            const shinx_user_male_num2 = shinx.user_male ? 0 : 1;
+            ctx.drawImage(img, 51 * shinx_user_male_num2, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
             let guests = [];
@@ -221,7 +225,8 @@ export default async (interaction: any, messageFlags: any) => {
                 if (!userFinder) userFinder = interaction.guild.members.cache;
                 for (let i = 0; i < guests.length; i++) {
                     const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
+                    const guest_user_male_num2 = guests[i].user_male ? 0 : 1;
+                    ctx.drawImage(img, 51 * guest_user_male_num2, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
                     for (let k = nick.length - 1; 0 <= k; k--) {
                         ctx.font = applyText(canvas, nick[k], 18, 51);
                         ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
@@ -236,7 +241,7 @@ export default async (interaction: any, messageFlags: any) => {
             };
 
             let reactionPlay = playing_reaction();
-            if (shinx.belly as any < 0.2) reactionPlay = playing_reaction(0);
+            if (parseFloat(String(shinx.belly)) < 0.2) reactionPlay = playing_reaction(0);
 
             img = await Canvas.loadImage('./assets/shinx/reactions.png');
             ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
@@ -263,7 +268,9 @@ export default async (interaction: any, messageFlags: any) => {
             };
             ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
             img = await Canvas.loadImage('./assets/shinx/trainer.png');
-            ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
+            const shinx_user_male_num3 = shinx.user_male ? 0 : 1;
+            const shinx_user_male_mult = shinx.user_male ? 1 : 0;
+            ctx.drawImage(img, 172 * shinx_user_male_num3, 0, 129 + 42 * shinx_user_male_mult, 108, 2, 52, 129 + 42 * shinx_user_male_mult, 108);
             img = await Canvas.loadImage('./assets/shinx/portraits.png');
             let conversation = await getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
@@ -293,7 +300,8 @@ export default async (interaction: any, messageFlags: any) => {
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
                     const is_user_male = await isTrainerMale(master.id);
-                    ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
+                    const is_user_male_num4 = is_user_male ? 0 : 1;
+                    ctx.drawImage(img, 51 * is_user_male_num4, 72 * 0, 51, 72, 270, 200, 51, 72);
                     img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
                     ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
                     img = await Canvas.loadImage('./assets/shinx/reactions.png');
@@ -397,7 +405,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setLabel("Refuse");
             const answer_buttons = new ActionRowBuilder()
                 .addComponents([battleAcceptButton, battleRefuseButton]);
-            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] as any });
+            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: [answer_buttons] as any, files: [messageFile] as any });
 
             const filter = (interaction: any) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
             let trainer_answer;
@@ -478,24 +486,24 @@ export default async (interaction: any, messageFlags: any) => {
                         text += addLine(`${formatName(nicks[(i + 1) % 2], true)} fainted!`);
                         for (let h = 0; h < 2; h++) {
                             await incrementCombatAmount(trainers[h].id, i == h);
-                            const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level as any, i !== h);
+                            const exp = shinxes[h].gainExperience(parseFloat(String(shinxes[(h + 1) % 2].level)), i !== h);
                             text += addLine(`${formatName(nicks[h], true)} won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
-                                text += addLine(`${formatName(nicks[h], true)} grew to level ${bold(shinxes[h].level as any)}!`);
+                                text += addLine(`${formatName(nicks[h], true)} grew to level ${bold(String(shinxes[h].level))}!`);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p]);
                         globalVars.battling.yes = false;
                         messageFile = new AttachmentBuilder(canvas.toBuffer());
-                        return sendMessage({ interaction: interaction, content: text, files: messageFile });
+                        return sendMessage({ interaction: interaction, content: text, files: [messageFile] });
                     } else {
                         if (result === -1) {
                             text += addLine(`${formatName(nicks[i], true)} lost his shield by blocking a deathblow!`);
                         };
                     };
                 };
-                let shinxHP0 = await hp(shinxes[0].percent as any);
-                let shinxHP1 = await hp(shinxes[1].percent as any);
+                let shinxHP0 = await hp(parseFloat(String(shinxes[0].percent)));
+                let shinxHP1 = await hp(parseFloat(String(shinxes[1].percent)));
                 const hps = [shinxHP0, shinxHP1];
                 for (let i = 0; i < 2; i++) {
                     if (!isNaN(hps[i][0])) {

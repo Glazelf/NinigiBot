@@ -28,7 +28,7 @@ export default async (interaction: any, messageFlags: any) => {
     let serverApi: any = await import("../../database/dbServices/server.api.js");
     serverApi = await serverApi.default() as any;
     let adminBool = isAdmin(interaction.member);
-    let modBool = checkPermissions({ member: interaction.member, permissions: [PermissionFlagsBits.ManageRoles] });
+    let modBool = checkPermissions({ member: interaction.member, permissions: [PermissionFlagsBits.ManageRoles], channel: null });
     // In theory this can proc for other integration roles but this is intended for Twitch/YouTube sub roles
     let integrationRoleBool = interaction.member.roles.cache.some(role => role.tags?.integrationId);
     let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
@@ -43,7 +43,7 @@ export default async (interaction: any, messageFlags: any) => {
     let colorStyleArg = interaction.options.getString("color-style");
     let iconArg = interaction.options.getAttachment("icon");
 
-    let roleColors = {};
+    let roleColors: any = {};
     let iconImg = null;
     let deleteBool = false;
     let fileIsImg = false;
@@ -172,7 +172,7 @@ export default async (interaction: any, messageFlags: any) => {
         } catch (e: any) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {
-                return logger({ exception: e, interaction: interaction });
+                return logger({ exception: e, client: interaction.client, interaction: interaction });
             } else {
                 return sendMessage({ interaction: interaction, content: `An error occurred creating a role.` });
             };
