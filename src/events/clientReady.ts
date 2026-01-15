@@ -34,7 +34,7 @@ export default async (client: ExtendedClient) => {
                 const fileName = file.split(".")[0];
                 if (!fileName.endsWith("_full")) continue; // Only count full language files
                 const languageKey = fileName.split("_")[0];
-                const languageJSON = await import(`../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
+                const languageJSON = await import(`../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
                 globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
             }
             console.log("Loaded Splatoon 3 language files!");
