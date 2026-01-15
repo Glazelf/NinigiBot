@@ -16,8 +16,8 @@ export default async (client: ExtendedClient, message) => {
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            if (starboardChannel) {
-                let starboardMessage = await starboardChannel.messages.fetch(messageDB.starboard_message_id);
+            if (starboardChannel && starboardChannel.isTextBased() && 'messages' in starboardChannel) {
+                let starboardMessage = await (starboardChannel as any).messages.fetch(messageDB.starboard_message_id);
                 if (starboardMessage) starboardMessage.delete();
             };
         };

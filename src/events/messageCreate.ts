@@ -69,7 +69,9 @@ export default async (client: ExtendedClient, message) => {
             if (attachmentsString.length > 0) dmEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }]);
             dmEmbeds.unshift(dmEmbed);
             let dmLogObject = { content: message.author.id, embeds: [dmEmbeds], components: [profileButtons] as any };
-            return DMChannel.send(dmLogObject);
+            if (DMChannel?.isTextBased()) {
+                return (DMChannel as any).send(dmLogObject);
+            }
         };
         if (message.channel.type !== ChannelType.GuildForum && !checkPermissions({ member: message.guild.members.me, channel: message.channel, permissions: [PermissionFlagsBits.SendMessages] })) return;
         if (!message.member) return;

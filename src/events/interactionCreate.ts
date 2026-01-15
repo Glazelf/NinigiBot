@@ -914,7 +914,9 @@ export default async (client: ExtendedClient, interaction) => {
                                 { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
-                        await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                        if (DMChannel?.isTextBased()) {
+                            await (DMChannel as any).send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                        }
                         return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case "modMailModal":
                         // Modmail
@@ -972,11 +974,11 @@ export default async (client: ExtendedClient, interaction) => {
                         // Prevent overriding winner by waiting to submit answer
                         // This check works by checking if the description is filled, this is only the case if the game has finished
                         let pkmQuizMessageDescription = interaction.message.embeds[0].data.description;
-                        if (pkmQuizMessageDescription && (pkmQuizMessageDescription as string).split && (pkmQuizMessageDescription as string).split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (pkmQuizMessageDescription && typeof pkmQuizMessageDescription === 'string' && pkmQuizMessageDescription.split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
-                        let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
+                        let pkmQuizCorrectAnswer = (pkmQuizButtonID as string).split("|")[1];
                         // Getting from dex allows aliases
                         const pkmQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(pkmQuizButtonID));
                         // If there are issues with text validation, add normalizeString() to guess here before getting from Dex
@@ -997,10 +999,10 @@ export default async (client: ExtendedClient, interaction) => {
                         messageFlags.remove(MessageFlags.Ephemeral);
                         if (!interaction.message) return sendMessage({ interaction: interaction, content: deletedModalString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         let megaQuizMessageDescription = interaction.message.embeds[0].data.description;
-                        if (megaQuizMessageDescription && (megaQuizMessageDescription as string).split && (megaQuizMessageDescription as string).split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                        if (megaQuizMessageDescription && typeof megaQuizMessageDescription === 'string' && megaQuizMessageDescription.split('').length > 0) return sendMessage({ interaction: interaction, content: gameEndedString, flags: messageFlags.add(MessageFlags.Ephemeral) });
                         if (interaction.message.flags.has("Ephemeral")) messageFlags.add(MessageFlags.Ephemeral);
                         let megaQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
-                        let correctMegaStone = Dex.items.get(megaQuizButtonID.split("|")[1]);
+                        let correctMegaStone = Dex.items.get((megaQuizButtonID as string).split("|")[1]);
                         const megaQuizModalGuess = replacePokemonNameSynonyms(interaction.fields.getTextInputValue(megaQuizButtonID));
                         const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
 

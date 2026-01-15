@@ -40,9 +40,11 @@ export default async (client: ExtendedClient, messageReaction) => {
         if (messageReaction.count == 0 && messageDB) {
             // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            await starChannel.messages.fetch(messageDB.starboard_message_id).then(m => {
-                m.delete();
-            });
+            if (starChannel && starChannel.isTextBased() && 'messages' in starChannel) {
+                await (starChannel as any).messages.fetch(messageDB.starboard_message_id).then(m => {
+                    m.delete();
+                });
+            }
             await messageDB.destroy();
             return;
         } else if (messageDB) {
