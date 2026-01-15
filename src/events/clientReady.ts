@@ -33,8 +33,17 @@ export default async (client: ExtendedClient) => {
         birthday(client);
         console.log("Loaded affairs!");
 
-        await client.guilds.fetch();
-        await client.application.emojis.fetch();
+        try {
+            await client.guilds.fetch();
+        } catch (e: any) {
+            console.log("Warning: Failed to fetch guilds:", e.message);
+        }
+        
+        try {
+            await client.application.emojis.fetch();
+        } catch (e: any) {
+            console.log("Warning: Failed to fetch application emojis:", e.message);
+        }
 
         let timestamp = getTime();
         const startupStats = `Commands: ${client.commands.size}\nGuilds: ${client.guilds.cache.size}\nChannels: ${client.channels.cache.size}\nUsers: ${client.users.cache.size} (All stats are from cache)`;
