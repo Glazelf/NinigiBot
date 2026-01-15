@@ -1,7 +1,5 @@
 import {
-    MessageFlagsBitField,
-    MessageFlags,
-    ComponentType
+    MessageFlagsBitField
 } from "discord.js";
 
 export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }) => {

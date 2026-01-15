@@ -648,21 +648,21 @@ export default async (client: any, interaction) => {
                                         let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
                                         let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
                                         let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
-                                        for await (const [key, value] of Object.entries(allClothesHead)) {
+                                        for await (const [key, _value] of Object.entries(allClothesHead)) {
                                             let clothesHeadEndString = "_Head";
                                             if (!key.endsWith(clothesHeadEndString)) {
                                                 allClothesHead[`${key}${clothesHeadEndString}`] = allClothesHead[key];
                                                 delete allClothesHead[key];
                                             };
                                         };
-                                        for await (const [key, value] of Object.entries(allClothesBody)) {
+                                        for await (const [key, _value] of Object.entries(allClothesBody)) {
                                             let clothesBodyEndString = "_Clothes";
                                             if (!key.endsWith(clothesBodyEndString)) {
                                                 allClothesBody[`${key}${clothesBodyEndString}`] = allClothesBody[key];
                                                 delete allClothesBody[key];
                                             };
                                         };
-                                        for await (const [key, value] of Object.entries(allClothesShoes)) {
+                                        for await (const [key, _value] of Object.entries(allClothesShoes)) {
                                             let clothesShoesEndString = "_Shoes";
                                             if (!key.endsWith(clothesShoesEndString)) {
                                                 allClothesShoes[`${key}${clothesShoesEndString}`] = allClothesShoes[key];
@@ -768,7 +768,7 @@ export default async (client: any, interaction) => {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "persona":
-                                        for await (const [key, value] of Object.entries(personaMapRoyal)) {
+                                        for await (const [key, _value] of Object.entries(personaMapRoyal)) {
                                             if (normalizeString(key).includes(normalizeString(focusedOption.value))) choices.push({ name: key, value: key });
                                         };
                                         break;
@@ -802,7 +802,7 @@ export default async (client: any, interaction) => {
                             case "name":
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);
                                 let planetsData = planetsResponse.data;
-                                for await (const [key, value] of Object.entries(planetsData)) {
+                                for await (const [_key, value] of Object.entries(planetsData)) {
                                     const planetValue = value as any;
                                     if (normalizeString(planetValue.name).includes(normalizeString(focusedOption.value))) choices.push({ name: planetValue.name, value: planetValue.name });
                                 };
@@ -936,7 +936,7 @@ export default async (client: any, interaction) => {
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})`, iconURL: userAvatar });
                         if (modMailUsers !== null) {
                             let modMailUsersString = "";
-                            for (let [id, user] of modMailUsers) {
+                            for (let [_id, user] of modMailUsers) {
                                 modMailUsersString += `${user} (${user.id})\n`;
                             };
                             modMailEmbed.addFields([{ name: `Mentioned Users: (${modMailUsers.size})`, value: modMailUsersString }]);
@@ -944,7 +944,7 @@ export default async (client: any, interaction) => {
                         if (modMailFiles !== null) {
                             let modMailFilesString = "";
                             let modMailFileLoopIndex = 0;
-                            for (let [id, file] of modMailFiles) {
+                            for (let [_id, file] of modMailFiles) {
                                 modMailFilesString += `${file.proxyURL}\n`;
                                 if (modMailFileLoopIndex > 0) {
                                     let modMailImageEmbed = new EmbedBuilder()

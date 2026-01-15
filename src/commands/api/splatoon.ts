@@ -304,11 +304,9 @@ export default async (interaction: any, messageFlags: any) => {
 
             let currentTime = new Date().valueOf();
             let currentMaps = null;
-            let upcomingMaps = null;
             let currentSalmonRunEventIsActive = false;
             if (currentSalmonRunEvent) currentSalmonRunEventIsActive = (Date.now() >= Date.parse(currentSalmonRunEvent.startTime) && Date.now() <= Date.parse(currentSalmonRunEvent.endTime));
             if (!currentSalmonRunEventIsActive) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
-            upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
             let randomStageIndex = randomNumber(0, 1);
             let modeSettings = `${scheduleMode}MatchSetting`;

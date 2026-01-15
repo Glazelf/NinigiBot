@@ -1,8 +1,6 @@
 import { userdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 
-const DAILY_TROPHIES = 5;
-
 export async function getUser(id, attributes = null) {
     const { User } = await userdataModel(userdata);
     let user = await User.findByPk(id, {

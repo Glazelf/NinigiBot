@@ -23,11 +23,11 @@ export default async (interaction: any, messageFlags: any) => {
         .setColor(globalVars.embedColor as [number, number, number])
         .setTitle("SKUs & Entitlements");
 
-    for await (let [SKUID, SKU] of SKUs) {
+    for await (let [_SKUID, SKU] of SKUs) {
         let userList = [];
         let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
         if (entitlementsSKU.length < 1) continue;
-        for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
+        for await (let [_entitlementID, entitlement] of (entitlementsSKU)) {
             let entitlementUser = await entitlement.fetchUser();
             let entitlementStartsAt = Math.floor(entitlement.startsTimestamp / 1000);
             userList.push(`${entitlementUser.username} (${entitlementUser.id}) ${time(entitlementStartsAt, TimestampStyles.ShortDate)}`);

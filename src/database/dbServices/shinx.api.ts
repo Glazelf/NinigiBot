@@ -1,8 +1,6 @@
 import {
     Op,
-    fn,
-    where,
-    col
+    fn
 } from "sequelize";
 import {
     userdata,
@@ -73,7 +71,6 @@ export async function hasEventTrophy(user_id, trophy_id) {
     const { EventTrophy } = await userdataModel(userdata);
     const { User } = await userdataModel(userdata);
 
-    let user = await getUser(user_id, ['user_id']);
     const usereventtrophy = await User.findOne({
         where: { user_id: user_id },
         include: [{
@@ -88,12 +85,7 @@ export async function hasEventTrophy(user_id, trophy_id) {
 };
 
 export async function addEventTrophy(user_id, trophy_id) {
-    const { EventTrophy } = await userdataModel(userdata);
     let user = await getUser(user_id, ['user_id']);
-    let trophy_id_t = trophy_id.toLowerCase();
-    const trophy = await EventTrophy.findOne(
-        { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
-    );
     if (!(await hasEventTrophy(user_id, trophy_id))) {
         await user.addEventTrophy(trophy_id);
     };

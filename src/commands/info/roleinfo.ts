@@ -27,7 +27,7 @@ export default async (interaction: any, messageFlags: any) => {
     let roleMembers = guildMembers.filter(member => member.roles.cache.get(role.id));
     if (memberListBool === true) {
         await interaction.deferReply({ flags: messageFlags });
-        for (const [id, member] of roleMembers) {
+        for (const [_id, member] of roleMembers) {
             let stringAddition = member.toString();
             if (roleMembersString.length > 0) stringAddition = `, ${member}`;
             if (roleMembersString.length + stringAddition.length < 1021) { // Limit is 1024, 1021 used so that dots in else statement always fit

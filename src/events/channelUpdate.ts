@@ -39,7 +39,6 @@ export default async (client: any, oldChannel, newChannel) => {
 
             let footer = newChannel.id;
             if (executor) footer = executor.username;
-            let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor as [number, number, number])

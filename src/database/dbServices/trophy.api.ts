@@ -69,7 +69,7 @@ export async function createShopTrophy(name, emote, description, price) {
 };
 
 export async function deleteShopTrophy(trophy_id) {
-    const { User, ShopTrophy, EventTrophy } = await userdataModel(userdata);
+    const { User: _User, ShopTrophy, EventTrophy: _EventTrophy } = await userdataModel(userdata);
     const trophy_id_t = trophy_id.toLowerCase()
     const trophy = await ShopTrophy.findOne({ attributes: ['price'], where: where(fn('lower', col('trophy_id')), trophy_id_t) })
     if (!trophy) return false;

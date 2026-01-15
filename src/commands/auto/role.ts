@@ -57,7 +57,7 @@ export default async (interaction: any, messageFlags: any) => {
                 roleIDs.push(eligibleRole.role_id);
             });
             roles = Object.entries(roles).sort((a: any, b: any) => b[1].role.position - a[1].role.position);
-            for await (const [key, value] of Object.entries(roles)) {
+            for await (const [_key, value] of Object.entries(roles)) {
                 let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                 if (!currentRole) continue;
                 let roleOptionName = currentRole.name;

@@ -5,7 +5,6 @@ import {
     EmbedBuilder,
     bold
 } from "discord.js";
-import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import rewardMoney from "../db/rewardMoney.js";
@@ -20,10 +19,8 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let pokemonButtons = new ActionRowBuilder();
     let quizTitle = "Who uses this mega stone?";
     let quizDescription = null;
-    let pokemon = null;
     let embedColor = globalVars.embedColor;
     if (!stoneList && stone) {
-        pokemon = Dex.species.get(Object.keys(stone.megaStone)[0]);
         if (winner) {
             let pokemonSim = DexSim.species.get(Object.keys(stone.megaStone)[0]);
             embedColor = colorHexes[pokemonSim.color.toLowerCase()];

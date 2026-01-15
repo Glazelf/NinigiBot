@@ -6,4 +6,4 @@ import forever from 'forever-monitor';
 const foreverOptions = [{
     "uid": "Ninigi",
 }];
-const child = forever.start('./build/bot.js', foreverOptions);
+forever.start('./build/bot.js', foreverOptions);

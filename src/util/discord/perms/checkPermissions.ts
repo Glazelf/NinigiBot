@@ -1,6 +1,6 @@
 import isAdmin from "./isAdmin.js";
 
-export default ({ member, permissions, channel }) => {
+export default ({ member, permissions, channel = null }: { member: any; permissions: any; channel?: any }) => {
     if (isAdmin(member)) return true;
     let passedPermissions = [];
     for (let permission of permissions) {

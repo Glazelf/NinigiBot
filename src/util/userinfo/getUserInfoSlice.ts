@@ -158,7 +158,7 @@ export default async (interaction: any, page: any, user: any) => {
     };
     return {
         interaction: interaction,
-        embeds: profileEmbed,
+        embeds: [profileEmbed],
         components: [profileButtons]
     };
 };
