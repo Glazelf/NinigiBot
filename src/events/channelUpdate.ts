@@ -64,7 +64,7 @@ export default async (client: ExtendedClient, oldChannel, newChannel) => {
                     { name: `Category:`, value: `Old: ${categoryOld}\nNew: ${categoryNew}`, inline: true }
                 ]);
             };
-            if ([ChannelType.GuildText, ChannelType.GuildNews, ChannelType.GuildStore].includes(newChannel.type)) {
+            if ([ChannelType.GuildText, ChannelType.GuildNews].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     let topicOld = oldChannel.topic || 'None';
                     let topicNew = newChannel.topic || 'None';

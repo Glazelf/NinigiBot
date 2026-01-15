@@ -102,7 +102,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
     await guild.channels.cache.forEach(async channel => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
-        if (channel.type == ChannelType.GuildThread) threadCount += 1;
+        if ([ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread].includes(channel.type)) threadCount += 1;
         // Get archived threads?
         // if (channel.threads && channel.type == ChannelType.GuildText && checkPermissions({ member: botMember, permissions: [PermissionFlagsBits.Administrator] })) {
         //     let archivedThreads = await channel.threads.fetchArchived();

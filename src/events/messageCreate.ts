@@ -71,7 +71,7 @@ export default async (client: ExtendedClient, message) => {
             let dmLogObject = { content: message.author.id, embeds: [dmEmbeds], components: [profileButtons] as any };
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type === ChannelType.GuildForum && !checkPermissions({ member: message.guild.members.me, channel: message.channel, permissions: [PermissionFlagsBits.SendMessages] })) return;
+        if (message.channel.type !== ChannelType.GuildForum && !checkPermissions({ member: message.guild.members.me, channel: message.channel, permissions: [PermissionFlagsBits.SendMessages] })) return;
         if (!message.member) return;
 
         let memberRoles = 0;

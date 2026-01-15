@@ -12,6 +12,7 @@ declare global {
 export interface CommandProps {
   commandObject: {
     name: string;
+    description?: string;
     type?: number;
     contexts?: number[];
     integration_types?: number[];

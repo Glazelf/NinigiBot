@@ -16,7 +16,7 @@ export default async (interaction: any, messageFlags: any) => {
     let severity = interaction.options.getString("severity");
     if (!severity) severity = "owo";
 
-    let inputOwOified = owoify.default(input, severity);
+    let inputOwOified = (owoify as any)(input, severity);
     let returnString = codeBlock("fix", inputOwOified);
 
     return sendMessage({ interaction: interaction, content: returnString });
