@@ -27,7 +27,7 @@ export default async ({ interaction, content = "", embeds = [], files = [], comp
         if (Array.isArray(components)) {
             messageObject.components = components;
         } else {
-            if ((components as any).components.length != 0) {
+            if ((components as any)?.components?.length != 0) {
                 messageObject.components = [components];
             };
         };
