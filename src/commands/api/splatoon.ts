@@ -19,13 +19,13 @@ import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import GearInfoClothesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import GearInfoHeadJSON from "../../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import GearInfoShoesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import WeaponInfoMainJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
 
 // Type definitions for Splatoon 3 data

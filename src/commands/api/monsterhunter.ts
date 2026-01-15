@@ -12,9 +12,9 @@ import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
 import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import monstersJSON from "../../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import questsJSON from "../../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 const mhRiseString = "Monster Hunter Rise";

@@ -32,14 +32,14 @@ import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
 import getMegaStoneGuess from "../util/pokemon/getMegaStoneGuess.js";
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import MHMonstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-// @ts-expect-error - Submodule JSON not initialized
+// @ts-expect-error - Submodule may not be initialized yet, run: git submodule update --init --recursive
 import MHQuestsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
@@ -610,7 +610,7 @@ export default async (client: ExtendedClient, interaction) => {
                                     const pokemonCardSetId = card.id.split("-")[0];
                                     const pokemonCardSet = pokemonCardSetsJSON.find((element: any) => element.id == pokemonCardSetId);
                                     const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
-                                    const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
+                                    const pokemonCardReleaseDate = new Date(parseInt(pokemonCardReleaseDateSplit[0]), parseInt(pokemonCardReleaseDateSplit[1]) - 1, parseInt(pokemonCardReleaseDateSplit[2]));
                                     const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${card.number}/${pokemonCardSet.printedTotal}`;
                                     if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
                                         valuesByDate[card.id] = pokemonCardReleaseDate;
