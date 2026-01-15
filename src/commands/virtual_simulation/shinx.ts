@@ -481,7 +481,8 @@ export default async (interaction: any, messageFlags: any) => {
                             let avatarBuffer = await axios.get(avatars[q], { responseType: 'arraybuffer' }).then(response => response.data);
                             let avatar = new Canvas.Image();
                             avatar.src = avatarBuffer;
-                            ctx.drawImage(avatar, 18 + 134 * (q === (i ? 1 : 0) ? 1 : 0), 43, 80, 80);
+                            const offset = q === i ? 134 : 0;
+                            ctx.drawImage(avatar, 18 + offset, 43, 80, 80);
                         };
                         text += addLine(`${formatName(nicks[(i + 1) % 2], true)} fainted!`);
                         for (let h = 0; h < 2; h++) {

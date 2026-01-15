@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
 import isOwner from "../../util/discord/perms/isOwner.js";
-import { getAllUsers } from "../../database/dbServices/user.api.js";
+import { getAllUsers, bulkDeleteUsers } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction: any, messageFlags: any) => {
@@ -44,7 +44,6 @@ export default async (interaction: any, messageFlags: any) => {
     });
     deleted_users = [...new Set(deleted_users)];
     if (deleted_users.length == 0) return sendMessage({ interaction: interaction, content: 'Database is already clean!', flags: messageFlags });
-    const { bulkDeleteUsers } = await import("../../database/dbServices/user.api.js");
     await bulkDeleteUsers(deleted_users);
     return sendMessage({ interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.`, flags: messageFlags });
 };
