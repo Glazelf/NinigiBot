@@ -15,7 +15,7 @@ export default async (client: ExtendedClient) => {
                     commandGuildID = command.guildID;
                     if (client.user.id != globalVars.NinigiID) commandGuildID = process.env.DEV_SERVER_ID;
                 };
-                await client.application.commands.create(command.commandObject, commandGuildID);
+                await client.application.commands.create(command.commandObject as any, commandGuildID);
             } catch (e: any) {
                 console.log(e);
             };

@@ -43,7 +43,7 @@ export default async (interaction: any, messageFlags: any) => {
     let daysMutedDisplay = daysMuted > 0 ? daysMuted + (daysMuted == 1 ? " day " : " days ") : "";
     let hoursMutedDisplay = hoursMuted > 0 ? hoursMuted + (hoursMuted == 1 ? " hour " : " hours ") : "";
     let minutesMutedDisplay = minutesMuted > 0 ? minutesMuted + (minutesMuted == 1 ? " minute " : " minutes ") : "";
-    displayMuteTime = daysMutedDisplay + hoursMutedDisplay + minutesMutedDisplay;
+    let displayMuteTimeStr = daysMutedDisplay + hoursMutedDisplay + minutesMutedDisplay;
 
     if (!member) return sendMessage({ interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
     // Check permissions
@@ -56,7 +56,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (reasonArg) reason = reasonArg;
     let reasonCodeBlock = codeBlock("fix", reason);
 
-    let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${reasonCodeBlock}`;
+    let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTimeStr}for the following reason: ${reasonCodeBlock}`;
     if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
         if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
             muteTime = null;
@@ -65,10 +65,10 @@ export default async (interaction: any, messageFlags: any) => {
     };
     let time = getTime();
     let reasonInfo = `-${formatName(interaction.user.username, false)} (${time})`;
-    let dmString = `You got muted in ${formatName(interaction.guild.name, true)} for ${bold(displayMuteTime)} by ${formatName(interaction.user.username, true)} for the following reason: ${reasonCodeBlock}`;
+    let dmString = `You got muted in ${formatName(interaction.guild.name, true)} for ${bold(displayMuteTimeStr)} by ${formatName(interaction.user.username, true)} for the following reason: ${reasonCodeBlock}`;
     // Timeout logic
     try {
-        await member.timeout(muteTime, `${reason} ${reasonInfo}`);
+        await member.timeout(muteTime as any, `${reason} ${reasonInfo}`);
         await user.send({ content: dmString })
             .then(message => muteReturnString += `Succeeded in sending a DM to ${usernameFormatted} with the reason.`)
             .catch(e => muteReturnString += `Failed to send a DM to ${usernameFormatted} with the reason.`);

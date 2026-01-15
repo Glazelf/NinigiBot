@@ -141,9 +141,9 @@ export default (sequelize: any, DataTypes: any) => {
         this.save({ fields: ["belly"] });
     };
     Shinx.prototype.getHunger = function () {
-        return MAX_RANGE - this.belly as any;
+        return MAX_RANGE - (this.belly as any);
     };
-    Shinx.prototype.getBelly = () => {
+    Shinx.prototype.getBelly = function () {
         return this.belly as any;
     };
     Shinx.prototype.getBellyPercent = function () {

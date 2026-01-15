@@ -188,7 +188,7 @@ export default async (interaction: any, messageFlags: any) => {
                     };
 
                     img = await Canvas.loadImage('./assets/shinx/reactions.png');
-                    ctx.drawImage(img, 10 + 30 * reactionFeed[1], 8, 30, 32, 202, 115, 30, 32);
+                    ctx.drawImage(img, 10 + 30 * parseFloat(String(reactionFeed[1])), 8, 30, 32, 202, 115, 30, 32);
 
                     if (now.getHours() > 20 || now.getHours() < 6) {
                         img = await Canvas.loadImage('./assets/shinx/dinNight.png');
@@ -244,8 +244,8 @@ export default async (interaction: any, messageFlags: any) => {
             if (parseFloat(String(shinx.belly)) < 0.2) reactionPlay = playing_reaction(0);
 
             img = await Canvas.loadImage('./assets/shinx/reactions.png');
-            ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
-            shinx.addExperienceAndUnfeed(100 * reactionPlay[2], 1);
+            ctx.drawImage(img, 10 + 30 * parseFloat(String(reactionPlay[1])), 8, 30, 32, 120, 212, 30, 32);
+            shinx.addExperienceAndUnfeed(100 * parseFloat(String(reactionPlay[2])), 1);
             messageFile = new AttachmentBuilder(canvas.toBuffer());
             return sendMessage({
                 interaction: interaction,
@@ -481,7 +481,7 @@ export default async (interaction: any, messageFlags: any) => {
                             let avatarBuffer = await axios.get(avatars[q], { responseType: 'arraybuffer' }).then(response => response.data);
                             let avatar = new Canvas.Image();
                             avatar.src = avatarBuffer;
-                            ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
+                            ctx.drawImage(avatar, 18 + 134 * (q === (i ? 1 : 0) ? 1 : 0), 43, 80, 80);
                         };
                         text += addLine(`${formatName(nicks[(i + 1) % 2], true)} fainted!`);
                         for (let h = 0; h < 2; h++) {
@@ -506,17 +506,17 @@ export default async (interaction: any, messageFlags: any) => {
                 let shinxHP1 = await hp(parseFloat(String(shinxes[1].percent)));
                 const hps = [shinxHP0, shinxHP1];
                 for (let i = 0; i < 2; i++) {
-                    if (!isNaN(hps[i][0])) {
-                        const color = hps[i][0];
+                    if (!isNaN(parseFloat(String(hps[i][0])))) {
+                        const color = parseFloat(String(hps[i][0]));
                         if (color > 2 && prevColors[i] <= color - 1) {
                             ctx.fillStyle = colors[color - 1];
                             ctx.fillRect(38 + 90 * i, 58 + 78 * i, 96, 4);
                         };
                         ctx.fillStyle = colors[color];
-                        ctx.fillRect(38 + 90 * i, 58 + 78 * i, hps[i][1], 4);
+                        ctx.fillRect(38 + 90 * i, 58 + 78 * i, parseFloat(String(hps[i][1])), 4);
                         prevColors[i] = color;
                     };
-                    if (shinxes[i].geassMode()) {
+                    if (parseFloat(String(shinxes[i].geassMode()))) {
                         text += addLine(`${bold("...?")}\nThe power of love remains!\n${formatName(`${nicks[i]} entered Geass mode!`, true)}`);
                         ctx.drawImage(geasson, 52 + 35 * i * i, 20 + 79 * i);
                         ctx.font = 'normal bolder 14px Arial';

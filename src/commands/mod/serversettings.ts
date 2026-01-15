@@ -77,7 +77,7 @@ export default async (interaction: any, messageFlags: any) => {
             ];
             // There should be a builder for this? but couldn't get this to work: https://discord.js.org/docs/packages/discord.js/14.14.1/AutoModerationRule:Class
             // let autoModObject = new AutoModerationRule()
-            let autoModObject = {
+            let autoModObject: any = {
                 name: `Ninigi AutoMod`,
                 enabled: true,
                 eventType: 1,

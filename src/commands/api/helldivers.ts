@@ -77,8 +77,8 @@ export default async (interaction: any, messageFlags: any) => {
             if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
             break;
         case "campaign":
-            campaignStatus = campaignStatus.data as any[];
-            await campaignStatus.forEach(async planet => {
+            const campaignData = campaignStatus.data as any[];
+            await campaignData.forEach(async planet => {
                 let planetStatusTitle = planet.name;
                 if (planet.majorOrder) planetStatusTitle += ` (Major Order)`;
                 let planetStatusString = `${liberationString} vs. ${planet.faction}`;

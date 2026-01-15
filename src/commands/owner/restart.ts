@@ -31,7 +31,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (dbinitArg === true) dbinit = dbinitArg;
     let timestamp = getTime();
     console.log(`Restarting for ${formatName(interaction.user.username, false)}. (${timestamp})`);
-    let installResult = "";
+    let installResult: any = "";
     // Run commands
     if (npmInstall) {
         installResult = await runCommand("npm install");
@@ -40,7 +40,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (dbinit) await runCommand("node dbInit.js");
     // Return messages then destroy
     let restartString = "Restarting.";
-    let installResultString = codeBlock("fix", installResult.stdout);
+    let installResultString = codeBlock("fix", installResult?.stdout || installResult);
     if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
     if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
     await sendMessage({ interaction: interaction, content: restartString });

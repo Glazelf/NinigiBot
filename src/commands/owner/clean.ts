@@ -29,7 +29,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (!server_users) server_users = interaction.guild.members.cache;
     server_users = server_users.map(user => user.id);
     const pre_length = users.length;
-    const deleted_users = [];
+    let deleted_users: any[] = [];
     let checkedUsers = [];
     // Check duplicate user_id
     await users.forEach(user => {
@@ -44,7 +44,8 @@ export default async (interaction: any, messageFlags: any) => {
     });
     deleted_users = [...new Set(deleted_users)];
     if (deleted_users.length == 0) return sendMessage({ interaction: interaction, content: 'Database is already clean!', flags: messageFlags });
-    await user_api.bulkDeleteUsers(deleted_users);
+    const { bulkDeleteUsers } = await import("../../database/dbServices/user.api.js");
+    await bulkDeleteUsers(deleted_users);
     return sendMessage({ interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.`, flags: messageFlags });
 };
 

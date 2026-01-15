@@ -77,7 +77,7 @@ export default async ({ elite = false, emojis }) => {
             if (tower.path1NumBlockedTiers > 0 || tower.path2NumBlockedTiers || tower.path3NumBlockedTiers) {
                 // Sometimes allowed tier is -1 when they mean 0, leading to above calculation listing 6. 
                 // We can filter like this because if not all tiers are allowed the paragon can never be made, making 6-6-6 impossible.
-                towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`.replace(/6/g, 0);
+                towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`.replace(/6/g, "0");
                 towersAllowedAppendix = true;
             };
             return allowedTowersArray.push(towerString);

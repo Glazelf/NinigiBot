@@ -42,10 +42,10 @@ export default async (interaction: any, messageFlags: any) => {
                 let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
                 switch (trophy.temp_bought) {
                     case 'Bought':
-                        trophy_price.value = codeBlock("yaml", `Bought`);
+                        trophy_price.value = codeBlock("yaml", `Bought`) as any;
                         break;
                     case 'CantBuy':
-                        trophy_price.value = codeBlock("css", `[${trophy.price}]`);
+                        trophy_price.value = codeBlock("css", `[${trophy.price}]`) as any;
                         break;
                     case 'CanBuy':
                         break;
@@ -85,9 +85,9 @@ export default async (interaction: any, messageFlags: any) => {
                     img = await Canvas.loadImage('./assets/shinx/frontier.png');
                     ctx.drawImage(img, 0, 0);
                     img = await Canvas.loadImage('./assets/shinx/mc.png');
-                    ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
+                    ctx.drawImage(img, 51 * (shinx.user_male ? 0 : 1), 72 * 0, 51, 72, 162, 123, 51, 72);
                     img = await Canvas.loadImage('./assets/shinx/fieldShinx.png');
-                    ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
+                    ctx.drawImage(img, 57 * 8, 48 * parseFloat(String(shinx.shiny)), 57, 48, 217, 147, 57, 48);
                     img = await Canvas.loadImage('./assets/shinx/reactions.png');
                     ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
 

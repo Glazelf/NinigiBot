@@ -49,15 +49,15 @@ const contextInput = new TextInputBuilder()
     .setMinLength(1)
     .setMaxLength(100)
     .setRequired(true);
-const actionRow1 = new ActionRowBuilder()
+const actionRow1 = new ActionRowBuilder<TextInputBuilder>()
     .addComponents(titleInput);
-const actionRow2 = new ActionRowBuilder()
+const actionRow2 = new ActionRowBuilder<TextInputBuilder>()
     .addComponents(descriptionInput);
-const actionRow3 = new ActionRowBuilder()
+const actionRow3 = new ActionRowBuilder<TextInputBuilder>()
     .addComponents(reproduceInput);
-const actionRow4 = new ActionRowBuilder()
+const actionRow4 = new ActionRowBuilder<TextInputBuilder>()
     .addComponents(behaviourInput);
-const actionRow5 = new ActionRowBuilder()
+const actionRow5 = new ActionRowBuilder<TextInputBuilder>()
     .addComponents(contextInput);
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 

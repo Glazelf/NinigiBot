@@ -78,7 +78,7 @@ export default async (interaction: any, messageFlags: any) => {
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
-            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
+            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline("shop")}`;
     };
     return sendMessage({ interaction: interaction, content: returnString, flags: messageFlags.add(MessageFlags.Ephemeral) });
 };

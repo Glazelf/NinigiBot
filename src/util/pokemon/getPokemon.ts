@@ -45,7 +45,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let pokemonAvailable = (pokemonGen !== undefined);
     // For some reason gmax forms don't return generational data, so get an extra check here
     if (pokemonAvailable || (generation == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in generation ${generation}`;
-    if (!pokemonGen) pokemonGen = pokemon;
+    if (!pokemonGen) pokemonGen = pokemon as any;
     // Gender studies
     let pokemonGender = "";
     let genderString = "";
@@ -164,17 +164,17 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let SpAstats = calcStat(pokemonGen.baseStats.spa, generation);
     let SpDstats = calcStat(pokemonGen.baseStats.spd, generation);
     let Spestats = calcStat(pokemonGen.baseStats.spe, generation);
-    let statsString = `${Dex.stats.shortNames.hp}: ${bold(pokemonGen.baseStats.hp)} ${HPstats}\n${Dex.stats.shortNames.atk}: ${bold(pokemonGen.baseStats.atk)} ${Atkstats}\n${Dex.stats.shortNames.def}: ${bold(pokemonGen.baseStats.def)} ${Defstats}\n`;
+    let statsString = `${(Dex.stats as any).shortNames.hp}: ${bold(String(pokemonGen.baseStats.hp))} ${HPstats}\n${(Dex.stats as any).shortNames.atk}: ${bold(String(pokemonGen.baseStats.atk))} ${Atkstats}\n${(Dex.stats as any).shortNames.def}: ${bold(String(pokemonGen.baseStats.def))} ${Defstats}\n`;
     // Account for gen 1 Special stat
     switch (generation) {
         case 1:
-            statsString += `${genData.stats.dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n`;
+            statsString += `${(genData as any).stats.shortNames.spa}: ${bold(String(pokemonGen.baseStats.spa))} ${SpAstats}\n`;
             break;
         default:
-            statsString += `${Dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n${Dex.stats.shortNames.spd}: ${bold(pokemonGen.baseStats.spd)} ${SpDstats}\n`;
+            statsString += `${(Dex.stats as any).shortNames.spa}: ${bold(String(pokemonGen.baseStats.spa))} ${SpAstats}\n${(Dex.stats as any).shortNames.spd}: ${bold(String(pokemonGen.baseStats.spd))} ${SpDstats}\n`;
             break;
     };
-    statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
+    statsString += `${(Dex.stats as any).shortNames.spe}: ${bold(String(pokemonGen.baseStats.spe))} ${Spestats}\nBST: ${(pokemonGen as any).bst}`;
 
     let levelMoves = [];
     let levelMovesNames = [];

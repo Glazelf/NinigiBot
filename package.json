@@ -18,6 +18,7 @@
     "owoify-js": "^2.0.0",
     "path": "^0.12.7",
     "sequelize": "^6.37.7",
+    "source-map-support": "^0.5.21",
     "sqlite3": "^5.1.7",
     "unique-names-generator": "^4.7.1",
     "xmlhttprequest": "^1.8.0"

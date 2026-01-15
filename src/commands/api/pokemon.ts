@@ -199,9 +199,9 @@ export default async (interaction: any, messageFlags: any) => {
             let target = capitalizeString(moveGen.target.split(/(?=[A-Z])/).join(" "));
             if (target == "Normal") target = "Any Adjacent";
 
-            let moveTitle = moveGen.name;
-            if ((moveGen as any).isMax) moveTitle = `${moveGen.name} (Max Move)`;
-            if ((moveGen as any).isZ) moveTitle = `${moveGen.name} (Z-Move)`;
+            let moveTitle: any = moveGen.name;
+            if ((moveGen as any).isMax) moveTitle = `${(moveGen as any).name} (Max Move)`;
+            if ((moveGen as any).isZ) moveTitle = `${(moveGen as any).name} (Z-Move)`;
             let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
             let moveCategoryString = move.category;
             if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji} ${moveCategoryString}`;
@@ -403,10 +403,10 @@ export default async (interaction: any, messageFlags: any) => {
                 // Data from generic usage page
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
-                rawUsage = pokemonDataSplitLine[2].trim();
-                usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%`;
-                usageRank = genericDataSplitPokemon[0].split("|");
-                usageRank = parseInt(usageRank[usageRank.length - 2].trim());
+                rawUsage = pokemonDataSplitLine[2].trim() as any;
+                usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%` as any;
+                let usageRankArray = genericDataSplitPokemon[0].split("|");
+                usageRank = parseInt(usageRankArray[usageRankArray.length - 2].trim()) as any;
                 // Not all formats and months have tera types. Counters list exists everywhere but can be empty.
                 let teraTypesString = "";
                 let movesEndsplit = "Teammates";
@@ -445,7 +445,7 @@ export default async (interaction: any, messageFlags: any) => {
                     // Percentage determination copied from generic usage data parsing for specific pokemon
                     genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
-                    usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%`;
+                    usagePercentage = `${Math.round(parseFloat(pokemonDataSplitLine[1].trim().replace("%", "")) * 100) / 100}%` as any;
                     usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
@@ -531,8 +531,8 @@ export default async (interaction: any, messageFlags: any) => {
         // Who's That Pokémon quiz
         case "whosthat":
             await interaction.deferReply({ flags: messageFlags });
-            let allowedPokemonList = allPokemon;
-            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
+            let allowedPokemonList = allPokemon as any;
+            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation) as any;
             allowedPokemonList = allowedPokemonList.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&

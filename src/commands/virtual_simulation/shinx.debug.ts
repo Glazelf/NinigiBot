@@ -66,19 +66,19 @@ export default async (interaction: any, messageFlags: any) => {
             let text = '';
 
             const nicks = [];
-            for (let i = 0; i < 2; i++) nicks.push(`${shinxes[i].owner.username}'s ${shinxes[i].nick}`);
+            for (let j = 0; j < 2; j++) nicks.push(`${shinxes[j].owner.username}'s ${shinxes[j].nick}`);
 
-            i = 0;
-            text += addLine(`${formatName(nicks[(i + 1) % 2], true)} fainted!`);
+            let faintedIndex = 0;
+            text += addLine(`${formatName(nicks[(faintedIndex + 1) % 2], true)} fainted!`);
             for (let h = 0; h < 2; h++) {
-                await incrementCombatAmount(trainers[h].id, i == h);
-                const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level as any, i !== h);
+                await incrementCombatAmount(trainers[h].id, faintedIndex == h);
+                const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level as any, faintedIndex !== h);
                 text += addLine(`${formatName(nicks[h], true)} won ${exp[0]} exp. points!`);
                 if (exp[1] > 0) {
                     text += addLine(`${formatName(nicks[h], true)} grew to level ${bold(shinxes[h].level as any)}!`);
                 };
             };
-            for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
+            for (let p = 0; p < 2; p++) await saveBattle(shinxes[p]);
             globalVars.battling.yes = false;
             return sendMessage({ interaction: interaction, content: text });
     };

@@ -1,7 +1,8 @@
 import {
     EmbedBuilder,
     PermissionFlagsBits,
-    AuditLogEvent
+    AuditLogEvent,
+    TextChannel
 } from "discord.js";
 import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
