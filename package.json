@@ -42,7 +42,7 @@
   "homepage": "https://github.com/Glazelf/NinigiBot#readme",
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/node": "^25.0.8",
+    "@types/node": "^25.0.9",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

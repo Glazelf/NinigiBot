@@ -30,11 +30,18 @@ export default async (client: ExtendedClient) => {
         await client.application.emojis.fetch();
 
         let timestamp = getTime();
-        let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
         const startupStats = `Commands: ${client.commands.size}\nGuilds: ${client.guilds.cache.size}\nChannels: ${client.channels.cache.size}\nUsers: ${client.users.cache.size} (All stats are from cache)`;
         console.log(`${startupStats}\nConnected as ${client.user.username}. (${timestamp})`);
-        if (devChannel?.isTextBased()) {
-            return (devChannel as TextChannel).send({ content: `Successfully connected. ${codeBlock("fix", startupStats)}` });
+        
+        if (process.env.DEV_CHANNEL_ID) {
+            try {
+                let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
+                if (devChannel?.isTextBased()) {
+                    await (devChannel as TextChannel).send({ content: `Successfully connected. ${codeBlock("fix", startupStats)}` });
+                }
+            } catch (e: any) {
+                console.log("Failed to send startup message to dev channel:", e.message);
+            }
         }
 
     } catch (e: any) {
