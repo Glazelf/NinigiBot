@@ -66,7 +66,7 @@ export default async (interaction: any, messageFlags: any) => {
                 } else if (messageFlags.has(MessageFlags.Ephemeral)) {
                     roleOptionName = `${receiveEmote} ${roleOptionName}`;
                 };
-                let roleOption = {
+                let roleOption: any = {
                     label: roleOptionName,
                     value: currentRole.id
                 };

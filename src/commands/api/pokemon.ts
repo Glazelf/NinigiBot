@@ -50,7 +50,7 @@ export default async (interaction: any, messageFlags: any) => {
     let shinyArg = interaction.options.getBoolean("shiny");
     if (shinyArg === true) shinyBool = true;
     // Variables
-    let embedColor = globalVars.embedColor;
+    let embedColor: [number, number, number] = globalVars.embedColor as [number, number, number];
     let nameInput = interaction.options.getString("name");
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");

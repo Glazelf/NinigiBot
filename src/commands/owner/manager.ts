@@ -34,10 +34,13 @@ export default async (interaction: any, messageFlags: any) => {
             switch (checker(trophy_name, 25)) {
                 case "TooShort":
                     error += 'Name too short\n';
+                    break;
                 case "TooLong":
                     error += 'Name exceeds 25 characters\n';
+                    break;
                 case "InvalidChars":
                     error += 'Name has invalid characters\n';
+                    break;
             };
             res = await checkTrophyExistance(trophy_name);
             if (res == true) error += 'Name already used\n';
@@ -45,10 +48,13 @@ export default async (interaction: any, messageFlags: any) => {
             switch (checker(trophy_desc, 1024, false)) {
                 case "TooShort":
                     error += 'Description too short\n';
+                    break;
                 case "TooLong":
                     error += 'Description exceeds 25 characters\n';
+                    break;
                 case "InvalidChars":
                     error += 'Description has invalid characters\n';
+                    break;
             };
             let trophy_emote = interaction.options.getString("emote").trim().replace(/^:+/, '').replace(/:+$/, '');
             let parsed_emote = trophy_emote.match(regexpDiscord);
@@ -68,6 +74,7 @@ export default async (interaction: any, messageFlags: any) => {
                 await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
                 returnString = `${trophy_name} added successfully to the shop!`;
             };
+            break;
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
