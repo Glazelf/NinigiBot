@@ -574,7 +574,7 @@ export default async (interaction: any, messageFlags: any) => {
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()] as [number, number, number];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: pokemonButtons ? [pokemonButtons] : [], files: pokemonFiles, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: pokemonButtons ? [pokemonButtons] : [], files: pokemonFiles || [], flags: messageFlags });
 };
 
 function getLearnData(learnData) {
