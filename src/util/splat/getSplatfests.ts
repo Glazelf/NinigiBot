@@ -156,7 +156,7 @@ export default async ({ page, region }): Promise<SplatfestMessageObject> => {
         let splatfestResultsRegular = "- Open Battles: ";
         let splatfestResultsChallenge = "- Pro Battles: ";
         let splatfestResultsTricolor = "- Tricolor Battles: ";
-        let splatfestResultsWinner = bold("Winner: Team {1} ({2}p)");
+        let splatfestResultsWinner: string = bold("Winner: Team {1} ({2}p)");
         let splatfestTeamIndex = 0;
         let splatfestIdols = {
             0: "Shiver",
