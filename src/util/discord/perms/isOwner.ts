@@ -1,3 +1,5 @@
+import type { ExtendedClient } from '../../types/global.js';
+
 export default async (client: ExtendedClient, user) => {
     let application = await client.application.fetch();
     let ownerID = application.owner.id;

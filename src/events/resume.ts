@@ -1,5 +1,7 @@
-import type { ExtendedClient } from '../types/global.js';
-import globalVars from "../objects/globalVars.json" with { type: "json" };
+import type { ExtendedClient, GlobalVars } from '../types/global.js';
+import globalVarsJson from "../objects/globalVars.json" with { type: "json" };
+
+const globalVars = globalVarsJson as GlobalVars;
 
 export default async (client: ExtendedClient) => {
     try {

@@ -1,5 +1,6 @@
 import {
-    EmbedBuilder
+    EmbedBuilder,
+    TextChannel
 } from "discord.js";
 import type { ExtendedClient } from '../types/global.js';
 import logger from "../util/logger.js";
@@ -9,7 +10,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 export default async (client: ExtendedClient, guild) => {
     try {
         let log = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
-        if (!log) return;
+        if (!log || !log.isTextBased()) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let guildOwner = null;
@@ -29,7 +30,7 @@ export default async (client: ExtendedClient, guild) => {
             .addFields([{ name: `Name:`, value: formatName(guild.name, false), inline: true }]);
         if (guildOwner) guildEmbed.addFields([{ name: `Owner:`, value: `${formatName(guildOwner.user.username, false)} (${guildOwner.id})`, inline: false }]);
         guildEmbed.addFields([{ name: `Members:`, value: guild.memberCount.toString(), inline: false }])
-        return log.send({ embeds: [guildEmbed] });
+        return (log as TextChannel).send({ embeds: [guildEmbed] });
 
     } catch (e: any) {
         logger({ exception: e, client: client });
