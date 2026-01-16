@@ -382,12 +382,12 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     };
 
     let buttonArray: any[] = [];
-    if (formButtonsObject[0].components.length > 0) buttonArray.push(formButtonsObject[0]);
-    if (formButtonsObject[1].components.length > 0) buttonArray.push(formButtonsObject[1]);
-    if (formButtonsObject[2].components.length > 0) buttonArray.push(formButtonsObject[2]);
-    if (formButtonsObject[3].components.length > 0 && pkmButtons2.components.length < 1) buttonArray.push(formButtonsObject[3]);
-    buttonArray.push(pkmButtons);
-    if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
+    if (formButtonsObject[0].components.length > 0) buttonArray.push(formButtonsObject[0].toJSON());
+    if (formButtonsObject[1].components.length > 0) buttonArray.push(formButtonsObject[1].toJSON());
+    if (formButtonsObject[2].components.length > 0) buttonArray.push(formButtonsObject[2].toJSON());
+    if (formButtonsObject[3].components.length > 0 && pkmButtons2.components.length < 1) buttonArray.push(formButtonsObject[3].toJSON());
+    buttonArray.push(pkmButtons.toJSON());
+    if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2.toJSON());
     // Embed building
     pkmEmbed
         .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
@@ -420,7 +420,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let embedColor = globalVars.embedColor;
     if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
     pkmEmbed.setColor(embedColor as [number, number, number]);
-    messageObject = { embeds: [pkmEmbed], components: [buttonArray] };
+    messageObject = { embeds: [pkmEmbed], components: buttonArray };
     return messageObject;
 };
 

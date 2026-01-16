@@ -53,7 +53,7 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
             .setLabel("Reveal")
             .setStyle(ButtonStyle.Danger);
         pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
-        messageObject.components = [pokemonButtons];
+        messageObject.components = [pokemonButtons.toJSON()];
     };
 
     let quizEmbed = new EmbedBuilder()

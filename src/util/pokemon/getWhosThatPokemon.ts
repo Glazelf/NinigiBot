@@ -95,7 +95,7 @@ export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => 
         pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.png" });
         embedImage = `attachment://${pokemonImage.name}`;
         messageObject.files = [pokemonImage];
-        messageObject.components = [pokemonButtons];
+        messageObject.components = [pokemonButtons.toJSON()];
     };
 
     let quizEmbed = new EmbedBuilder()
