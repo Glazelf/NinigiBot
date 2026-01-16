@@ -29,7 +29,7 @@ export interface ExtendedClient extends Client {
 export interface GlobalVars {
   NinigiID: string;
   ShinxServerID: string;
-  ShinxServerInvite: string;
+  supportServerInvite: string;
   eventChannelID: string;
   sysbotChannelIDs: string[];
   sysbotLogChannelID: string;
@@ -56,4 +56,4 @@ export interface ColorHexes {
   [key: string]: string;
 }
 
-export {};
+export { };
