@@ -22,6 +22,9 @@ export default async (client: ExtendedClient, info) => {
     let debugChannel;
     try {
         debugChannel = await client.channels.fetch(debugChannelID);
+        if (!debugChannel || !debugChannel.isTextBased()) {
+            return console.log(info);
+        }
         // console.log(info); // Uncomment to always log to console
     } catch (e: any) {
         // console.log(e);
