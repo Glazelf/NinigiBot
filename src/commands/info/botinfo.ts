@@ -105,7 +105,7 @@ export default async (interaction: any, messageFlags: any) => {
     const supportServerButton = new ButtonBuilder()
         .setLabel("Support Server")
         .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+        .setURL(`https://discord.gg/${globalVars.supportServerInvite}`);
     const githubButton = new ButtonBuilder()
         .setLabel("GitHub")
         .setStyle(ButtonStyle.Link)
