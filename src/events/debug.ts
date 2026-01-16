@@ -46,6 +46,6 @@ export default async (client: ExtendedClient, info) => {
         debugEmbeds[debugEmbedsIndex].addFields([{ name: fieldName, value: fieldValue, inline: false }]);
         debugInfoIndex += maxFieldValueLength;
     };
-    // Send embed
-    return debugChannel.send({ embeds: [debugEmbeds] });
+    // Send embed - convert EmbedBuilders to JSON
+    return debugChannel.send({ embeds: debugEmbeds.map(embed => embed.toJSON()) });
 };

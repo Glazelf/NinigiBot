@@ -72,7 +72,13 @@ Message:${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``; // Backticks are to make sure codeBlock remains closed after substring
         // Fix cross-shard logging sometime
+        if (!process.env.DEV_CHANNEL_ID) {
+            return console.log(baseMessage);
+        }
         let devChannel = await client.channels.fetch(process.env.DEV_CHANNEL_ID);
+        if (!devChannel || !devChannel.isTextBased()) {
+            return console.log(baseMessage);
+        }
         if (baseMessage.includes("Missing Permissions")) {
             return interaction.reply(`I lack permissions to perform the requested action.`).catch(e => { return null; });
         } else {
