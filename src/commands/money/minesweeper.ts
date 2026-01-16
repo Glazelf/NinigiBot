@@ -76,7 +76,7 @@ export default async (interaction: any, messageFlags: any) => {
     if (correctionString.length > 0) returnString += `\n${correctionString}`;
     returnString += `\nMines: ${mines}`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: [buttonRowArray], flags: messageFlags });
+    return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray.map(row => row.toJSON()), flags: messageFlags });
 };
 
 // Integer options

@@ -85,7 +85,7 @@ export default async (interaction: any, messageFlags: any) => {
 
             let returnString = `Choose roles to toggle:`;
             if (messageFlags.has(MessageFlags.Ephemeral)) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
-            return sendMessage({ interaction: interaction, content: returnString, components: [rolesSelects] });
+            return sendMessage({ interaction: interaction, content: returnString, components: [rolesSelects.toJSON()] });
         };
         // Help menu
         for (let i = 0; i < roleText.length; i++) {

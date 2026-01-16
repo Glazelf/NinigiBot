@@ -405,7 +405,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setLabel("Refuse");
             const answer_buttons = new ActionRowBuilder()
                 .addComponents([battleAcceptButton, battleRefuseButton]);
-            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: [answer_buttons] as any, files: [messageFile] as any });
+            const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: [answer_buttons.toJSON()], files: [messageFile] as any });
 
             const filter = (interaction: any) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
             let trainer_answer;

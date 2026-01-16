@@ -33,7 +33,7 @@ export default async (interaction: any, messageFlags: any) => {
 
     let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-    return sendMessage({ interaction: interaction, content: returnString, components: [googleActionRow], flags: messageFlags });
+    return sendMessage({ interaction: interaction, content: returnString, components: [googleActionRow.toJSON()], flags: messageFlags });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()
