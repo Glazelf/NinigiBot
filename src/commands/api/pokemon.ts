@@ -571,7 +571,7 @@ export default async (interaction: any, messageFlags: any) => {
         if (pokemonButtons instanceof ActionRowBuilder) {
             pokemonButtons.addComponents(bulbapediaButton);
         } else if (Array.isArray(pokemonButtons)) {
-            const bulbapediaRow = new ActionRowBuilder().addComponents(bulbapediaButton);
+            const bulbapediaRow = new ActionRowBuilder<ButtonBuilder>().addComponents(bulbapediaButton);
             pokemonButtons.push(bulbapediaRow.toJSON());
         }
     };
