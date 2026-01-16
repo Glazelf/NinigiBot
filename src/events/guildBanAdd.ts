@@ -59,7 +59,7 @@ export default async (client: ExtendedClient, guildBan) => {
                     { name: `Reason:`, value: reason, inline: false },
                     { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
                 ]);
-            return log.send({ embeds: [banEmbed], components: [banButtons] as any });
+            return log.send({ embeds: [banEmbed], components: [banButtons.toJSON()] });
 
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {

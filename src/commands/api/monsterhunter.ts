@@ -90,7 +90,7 @@ export default async (interaction: any, messageFlags: any) => {
             let messageObject = await getMonster(monsterData, interaction.client.application.emojis.cache);
             return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, flags: messageFlags })
     };
-    return sendMessage({ interaction: interaction, embeds: [mhEmbed], components: [buttonArray], flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [mhEmbed], components: buttonArray.map((row: any) => row.toJSON()), flags: messageFlags });
 };
 
 const gameChoices = [

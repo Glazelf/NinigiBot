@@ -74,7 +74,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .addMediaGalleryComponents(foxImageGallery)
             break;
     };
-    return sendMessage({ interaction: interaction, components: [randomContainer] as any, flags: messageFlags });
+    return sendMessage({ interaction: interaction, components: [randomContainer.toJSON()], flags: messageFlags });
 };
 
 // String options

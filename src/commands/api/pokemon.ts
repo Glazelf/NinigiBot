@@ -382,7 +382,7 @@ export default async (interaction: any, messageFlags: any) => {
             // Check URL validity. Make a prettier embed for this one day
             let searchURLExists = urlExists(searchURL);
             let genericUsageResponseURLExists = urlExists(genericUsageURL);
-            if (!searchURLExists || !genericUsageResponseURLExists) return sendMessage({ interaction: interaction, content: failText, components: [usageButtons] });
+            if (!searchURLExists || !genericUsageResponseURLExists) return sendMessage({ interaction: interaction, content: failText, components: [usageButtons.toJSON()] });
             response = await axios.get(searchURL);
             genericUsageResponse = await axios.get(genericUsageURL);
             // Filter, split and trim pokemon data
@@ -399,7 +399,7 @@ export default async (interaction: any, messageFlags: any) => {
             if (pokemon) {
                 const pokemonNameSearch = pokemon.name + " "; // Space is to exclude matching more popular subforms
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemonNameSearch));
-                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${inlineCode(pokemon.name)} in ${formatInput} during the specified month.`, components: [usageButtons] });
+                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${inlineCode(pokemon.name)} in ${formatInput} during the specified month.`, components: [usageButtons.toJSON()] });
                 // Data from generic usage page
                 genericDataSplitPokemon = genericUsageResponse.data.split(pokemonNameSearch);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");

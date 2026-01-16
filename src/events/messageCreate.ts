@@ -69,7 +69,7 @@ export default async (client: ExtendedClient, message) => {
             if (message.content) dmEmbed.setDescription(message.content);
             if (attachmentsString.length > 0) dmEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }]);
             dmEmbeds.unshift(dmEmbed);
-            let dmLogObject = { content: message.author.id, embeds: dmEmbeds as any, components: [profileButtons] as any };
+            let dmLogObject = { content: message.author.id, embeds: dmEmbeds as any, components: [profileButtons.toJSON()] };
             if (DMChannel?.isTextBased()) {
                 return (DMChannel as TextChannel).send(dmLogObject);
             }

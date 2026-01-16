@@ -103,7 +103,7 @@ export default async (interaction: any, messageFlags: any) => {
             };
             p5Embed.setTitle(nameInput);
     };
-    return sendMessage({ interaction: interaction, embeds: [p5Embed], components: [buttonArray], flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: [p5Embed], components: buttonArray.map((row: any) => row.toJSON()), flags: messageFlags });
 };
 
 function getWeaknessString(string) {
