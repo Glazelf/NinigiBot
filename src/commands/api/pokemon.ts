@@ -54,7 +54,7 @@ export default async (interaction: any, messageFlags: any) => {
     let nameInput = interaction.options.getString("name");
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
-    let pokemonButtons = new ActionRowBuilder();
+    let pokemonButtons: any = new ActionRowBuilder();
     let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
     let generationInput = interaction.options.getInteger("generation");
@@ -566,7 +566,14 @@ export default async (interaction: any, messageFlags: any) => {
             .setLabel("More info")
             .setStyle(ButtonStyle.Link)
             .setURL(linkBulbapedia);
-        pokemonButtons.addComponents(bulbapediaButton);
+        // If pokemonButtons is an ActionRowBuilder, add the button to it
+        // If it's already an array from a message object, create a new row with the button
+        if (pokemonButtons instanceof ActionRowBuilder) {
+            pokemonButtons.addComponents(bulbapediaButton);
+        } else if (Array.isArray(pokemonButtons)) {
+            const bulbapediaRow = new ActionRowBuilder().addComponents(bulbapediaButton);
+            pokemonButtons.push(bulbapediaRow.toJSON());
+        }
     };
     // Color check for non-Pokémon commands
     if (pokemonEmbed) {
@@ -574,7 +581,16 @@ export default async (interaction: any, messageFlags: any) => {
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()] as [number, number, number];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: pokemonButtons ? [pokemonButtons.toJSON()] : [], files: pokemonFiles || [], flags: messageFlags });
+    // Serialize components properly
+    let components = [];
+    if (pokemonButtons) {
+        if (pokemonButtons instanceof ActionRowBuilder) {
+            components = [pokemonButtons.toJSON()];
+        } else if (Array.isArray(pokemonButtons)) {
+            components = pokemonButtons;
+        }
+    }
+    return sendMessage({ interaction: interaction, embeds: [pokemonEmbed], components: components, files: pokemonFiles || [], flags: messageFlags });
 };
 
 function getLearnData(learnData) {
