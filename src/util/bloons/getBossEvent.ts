@@ -113,7 +113,7 @@ export default async ({ elite = false, emojis }) => {
         bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the next one instead:" });
     };
 
-    const bossEventActionRow = new ActionRowBuilder();
+    const bossEventActionRow = new ActionRowBuilder<ButtonBuilder>();
     const bossEventEliteButton = new ButtonBuilder()
         .setCustomId(`btd6BossEventElite|${elite}`)
         .setStyle(ButtonStyle.Danger)

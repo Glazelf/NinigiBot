@@ -25,7 +25,7 @@ export default async ({ gameName, page }) => {
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor as [number, number, number])
         .setTitle(`${gameName} Quests`);
-    let questsButtons = new ActionRowBuilder();
+    let questsButtons = new ActionRowBuilder<ButtonBuilder>();
     let pageLength = 25;
     let startIndex = pageLength * page - pageLength + 1; // 1, 26, 53, etc.
     let endIndex = startIndex + pageLength - 1; // 25, 50, 75, etc.

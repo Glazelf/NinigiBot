@@ -117,9 +117,9 @@ export default async (interaction: any, messageFlags: any) => {
     const donationButton = new ButtonBuilder()
         .setStyle(ButtonStyle.Premium)
         .setSKUId("1232804422585815071");
-    let botButtons1 = new ActionRowBuilder()
+    let botButtons1 = new ActionRowBuilder<ButtonBuilder>()
         .addComponents([appDirectoryButton, inviteButton, supportServerButton, githubButton]);
-    let botButtons2 = new ActionRowBuilder()
+    let botButtons2 = new ActionRowBuilder<ButtonBuilder>()
         .addComponents([subscriptionButton, donationButton]);
     let componentRows = [botButtons1];
     if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);

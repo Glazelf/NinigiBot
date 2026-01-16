@@ -118,7 +118,7 @@ export default async (monsterData: any, emojis: any) => {
     if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, emojis, "Ailment");
 
     let buttonArray: any[] = [];
-    let subSpeciesButtons = new ActionRowBuilder();
+    let subSpeciesButtons = new ActionRowBuilder<ButtonBuilder>();
     // Get subspecies
     if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
         if (monsterData.subSpecies.length < 6) {

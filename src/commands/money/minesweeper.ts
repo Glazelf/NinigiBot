@@ -61,7 +61,7 @@ export default async (interaction: any, messageFlags: any) => {
     let placeholderEmoji = "⬛";
     let buttonRowArray = [];
     for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-        let buttonRow = new ActionRowBuilder();
+        let buttonRow = new ActionRowBuilder<ButtonBuilder>();
         for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
             const mineButton = new ButtonBuilder()
                 .setCustomId(`minesweeper${rowIndex}-${columnIndex}-${placeholderEmoji}-${mines}-${bet}-${betGain}`)

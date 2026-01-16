@@ -403,7 +403,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setCustomId("battleNo")
                 .setStyle(ButtonStyle.Danger)
                 .setLabel("Refuse");
-            const answer_buttons = new ActionRowBuilder()
+            const answer_buttons = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents([battleAcceptButton, battleRefuseButton]);
             const sent_message = await sendMessage({ interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: [answer_buttons.toJSON()], files: [messageFile] as any });
 

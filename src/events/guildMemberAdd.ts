@@ -29,7 +29,7 @@ export default async (client: ExtendedClient, member) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${member.id}`);
-            let joinButtons = new ActionRowBuilder()
+            let joinButtons = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(profileButton);
             const joinEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor as [number, number, number])

@@ -327,7 +327,7 @@ export default async (client: ExtendedClient, interaction) => {
                             for (let rowIndex = 0; rowIndex < mineRows; rowIndex++) {
                                 let actionRow = minesweeperComponentsCopy[rowIndex];
                                 const rowCopy = ActionRowBuilder.from(actionRow);
-                                let rowNew = new ActionRowBuilder();
+                                let rowNew = new ActionRowBuilder<ButtonBuilder>();
 
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
@@ -930,7 +930,7 @@ export default async (client: ExtendedClient, interaction) => {
                             .setLabel("Profile")
                             .setStyle(ButtonStyle.Link)
                             .setURL(`discord://-/users/${interaction.user.id}`);
-                        let profileButtons = new ActionRowBuilder()
+                        let profileButtons = new ActionRowBuilder<ButtonBuilder>()
                             .addComponents(profileButton);
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor as [number, number, number])

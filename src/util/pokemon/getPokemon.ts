@@ -274,8 +274,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     previousPokemon = allPokemon.filter((pokemon: Species) => pokemon.num == previousPokemonID)[0];
     nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
     // Add species buttons
-    let pkmButtons = new ActionRowBuilder();
-    let pkmButtons2 = new ActionRowBuilder();
+    let pkmButtons = new ActionRowBuilder<ButtonBuilder>();
+    let pkmButtons2 = new ActionRowBuilder<ButtonBuilder>();
     const previousPokemonButton = new ButtonBuilder()
         .setCustomId(`pkmleft|${buttonAppend}`)
         .setLabel(previousPokemon.name)
@@ -336,11 +336,11 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     };
     let formButtonsComponentsCounter = 0;
     let formButtonsObject = {
-        0: new ActionRowBuilder(),
-        1: new ActionRowBuilder(),
-        2: new ActionRowBuilder(),
-        3: new ActionRowBuilder(),
-        4: new ActionRowBuilder()
+        0: new ActionRowBuilder<ButtonBuilder>(),
+        1: new ActionRowBuilder<ButtonBuilder>(),
+        2: new ActionRowBuilder<ButtonBuilder>(),
+        3: new ActionRowBuilder<ButtonBuilder>(),
+        4: new ActionRowBuilder<ButtonBuilder>()
     };
     let pokemonForms = [];
     let baseSpecies = pokemon; // Default is pokemon == baseSpecies

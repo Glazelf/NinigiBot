@@ -80,7 +80,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setPlaceholder("Click here to drop down!")
                 .addOptions(rolesArray)
                 .setMaxValues(rolesArray.length);
-            let rolesSelects = new ActionRowBuilder()
+            let rolesSelects = new ActionRowBuilder<StringSelectMenuBuilder>()
                 .addComponents(roleSelectMenu);
 
             let returnString = `Choose roles to toggle:`;

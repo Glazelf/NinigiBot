@@ -47,7 +47,7 @@ btd6UserModal.addLabelComponents(oakLabel, oakInfoLabel);
 
 export default async (interaction: any, messageFlags: any) => {
     let apiError = null;
-    let btd6ActionRow = new ActionRowBuilder();
+    let btd6ActionRow = new ActionRowBuilder<ButtonBuilder>();
     let btd6Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor as [number, number, number]);
     switch (interaction.options.getSubcommand()) {

@@ -15,7 +15,7 @@ export default async (offset: any) => {
     trophy_list.slice.forEach(trophy => {
         embed.addFields([{ name: "\u200B", value: `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`, inline: true }]);
     });
-    const navigation_buttons = new ActionRowBuilder();
+    const navigation_buttons = new ActionRowBuilder<ButtonBuilder>();
     const leftButton = new ButtonBuilder()
         .setCustomId('bgd' + (offset - trophies_per_page))
         .setStyle(ButtonStyle.Primary)

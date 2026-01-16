@@ -45,7 +45,7 @@ export default async (client: ExtendedClient, guildBan) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${target.id}`);
-            let banButtons = new ActionRowBuilder()
+            let banButtons = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(profileButton);
             const banEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor as [number, number, number])

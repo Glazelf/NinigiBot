@@ -36,7 +36,7 @@ export default async ({ page, region }): Promise<SplatfestMessageObject> => {
         .setTitle("Splatfests")
         .setColor(globalVars.embedColor as [number, number, number])
         .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
-    let splatfestButtons = new ActionRowBuilder();
+    let splatfestButtons = new ActionRowBuilder<ButtonBuilder>();
     let splat3EmbedFields = [];
     let pageStartIndex = (page - 1) * 10; // 1 --> 0, 2 --> 10, 3 --> 20, etc.
     let pageEndIndex = page * 10 - 1; // 1 --> 9, 2 --> 19, 3 --> 29, etc.

@@ -22,7 +22,7 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 // Winner = person who ended the game, either through reveal or guessing correctly
 export default async ({ interaction, winner, pokemonList, pokemon, reveal }) => {
     let messageObject: any = {};
-    let pokemonButtons = new ActionRowBuilder();
+    let pokemonButtons = new ActionRowBuilder<ButtonBuilder>();
     let doesRenderExist = false;
     let quizTitle = "Who's That Pokémon?";
     let quizDescription = null;

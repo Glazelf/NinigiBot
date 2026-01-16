@@ -109,7 +109,7 @@ export default async (interaction: any, messageFlags: any) => {
         //     threadCount += archivedThreads.threads.entries().length;
         // };
     });
-    let serverButtons = new ActionRowBuilder();
+    let serverButtons = new ActionRowBuilder<ButtonBuilder>();
     // Doesn't seem like there's a feature yet for having guild web pages enabled
     let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(/ /g, "-"))}-${guild.id}`;
     if (guild.features.includes(GuildFeature.Discoverable)) {

@@ -32,7 +32,7 @@ export default async (interaction: any, page: any, user: any) => {
         .setColor(embedColor as [number, number, number])
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
-    let profileButtons = new ActionRowBuilder();
+    let profileButtons = new ActionRowBuilder<ButtonBuilder>();
     const profileButton = new ButtonBuilder()
         .setLabel("Profile")
         .setStyle(ButtonStyle.Link)

@@ -37,7 +37,7 @@ export default async (client: ExtendedClient, message) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${message.author.id}`);
-            let profileButtons = new ActionRowBuilder()
+            let profileButtons = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(profileButton);
 
             let attachmentsTitle = "Attachments:";

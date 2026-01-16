@@ -28,7 +28,7 @@ export default async (interaction: any, messageFlags: any) => {
         .setLabel("Google")
         .setStyle(ButtonStyle.Link)
         .setURL(googleLink);
-    let googleActionRow = new ActionRowBuilder()
+    let googleActionRow = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(googleButton);
 
     let returnString = `Here's the answer to your question, ${questionAskUser}:`;

@@ -377,7 +377,7 @@ export default async (interaction: any, messageFlags: any) => {
                 .setLabel("Showdown Usage (Detailed)")
                 .setStyle(ButtonStyle.Link)
                 .setURL(searchURL);
-            let usageButtons = new ActionRowBuilder()
+            let usageButtons = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents([usageButtonSimple, usageButtonDetailed]);
             // Check URL validity. Make a prettier embed for this one day
             let searchURLExists = urlExists(searchURL);
