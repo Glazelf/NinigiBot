@@ -54,7 +54,7 @@ export default async (interaction: any, messageFlags: any) => {
     let nameInput = interaction.options.getString("name");
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
-    let pokemonButtons: any = new ActionRowBuilder();
+    let pokemonButtons: any = new ActionRowBuilder<ButtonBuilder>();
     let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
     let generationInput = interaction.options.getInteger("generation");
