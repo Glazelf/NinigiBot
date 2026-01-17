@@ -173,6 +173,13 @@ export default async (client: ExtendedClient, interaction) => {
                         let editOriginalMessage = (isOriginalUser ||
                             interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
                             !interaction.message.interaction);
+                        // Defer the interaction to prevent timeout on slow operations
+                        // Skip deferring for modals (they show immediately) and non-original user messages (they reply with ephemeral)
+                        if (!interaction.customId.startsWith(pkmQuizGuessButtonIdStart) && 
+                            !interaction.customId.startsWith("megaQuizGuess") && 
+                            editOriginalMessage) {
+                            await interaction.deferUpdate();
+                        }
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             if (!isOriginalUser) return sendMessage(notOriginalUserMessageObject);
