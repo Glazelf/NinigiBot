@@ -175,10 +175,12 @@ export default async (client: ExtendedClient, interaction) => {
                             !interaction.message.interaction);
                         // Defer the interaction to prevent timeout on slow operations
                         // Skip deferring for modals (they show immediately) and non-original user messages (they reply with ephemeral)
+                        let wasDeferred = false;
                         if (!interaction.customId.startsWith(pkmQuizGuessButtonIdStart) && 
                             !interaction.customId.startsWith("megaQuizGuess") && 
                             editOriginalMessage) {
                             await interaction.deferUpdate();
+                            wasDeferred = true;
                         }
                         // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
@@ -440,7 +442,12 @@ export default async (client: ExtendedClient, interaction) => {
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
                             try {
-                                await interaction.update({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
+                                // Use editReply if we deferred, otherwise use update
+                                if (wasDeferred) {
+                                    await interaction.editReply({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
+                                } else {
+                                    await interaction.update({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
+                                }
                             } catch (e: any) {
                                 // console.log(e);
                                 return;
