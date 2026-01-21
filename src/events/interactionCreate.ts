@@ -444,9 +444,9 @@ export default async (client: ExtendedClient, interaction) => {
                             try {
                                 // Use editReply if we deferred, otherwise use update
                                 if (wasDeferred) {
-                                    await interaction.editReply({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
+                                    await interaction.editReply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
                                 } else {
-                                    await interaction.update({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn });
+                                    await interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
                                 }
                             } catch (e: any) {
                                 // console.log(e);
@@ -454,7 +454,7 @@ export default async (client: ExtendedClient, interaction) => {
                             };
                         } else {
                             try {
-                                await interaction.reply({ content: contentReturn, embeds: [embedsReturn], components: componentsReturn, files: filesReturn, flags: messageFlags.add(MessageFlags.Ephemeral) });
+                                await interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, flags: messageFlags.add(MessageFlags.Ephemeral) });
                             } catch (e: any) {
                                 // console.log(e);
                                 return;
