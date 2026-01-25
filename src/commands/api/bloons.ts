@@ -72,7 +72,9 @@ export default async (interaction: any, messageFlags: any) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed = getAPIErrorMessageObject(apiError).embeds[0];
     };
-    return sendMessage({ interaction: interaction, embeds: [btd6Embed], components: [btd6ActionRow.toJSON()], flags: messageFlags });
+    // btd6ActionRow is either an ActionRowBuilder or already a serialized array from getBossEvent
+    const components = Array.isArray(btd6ActionRow) ? btd6ActionRow : [btd6ActionRow.toJSON()];
+    return sendMessage({ interaction: interaction, embeds: [btd6Embed], components: components, flags: messageFlags });
 };
 
 // Boolean options
