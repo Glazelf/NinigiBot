@@ -90,7 +90,7 @@ export default async (client: ExtendedClient, oldRole, newRole) => {
             };
             updateEmbed.setDescription(updateDescription);
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
-            return log.send({ embeds: [updateEmbed] });
+            return log.send({ embeds: [updateEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

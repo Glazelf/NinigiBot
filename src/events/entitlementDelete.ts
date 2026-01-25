@@ -37,7 +37,7 @@ export default async (client: ExtendedClient, entitlement) => {
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name, true)} ended.`)
             .setFooter({ text: `ID: ${entitlement.id}` })
             .setTimestamp();
-        return (log as TextChannel).send({ embeds: [entitlementEmbed] });
+        return (log as TextChannel).send({ embeds: [entitlementEmbed.toJSON()] });
 
     } catch (e: any) {
         logger({ exception: e, client: client });

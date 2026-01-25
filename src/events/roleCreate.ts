@@ -42,7 +42,7 @@ export default async (client: ExtendedClient, role) => {
                 .setTimestamp();
             if (role.permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: role.permissions.toArray().join(', '), inline: false }]);
             if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
-            return log.send({ embeds: [createEmbed] });
+            return log.send({ embeds: [createEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

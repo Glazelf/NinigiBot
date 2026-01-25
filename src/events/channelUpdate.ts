@@ -115,7 +115,7 @@ export default async (client: ExtendedClient, oldChannel, newChannel) => {
             // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
             if (!updateEmbed.data.fields) return;
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
-            return log.send({ embeds: [updateEmbed] });
+            return log.send({ embeds: [updateEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

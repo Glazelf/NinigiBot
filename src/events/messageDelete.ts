@@ -87,7 +87,7 @@ export default async (client: ExtendedClient, message) => {
             deleteEmbed
                 .setFooter({ text: message.author.username, iconURL: avatar })
                 .setTimestamp(message.createdTimestamp);
-            return log.send({ embeds: [deleteEmbed] });
+            return log.send({ embeds: [deleteEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

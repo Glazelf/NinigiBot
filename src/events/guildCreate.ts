@@ -31,7 +31,7 @@ export default async (client: ExtendedClient, guild) => {
             .addFields([{ name: `Name:`, value: formatName(guild.name, false), inline: true }]);
         if (guildOwner.user) guildEmbed.addFields([{ name: `Owner:`, value: `${formatName(guildOwner.user.username, false)} (${guildOwner.id})`, inline: false }]);
         guildEmbed.addFields([{ name: `Members:`, value: guild.memberCount.toString(), inline: false }])
-        return (log as TextChannel).send({ embeds: [guildEmbed] });
+        return (log as TextChannel).send({ embeds: [guildEmbed.toJSON()] });
 
     } catch (e: any) {
         logger({ exception: e, client: client });

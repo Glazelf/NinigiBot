@@ -930,7 +930,7 @@ export default async (client: ExtendedClient, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
                         if (DMChannel?.isTextBased()) {
-                            await (DMChannel as TextChannel).send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                            await (DMChannel as TextChannel).send({ content: interaction.user.id, embeds: [bugReportEmbed.toJSON()] });
                         }
                         return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.`, flags: messageFlags.add(MessageFlags.Ephemeral) });
                     case "modMailModal":
@@ -978,8 +978,8 @@ export default async (client: ExtendedClient, interaction) => {
                         };
                         modMailEmbedArray.unshift(modMailEmbed);
                         let modmailReturnString = `Your message has been sent to the moderators!\nThey should get back to you soon.\n`;
-                        await interaction.guild.safetyAlertsChannel.send({ embeds: [modMailEmbedArray], components: [profileButtons.toJSON()] });
-                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name, true)}.`, embeds: [modMailEmbed] })
+                        await interaction.guild.safetyAlertsChannel.send({ embeds: modMailEmbedArray.map(embed => embed.toJSON()), components: [profileButtons.toJSON()] });
+                        await interaction.user.send({ content: `This is a receipt of your modmail in ${formatName(interaction.guild.name, true)}.`, embeds: [modMailEmbed.toJSON()] })
                             .then(message => modmailReturnString += "You should have received a receipt in your DMs.")
                             .catch(e => modmailReturnString += "Faled to send you a receipt through DMs.");
                         return sendMessage({ interaction: interaction, content: modmailReturnString, flags: messageFlags.add(MessageFlags.Ephemeral) });

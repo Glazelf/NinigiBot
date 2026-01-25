@@ -77,7 +77,9 @@ export default async (client: ExtendedClient, oldMessage, newMessage) => {
             if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
             updateEmbeds.unshift(updateEmbed);
-            return log.send({ embeds: [updateEmbeds] });
+            // Serialize all EmbedBuilder objects before sending
+            const serializedEmbeds = updateEmbeds.map(embed => embed.toJSON());
+            return log.send({ embeds: serializedEmbeds });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

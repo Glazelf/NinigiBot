@@ -46,7 +46,7 @@ export default async (client: ExtendedClient, messages) => {
                 .setTitle(`Messages Purged ❌`)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
-            return log.send({ embeds: [purgeEmbed] });
+            return log.send({ embeds: [purgeEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

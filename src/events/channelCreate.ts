@@ -44,7 +44,7 @@ export default async (client: ExtendedClient, channel) => {
                 .setTimestamp();
             if (channel.parent) createEmbed.addFields([{ name: 'Parent category:', value: channel.parent.name, inline: true }]);
             if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }]);
-            return log.send({ embeds: [createEmbed] });
+            return log.send({ embeds: [createEmbed.toJSON()] });
 
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {

@@ -53,7 +53,7 @@ export default async (client: ExtendedClient, role) => {
                 .setTimestamp();
             if (roleColorText.length > 0) deleteEmbed.addFields([{ name: 'Color:', value: roleColorText, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
-            return log.send({ embeds: [deleteEmbed] });
+            return log.send({ embeds: [deleteEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

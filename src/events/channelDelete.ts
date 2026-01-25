@@ -42,7 +42,7 @@ export default async (client: ExtendedClient, channel) => {
                 .setFooter({ text: `ID: ${channel.id}` })
                 .setTimestamp();
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
-            return log.send({ embeds: [deleteEmbed] });
+            return log.send({ embeds: [deleteEmbed.toJSON()] });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

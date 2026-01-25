@@ -153,7 +153,7 @@ export default async (client: ExtendedClient, oldMember, newMember) => {
             if (changeText) updateEmbed.setDescription(changeText);
             updateEmbed.addFields([{ name: `User:`, value: `${oldMember} (${oldMember.id})`, inline: true }]);
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
-            return log.send({ embeds: [updateEmbed] });
+            return log.send({ embeds: [updateEmbed.toJSON()] });
 
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
