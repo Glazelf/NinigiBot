@@ -57,5 +57,7 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
     if (targetMessage.attachments.size > 0) starEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }])
     if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: false }]);
     starboardEmbeds.unshift(starEmbed);
-    return { embeds: [starboardEmbeds] };
+    // Serialize all EmbedBuilder objects to plain objects before returning
+    const serializedEmbeds = starboardEmbeds.map(embed => embed.toJSON());
+    return { embeds: serializedEmbeds };
 };
