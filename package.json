@@ -2,7 +2,7 @@
   "name": "ninigibot",
   "version": "1.0.0",
   "description": "NinigiBot for Discord",
-  "main": "forever.js",
+  "main": "dist/forever.js",
   "type": "module",
   "dependencies": {
     "@pkmn/data": "^0.10.5",
@@ -23,8 +23,11 @@
     "xmlhttprequest": "^1.8.0"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/forever.js",
+    "dev": "ts-node src/forever.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write */**/*.js"
+    "format": "prettier --write */**/*.{js,ts}"
   },
   "repository": {
     "type": "git",
@@ -36,5 +39,11 @@
   "bugs": {
     "url": "https://github.com/Glazelf/NinigiBot/issues"
   },
-  "homepage": "https://github.com/Glazelf/NinigiBot#readme"
+  "homepage": "https://github.com/Glazelf/NinigiBot#readme",
+  "devDependencies": {
+    "@types/minimist": "^1.2.5",
+    "@types/node": "^25.0.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
 }
