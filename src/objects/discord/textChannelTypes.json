@@ -1,0 +1,9 @@
+{
+    "GuildText": 0,
+    "GuildVoice": 2,
+    "GuildAnnouncement": 5,
+    "AnnouncementThread": 10,
+    "PublicThread": 11,
+    "PrivateThread": 12,
+    "GuildStageVoice": 13
+}

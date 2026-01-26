@@ -1,0 +1,7 @@
+{
+    "0": "None",
+    "1": "Low (Verified email)",
+    "2": "Medium (Account age 5+ minutes)",
+    "3": "High (Server member 10+ minutes)",
+    "4": "Very High (Verified phone)"
+}
