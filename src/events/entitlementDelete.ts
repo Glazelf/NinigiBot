@@ -32,7 +32,7 @@ export default async (client, entitlement) => {
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor as [number, number, number])
-            .setTitle("Entitlemend Ended ❌")
+            .setTitle("Entitlement Ended ❌")
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name, true)} ended.`)
             .setFooter({ text: `ID: ${entitlement.id}` })
             .setTimestamp();

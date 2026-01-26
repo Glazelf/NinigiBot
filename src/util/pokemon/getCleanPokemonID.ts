@@ -23,7 +23,7 @@ export default (pokemon) => {
             let megaIndex = pokemonNameSplit.indexOf(megaFormString);
             for (const formIndicator of pokemonNameSplit) {
                 if ([0, megaIndex].includes(pokemonNameSplit.indexOf(formIndicator))) continue;
-                console.log(formIndicator)
+                // console.log(formIndicator);
                 pokemonID += formIndicator.charAt(0);
             }
         } else {

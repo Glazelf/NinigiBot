@@ -18,7 +18,7 @@ export default async (client, entitlement) => {
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor as [number, number, number])
-            .setTitle("Entitlemend Started ⭐")
+            .setTitle("Entitlement Started ⭐")
             .setDescription(`${user.username} (${user.id})'s ${formatName(matchingSKU.name, true)} started.`)
             .setFooter({ text: `ID: ${entitlement.id}` })
             .setTimestamp();
