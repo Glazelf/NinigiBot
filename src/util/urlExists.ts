@@ -1,6 +1,6 @@
 import XMLHttpRequest from "xmlhttprequest";
 
-export default (url) => {
+export default (url: string): boolean => {
     const XMLHttpRequestConstructor = XMLHttpRequest.XMLHttpRequest;
     let http = new XMLHttpRequestConstructor();
     http.open('HEAD', url, false);

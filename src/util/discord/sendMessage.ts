@@ -18,7 +18,7 @@ interface SendMessageOptions {
     flags?: MessageFlagsBitField;
 }
 
-export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }: SendMessageOptions) => {
+export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }: SendMessageOptions): Promise<Message | void> => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
     let messageObject: any = {};
