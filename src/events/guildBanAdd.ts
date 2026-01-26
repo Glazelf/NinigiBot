@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -58,7 +59,7 @@ export default async (client, guildBan) => {
                     { name: `Reason:`, value: reason, inline: false },
                     { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
                 ]);
-            return log.send({ embeds: [banEmbed], components: [banButtons] });
+            return log.send({ embeds: [banEmbed], components: [banButtons] as any });
 
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {

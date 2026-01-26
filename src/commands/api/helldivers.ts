@@ -31,7 +31,7 @@ export default async (interaction, messageFlags) => {
             let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
-            let planetObject = Object.entries(planetsData).find(([key, value]) => normalizeString(value.name) == normalizeString(inputPlanet));
+            let planetObject: any = Object.entries(planetsData).find(([key, value]: [string, any]) => normalizeString(value.name) == normalizeString(inputPlanet));
             if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
             let planetIndex = planetObject[0];
             planetObject = planetObject[1];
@@ -65,7 +65,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "campaign":
             campaignStatus = campaignStatus.data;
-            await campaignStatus.forEach(async planet => {
+            await (campaignStatus as any).forEach(async (planet: any) => {
                 let planetStatusTitle = planet.name;
                 if (planet.majorOrder) planetStatusTitle += ` (Major Order)`;
                 let planetStatusString = `${liberationString} vs. ${planet.faction}`;
@@ -82,7 +82,7 @@ export default async (interaction, messageFlags) => {
             helldiversEmbed.setTitle("Campaign Status");
             break;
     };
-    return sendMessage({ interaction: interaction, embeds: helldiversEmbed  as any });
+    return sendMessage({ interaction: interaction, embeds: helldiversEmbed as any  });
 };
 
 // String options

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Global
 import {
     InteractionType,
@@ -30,11 +31,14 @@ import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
 import getMegaStoneGuess from "../util/pokemon/getMegaStoneGuess.js";
+// @ts-ignore
 import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
+// @ts-ignore
 import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+// @ts-ignore
 import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";

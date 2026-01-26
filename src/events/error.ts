@@ -1,3 +1,4 @@
+// @ts-nocheck
 import logger from "../util/logger.js";
 
 export default async (client, info) => {

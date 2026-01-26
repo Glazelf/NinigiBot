@@ -1,13 +1,27 @@
 import {
     MessageFlagsBitField,
     MessageFlags,
-    ComponentType
+    ComponentType,
+    EmbedBuilder,
+    Interaction,
+    Message,
+    AttachmentBuilder,
+    ActionRowBuilder
 } from "discord.js";
 
-export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }) => {
+interface SendMessageOptions {
+    interaction: any;
+    content?: string;
+    embeds?: EmbedBuilder | EmbedBuilder[] | any;
+    files?: AttachmentBuilder | AttachmentBuilder[] | any;
+    components?: ActionRowBuilder<any> | ActionRowBuilder<any>[] | any;
+    flags?: MessageFlagsBitField;
+}
+
+export default async ({ interaction, content = "", embeds = [], files = [], components = [], flags = new MessageFlagsBitField }: SendMessageOptions) => {
     if (!interaction) return; // Note: interaction can be a message instead
     // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
-    let messageObject = {};
+    let messageObject: any = {};
     if (content) messageObject.content = content;
     if (embeds) {
         if (Array.isArray(embeds)) {
@@ -29,7 +43,7 @@ export default async ({ interaction, content = "", embeds = [], files = [], comp
         if (Array.isArray(components)) {
             messageObject.components = components;
         } else {
-            if (components.components.length != 0) {
+            if ((components as any).components.length != 0) {
                 messageObject.components = [components];
             };
         };

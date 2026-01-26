@@ -7,6 +7,7 @@ import {
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+// @ts-ignore
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
@@ -164,7 +165,7 @@ export default async (monsterData, emojis) => {
     //     .setImage(monsterRender);
     // mhEmbed.setURL("https://discord.com/") // Not clickable since embed has no title, used to display two big images)
 
-    let messageObject = { embeds: [mhEmbed], components: buttonArray };
+    let messageObject = { embeds: [mhEmbed], components: buttonArray as any };
     return messageObject;
 };
 

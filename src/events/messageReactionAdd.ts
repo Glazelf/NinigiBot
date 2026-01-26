@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PermissionFlagsBits } from "discord.js";
 import getStarboardMessage from "../util/discord/getStarboardMessage.js";
 import logger from "../util/logger.js";

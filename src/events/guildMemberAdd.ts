@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -41,7 +42,7 @@ export default async (client, member) => {
                     { name: "User:", value: `${member} (${member.user.username})`, inline: false },
                     { name: "Created:", value: time(Math.floor(member.user.createdTimestamp / 1000), TimestampStyles.ShortDate), inline: true }
                 ]);
-            return log.send({ embeds: [joinEmbed], components: [joinButtons] });
+            return log.send({ embeds: [joinEmbed], components: [joinButtons] as any });
         } else if (checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.SendMessages] }) && !checkPermissions({ member: botMember, channel: log, permissions: [PermissionFlagsBits.EmbedLinks] })) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

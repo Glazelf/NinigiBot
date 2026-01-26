@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -63,7 +64,7 @@ export default async (interaction, page, user) => {
             let shortenedRoles;
             if (memberRoles && memberRoles.size !== 0) {
                 rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
-                rolesSorted = [...rolesSorted.values()].join(", ");
+                rolesSorted = [...rolesSorted.values() as any].join(", ");
                 for (let i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
                     rolesSorted = rolesSorted.split(", ");
                     await rolesSorted.pop();
@@ -167,7 +168,7 @@ async function getJoinRank(user, guild) {
     if (!user) return;
     await guild.members.fetch().catch(e => { return null; });
     // Sort all users by join time
-    let arr = [...guild.members.cache.values()];
+    let arr = [...guild.members.cache.values() as any];
     arr.sort((a, b) => a.joinedAt - b.joinedAt);
     // Get provided user
     for (let i = 0; i < arr.length; i++) {

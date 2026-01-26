@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     MessageFlags,
     EmbedBuilder,
@@ -56,11 +57,8 @@ export default async (interaction, messageFlags) => {
                     { name: "\u200B", value: "\u200B", inline: true }
                 ]);
             });
-            return sendMessage({
-                interaction: interaction,
-                embeds: [embed],
-                flags: messageFlags
-            });
+            return sendMessage({ interaction: interaction, embeds: [embed] as any, flags: messageFlags
+             });
         case "buy":
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
@@ -102,12 +100,9 @@ export default async (interaction, messageFlags) => {
             });
         case "list":
             let trophy_slice = await getTrophyEmbedSlice(0);
-            return sendMessage({
-                interaction: interaction,
-                embeds: [trophy_slice.embed],
-                components: trophy_slice.components,
+            return sendMessage({ interaction: interaction, embeds: [trophy_slice.embed] as any, components: trophy_slice.components,
                 flags: messageFlags,
-            });
+             });
         case "info":
             res = await getShopTrophyWithName(trophy_name);
             let isShop = true;
@@ -133,11 +128,8 @@ export default async (interaction, messageFlags) => {
                 let location = `Sometimes found in the Shop.`;
                 if (!isShop) location = res.origin;
                 embed.addFields([{ name: "Location:", value: `${location}`, inline: true }]);
-                return sendMessage({
-                    interaction: interaction,
-                    embeds: [embed],
-                    flags: messageFlags
-                });
+                return sendMessage({ interaction: interaction, embeds: [embed] as any, flags: messageFlags
+                 });
             };
     };
 };

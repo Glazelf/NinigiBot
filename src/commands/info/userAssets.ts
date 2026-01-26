@@ -34,7 +34,7 @@ export default async (interaction, messageFlags) => {
     userAssetEmbeds[0]
         .setColor(globalVars.embedColor as [number, number, number])
         .setAuthor({ name: `${user.username}'s assets:` });
-    return sendMessage({ interaction: interaction, embeds: userAssetEmbeds, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: userAssetEmbeds as any, flags: messageFlags  });
 };
 
 export const commandObject = new ContextMenuCommandBuilder()

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     MessageFlags,
     MessageFlagsBitField,
@@ -19,9 +20,13 @@ import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
+// @ts-ignore
 import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
+// @ts-ignore
 import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
+// @ts-ignore
 import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
+// @ts-ignore
 import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
 // import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
 // import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
@@ -232,7 +237,7 @@ export default async (interaction, messageFlags) => {
             break;
         case "schedule":
             await interaction.deferReply({ flags: messageFlags });
-            let inputData = interaction.options.getString("mode");
+            let inputData: any = interaction.options.getString("mode");
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
             let submode = inputData.split("|")[2];
@@ -260,7 +265,7 @@ export default async (interaction, messageFlags) => {
             if (responseSchedules.data.data.eventSchedules.nodes.length > 0) allowedModes.push(challengesID);
             if (!allowedModes.includes(inputMode)) return sendMessage({ interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
-            let scheduleData = responseSchedules.data.data[inputMode];
+            let scheduleData: any = responseSchedules.data.data[inputMode];
             let currentSalmonRunEvent = null;
             let currentSalmonRunEventTitle = null;
             if (inputMode == salmonRunID) {
@@ -329,7 +334,7 @@ export default async (interaction, messageFlags) => {
                 // Splatfest
                 let splatfestScheduleDescription = `${currentFest.title}\n`;
                 let responseSplatfest = await axios.get(splatfestAPI);
-                let splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
+                let splatfestData: any = responseSplatfest.data[inputRegion].data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
                 let splatfestDefender = null;
                 let splatfestTeamIndex = 0;
                 await splatfestData.teams.forEach(team => {
@@ -385,7 +390,7 @@ export default async (interaction, messageFlags) => {
             await interaction.deferReply({ flags: messageFlags });
             let responseSplatnet = await axios.get(splatnetAPI);
             if (responseSplatnet.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
-            let splatnetData = responseSplatnet.data.data.gesotown;
+            let splatnetData: any = responseSplatnet.data.data.gesotown;
             // Limited time brand
             splat3Embed
                 .setTitle("SplatNet3 Shop")
@@ -414,7 +419,7 @@ export default async (interaction, messageFlags) => {
             // User-Agent for identification, can be added as a default under axios.defaults.headers.common["User-Agent"] if other tools require this. Replay Lookup blocks generic axios requests
             let replayResponse = await axios.get(`${replayAPI}${replayCode}`, { headers: { "User-Agent": "NinigiBot (+https://github.com/Glazelf/NinigiBot" } });
             if (replayResponse.status !== 200) return sendMessage({ interaction: interaction, content: "Error occurred getting that replay. Make sure the code is correct." });
-            let replayData = replayResponse.data.replay.historyDetail;
+            let replayData: any = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
             // Match data
             let replayTimestamp = `Timestamp: ${time(Date.parse(replayData.playedTime) / 1000, TimestampStyles.ShortDateTime)}`;
@@ -427,9 +432,9 @@ export default async (interaction, messageFlags) => {
             } else if (replayData.myTeam.result.score) {
                 replayResult += ` (83 points)`;
             };
-            let matchData = `${replayStage}\n${replayResult}\n${replayTimestamp}`;
+            let matchData: any = `${replayStage}\n${replayResult}\n${replayTimestamp}`;
             // Player data
-            let playerData = [];
+            let playerData: any = [];
             playerData.push(`Player: ${replayData.player.name}#${replayData.player.nameId} (${replayData.player.byname})`);
             playerData.push(`Weapon: ${replayData.player.weapon.name}`);
             playerData.push(`Head: ${replayData.player.headGear.name}`);

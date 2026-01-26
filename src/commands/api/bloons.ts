@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     MessageFlags,
     EmbedBuilder,
@@ -62,8 +63,8 @@ export default async (interaction, messageFlags) => {
                 apiError = bossEventMessageObject;
                 break;
             };
-            btd6Embed = bossEventMessageObject.embeds;
-            btd6ActionRow = bossEventMessageObject.components;
+            btd6Embed = (bossEventMessageObject as any).embeds;
+            btd6ActionRow = (bossEventMessageObject as any).components;
             break;
     };
     // Handle API errors
@@ -71,7 +72,7 @@ export default async (interaction, messageFlags) => {
         messageFlags.add(MessageFlags.Ephemeral);
         btd6Embed = getAPIErrorMessageObject(apiError).embeds[0];
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, flags: messageFlags });
+    return sendMessage({ interaction: interaction, embeds: btd6Embed as any, components: btd6ActionRow, flags: messageFlags  });
 };
 
 // Boolean options

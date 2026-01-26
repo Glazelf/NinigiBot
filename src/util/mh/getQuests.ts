@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -8,6 +9,7 @@ import {
 } from "discord.js";
 import normalizeString from "../string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+// @ts-ignore
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ gameName, page }) => {

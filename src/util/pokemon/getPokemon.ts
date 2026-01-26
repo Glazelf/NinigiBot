@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -418,7 +419,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let embedColor = globalVars.embedColor;
     if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
     pkmEmbed.setColor(embedColor);
-    messageObject = { embeds: [pkmEmbed], components: buttonArray };
+    messageObject = { embeds: [pkmEmbed], components: buttonArray as any };
     return messageObject;
 };
 

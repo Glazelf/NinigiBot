@@ -46,7 +46,7 @@ export default async (interaction, messageFlags) => {
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };
-            return sendMessage({ interaction: interaction, embeds: [embed], flags: messageFlags });
+            return sendMessage({ interaction: interaction, embeds: [embed] as any, flags: messageFlags  });
         case "swapsprite":
             const shinx = await getShinx(interaction.user.id);
             return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${interaction.user}!`, flags: messageFlags.add(MessageFlags.Ephemeral) });

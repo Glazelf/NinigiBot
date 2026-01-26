@@ -12,7 +12,9 @@ import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
 import normalizeString from "../../util/string/normalizeString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+// @ts-ignore
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+// @ts-ignore
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 const mhRiseString = "Monster Hunter Rise";
@@ -67,7 +69,7 @@ export default async (interaction, messageFlags) => {
         case "questlist":
             const gameInput = interaction.options.getString("game");
             let questsMessageObject = await getQuests({ gameName: gameInput, page: 1 });
-            return sendMessage({ interaction: interaction, content: questsMessageObject.content, embeds: questsMessageObject.embeds, components: questsMessageObject.components, flags: messageFlags });
+            return sendMessage({ interaction: interaction, content: (questsMessageObject as any).content, embeds: (questsMessageObject as any).embeds, components: (questsMessageObject as any).components, flags: messageFlags });
         // Monsters
         case "monster":
             let monsterName = normalizeString(nameInput);

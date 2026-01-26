@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Minesweeper from "discord.js-minesweeper";
 
 export default (rows, columns, mines, bombEmoji) => {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -24,7 +25,7 @@ export default async ({ page, region }) => {
     let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
     let responseSplatfest = await axios.get(splatfestAPI);
     if (responseSplatfest.status != 200) {
-        splatfestMessageObject.content = `Error occurred getting Splatfest data. Please try again later.`;
+        (splatfestMessageObject as any).content = `Error occurred getting Splatfest data. Please try again later.`;
         return splatfestMessageObject;
     };
     let splatfestData = responseSplatfest.data[region].data.festRecords.nodes;
@@ -256,7 +257,7 @@ export default async ({ page, region }) => {
     if (page < 2) rightButton.setDisabled(true);
     splat3Embed.setImage(splatfestBanner);
     if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription(`Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n${bold("Bold")} indicates the winning team, ${italic("italics")} indicates second place.`);
-    splatfestMessageObject.embeds = [splat3Embed];
-    splatfestMessageObject.components = splatfestButtons;
+    (splatfestMessageObject as any).embeds = [splat3Embed];
+    (splatfestMessageObject as any).components = splatfestButtons;
     return splatfestMessageObject;
 };

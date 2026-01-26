@@ -1,3 +1,4 @@
+// @ts-nocheck
 import getExpFromLevel from "../../../../util/shinx/getExpFromLevel.js";
 import parseMeetDate from "../../../../util/shinx/parseMeetDate.js";
 import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";

@@ -34,7 +34,7 @@ export default async (interaction, messageFlags) => {
         };
         if (userList.length > 0) entitlementEmbed.addFields([{ name: `${SKU.name}: (${userList.length})`, value: userList.join("\n") }]);
     };
-    return sendMessage({ interaction: interaction, embeds: entitlementEmbed, flags: messageFlags.add(MessageFlags.Ephemeral) });
+    return sendMessage({ interaction: interaction, embeds: entitlementEmbed as any, flags: messageFlags.add(MessageFlags.Ephemeral)  });
 };
 
 export const guildID = process.env.DEV_SERVER_ID;

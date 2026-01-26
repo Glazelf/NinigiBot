@@ -123,7 +123,7 @@ export default async (interaction, messageFlags) => {
         .addComponents([subscriptionButton, donationButton]);
     let componentRows = [botButtons1];
     if (interaction.client.user.id == globalVars.NinigiID) componentRows.push(botButtons2);
-    return sendMessage({ interaction: interaction, embeds: botEmbed, components: componentRows });
+    return sendMessage({ interaction: interaction, embeds: botEmbed as any, components: componentRows as any });
 };
 
 // Boolean options

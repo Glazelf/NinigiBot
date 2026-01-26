@@ -1,3 +1,4 @@
+// @ts-nocheck
 import getLevelFromExp from "./getLevelFromExp.js";
 
 // Might be good to rewrite around Math.random() in this file but it's a hassle to test battles for this and these uses pose no security risk

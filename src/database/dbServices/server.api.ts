@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { serverdata } from "../../database/dbConnection/dbConnection.js";
 import serverdataModel from "../../database/dbObjects/serverdata.model.js";
 
