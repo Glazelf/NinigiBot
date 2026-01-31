@@ -12,7 +12,13 @@ import {
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
+import { dirname } from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
+
+// Get the directory name of the current module (equivalent to __dirname in CommonJS)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Extend the Client type to include our custom commands property
 declare module "discord.js" {
@@ -66,7 +72,8 @@ const client = new Client({
 });
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-await fs.promises.readdir("./events/").then(async (files) => {
+const eventsPath = path.join(__dirname, "events");
+await fs.promises.readdir(eventsPath).then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
@@ -88,7 +95,8 @@ client.commands = new Collection<string, any>();
 const debugMode: boolean = process.env.DEBUG == "1" ? true : false;
 if (debugMode) console.log("Debug mode enabled!");
 
-await walk(`./commands/`);
+const commandsPath = path.join(__dirname, "commands");
+await walk(commandsPath);
 console.log("Loaded commands!");
 
 client.login(process.env.TOKEN);
@@ -104,7 +112,9 @@ async function walk(dir: string): Promise<void> {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     if (file.endsWith('.debug.js') && !debugMode) return;
                     if (file.endsWith('.debug.js')) console.log(`Debug command ${file} added!`);
-                    let props = await import(`./${filepath}`);
+                    // Convert absolute path to file URL for ES module import
+                    const fileUrl = pathToFileURL(filepath);
+                    let props = await import(fileUrl.href);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
                     if (!props.commandObject.contexts) props.commandObject.contexts = [
