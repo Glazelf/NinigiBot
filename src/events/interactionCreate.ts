@@ -133,7 +133,7 @@ export default async (client, interaction) => {
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
-                    if (command.commandObject.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
+                    if (command.commandObject.name.toLowerCase().replace(" ", "") == commandName) cmd = command;
                 });
                 // Run the command
                 if (cmd) {
