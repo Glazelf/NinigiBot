@@ -364,8 +364,8 @@ export default async (interaction: any, messageFlags: any) => {
             year = updatedTimes.year;
             let monthString = leadingZeros(month, 2);
             // Format URL and other variables
-            let searchURL = `https://www.smogon.com/stats/${year}-${monthString}/moveset/${formatInput}-${rating}.txt`;
-            let genericUsageURL = `https://www.smogon.com/stats/${year}-${monthString}/${formatInput}-${rating}.txt`;
+            let searchURL = `https://www.smogon.com/stats/${year}-${monthString}/moveset/${encodeURIComponent(formatInput)}-${rating}.txt`;
+            let genericUsageURL = `https://www.smogon.com/stats/${year}-${monthString}/${encodeURIComponent(formatInput)}-${rating}.txt`;
             let response = null;
             let genericUsageResponse = null;
             let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
