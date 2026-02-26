@@ -125,7 +125,7 @@ export default async ({ elite = false, emojis }) => {
     };
     bossEventActionRow.addComponents(bossEventEliteButton);
 
-    return { embeds: [bossEventEmbed], components: [bossEventActionRow.toJSON()] };
+    return { embeds: [bossEventEmbed.toJSON()], components: [bossEventActionRow.toJSON()] };
 };
 
 function sortTowersToIngame(towerList, type) {
