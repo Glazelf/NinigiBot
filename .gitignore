@@ -25,6 +25,7 @@ jspm_packages
 /src/assets/pkm
 # TypeScript
 /build
+/dist
 *.tsbuildinfo
 # Roms
 *.gbc
