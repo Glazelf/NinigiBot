@@ -7,25 +7,34 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client: ExtendedClient) => {
     try {
-        // Set interactions
+        // Set interactions using bulk registration for faster startup
+        const globalCommands: any[] = [];
+        const guildCommandsMap = new Map<string, any[]>();
         for (const [, command] of client.commands) {
+            if (command.guildID) {
+                let commandGuildID = command.guildID;
+                if (client.user.id != globalVars.NinigiID) {
+                    commandGuildID = process.env.DEV_SERVER_ID;
+                    if (!commandGuildID) continue;
+                }
+                const existing = guildCommandsMap.get(commandGuildID) ?? [];
+                existing.push(command.commandObject);
+                guildCommandsMap.set(commandGuildID, existing);
+            } else {
+                globalCommands.push(command.commandObject);
+            }
+        }
+        try {
+            await client.application.commands.set(globalCommands as any);
+        } catch (e: any) {
+            console.log("Error registering global commands:", e.message || e);
+        }
+        for (const [guildID, commands] of guildCommandsMap) {
             try {
-                let commandGuildID = null;
-                if (command.guildID) {
-                    commandGuildID = command.guildID;
-                    if (client.user.id != globalVars.NinigiID) {
-                        commandGuildID = process.env.DEV_SERVER_ID;
-                        // Skip guild commands if DEV_SERVER_ID is not set for non-production bots
-                        if (!commandGuildID) {
-                            console.log(`Skipping guild command ${command.commandObject.name} - DEV_SERVER_ID not set`);
-                            continue;
-                        }
-                    }
-                };
-                await client.application.commands.create(command.commandObject as any, commandGuildID);
+                await client.application.commands.set(commands as any, guildID);
             } catch (e: any) {
-                console.log(`Error registering command ${command.commandObject?.name}:`, e.message || e);
-            };
+                console.log(`Error registering guild commands for ${guildID}:`, e.message || e);
+            }
         }
         console.log("Loaded interactions!");
         // Affairs
