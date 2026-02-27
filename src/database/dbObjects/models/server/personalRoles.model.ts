@@ -1,0 +1,18 @@
+export default (sequelize: any, DataTypes: any) => {
+    return sequelize.define('personal_roles', {
+        server_id: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        role_id: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        user_id: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+    }, {
+        timestamps: false,
+    });
+};
