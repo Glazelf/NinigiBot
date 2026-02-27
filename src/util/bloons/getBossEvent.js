@@ -92,7 +92,7 @@ export default async ({ elite = false, emojis }) => {
     let allowedTowersString = allowedTowersArray.join("\n");
     let bannedString = bannedArray.join("\n");
     if (bannedString.length == 0) bannedString = "Nothing is banned.";
-    if (allowedHeroesArray.length == towersOrdered.towers.length && !towersAllowedAppendix) allowedTowersString = "All towers are allowed (5-5-5).";
+    if (allowedTowersArray.length == towersOrdered.towers.length && !towersAllowedAppendix) allowedTowersString = "All towers and tiers are allowed.";
 
     let bossEventEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)

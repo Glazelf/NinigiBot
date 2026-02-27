@@ -20,6 +20,7 @@ import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/discord/sendMessage.js";
 import randomNumber from "../util/math/randomNumber.js";
+import formatNumber from "../util/math/formatNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 // Pokémon
 import { Dex } from '@pkmn/dex';
@@ -70,15 +71,13 @@ const pokemonGenerations = new Generations(Dex);
 const allPokemonByLength = Dex.species.all().filter(pokemon => pokemon.isNonstandard !== "CAP").sort((a, b) => a.name.length - b.name.length);
 const pokemonNameLengthShortest = allPokemonByLength[0].name.length;
 const pokemonNameLengthLongest = allPokemonByLength[allPokemonByLength.length - 1].name.length;
-const allMegaStonesByLength = Dex.items.all().filter(item => item.megaEvolves && item.isNonstandard !== "CAP").sort((a, b) => {
-    let aMega = a.megaEvolves;
-    let bMega = b.megaEvolves;
-    if (Array.isArray(a.megaEvolves)) aMega = a.megaEvolves[0];
-    if (Array.isArray(b.megaEvolves)) bMega = b.megaEvolves[0];
+const allMegaStonesByLength = Dex.items.all().filter(item => item.megaStone && item.isNonstandard !== "CAP").sort((a, b) => {
+    let aMega = Object.keys(a.megaStone)[0];
+    let bMega = Object.keys(b.megaStone)[0];
     return aMega.length - bMega.length;
 });
-const megaStoneNameLengthShortest = allMegaStonesByLength[0].megaEvolves.length;
-const megaStoneNameLengthLongest = allMegaStonesByLength[allMegaStonesByLength.length - 1].megaEvolves.length;
+const megaStoneNameLengthShortest = Object.keys(allMegaStonesByLength[0].megaStone)[0].length;
+const megaStoneNameLengthLongest = Object.keys(allMegaStonesByLength[allMegaStonesByLength.length - 1].megaStone)[0].length;
 
 // List all Pokemon Cards
 let pokemonCardsBySet = {};
@@ -381,14 +380,14 @@ export default async (client, interaction) => {
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You hit a mine! Game over!`;
                                 // Bet doesn't need to be subtracted, this is already done when setting up the bet
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
+                                if (mineBet > 0) contentReturn += `\nYou lost ${formatNumber(mineBet, interaction.locale)}${globalVars.currency}.\nYour current balance is ${currentBalance}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
                                 matrixString = getMatrixString(componentsReturn);
                                 contentReturn = `## You won! Congratulations!\n`;
                                 if (mineBet > 0) {
-                                    contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
+                                    contentReturn += `You bet ${formatNumber(mineBet, interaction.locale)}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
                                 contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.`;
@@ -558,33 +557,30 @@ export default async (client, interaction) => {
                                     case "move":
                                     case "pokemon":
                                         if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
-                                            // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                            let moves = pokemonAutocompleteFilter(dexModified.moves.all(), generationInput, Dex.gen);
                                             moves.forEach(move => {
                                                 if (normalizeString(move.name).includes(normalizeString(focusedOption.value))) choices.push({ name: move.name, value: move.name });
                                             });
                                             break;
                                         } else {
-                                            // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen).sort((a, b) => a.num - b.num);
+                                            let pokemonSpecies = pokemonAutocompleteFilter(dexModified.species.all(), generationInput, Dex.gen);
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                                if ((normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value)))
-                                                    && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
+                                                let identifierIncludesInput = (normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value).replace(/ /g, "-")))
+                                                let isNotGmaxUsage = !(usageBool && species.name.endsWith("-Gmax"));
+                                                if (identifierIncludesInput && isNotGmaxUsage) choices.push({ name: pokemonIdentifier, value: species.name });
                                             });
                                             break;
                                         };
                                     case "ability":
-                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                        let abilities = pokemonAutocompleteFilter(dexModified.abilities.all(), generationInput, Dex.gen);
                                         abilities.forEach(ability => {
                                             if (normalizeString(ability.name).includes(normalizeString(focusedOption.value))) choices.push({ name: ability.name, value: ability.name });
                                         });
                                         break;
                                     case "item":
-                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen).sort((a, b) => a.name.localeCompare(b.name));
+                                        let items = pokemonAutocompleteFilter(dexModified.items.all(), generationInput, Dex.gen);
                                         items.forEach(item => {
                                             if (normalizeString(item.name).includes(normalizeString(focusedOption.value))) choices.push({ name: item.name, value: item.name });
                                         });
@@ -1002,7 +998,7 @@ export default async (client, interaction) => {
                         const megaQuizModalGuessFormatted = Dex.species.get(megaQuizModalGuess).name;
 
                         // We can check more leniently if the input includes the correct answer since we don't need to be strict about forms
-                        if (megaQuizModalGuessFormatted.includes(correctMegaStone.itemUser[0])) {
+                        if (megaQuizModalGuessFormatted.includes(Object.keys(correctMegaStone.megaStone)[0])) {
                             let megaQuizMessageObject = await getMegaStoneGuess({ interaction: interaction, winner: interaction.user, stone: correctMegaStone });
                             interaction.update({ embeds: megaQuizMessageObject.embeds, files: megaQuizMessageObject.files, components: megaQuizMessageObject.components }).catch(e => {
                                 return null;

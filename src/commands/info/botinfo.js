@@ -13,6 +13,7 @@ import sendMessage from "../../util/discord/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
 import isOwner from "../../util/discord/perms/isOwner.js";
+import formatNumber from "../../util/math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import packageJSON from "../../../package.json" with { type: "json" };
 
@@ -65,10 +66,10 @@ export default async (interaction, messageFlags) => {
     developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
 
     // Stats
-    let userInstallString = `User Installs: ${interaction.client.application.approximateUserInstallCount}`;
-    let serverInstallString = `Servers: ${interaction.client.application.approximateGuildCount}`;
+    let userInstallString = `User Installs: ${formatNumber(interaction.client.application.approximateUserInstallCount, interaction.locale)}`;
+    let serverInstallString = `Servers: ${formatNumber(interaction.client.application.approximateGuildCount, interaction.locale)}`;
     if (ownerBool) serverInstallString += `/${maxServersPerShard * interaction.client.options.shardCount}`;
-    let totalMemberCountString = `Total Members: ${totalMembers}`;
+    let totalMemberCountString = `Total Members: ${formatNumber(totalMembers, interaction.locale)}`;
     let emojiCountString = `Emojis: ${emojis.size}/${emojiMax}`;
     let githubStarCountString = `GitHub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`;
     let statFieldValue = `${userInstallString}\n${serverInstallString}\n${totalMemberCountString}\n${emojiCountString}\n${githubStarCountString}`;
@@ -104,7 +105,7 @@ export default async (interaction, messageFlags) => {
     const supportServerButton = new ButtonBuilder()
         .setLabel("Support Server")
         .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+        .setURL(`https://discord.gg/${globalVars.supportServerInvite}`);
     const githubButton = new ButtonBuilder()
         .setLabel("GitHub")
         .setStyle(ButtonStyle.Link)

@@ -14,8 +14,8 @@ import {
     hyperlink
 } from "discord.js";
 import sendMessage from "../../util/discord/sendMessage.js";
-import isAdmin from "../../util/discord/perms/isAdmin.js";
 import checkPermissions from "../../util/discord/perms/checkPermissions.js";
+import formatNumber from "../../util/math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
@@ -129,11 +129,11 @@ export default async (interaction, messageFlags) => {
         serverButtons.addComponents(insightsButton);
     };
 
-    let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size} 🤖\nChannels: ${channelCount}`;
+    let statsString = `Members: ${formatNumber(guild.memberCount, interaction.locale)}\nBots: ${botMembers.size} 🤖\nChannels: ${channelCount}`;
     // Change "Active Threads" to "Threads" when archived threads get added
     if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
     if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
-    if (banCount > 0) statsString += `\nBans: ${banCount}`;
+    if (banCount > 0) statsString += `\nBans: ${formatNumber(banCount, interaction.locale)}`;
     if (guild.premiumSubscriptionCount > 0) statsString += `\nBoosts: ${boosterString}`;
     let assetString = `\nEmojis: ${unmanagedEmoteCount}/${emoteMax} 😳`;
     if (managedEmojis.size > 0) assetString += `\nTwitch Emojis: ${managedEmojis.size}`;

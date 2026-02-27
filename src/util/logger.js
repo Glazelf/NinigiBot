@@ -67,8 +67,8 @@ Component Type: ${interaction.componentType}
 Command: ${interaction.commandName} (${interaction.customId})
 Subcommand: ${subCommand}
 Options: ${interactionOptions}
-Error:\n${exceptionCode}
-${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
+Error:${exceptionCode}
+Message:${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``; // Backticks are to make sure codeBlock remains closed after substring
         // Fix cross-shard logging sometime

@@ -4,6 +4,7 @@ import {
 } from "discord.js";
 import axios from "axios";
 import getAPIErrorMessageObject from "./getAPIErrorMessageObject.js";
+import formatNumber from "../math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
@@ -32,13 +33,13 @@ export default async ({ interaction, oak, messageFlags }) => {
         rankString += userData.rank;
     };
     // General stats
-    let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nBloons Popped: ${userData.bloonsPopped.bloonsPopped}`;
+    let userDescription = `${rankString}\nTotal EXP: ${formatNumber(saveData.xp + saveData.veteranXp, interaction.locale)}\nBloons Popped: ${formatNumber(userData.bloonsPopped.bloonsPopped, interaction.locale)}`;
     let redBloonEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6RedBloon");
     if (redBloonEmoji) userDescription += ` ${redBloonEmoji}`;
-    userDescription += `\nGames Played: ${saveData.gamesPlayed}`;
+    userDescription += `\nGames Played: ${formatNumber(saveData.gamesPlayed, interaction.locale)}`;
     if (saveData.lifetimeTrophies > 0) {
         let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
-        userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
+        userDescription += `\nTrophies Earned: ${formatNumber(saveData.lifetimeTrophies, interaction.locale)}`;
         if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
     };
     if (saveData.achievementsClaimed.length > 0) {
@@ -56,8 +57,8 @@ export default async ({ interaction, oak, messageFlags }) => {
 
     if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
     // Hero and tower usage
-    let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache);
-    let towersByUsageString = getUsageListString(userData.towersPlaced, interaction.client.application.emojis.cache);
+    let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache, interaction.locale);
+    let towersByUsageString = getUsageListString(userData.towersPlaced, interaction.client.application.emojis.cache, interaction.locale);
     // Build user embed
     btd6Embed
         .setTitle(userData.displayName)
@@ -72,13 +73,13 @@ export default async ({ interaction, oak, messageFlags }) => {
     return { embeds: [btd6Embed], messageFlags: messageFlags };
 };
 
-function getUsageListString(usageObject, emojis) {
+function getUsageListString(usageObject, emojis, locale) {
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
         let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
         if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
-        usageString += `${element[0]}: ${element[1]}\n`;
+        usageString += `${element[0]}: ${formatNumber(element[1], locale)}\n`;
     });
     return usageString;
 };

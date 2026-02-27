@@ -9,6 +9,7 @@ import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import rewardMoney from "../db/rewardMoney.js";
+import formatNumber from "../math/formatNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
@@ -22,9 +23,9 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
     let pokemon = null;
     let embedColor = globalVars.embedColor;
     if (!stoneList && stone) {
-        pokemon = Dex.species.get(stone.itemUser[0]);
+        pokemon = Dex.species.get(Object.keys(stone.megaStone)[0]);
         if (winner) {
-            let pokemonSim = DexSim.species.get(stone.itemUser[0]);
+            let pokemonSim = DexSim.species.get(Object.keys(stone.megaStone)[0]);
             embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         };
     };
@@ -37,11 +38,11 @@ export default async ({ interaction, winner, stoneList, stone, reveal }) => {
         } else {
             // Format winning message update for correct guess
             let megaQuizPrize = 20;
-            quizDescription = `${winner} guessed correctly and won ${megaQuizPrize}${globalVars.currency}.`;
+            quizDescription = `${winner} guessed correctly and won ${formatNumber(megaQuizPrize, interaction.locale)}${globalVars.currency}.`;
             let rewardData = await rewardMoney({ application: interaction.client.application, userID: winner.id, reward: megaQuizPrize });
             if (rewardData.isSubscriber) quizDescription += `\n${winner} ${rewardData.rewardString}`;
         };
-        quizDescription += `\nThe answer was ${bold(stone.itemUser[0])}.\nThe item shown is the ${bold(stone.name)}.`;
+        quizDescription += `\nThe answer was ${bold(Object.keys(stone.megaStone)[0])}.\nThe item shown is the ${bold(stone.name)}.`;
         messageObject.files = [];
         messageObject.components = [];
     } else {
