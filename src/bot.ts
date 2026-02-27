@@ -8,11 +8,12 @@ import {
     InteractionContextType,
     ApplicationIntegrationType,
     PresenceUpdateStatus,
-    AllowedMentionsTypes
+    AllowedMentionsTypes,
+    PresenceData
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
-import globalVars from "./objects/globalVars.json" with { type: "json" };
+import globalVars from "./objects/globalVars.json" with { type: "json"};
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -35,7 +36,8 @@ const partials = [
 // Presence
 const customStatus = "💤 Chilling in Valor Cavern";
 // When setting multiple activities including a custom status, only the custom status will be displayed which is weird behaviour inconsistent with normal users but it's no big deal for a bot anyways, it's just visual flair.
-const presenceObject = {
+
+const presenceObject: PresenceData = {
     activities: [{
         name: customStatus, // Not visible but a required feel, only visible through the API
         state: customStatus, // This is what shows up on users' clients
@@ -59,7 +61,7 @@ const client = new Client({
 });
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-await fs.promises.readdir("./events/").then(async (files) => {
+await fs.promises.readdir("./build/events/").then(async (files) => {
     for await (const file of files) {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
@@ -78,16 +80,17 @@ await fs.promises.readdir("./events/").then(async (files) => {
 console.log("Loaded events!");
 
 client.commands = new Collection();
-const debugMode = process.env.DEBUG == 1 ? true : false;
+
+const debugMode = process.env.DEBUG as unknown as number == 1 ? true : false;
 if (debugMode) console.log("Debug mode enabled!");
 
-await walk(`./commands/`);
+await walk(`./build/commands/`, function () { return; });
 console.log("Loaded commands!");
 
 client.login(process.env.TOKEN);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
-async function walk(dir, callback) {
+async function walk(dir: string, callback: Function) {
     await fs.promises.readdir(dir).then(async (files) => {
         for (const file of files) {
             let filepath = path.join(dir, file);
@@ -97,7 +100,7 @@ async function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     if (file.endsWith('.debug.js') && !debugMode) return;
                     if (file.endsWith('.debug.js')) console.log(`Debug command ${file} added!`);
-                    let props = await import(`./${filepath}`);
+                    let props = await import(`../${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
                     if (!props.commandObject.contexts) props.commandObject.contexts = [

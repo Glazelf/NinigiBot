@@ -19,12 +19,12 @@ import randomNumber from "../../util/math/randomNumber.js";
 import isGuildDataAvailable from "../../util/discord/isGuildDataAvailable.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 const version = "latest"; // Use version number without periods or "latest"
-import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
-import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
-import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
-import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
-// import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
-// import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
+import GearInfoClothesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
+import GearInfoHeadJSON from "../../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
+import GearInfoShoesJSON from "../../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
+import WeaponInfoMainJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
+// import WeaponInfoSpecialJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
+// import WeaponInfoSubJSON from "../../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
 
 // Import language files
 fs.readdir("./submodules/splat3/data/language/", (err, files) => {
@@ -33,7 +33,7 @@ fs.readdir("./submodules/splat3/data/language/", (err, files) => {
         const fileName = file.split(".")[0];
         if (!fileName.endsWith("_full")) return; // Skip to next iteration, only count full language files
         const languageKey = fileName.split("_")[0];
-        const languageJSON = await import(`../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
+        const languageJSON = await import(`../../../submodules/splat3/data/language/${file}`, { with: { type: "json" } });
         globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
     });
 });

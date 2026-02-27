@@ -17,13 +17,14 @@ import {
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const minGridLength = 2;
-const maxGridLength = 5;
+const maxGridColumns = 5;
+const maxGridRows = 6; // Component limit is 40 with components v2, minus 5 action rows, text and the container itself
 const profitPerMine = 10; // 10% gain per mine on won bet
 
 export default async (interaction, messageFlags) => {
     let correctionString = "";
-    let rows = 5;
-    let columns = 5;
+    let rows = maxGridRows;
+    let columns = maxGridColumns;
     let minesFloor = 1;
     let minesCapPercentage = 50;
     let rowsArg = interaction.options.getInteger("rows");
@@ -89,12 +90,12 @@ const rowsOption = new SlashCommandIntegerOption()
     .setName("rows")
     .setDescription("Amount of rows.")
     .setMinValue(minGridLength)
-    .setMaxValue(maxGridLength);
+    .setMaxValue(maxGridRows);
 const columnsOption = new SlashCommandIntegerOption()
     .setName("columns")
     .setDescription("Amount of columns.")
     .setMinValue(minGridLength)
-    .setMaxValue(maxGridLength);
+    .setMaxValue(maxGridColumns);
 const betOption = new SlashCommandIntegerOption()
     .setName("bet")
     .setDescription(`Amount of money to bet. Profit is ${profitPerMine}% per mine.`)

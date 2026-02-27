@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "ES2024",
+        "module": "nodenext",
+        "outDir": "./build/",
+        "rootDir": "./src",
+        "incremental": true, // Remove when rewrite complete
+        "allowJs": true, // Remove when rewrite complete
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "removeComments": true,
+        "noEmitOnError": true,
+        "inlineSourceMap": true,
+        // Fix JSON imports
+        "resolveJsonModule": true
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "./node_modules"
+    ]
+}
