@@ -187,7 +187,7 @@ export default async (interaction, messageFlags) => {
             if (moveGen.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
-            let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
+            let type = getTypeEmojis({ type: moveGen.type, emojis: interaction.client.application.emojis.cache });
             let ppString = moveGen.pp.toString();
             let ppMax = Math.floor(moveGen.pp * 1.6);
             if (moveGen.pp !== ppMax) ppString += ` (${ppMax})`; // Only add max PP in brackets if max PP is actually different from base PP
@@ -201,8 +201,8 @@ export default async (interaction, messageFlags) => {
             let moveTitle = moveGen.name;
             if (moveGen.isMax) moveTitle = `${moveGen.name} (Max Move)`;
             if (moveGen.isZ) moveTitle = `${moveGen.name} (Z-Move)`;
-            let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${move.category}`);
-            let moveCategoryString = move.category;
+            let moveCategoryEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `PokemonMoveCategory${moveGen.category}`);
+            let moveCategoryString = moveGen.category;
             if (moveCategoryEmoji) moveCategoryString = `${moveCategoryEmoji} ${moveCategoryString}`;
 
             pokemonEmbed
