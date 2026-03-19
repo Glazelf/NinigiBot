@@ -566,7 +566,11 @@ export default async (client, interaction) => {
                                             let usageBool = (interaction.options.getSubcommand() == "usage");
                                             pokemonSpecies.forEach(species => {
                                                 let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                                let identifierIncludesInput = (normalizeString(pokemonIdentifier).includes(normalizeString(focusedOption.value).replace(/ /g, "-")))
+                                                let pokemonIdentifierNormalized = normalizeString(pokemonIdentifier);
+                                                let inputNormalized = normalizeString(focusedOption.value);
+                                                // Check against the input and input but replacing all spaces with dashes.
+                                                // Might need to find a cleaner search method in the future?
+                                                let identifierIncludesInput = (pokemonIdentifierNormalized.includes(inputNormalized) || pokemonIdentifierNormalized.includes(inputNormalized.replace(/ /g, "-")));
                                                 let isNotGmaxUsage = !(usageBool && species.name.endsWith("-Gmax"));
                                                 if (identifierIncludesInput && isNotGmaxUsage) choices.push({ name: pokemonIdentifier, value: species.name });
                                             });
