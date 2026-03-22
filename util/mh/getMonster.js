@@ -133,18 +133,16 @@ export default async (monsterData, emojis) => {
         };
     };
     // Get base monster
-    if (!monsterData.subSpecies) {
-        monstersJSON.monsters.forEach(monster => {
-            if (!monster.subSpecies) return;
-            if (monster.subSpecies.includes(monsterData.name)) {
-                const baseMonsterButton = new ButtonBuilder()
-                    .setCustomId("mhSubOrigin")
-                    .setStyle(ButtonStyle.Secondary)
-                    .setLabel(monster.name);
-                subSpeciesButtons.addComponents(baseMonsterButton);
-            };
-        });
-    };
+    monstersJSON.monsters.forEach(monster => {
+        if (!monster.subSpecies) return;
+        if (monster.subSpecies.includes(monsterData.name)) {
+            const baseMonsterButton = new ButtonBuilder()
+                .setCustomId("mhSubOrigin")
+                .setStyle(ButtonStyle.Secondary)
+                .setLabel(monster.name);
+            subSpeciesButtons.addComponents(baseMonsterButton);
+        };
+    });
     if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
     let mhEmbed = new EmbedBuilder()
