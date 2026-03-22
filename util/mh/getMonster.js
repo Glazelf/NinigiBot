@@ -117,33 +117,39 @@ export default async (monsterData, emojis) => {
     if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, emojis, "Ailment");
 
     let buttonArray = [];
-    let subSpeciesButtons = new ActionRowBuilder();
-    // Get subspecies
-    if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
-        if (monsterData.subSpecies.length < 6) {
-            for (let i = 0; i < monsterData.subSpecies.length; i++) {
-                const subSpeciesButton = new ButtonBuilder()
-                    .setCustomId(`mhSub${i}`)
-                    .setStyle(ButtonStyle.Secondary)
-                    .setLabel(monsterData.subSpecies[i]);
-                subSpeciesButtons.addComponents(subSpeciesButton);
-            };
-        } else {
-            // How many subspecies do you need??
-        };
+    let altSpeciesButtons = new ActionRowBuilder();
+    let baseSpecies = monsterData;
+    let parentSpecies = getParentSpecies(monstersJSON, monsterData);
+
+    // Get base species, needs multiple layers for monsters like Guardian Fulgur Anjanath
+    while (parentSpecies) {
+        baseSpecies = parentSpecies;
+        parentSpecies = getParentSpecies(monstersJSON, parentSpecies);
     };
-    // Get base monster
+
+    // Alt species here refers to subspecies, parent species, deviants, whatever.
+    let altSpeciesLoopIndex = 0;
+    // base Species is checked outside of loop below to make sure button is at the front
+    if (monsterData !== baseSpecies) {
+        const baseSpeciesButton = new ButtonBuilder()
+            .setCustomId(`mhSub${altSpeciesLoopIndex}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setLabel(baseSpecies.name);
+        altSpeciesButtons.addComponents(baseSpeciesButton);
+    };
+
     monstersJSON.monsters.forEach(monster => {
-        if (!monster.subSpecies) return;
-        if (monster.subSpecies.includes(monsterData.name)) {
-            const baseMonsterButton = new ButtonBuilder()
-                .setCustomId("mhSubOrigin")
+        // The check here is sort of ugly but as far as I know perfectly accurate and lightweight.
+        if (monster.name.includes(baseSpecies.name) && ![monsterData.name, baseSpecies.name].includes(monster.name)) {
+            altSpeciesLoopIndex += 1;
+            const altSpeciesButton = new ButtonBuilder()
+                .setCustomId(`mhSub${altSpeciesLoopIndex}`)
                 .setStyle(ButtonStyle.Secondary)
                 .setLabel(monster.name);
-            subSpeciesButtons.addComponents(baseMonsterButton);
+            altSpeciesButtons.addComponents(altSpeciesButton);
         };
     });
-    if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
+    if (altSpeciesButtons.components.length > 0) buttonArray.push(altSpeciesButtons);
 
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
@@ -186,4 +192,13 @@ function getStringFromObject(object, emojis, type) {
         };
     });
     return itemArray.join("\n");
+};
+
+function getParentSpecies(monstersJSON, monsterInput) {
+    let parentSpecies = null;
+    monstersJSON.monsters.forEach(monster => {
+        if (!monster.subSpecies) return;
+        if (monster.subSpecies.includes(monsterInput.name)) parentSpecies = monster;
+    });
+    return parentSpecies;
 };
