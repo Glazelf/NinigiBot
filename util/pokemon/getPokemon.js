@@ -400,8 +400,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Genders are introduced in gen 2
     if (generation >= 2) pkmEmbed.addFields([{ name: "Gender:", value: genderString, inline: true }]);
     // Abilities are introduced in gen 3
-    // Gen 9 megas don't have abilities yet, remove check for that when data gets added
-    if (generation >= 3 && !(pokemon.gen == 9 && pokemon.name.includes("-Mega"))) pkmEmbed.addFields([{ name: "Abilities:", value: abilityString, inline: false }]);
+    // Check for newest gen megas that don't have just one ability, which is how Showdown formats them not having an ability
+    if (generation >= 3 && !(pokemon.gen == Dex.gen && pokemon.name.includes("-Mega") && Object.keys(pokemon.abilities).length > 1)) pkmEmbed.addFields([{ name: "Abilities:", value: abilityString, inline: false }]);
     if (superEffectivesString.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectivesString, inline: false }]);
     if (resistancesString.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistancesString, inline: false }]);
     if (immunitiesString.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunitiesString, inline: false }]);
