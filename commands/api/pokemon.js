@@ -690,8 +690,8 @@ const generationChoicesAbilities = [
     { name: "Champions", value: "champions" },
     { name: "9 (Scarlet/Violet + Indigo Disk) (Default)", value: "9" },
     { name: "8 (Sword/Shield + Crown Tundra)", value: "8" },
-    { name: "7 (Ultra Sun/Ultra Moon", value: "7" },
-    { name: "6 (Omega Ruby/Alpha Sapphire", value: "6" },
+    { name: "7 (Ultra Sun/Ultra Moon)", value: "7" },
+    { name: "6 (Omega Ruby/Alpha Sapphire)", value: "6" },
     { name: "5 (Black 2/White 2)", value: "5" },
     { name: "4 (Heart Gold/Soul Silver)", value: "4" },
     { name: "3 (Emerald)", value: "3" }
