@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
+import { Generations } from '@pkmn/data';
 import urlExists from "../urlExists.js";
 import convertMeterFeet from "../math/convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
@@ -17,13 +18,24 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
+const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
+export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, generationInput = 9, emojis }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
-    let generation = genData.dex.gen;
+    let generation = genData.dex?.gen;
+    let typeData = genData.types;
+    if (generationInput == "champions") {
+        let newGenData = gens.get(Dex.gen);
+        generation = gens.get(Dex.gen).dex.gen;
+        typeData = newGenData.types;
+    };
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+
+    console.log(genData.species)
+    console.log(genData)
+
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
     let pokemonGen = genData.species.get(pokemon.name);
     if (generation < pokemon.gen) {
@@ -74,9 +86,9 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let superEffectives = [];
     let resistances = [];
     let immunities = [];
-    for (let type of genData.types) {
+    for (let type of typeData) {
         if (["???", "Stellar"].includes(type.name)) continue;
-        let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
+        let effectiveness = typeData.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
         let typeEffectString = getTypeEmojis({ type: type.name, boldBool: typeEmoteBold, emojis: emojis });
@@ -93,7 +105,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Metrics
     let metricsString = "";
     let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
-    let pokemonSim = DexSim.forGen(genData.dex.gen).species.get(pokemon.name);
+    let pokemonSim = DexSim.forGen(generation).species.get(pokemon.name);
     let heightAmerican = convertMeterFeet(pokemonSim.heightm);
     if (pokemonGen.weightkg && pokemonGen.weightkg > 0) {
         metricsString += `${bold("Weight:")}\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;

@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
+import { ModdedDex } from '@pkmn/mods';
 import { Generations } from '@pkmn/data';
 import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
@@ -56,9 +57,18 @@ export default async (interaction, messageFlags) => {
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move;
     // Set generation
-    let generationInput = interaction.options.getInteger("generation");
+    let generationInput = interaction.options.getString("generation");
     let generation = generationInput || Dex.gen;
-    let genData = gens.get(generation);
+    let dexGen = Dex.gen;
+    let genData = null;
+    if (!isNaN(generation)) {
+        genData = gens.get(parseInt(generation));
+        dexGen = genData.dex.gen;
+    } else {
+        genData = Dex.mod(generation, await import(`@pkmn/mods/${generation}`));
+    };
+    let generationText = `${isNaN(generation) ? "Generation " : ""}${generation}`;
+    // All Pokémon list
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     nameInput = replacePokemonNameSynonyms(nameInput);
     pokemonInput = replacePokemonNameSynonyms(pokemonInput);
@@ -69,7 +79,7 @@ export default async (interaction, messageFlags) => {
     };
     if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
     if (moveInput) move = Dex.moves.get(moveInput);
-    let noPokemonString = `Sorry, I could not find a Pokémon called ${inlineCode(nameInput)} in generation ${generation}.`;
+    let noPokemonString = `Sorry, I could not find a Pokémon called ${inlineCode(nameInput)} in ${generationText}.`;
     // Dex.species.get() is so that data in the object is consistent when delivered to later functions
     // Filtering to genDex is so that random does not return Pokémon that don't exist yet for the generation input
     if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = Dex.species.get(getRandomObjectItem(allPokemonGen).name);
@@ -90,7 +100,7 @@ export default async (interaction, messageFlags) => {
             let abilityGen = genData.abilities.get(nameInput);
             // let abilityGen = genData.abilities.get(abilitySearch);
             let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
-            let abilityFailString = `I could not find that ability in generation ${generation}.`;
+            let abilityFailString = `I could not find that ability in ${generationText}.`;
             if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
                 return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(abilityFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -107,12 +117,12 @@ export default async (interaction, messageFlags) => {
                 if (!isIdenticalForm(match.name)) abilityMatchesArray.push(match.name);
             });
             let abilityMatchesString = abilityMatchesArray.join(", ");
-            if (abilityMatchesString.length == 0) abilityMatchesString = `No Pokémon has this ability in generation ${generation}.`;
+            if (abilityMatchesString.length == 0) abilityMatchesString = `No Pokémon has this ability in ${generationText}.`;
 
             pokemonEmbed
                 .setTitle(abilityGen.name)
                 .setDescription(abilityGen.desc)
-                .setFooter({ text: `Introduced in generation ${ability.gen}\nGeneration ${generation} data` })
+                .setFooter({ text: `Introduced in generation ${ability.gen}\nData from ${generationText}` })
                 .addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
             break;
         // Items
@@ -122,7 +132,7 @@ export default async (interaction, messageFlags) => {
             let generationFooter = generation; // Might be usefull to move to top of file
             let itemIsFuture = (item.gen > generation);
             let itemIsAvailable = (itemGen == undefined);
-            let itemFailString = `I could not find that item in generation ${generation}.`;
+            let itemFailString = `I could not find that item in ${generationText}.`;
             if (itemIsFuture) itemFailString += `\n${inlineCode(item.name)} was introduced in generation ${item.gen}.`;
             if (!itemGen) {
                 itemGen = item;
@@ -141,13 +151,13 @@ export default async (interaction, messageFlags) => {
 
             let itemDescription = itemGen.desc;
             if (!itemDescription) itemDescription = itemGen.shortDesc; // This check is futureproofing can be removed when the following ps commit gets merged: https://github.com/smogon/pokemon-showdown/commit/6c46ab9924aac84fc9fbab5139d3eac5118fa71f
-            if (itemIsAvailable) itemDescription += `\nThis item is not available in generation ${generation}.`;
+            if (itemIsAvailable) itemDescription += `\nThis item is not available in ${generationText}.`;
 
             pokemonEmbed
                 .setTitle(itemGen.name)
                 .setThumbnail(itemImage)
                 .setDescription(itemDescription)
-                .setFooter({ text: `Introduced in generation ${item.gen}\nGeneration ${generationFooter} data` });
+                .setFooter({ text: `Introduced in generation ${item.gen}\nData from generation ${generationFooter}` });
             if (itemGen.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: itemGen.fling.basePower.toString(), inline: true }]);
             break;
         // Moves
@@ -554,7 +564,7 @@ export default async (interaction, messageFlags) => {
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
-            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, emojis: interaction.client.application.emojis.cache });
+            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, generationInput: generation, emojis: interaction.client.application.emojis.cache });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;
             break;
@@ -569,7 +579,7 @@ export default async (interaction, messageFlags) => {
     };
     // Color check for non-Pokémon commands
     if (pokemonEmbed) {
-        const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
+        const pokemonSim = DexSim.forGen(dexGen).species.get(colorPokemonName);
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         pokemonEmbed.setColor(embedColor);
     };
@@ -668,6 +678,20 @@ const cardImageChoices = [
     { name: "Image Only", value: "only" },
     { name: "No Image", value: "none" }
 ];
+const generationChoicesAbilities = [
+    { name: "Champions", value: "champions" },
+    { name: "9 (Scarlet/Violet + Indigo Disk) (Default)", value: "9" },
+    { name: "8 (Sword/Shield + Crown Tundra)", value: "8" },
+    { name: "7 (Ultra Sun/Ultra Moon", value: "7" },
+    { name: "6 (Omega Ruby/Alpha Sapphire", value: "6" },
+    { name: "5 (Black 2/White 2)", value: "5" },
+    { name: "4 (Heart Gold/Soul Silver)", value: "4" },
+    { name: "3 (Emerald)", value: "3" }
+];
+const generationChoices = generationChoicesAbilities.concat([
+    { name: "2 (Crystal)", value: "2" },
+    { name: "1 (Yellow)", value: "1" }
+]);
 
 const pokemonOptionDescription = "Pokémon to get info on.";
 const moveOptionDescription = "Move to get info on.";
@@ -708,6 +732,14 @@ const moveOptionName = new SlashCommandStringOption()
     .setDescription(moveOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
+const generationOption = new SlashCommandStringOption()
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
+    .setChoices(generationChoices);
+const generationOptionAbilities = new SlashCommandStringOption()
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
+    .setChoices(generationChoicesAbilities);
 const natureOption = new SlashCommandStringOption()
     .setName("name")
     .setDescription("Nature to get info on.")
@@ -726,18 +758,8 @@ const cardOption = new SlashCommandStringOption()
 const cardImageOption = new SlashCommandStringOption()
     .setName("image")
     .setDescription("Set the size of the image.")
-    .setChoices(cardImageChoices)
+    .setChoices(cardImageChoices);
 // Integer options
-const generationOption = new SlashCommandIntegerOption()
-    .setName(generationOptionName)
-    .setDescription(generationOptionDescription)
-    .setMinValue(1)
-    .setMaxValue(Dex.gen);
-const generationOptionAbilities = new SlashCommandIntegerOption()
-    .setName(generationOptionName)
-    .setDescription(generationOptionDescription)
-    .setMinValue(3)
-    .setMaxValue(Dex.gen);
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
     .setDescription("Month (number) to get data from.")
@@ -769,7 +791,7 @@ const pokemonSubcommand = new SlashCommandSubcommandBuilder()
     .setName("pokemon")
     .setDescription("Get info on a Pokémon.")
     .addStringOption(pokemonOptionRequiredName)
-    .addIntegerOption(generationOption)
+    .addStringOption(generationOption)
     .addBooleanOption(learnsetOption)
     .addBooleanOption(shinyOption)
     .addBooleanOption(ephemeralOption);
@@ -777,19 +799,19 @@ const abilitySubcommand = new SlashCommandSubcommandBuilder()
     .setName("ability")
     .setDescription("Get info on an ability.")
     .addStringOption(abilityOption)
-    .addIntegerOption(generationOptionAbilities)
+    .addStringOption(generationOptionAbilities)
     .addBooleanOption(ephemeralOption);
 const moveSubcommand = new SlashCommandSubcommandBuilder()
     .setName("move")
     .setDescription("Get info on a move.")
     .addStringOption(moveOptionName)
-    .addIntegerOption(generationOption)
+    .addStringOption(generationOption)
     .addBooleanOption(ephemeralOption);
 const itemSubcommand = new SlashCommandSubcommandBuilder()
     .setName("item")
     .setDescription("Get info on an item.")
     .addStringOption(itemOption)
-    .addIntegerOption(generationOption)
+    .addStringOption(generationOption)
     .addBooleanOption(ephemeralOption);
 const natureSubcommand = new SlashCommandSubcommandBuilder()
     .setName("nature")
@@ -825,7 +847,7 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
-    .addIntegerOption(generationOption)
+    .addStringOption(generationOption)
     .addBooleanOption(ephemeralOption);
 const guessMegaSubcommand = new SlashCommandSubcommandBuilder()
     .setName("guessmega")
