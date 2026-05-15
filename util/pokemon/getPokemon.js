@@ -15,26 +15,30 @@ import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getTypeEmojis from "./getTypeEmojis.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
+import getGenerationString from "./getGenerationString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const championsString = "champions";
 
 export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, generationInput = 9, emojis }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex?.gen;
+    let generationNumber = generation;
     let typeData = genData.types;
-    if (generationInput == "champions") {
+    let allSpecies = genData.species;
+    if (generationInput == championsString) {
         let newGenData = gens.get(Dex.gen);
-        generation = gens.get(Dex.gen).dex.gen;
+        allSpecies = genData.species.all();
+        generation = championsString;
+        generationNumber = Dex.gen
         typeData = newGenData.types;
     };
-    let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
-
-    console.log(genData.species)
-    console.log(genData)
+    let generationText = getGenerationString(generation);
+    let allPokemonGen = Array.from(allSpecies).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
 
     let pokemonLearnset = await genData.learnsets.get(pokemon.name);
     let pokemonGen = genData.species.get(pokemon.name);
@@ -42,7 +46,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         pkmEmbed
             .setTitle("Error")
             .setColor(globalVars.embedColorError)
-            .setDescription(`${inlineCode(pokemon.name)} does not exist yet in generation ${generation}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
+            .setDescription(`${inlineCode(pokemon.name)} does not exist yet in ${generationText}.\n${inlineCode(pokemon.name)} was introduced in generation ${pokemon.gen}.`);
         messageObject = { embeds: [pkmEmbed], components: [] };
         return messageObject;
     };
@@ -51,10 +55,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let recentGame = "SV";
     let description = "";
     // Construct footer
-    let footerText = `Unavailable in generation ${generation}`;
+    let footerText = `Unavailable in ${generationText}`;
     let pokemonAvailable = (pokemonGen !== undefined);
     // For some reason gmax forms don't return generational data, so get an extra check here
-    if (pokemonAvailable || (generation == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in generation ${generation}`;
+    if (pokemonAvailable || (generationNumber == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in ${generationText}`;
     if (!pokemonGen) pokemonGen = pokemon;
     // Gender studies
     let pokemonGender = "";
@@ -105,7 +109,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Metrics
     let metricsString = "";
     let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
-    let pokemonSim = DexSim.forGen(generation).species.get(pokemon.name);
+    let pokemonSim = DexSim.forGen(generationNumber).species.get(pokemon.name);
     let heightAmerican = convertMeterFeet(pokemonSim.heightm);
     if (pokemonGen.weightkg && pokemonGen.weightkg > 0) {
         metricsString += `${bold("Weight:")}\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
@@ -211,19 +215,19 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             if (moveData) moveName = moveData.name;
             for (let moveLearnData of learnData) {
                 let moveLearnGen = moveLearnData[0];
-                if (moveLearnGen > generation) {
+                if (moveLearnGen > generationNumber) {
                     continue;
-                } else if (moveLearnGen < generation && generation < 8) { // Transfer moves are deprecated in gen 8
+                } else if (moveLearnGen < generationNumber && generationNumber < 8) { // Transfer moves are deprecated in gen 8
                     transferMoves.push(moveName);
                     continue;
-                } else if (moveLearnGen < generation) {
+                } else if (moveLearnGen < generationNumber) {
                     continue;
                 } else if (moveLearnData.includes("L")) { // Level-up moves can be repeated
                     levelMoves.push(`${moveName}${levelMoveSplit}${moveLearnData.split("L")[1]}`);
                     levelMovesNames.push(moveName);
                 } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                     tmMoves.push(moveName);
-                } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName) && generation >= 2) { // Breeding is gen 2+, check might be redundant
+                } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName) && generationNumber >= 2) { // Breeding is gen 2+, check might be redundant
                     eggMoves.push(moveName);
                 } else if (moveLearnData.includes("T") && !tutorMoves.includes(moveName)) {
                     tutorMoves.push(moveName);
@@ -245,7 +249,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                     let moveData = genData.moves.get(moveName);
                     if (moveData) moveName = moveData.name;
                     for (let moveLearnData of learnData) {
-                        if (moveLearnData.startsWith(`${generation}E`)) eggMoves.push(moveName);
+                        if (moveLearnData.startsWith(`${generationNumber}E`)) eggMoves.push(moveName);
                     };
                 };
             };
@@ -301,7 +305,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     if (pokemon.prevo) {
         let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
         let evoMethod = getEvoMethod(pokemon);
-        if (prevoDataEvo.gen <= generation) {
+        if (prevoDataEvo.gen <= generationNumber) {
             if (pokemon.gender == prevoDataEvo.gender) pokemonGender = "";
             // Technically uses current Pokémon guaranteed gender and not prevo gender
             // But since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
@@ -331,8 +335,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                     break;
             };
         };
-        if (pokemonEvoData.gen <= generation) description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
-        if (![previousPokemon.name, nextPokemon.name].includes(pokemon.evos[i]) && pokemonEvoData.gen <= generation) {
+        if (pokemonEvoData.gen <= generationNumber) description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
+        if (![previousPokemon.name, nextPokemon.name].includes(pokemon.evos[i]) && pokemonEvoData.gen <= generationNumber) {
             const evoButton = new ButtonBuilder()
                 .setCustomId(`pkmevo${i + 1}|${buttonAppend}`)
                 .setLabel(pokemon.evos[i])
@@ -382,7 +386,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             for (let i = 0; i < pokemonForms.length; i++) {
                 let formData = Dex.species.get(pokemonForms[i]);
                 if (formData.name == pokemon.name) continue;
-                if (formData.gen > generation) continue;
+                if (formData.gen > generationNumber) continue;
                 if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
                 const formButton = new ButtonBuilder()
                     .setCustomId(`pkmForm${i}|${buttonAppend}`)
@@ -410,10 +414,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         { name: "Metrics:", value: metricsString, inline: true }
     ]);
     // Genders are introduced in gen 2
-    if (generation >= 2) pkmEmbed.addFields([{ name: "Gender:", value: genderString, inline: true }]);
+    if (generationNumber >= 2) pkmEmbed.addFields([{ name: "Gender:", value: genderString, inline: true }]);
     // Abilities are introduced in gen 3
     // Check for newest gen megas that don't have just one ability, which is how Showdown formats them not having an ability
-    if (generation >= 3 && !(pokemon.gen == Dex.gen && pokemon.name.includes("-Mega") && Object.keys(pokemon.abilities).length > 1)) pkmEmbed.addFields([{ name: "Abilities:", value: abilityString, inline: false }]);
+    if (generationNumber >= 3 && !(pokemon.gen == Dex.gen && pokemon.name.includes("-Mega") && Object.keys(pokemon.abilities).length > 1)) pkmEmbed.addFields([{ name: "Abilities:", value: abilityString, inline: false }]);
     if (superEffectivesString.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectivesString, inline: false }]);
     if (resistancesString.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistancesString, inline: false }]);
     if (immunitiesString.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunitiesString, inline: false }]);
@@ -425,7 +429,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         if (eggMovesString.length > 0) pkmEmbed.addFields([{ name: "Egg Moves:", value: eggMovesString, inline: false }]);
         if (tutorMovesString.length > 0) pkmEmbed.addFields([{ name: "Tutor Moves:", value: tutorMovesString, inline: false }]);
         if (specialMovesString.length > 0) pkmEmbed.addFields([{ name: "Special Moves:", value: specialMovesString, inline: false }]);
-        if (generation < 8 && transferMovesStrings.length > 0) transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
+        if (generationNumber < 8 && transferMovesStrings.length > 0) transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
     };
     pkmEmbed.setFooter({ text: footerText, iconURL: iconFooter });
     // Embed color, mostly for buttons
@@ -438,10 +442,11 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
 
 function calcHP(pokemon, generation) {
     let base = pokemon.baseStats.hp;
-    let min50;
-    let max50;
-    let min100;
-    let max100;
+    let min50 = 0;
+    let max50 = 0;
+    let min100 = 0;
+    let max100 = 0;
+    console.log(generation)
     if (generation <= 2) {
         min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
         max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
@@ -451,6 +456,11 @@ function calcHP(pokemon, generation) {
         min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
         max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
         min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+        max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+    } else if (generation == championsString) {
+        min50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10);
+        max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
+        min100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10);
         max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
     };
     //// Let's Go
@@ -471,10 +481,10 @@ function calcHP(pokemon, generation) {
 };
 
 function calcStat(base, generation) {
-    let min50;
-    let max50;
-    let min100;
-    let max100;
+    let min50 = 0;
+    let max50 = 0;
+    let min100 = 0;
+    let max100 = 0;
     if (generation <= 2) {
         min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
         max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
@@ -485,6 +495,11 @@ function calcStat(base, generation) {
         min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
         max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
         min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
+        max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+    } else if (generation == championsString) {
+        min50 = Math.floor(((((2 * base + 31) * 50) / 100) + 5) * 0.9);
+        max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+        min100 = Math.floor(((((2 * base + 31) * 100) / 100) + 5) * 0.9);
         max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
     };
     //// Let's Go

@@ -30,6 +30,7 @@ import getRandomObjectItem from "../../util/math/getRandomObjectItem.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import getMegaStoneGuess from "../../util/pokemon/getMegaStoneGuess.js";
+import getGenerationString from "../../util/pokemon/getGenerationString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
@@ -59,17 +60,22 @@ export default async (interaction, messageFlags) => {
     // Set generation
     let generationInput = interaction.options.getString("generation");
     let generation = generationInput || Dex.gen;
+    let generationNumber = generation; // Format gen as number for mods
     let dexGen = Dex.gen;
     let genData = null;
+    let allSpecies = null;
     if (!isNaN(generation)) {
         genData = gens.get(parseInt(generation));
         dexGen = genData.dex.gen;
+        allSpecies = genData.species;
     } else {
         genData = Dex.mod(generation, await import(`@pkmn/mods/${generation}`));
+        allSpecies = genData.species.all();
+        generationNumber = Dex.gen;
     };
-    let generationText = `${isNaN(generation) ? "Generation " : ""}${generation}`;
+    let generationText = getGenerationString(generation);
     // All Pokémon list
-    let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+    let allPokemonGen = Array.from(allSpecies).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     nameInput = replacePokemonNameSynonyms(nameInput);
     pokemonInput = replacePokemonNameSynonyms(pokemonInput);
     // Used for pokemon and learn
@@ -99,7 +105,7 @@ export default async (interaction, messageFlags) => {
             let ability = Dex.abilities.get(nameInput);
             let abilityGen = genData.abilities.get(nameInput);
             // let abilityGen = genData.abilities.get(abilitySearch);
-            let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
+            let abilityIsFuture = (ability.gen > generationNumber); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in ${generationText}.`;
             if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
@@ -110,7 +116,7 @@ export default async (interaction, messageFlags) => {
             // Ability is capitalized on Bulbapedia URLs
             linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
-            let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0);
+            let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0 && !pokemon.name.endsWith("-Gmax"));
             abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
             let abilityMatchesArray = [];
             abilityMatches.forEach(match => {
@@ -130,7 +136,7 @@ export default async (interaction, messageFlags) => {
             let item = Dex.items.get(nameInput);
             let itemGen = genData.items.get(nameInput);
             let generationFooter = generation; // Might be usefull to move to top of file
-            let itemIsFuture = (item.gen > generation);
+            let itemIsFuture = (item.gen > generationNumber);
             let itemIsAvailable = (itemGen == undefined);
             let itemFailString = `I could not find that item in ${generationText}.`;
             if (itemIsFuture) itemFailString += `\n${inlineCode(item.name)} was introduced in generation ${item.gen}.`;
@@ -150,7 +156,8 @@ export default async (interaction, messageFlags) => {
             if (item.itemUser) colorPokemonName = item.itemUser[0];
 
             let itemDescription = itemGen.desc;
-            if (!itemDescription) itemDescription = itemGen.shortDesc; // This check is futureproofing can be removed when the following ps commit gets merged: https://github.com/smogon/pokemon-showdown/commit/6c46ab9924aac84fc9fbab5139d3eac5118fa71f
+            // This check is futureproofing can be removed when the following ps commit gets merged: https://github.com/smogon/pokemon-showdown/commit/6c46ab9924aac84fc9fbab5139d3eac5118fa71f
+            if (!itemDescription) itemDescription = itemGen.shortDesc;
             if (itemIsAvailable) itemDescription += `\nThis item is not available in ${generationText}.`;
 
             pokemonEmbed
@@ -168,8 +175,8 @@ export default async (interaction, messageFlags) => {
                 moveGen = move;
                 moveIsAvailable = false;
             };
-            let moveIsFuture = (move.gen > generation);
-            let moveFailString = `I could not find that move in generation ${generation}.`;
+            let moveIsFuture = (move.gen > generationNumber);
+            let moveFailString = `I could not find that move in ${generationText}.`;
             if (moveIsFuture) moveFailString += `\n${inlineCode(move.name)} was introduced in generation ${move.gen}.`;
             if (!moveExists || moveIsFuture) {
                 return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(moveFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -181,10 +188,11 @@ export default async (interaction, messageFlags) => {
                     pokemon.name.startsWith("Terapagos-") ||
                     pokemon.name.startsWith("Ogerpon-") ||
                     pokemon.name.startsWith("Hoopa-") ||
-                    (pokemon.name.startsWith("Deoxys-") && generation > 3) || // Deoxys forms can't be changed in gen 3 so displaying them is usefull
+                    (pokemon.name.startsWith("Deoxys-") && generationNumber > 3) || // Deoxys forms can't be changed in gen 3 so displaying them is usefull
                     pokemon.name.endsWith("-Origin") ||
+                    pokemon.name.endsWith("Gmax") ||
                     (pokemon.name == "Smeargle" && move.id !== "sketch")) continue;
-                if (DexSim.forGen(generation).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
+                if (DexSim.forGen(generationNumber).species.getMovePool(pokemon.id).has(move.id)) moveLearnPool.push(pokemon.name);
             };
             let moveLearnPoolString = moveLearnPool.join(", ");
             if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
@@ -195,7 +203,7 @@ export default async (interaction, messageFlags) => {
             let description = moveGen.desc;
             if (moveGen.flags.contact) description += " Makes contact with the target.";
             if (moveGen.flags.bypasssub) description += " Bypasses Substitute.";
-            if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
+            if (!moveIsAvailable) description += `\nThis move is not usable in ${generationText}.`;
 
             let type = getTypeEmojis({ type: moveGen.type, emojis: interaction.client.application.emojis.cache });
             let ppString = moveGen.pp.toString();
@@ -218,7 +226,7 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
-                .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
+                .setFooter({ text: `Introduced in generation ${move.gen}\nData from ${generationText}.` });
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
                 { name: "Category:", value: moveCategoryString, inline: true },
@@ -229,9 +237,9 @@ export default async (interaction, messageFlags) => {
             if (moveGen.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: moveGen.critRatio.toString(), inline: true }]);
             if (!move.isMax && !move.isZ) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
             if (moveGen.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: moveGen.priority <= 0 ? moveGen.priority.toString() : `+${moveGen.priority}`, inline: true }]);
-            if (moveGen.contestType && [3, 4, 6].includes(generation)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
-            if (move.zMove && move.zMove.basePower && generation == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
-            if (move.maxMove && move.maxMove.basePower && generation == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
+            if (moveGen.contestType && [3, 4, 6].includes(generationNumber)) pokemonEmbed.addFields([{ name: "Contest Type:", value: moveGen.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
+            if (move.zMove && move.zMove.basePower && generationNumber == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
+            if (move.maxMove && move.maxMove.basePower && generationNumber == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
             if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
             break;
         // Natures
@@ -541,7 +549,7 @@ export default async (interaction, messageFlags) => {
         case "whosthat":
             await interaction.deferReply({ flags: messageFlags });
             let allowedPokemonList = allPokemon;
-            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generation);
+            if (generationInput) allowedPokemonList = allPokemonGen.filter(pokemon => pokemon.gen == generationNumber);
             allowedPokemonList = allowedPokemonList.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&
