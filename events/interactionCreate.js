@@ -544,7 +544,12 @@ export default async (client, interaction) => {
                         break;
                     case "pokemon":
                         let generationInput = interaction.options.getString("generation") || Dex.gen;
-                        let dexModified = Dex.mod(`gen${generationInput}`);
+                        let dexModified = Dex;
+                        if (isNaN(generationInput)) {
+                            dexModified = Dex.mod(generationInput, await import(`@pkmn/mods/${generationInput}`))
+                        } else {
+                            dexModified = Dex.mod(`gen${generationInput}`);
+                        };
                         switch (focusedOption.name) {
                             case "pokemon":
                             case "move":
