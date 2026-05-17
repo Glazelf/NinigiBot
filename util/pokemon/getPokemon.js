@@ -446,8 +446,15 @@ function calcHP(pokemon, generation) {
     let max50 = 0;
     let min100 = 0;
     let max100 = 0;
-    console.log(generation)
-    if (generation <= 2) {
+    if (isNaN(generation)) {
+        switch (generation) {
+            case championsString:
+                min50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10);
+                max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
+                min100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10);
+                max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+        };
+    } else if (generation <= 2) {
         min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
         max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
         min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
@@ -456,11 +463,6 @@ function calcHP(pokemon, generation) {
         min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
         max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
         min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
-        max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
-    } else if (generation == championsString) {
-        min50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10);
-        max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
-        min100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10);
         max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
     };
     //// Let's Go
@@ -485,7 +487,15 @@ function calcStat(base, generation) {
     let max50 = 0;
     let min100 = 0;
     let max100 = 0;
-    if (generation <= 2) {
+    if (isNaN(generation)) {
+        switch (generation) {
+            case championsString:
+                min50 = Math.floor(((((2 * base + 31) * 50) / 100) + 5) * 0.9);
+                max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+                min100 = Math.floor(((((2 * base + 31) * 100) / 100) + 5) * 0.9);
+                max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+        };
+    } else if (generation <= 2) {
         min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
         max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
         min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
@@ -495,11 +505,6 @@ function calcStat(base, generation) {
         min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
         max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
         min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
-        max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
-    } else if (generation == championsString) {
-        min50 = Math.floor(((((2 * base + 31) * 50) / 100) + 5) * 0.9);
-        max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
-        min100 = Math.floor(((((2 * base + 31) * 100) / 100) + 5) * 0.9);
         max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
     };
     //// Let's Go
