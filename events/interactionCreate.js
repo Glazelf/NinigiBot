@@ -1021,6 +1021,8 @@ export default async (client, interaction) => {
 };
 
 function pokemonAutocompleteFilter(object, inputGen, currentGen) {
+    // Would be cleaner to filter to Pokémon/items/etc. that are only in Champions but this prevents errors for now
+    if (inputGen == "champions") return object;
     return object.filter(item =>
         item.exists &&
         item.isNonstandard !== "CAP" &&
