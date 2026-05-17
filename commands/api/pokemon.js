@@ -64,14 +64,16 @@ export default async (interaction, messageFlags) => {
     let dexGen = Dex.gen;
     let genData = null;
     let allSpecies = null;
-    if (!isNaN(generation)) {
-        genData = gens.get(parseInt(generation));
-        dexGen = genData.dex.gen;
-        allSpecies = genData.species;
-    } else {
+    if (isNaN(generation)) {
+        // Modded
         genData = Dex.mod(generation, await import(`@pkmn/mods/${generation}`));
         allSpecies = genData.species.all();
         generationNumber = Dex.gen;
+    } else {
+        // Regular generation
+        genData = gens.get(parseInt(generation));
+        dexGen = genData.dex.gen;
+        allSpecies = genData.species;
     };
     let generationText = getGenerationString(generation);
     // All Pokémon list
