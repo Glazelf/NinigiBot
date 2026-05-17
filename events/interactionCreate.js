@@ -543,7 +543,7 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || Dex.gen;
+                        let generationInput = interaction.options.getString("generation") || Dex.gen;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
@@ -1021,12 +1021,11 @@ export default async (client, interaction) => {
 };
 
 function pokemonAutocompleteFilter(object, inputGen, currentGen) {
-    // Would be cleaner to filter to Pokémon/items/etc. that are only in Champions but this prevents errors for now
-    if (inputGen == "champions") return object;
+    // Would be cleaner to filter to Pokémon/items/etc. that are only in Champions
     return object.filter(item =>
         item.exists &&
         item.isNonstandard !== "CAP" &&
-        (inputGen === currentGen || item.isNonstandard !== "Future") && // Allow future in current gen
+        ([currentGen, "champions"].includes(inputGen) || item.isNonstandard !== "Future") && // Allow future in current gen
         !item.name.startsWith("Hidden Power ") && // Exclude typed Hidden Power moves
         !item.name !== "No Ability" && // Lack of ability
         (item.num === undefined || item.num > 0) // Pokémon dex number >0
