@@ -228,7 +228,7 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
-                .setFooter({ text: `Introduced in generation ${move.gen}\nData from ${generationText}.` });
+                .setFooter({ text: `Introduced in generation ${move.gen}.\nData from ${generationText}.` });
             pokemonEmbed.addFields([
                 { name: "Type:", value: type, inline: true },
                 { name: "Category:", value: moveCategoryString, inline: true },
