@@ -130,7 +130,7 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed
                 .setTitle(abilityGen.name)
                 .setDescription(abilityGen.desc)
-                .setFooter({ text: `Introduced in generation ${ability.gen}\nData from ${generationText}` })
+                .setFooter({ text: `Introduced in generation ${ability.gen}.\nData from ${generationText}.` })
                 .addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
             break;
         // Items
@@ -166,7 +166,7 @@ export default async (interaction, messageFlags) => {
                 .setTitle(itemGen.name)
                 .setThumbnail(itemImage)
                 .setDescription(itemDescription)
-                .setFooter({ text: `Introduced in generation ${item.gen}\nData from generation ${generationFooter}` });
+                .setFooter({ text: `Introduced in generation ${item.gen}.\nData from generation ${generationFooter}.` });
             if (itemGen.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: itemGen.fling.basePower.toString(), inline: true }]);
             break;
         // Moves

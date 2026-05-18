@@ -55,10 +55,10 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let recentGame = "SV";
     let description = "";
     // Construct footer
-    let footerText = `Unavailable in ${generationText}`;
+    let footerText = `Unavailable in ${generationText}.`;
     let pokemonAvailable = (pokemonGen !== undefined);
     // For some reason gmax forms don't return generational data, so get an extra check here
-    if (pokemonAvailable || (generationNumber == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in ${generationText}`;
+    if (pokemonAvailable || (generationNumber == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in ${generationText}.`;
     if (!pokemonGen) pokemonGen = pokemon;
     // Gender studies
     let pokemonGender = "";
