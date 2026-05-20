@@ -150,7 +150,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         iconAuthor = partyIcon;
         iconFooter = null;
     };
-    console.log(pokemon)
     let abilityString = "";
     if (pokemonGen.abilities['0']) {
         let ability0 = genData.abilities.get(pokemonGen.abilities[0]);
