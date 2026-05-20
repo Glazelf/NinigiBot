@@ -110,6 +110,8 @@ export default async (interaction, messageFlags) => {
             let abilityIsFuture = (ability.gen > generationNumber); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in ${generationText}.`;
             if (abilityIsFuture) abilityFailString += `\n${inlineCode(ability.name)} was introduced in generation ${ability.gen}.`;
+            // Check for Champions abilities
+            if (ability && !abilityGen && ability.gen == Dex.gen && ability.isNonstandard == "Future") abilityGen = ability;
             if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
                 return sendMessage({ interaction: interaction, embeds: errorEmbed.setDescription(abilityFailString), flags: messageFlags.add(MessageFlags.Ephemeral) });
             };

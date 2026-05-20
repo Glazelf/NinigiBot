@@ -150,21 +150,27 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         iconAuthor = partyIcon;
         iconFooter = null;
     };
+    console.log(pokemon)
     let abilityString = "";
     if (pokemonGen.abilities['0']) {
-        let ability0Desc = genData.abilities.get(pokemonGen.abilities[0]).shortDesc;
-        abilityString += `${bold(pokemonGen.abilities['0'])}: ${ability0Desc}`;
+        let ability0 = genData.abilities.get(pokemonGen.abilities[0]);
+        // This check is for megas introduced in Champions.
+        // Added the same check to other ability slots for futureproofing
+        if (!ability0 && Dex.gen == pokemon.gen && pokemon.isNonstandard == "Future") ability0 = Dex.abilities.get(pokemonGen.abilities[0]);
+        abilityString += `${bold(pokemonGen.abilities['0'])}: ${ability0.shortDesc}`;
     };
     if (pokemonGen.abilities['1']) {
-        let ability1Desc = genData.abilities.get(pokemonGen.abilities[1]).shortDesc;
-        abilityString += `\n${bold(pokemon.abilities['1'])}: ${ability1Desc}`;
+        let ability1 = genData.abilities.get(pokemonGen.abilities[1]);
+        if (!ability1 && Dex.gen == pokemon.gen && pokemon.isNonstandard == "Future") ability1 = Dex.abilities.get(pokemonGen.abilities[1]);
+        abilityString += `\n${bold(pokemon.abilities['1'])}: ${ability1.shortDesc}`;
     };
     if (pokemonGen.abilities['H']) {
-        let abilityHDesc = genData.abilities.get(pokemonGen.abilities['H']).shortDesc;
+        let abilityH = genData.abilities.get(pokemonGen.abilities['H']);
+        if (!abilityH && Dex.gen == pokemon.gen && pokemon.isNonstandard == "Future") abilityH = Dex.abilities.get(pokemonGen.abilities['H']);
         if (pokemonGen.unreleasedHidden) {
-            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Unreleased Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Unreleased Hidden): ${abilityH.shortDesc}`;
         } else {
-            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Hidden): ${abilityH.shortDesc}`;
         };
     };
     if (pokemonGen.abilities['S']) {
