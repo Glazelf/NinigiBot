@@ -153,7 +153,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let abilityString = "";
     if (pokemonGen.abilities['0']) {
         let ability0 = genData.abilities.get(pokemonGen.abilities[0]);
-        // This check is for megas introduced in Champions.
+        // This check is (for megas with) abilities introduced in Champions.
         // Added the same check to other ability slots for futureproofing
         if (!ability0 && Dex.gen == pokemon.gen && pokemon.isNonstandard == "Future") ability0 = Dex.abilities.get(pokemonGen.abilities[0]);
         abilityString += `${bold(pokemonGen.abilities['0'])}: ${ability0.shortDesc}`;
