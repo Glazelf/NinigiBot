@@ -227,12 +227,19 @@ export default async (client, interaction) => {
 
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
-                            let generationButton = customIdSplit[3];
-                            let genData = pokemonGenerations.get(generationButton);
+                            let buttonGeneration = customIdSplit[3];
+                            let genData = Dex.gen;
+                            if (isNaN(buttonGeneration)) {
+                                // Modded
+                                genData = Dex.mod(buttonGeneration, await import(`@pkmn/mods/${buttonGeneration}`));
+                            } else {
+                                // Regular generation
+                                genData = pokemonGenerations.get(buttonGeneration);
+                            };
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
+                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generationInput: buttonGeneration, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
