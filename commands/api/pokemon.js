@@ -192,6 +192,7 @@ export default async (interaction, messageFlags) => {
                     pokemon.name.startsWith("Terapagos-") ||
                     pokemon.name.startsWith("Ogerpon-") ||
                     pokemon.name.startsWith("Hoopa-") ||
+                    pokemon.name.startsWith("Meloetta-") ||
                     (pokemon.name.startsWith("Deoxys-") && generationNumber > 3) || // Deoxys forms can't be changed in gen 3 so displaying them is usefull
                     pokemon.name.endsWith("-Origin") ||
                     pokemon.name.endsWith("Gmax") ||
