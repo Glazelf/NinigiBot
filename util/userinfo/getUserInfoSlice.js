@@ -127,7 +127,7 @@ export default async (interaction, page, user) => {
             let birthdayParsed = parseDate(birthday);
             if (birthday && birthdayParsed) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
             let switchCode = user_db.swcode;
-            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
+            if (switchCode && switchCode !== 'None') profileEmbed.addFields([{ name: "Switch friend code:", value: switchCode, inline: true }]);
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
