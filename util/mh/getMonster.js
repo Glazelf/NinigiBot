@@ -8,6 +8,7 @@ import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import subSpeciesJSON from "../../objects/mh/subSpecies.json" with { type: "json" };
 
 const iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
 const mhWiki = "https://monsterhunterwiki.org/images/";
@@ -130,7 +131,7 @@ export default async (monsterData, emojis) => {
     // Alt species here refers to subspecies, parent species, deviants, whatever.
     let altSpeciesLoopIndex = 0;
     // base Species is checked outside of loop below to make sure button is at the front
-    if (monsterData !== baseSpecies) {
+    if (monsterData.name !== baseSpecies.name) {
         const baseSpeciesButton = new ButtonBuilder()
             .setCustomId(`mhSub${altSpeciesLoopIndex}`)
             .setStyle(ButtonStyle.Secondary)
@@ -138,9 +139,14 @@ export default async (monsterData, emojis) => {
         altSpeciesButtons.addComponents(baseSpeciesButton);
     };
 
+    // Add alt species buttons
     monstersJSON.monsters.forEach(monster => {
-        // The check here is sort of ugly but as far as I know perfectly accurate and lightweight.
-        if (monster.name.includes(baseSpecies.name) && ![monsterData.name, baseSpecies.name].includes(monster.name)) {
+        // Ignore self and base species
+        if ([monsterData.name, baseSpecies.name].includes(monster.name)) return;
+        // If subspecies json has an empty array, assume no alt species exist
+        if (subSpeciesJSON[baseSpecies.name]?.length === 0) return;
+        // Check if json or database lists subspecies
+        if (monster.name.includes(baseSpecies.name) || subSpeciesJSON[baseSpecies.name]?.includes(monster.name)) {
             altSpeciesLoopIndex += 1;
             const altSpeciesButton = new ButtonBuilder()
                 .setCustomId(`mhSub${altSpeciesLoopIndex}`)
