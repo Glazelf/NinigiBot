@@ -77,7 +77,10 @@ export default async (monsterData, emojis) => {
     };
     let monsterGameIndicator = gameDBName;
     if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
-    let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replace(/ /g, "_")}_Render_001.webp`;
+    // Remove variable split for wiki when regular database swaps to MHWA as well
+    let monsterGameIndicatorWiki = monsterGameIndicator;
+    if (monsterGameIndicatorWiki == "MHWilds") monsterGameIndicatorWiki = "MHWA";
+    let monsterRenderName = `${monsterGameIndicatorWiki}-${monsterData.name.replace(/ /g, "_")}_Render_001.webp`;
     let monsterRender = getWikiURL(monsterRenderName, mhWiki);
     let renderExists = urlExists(monsterRender);
     if (!renderExists) {
