@@ -5,6 +5,6 @@ export default (interaction) => {
     console.log(Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()))
     console.log(interaction.authorizingIntegrationOwners)
     console.log(ApplicationIntegrationType.GuildInstall)
-    console.log(ApplicationIntegrationType.GuildInstall.toString())
+    console.log(ApplicationIntegrationType)
     return (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString()));
 };
