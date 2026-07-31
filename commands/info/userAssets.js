@@ -18,6 +18,8 @@ export default async (interaction, messageFlags) => {
     let userAssetEmbeds = [];
     if (user.avatarURL()) userAssetLinks.push(await user.avatarURL(globalVars.displayAvatarSettings));
     if (user.bannerURL()) userAssetLinks.push(await user.bannerURL(globalVars.displayAvatarSettings));
+    console.log(member)
+    console.log(isGuildDataAvailable(interaction))
     if (isGuildDataAvailable(interaction) && member) {
         member = await member.fetch({ force: true });
         if (member.avatarURL()) userAssetLinks.push(await member.avatarURL(globalVars.displayAvatarSettings));
