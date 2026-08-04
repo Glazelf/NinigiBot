@@ -1,7 +1,6 @@
 import { ApplicationIntegrationType } from 'discord.js';
 
 export default (interaction) => {
-    // A little ugly to hardcode this text but they made the variables less consistent
-    console.log(interaction.authorizingIntegrationOwners)
-    return (interaction.inGuild() && Object.keys(interaction.authorizingIntegrationOwners).includes("guildId"));
+    // When no guild, guildId is present but nulled
+    return (interaction.inGuild() && interaction.authorizingIntegrationOwners.guildId !== null);
 };
