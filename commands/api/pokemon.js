@@ -529,8 +529,10 @@ export default async (interaction, messageFlags) => {
                     if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
                     if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
                     if (cardData.retreat) {
-                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + "Colorless");
-                        if (!colorlessEmoji) colorlessEmoji = "Colorless";
+                        const colorlessString = "Colorless"
+                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString);
+                        console.log(colorlessEmoji)
+                        if (!colorlessEmoji) colorlessEmoji = colorlessString;
                         let retreatCostString = colorlessEmoji.repeat(cardData.retreat);
                         if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
                     };
