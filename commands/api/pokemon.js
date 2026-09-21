@@ -488,7 +488,6 @@ export default async (interaction, messageFlags) => {
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
             let cardData = await tcgdex.card.get(cardInput);
             if (cardInput.toLowerCase() == "random") cardData = await tcgdex.random.card();
-            console.log(cardData)
             if (!cardData || cardData.error) return sendMessage(cardFailMessageObject);
             const cardSetData = await tcgdex.fetch("sets", cardData.set.id);
             const cardImage = `${cardData.image}.png`;
@@ -532,7 +531,7 @@ export default async (interaction, messageFlags) => {
                         const colorlessString = "Colorless"
                         let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString);
                         console.log(colorlessEmoji)
-                        if (!colorlessEmoji) colorlessEmoji = colorlessString;
+                        if (!colorlessEmoji || colorlessEmoji.length == 0) colorlessEmoji = colorlessString;
                         let retreatCostString = colorlessEmoji.repeat(cardData.retreat);
                         if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
                     };
