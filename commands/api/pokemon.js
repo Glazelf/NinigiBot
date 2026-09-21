@@ -17,8 +17,8 @@ import {
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
-import { ModdedDex } from '@pkmn/mods';
 import { Generations } from '@pkmn/data';
+import TCGdex from '@tcgdex/sdk'
 import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
@@ -33,7 +33,6 @@ import getMegaStoneGuess from "../../util/pokemon/getMegaStoneGuess.js";
 import getGenerationString from "../../util/pokemon/getGenerationString.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
@@ -41,6 +40,7 @@ const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon
 const allNatures = Dex.natures.all();
 const cardTypeEmojiPrefix = "PokemonCardType";
 const allMegaStones = Dex.items.all().filter(item => item.megaStone && item.isNonstandard !== "CAP");
+const tcgdex = new TCGdex('en');
 
 export default async (interaction, messageFlags) => {
     // Bools
@@ -484,19 +484,17 @@ export default async (interaction, messageFlags) => {
         case "card":
             const cardInput = interaction.options.getString("card");
             const imageType = interaction.options.getString("image") || "small";
-            const cardSetId = cardInput.split("-")[0];
             const cardFailMessageFlags = new MessageFlagsBitField(messageFlags);
             const cardFailMessageObject = { interaction: interaction, content: "Could not find that card. Please make sure to pick a card from the autocomplete options.", flags: cardFailMessageFlags.add(MessageFlags.Ephemeral) };
-            const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
-                return null;
-            });
-            if (!cardSetJSON) return sendMessage(cardFailMessageObject);
-            const cardData = cardSetJSON.default.find(element => element.id == cardInput);
-            if (!cardData) return sendMessage(cardFailMessageObject);
-            const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
+            let cardData = await tcgdex.card.get(cardInput);
+            if (cardInput.toLowerCase() == "random") cardData = await tcgdex.random.card();
+            console.log(cardData)
+            if (!cardData || cardData.error) return sendMessage(cardFailMessageObject);
+            const cardSetData = await tcgdex.fetch("sets", cardData.set.id);
+            const cardImage = `${cardData.image}.png`;
             switch (imageType) {
                 case "only":
-                    pokemonEmbed.setImage(cardData.images.large);
+                    pokemonEmbed.setImage(cardImage);
                     break;
                 default:
                     let cardTitle = cardData.name; // Space for fomatting with emojis below
@@ -507,19 +505,19 @@ export default async (interaction, messageFlags) => {
                             if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
                         });
                     };
-                    let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}`;
+                    let cardFooter = `${cardSetData.name} ${cardData.localId}/${cardSetData.cardCount.total}`;
                     if (cardData.artist) cardFooter += ` by ${cardData.artist}`;
                     cardFooter += "\n";
                     if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
-                    if (cardData.legalities) {
+                    if (cardData.legal) {
                         if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
-                        Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
+                        cardFooter += `${cardData.legal.standard ? "✅" : "❌"} Standard | ${cardData.legal.expanded ? "✅" : "❌"} Expanded`;
                     };
-                    if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
+                    if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.effect, inline: false }]));
                     if (cardData.attacks) cardData.attacks.forEach(attack => {
                         let attackName = attack.name;
                         if (attack.damage) attackName += ` - ${attack.damage}`;
-                        let attackDescription = attack.text || "No additional effect.";
+                        let attackDescription = attack.effect || "No additional effect.";
                         if (attack.cost) {
                             attackName = ` ${attackName}`; // Space looks better between cost and name
                             let attackCostCopy = attack.cost.slice(); // Avoid altering attack cost which causes issues with emoji order, slice seemed like the cleanest way to actually copy the array
@@ -530,22 +528,21 @@ export default async (interaction, messageFlags) => {
                     });
                     if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
                     if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
-                    if (cardData.retreatCost) {
-                        let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
+                    if (cardData.retreat) {
+                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + "Colorless");
+                        if (!colorlessEmoji) colorlessEmoji = "Colorless";
+                        let retreatCostString = colorlessEmoji.repeat(cardData.retreat);
                         if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
                     };
-                    // Card subtypes can be undefined, for example for (old) trainer cards
-                    let embedAuthor = cardData.supertype;
-                    if (cardData.subtypes) embedAuthor = `${cardData.subtypes.join(" ")} ${embedAuthor}`;
                     pokemonEmbed
-                        .setAuthor({ name: embedAuthor })
+                        .setAuthor({ name: cardData.category })
                         .setTitle(cardTitle)
-                        .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
+                        .setFooter({ text: cardFooter });
                     if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
                     if (imageType == "large") {
-                        pokemonEmbed.setImage(cardData.images.large);
+                        pokemonEmbed.setImage(cardImage);
                     } else if (imageType == "small") {
-                        pokemonEmbed.setThumbnail(cardData.images.large);
+                        pokemonEmbed.setThumbnail(cardImage);
                     };
                     break;
             };

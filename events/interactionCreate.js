@@ -30,7 +30,7 @@ import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 import replacePokemonNameSynonyms from "../util/pokemon/replacePokemonNameSynonyms.js";
 import getMegaStoneGuess from "../util/pokemon/getMegaStoneGuess.js";
-import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+import TCGdex, { Query } from '@tcgdex/sdk';
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
@@ -78,22 +78,8 @@ const allMegaStonesByLength = Dex.items.all().filter(item => item.megaStone && i
 });
 const megaStoneNameLengthShortest = Object.keys(allMegaStonesByLength[0].megaStone)[0].length;
 const megaStoneNameLengthLongest = Object.keys(allMegaStonesByLength[allMegaStonesByLength.length - 1].megaStone)[0].length;
+const tcgdex = new TCGdex('en');
 
-// List all Pokemon Cards
-let pokemonCardsBySet = {};
-let pokemonCardsAll = [];
-fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(async (file) => {
-        const fileName = file.split(".")[0];
-        if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
-        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { with: { type: "json" } });
-        setJSON.default.forEach(card => {
-            pokemonCardsBySet[fileName].push(card);
-            pokemonCardsAll.push(card);
-        });
-    });
-});
 // Helldivers
 const apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona
@@ -617,16 +603,25 @@ export default async (client, interaction) => {
                                 });
                                 break;
                             case "card":
-                                for await (const card of pokemonCardsAll) {
-                                    const pokemonCardSetId = card.id.split("-")[0];
-                                    const pokemonCardSet = pokemonCardSetsJSON.find((element) => element.id == pokemonCardSetId);
-                                    const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
-                                    const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
-                                    const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${card.number}/${pokemonCardSet.printedTotal}`;
-                                    if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
-                                        valuesByDate[card.id] = pokemonCardReleaseDate;
-                                        choices.push({ name: cardOptionString, value: card.id });
-                                    };
+                                let searchPrompt = "Azelf";
+                                if (focusedOption.value.length > 0) searchPrompt = focusedOption.value;
+                                let cards = await tcgdex.card.list(new Query().contains("name", searchPrompt));
+                                if (cards.length == 0) {
+                                    choices.push({ name: "No cards found.", value: "random" });
+                                    break;
+                                };
+                                cards = cards.reverse().slice(0, 25);
+                                let cardArray = [];
+                                for (const card of cards) {
+                                    let cardIdSplit = card.id.split("-");
+                                    let cardSetId = cardIdSplit.slice(0, cardIdSplit.length - 1).join("-");
+                                    const set = await tcgdex.set.get(cardSetId);
+                                    cardArray.push({ name: `${card.name} | ${set.name} (${card.localId}/${set.cardCount.total})`, value: card.id, releaseDate: new Date(set.releaseDate).getTime() });
+                                };
+                                cardArray = cardArray.sort((a, b) => b.releaseDate - a.releaseDate);
+                                console.log(cardArray)
+                                for (const card of cardArray) {
+                                    choices.push({ name: card.name, value: card.value });
                                 };
                                 break;
                         };
