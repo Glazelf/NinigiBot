@@ -619,7 +619,6 @@ export default async (client, interaction) => {
                                     cardArray.push({ name: `${card.name} | ${set.name} (${card.localId}/${set.cardCount.total})`, value: card.id, releaseDate: new Date(set.releaseDate).getTime() });
                                 };
                                 cardArray = cardArray.sort((a, b) => b.releaseDate - a.releaseDate);
-                                console.log(cardArray)
                                 for (const card of cardArray) {
                                     choices.push({ name: card.name, value: card.value });
                                 };
