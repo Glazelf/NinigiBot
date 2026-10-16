@@ -530,8 +530,7 @@ export default async (interaction, messageFlags) => {
                     if (cardData.retreat && cardData.retreat > 0) {
                         const colorlessString = "Colorless";
                         let retreatCostString = "";
-                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString);
-                        if (!colorlessEmoji || colorlessEmoji.length == 0) colorlessEmoji = colorlessString;
+                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString).toString() || colorlessString;
                         for (let i = 0; i < cardData.retreat; i++) {
                             retreatCostString += colorlessEmoji;
                         };
