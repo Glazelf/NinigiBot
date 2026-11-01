@@ -10,7 +10,6 @@ updates:
       pkmn:
         patterns:
           - "@pkmn/*"
-          # Test
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     assignees: ["Glazelf"]
