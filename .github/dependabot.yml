@@ -10,9 +10,9 @@ updates:
       pkmn:
         patterns:
           - "@pkmn/*"
-  # - package-ecosystem: "gitsubmodule"
-  #   directory: "/"
-  #   assignees: ["Glazelf"]
-  #   schedule:
-  #     interval: "daily"
-  #     time: "00:00"
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    assignees: ["Glazelf"]
+    schedule:
+      interval: "daily"
+      time: "00:00"
