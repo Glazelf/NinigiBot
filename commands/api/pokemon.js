@@ -573,6 +573,9 @@ export default async (interaction, messageFlags) => {
             pokemonEmbed = guessMegaStoneMessageObject.embeds[0];
             pokemonButtons = guessMegaStoneMessageObject.components;
             break;
+        case "pmd-quiz":
+
+            return interaction.showModal(pmdQuizModal);
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -704,6 +707,13 @@ const generationChoices = generationChoicesAbilities.concat([
     { name: "2 (Crystal)", value: "2" },
     { name: "1 (Yellow)", value: "1" }
 ]);
+const pmdGameChoices = [
+    { name: "Red & Blue Rescue Team", value: "pmd1" },
+    { name: "Explorers of Time & Darkness", value: "pmd2" },
+    { name: "Explorers of Sky", value: "pmd2s" },
+    { name: "Super Mystery Dungeon", value: "pmd4" },
+    { name: "Rescue Team DX", value: "pmd1dx" }
+];
 
 const pokemonOptionDescription = "Pokémon to get info on.";
 const moveOptionDescription = "Move to get info on.";
@@ -771,6 +781,10 @@ const cardImageOption = new SlashCommandStringOption()
     .setName("image")
     .setDescription("Set the size of the image.")
     .setChoices(cardImageChoices);
+const pmdGameOption = new SlashCommandStringOption()
+    .setName("game")
+    .setDescription("Pick a Mystery Dungeon game.")
+    .setChoices(pmdGameChoices);
 // Integer options
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
@@ -865,6 +879,11 @@ const guessMegaSubcommand = new SlashCommandSubcommandBuilder()
     .setName("guessmega")
     .setDescription("Guess the mega corresponding to the stone.")
     .addBooleanOption(ephemeralOption);
+const pmdQuizSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("pmd-quiz")
+    .setDescription("Take a Mystery Dungeon quiz!")
+    .addStringOption(pmdGameOption)
+    .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("pokemon")
@@ -879,4 +898,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(usageSubcommand)
     .addSubcommand(cardSubcommand)
     .addSubcommand(whosThatSubcommand)
-    .addSubcommand(guessMegaSubcommand);
+    .addSubcommand(guessMegaSubcommand)
+    .addSubcommand(pmdQuizSubcommand);
