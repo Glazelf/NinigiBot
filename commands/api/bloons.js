@@ -54,7 +54,6 @@ export default async (interaction, messageFlags) => {
         case "user":
             btd6UserModal.setCustomId(`${btd6UserModalIdBase}|${interaction.options.getBoolean("ephemeral")}`);
             return interaction.showModal(btd6UserModal);
-            break;
         case "boss-event":
             await interaction.deferReply({ flags: messageFlags });
             let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
