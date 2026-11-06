@@ -22,6 +22,7 @@ import TCGdex from '@tcgdex/sdk'
 import sendMessage from "../../util/discord/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
+import getPmdQuiz from "../../util/pokemon/getPmdQuiz.js";
 import replacePokemonNameSynonyms from "../../util/pokemon/replacePokemonNameSynonyms.js";
 import getTypeEmojis from "../../util/pokemon/getTypeEmojis.js";
 import capitalizeString from "../../util/capitalizeString.js";
@@ -574,8 +575,12 @@ export default async (interaction, messageFlags) => {
             pokemonButtons = guessMegaStoneMessageObject.components;
             break;
         case "pmd-quiz":
-            // Held back by modal component limit being 5.
-            return interaction.showModal(pmdQuizModal);
+            // Would prefer having this in a modal of 8 questions but modals only allow 5 components
+            const pmdGame = interaction.options.getString("game");
+            let pmdQuizMessageObject = await getPmdQuiz({ interaction: interaction, game: pmdGame });
+            pokemonEmbed = pmdQuizMessageObject.embeds[0];
+            // pokemonButtons = pmdQuizMessageObject.components;
+            break;
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString, flags: messageFlags.add(MessageFlags.Ephemeral) });
@@ -785,7 +790,8 @@ const cardImageOption = new SlashCommandStringOption()
 const pmdGameOption = new SlashCommandStringOption()
     .setName("game")
     .setDescription("Pick a Mystery Dungeon game.")
-    .setChoices(pmdGameChoices);
+    .setChoices(pmdGameChoices)
+    .setRequired(true);
 // Integer options
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
