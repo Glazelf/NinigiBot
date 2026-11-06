@@ -709,9 +709,10 @@ const generationChoices = generationChoicesAbilities.concat([
 ]);
 const pmdGameChoices = [
     { name: "Red & Blue Rescue Team", value: "pmd1" },
-    { name: "Explorers of Time & Darkness", value: "pmd2" },
+    { name: "Explorers of Time", value: "pmd2t" },
+    { name: "Explorers of Darkness", value: "pmd2d" },
     { name: "Explorers of Sky", value: "pmd2s" },
-    { name: "Super Mystery Dungeon", value: "pmd4" },
+    // { name: "Super Mystery Dungeon", value: "pmd4" }, // Has it's own totally different quiz mechanics, will be added later
     { name: "Rescue Team DX", value: "pmd1dx" }
 ];
 
