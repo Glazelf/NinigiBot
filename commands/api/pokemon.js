@@ -574,7 +574,7 @@ export default async (interaction, messageFlags) => {
             pokemonButtons = guessMegaStoneMessageObject.components;
             break;
         case "pmd-quiz":
-
+            // Held back by modal component limit being 5.
             return interaction.showModal(pmdQuizModal);
         // Pokémon
         case "pokemon":
