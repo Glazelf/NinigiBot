@@ -1,0 +1,110 @@
+{
+    "pmd1": {
+        "hardy": [
+            {
+                "question": "A test is coming up. How do you study for it?",
+                "answers": [
+                    {
+                        "answer": "Study hard.",
+                        "reward": {
+                            "hardy": 2
+                        }
+                    },
+                    {
+                        "answer": "At the last second.",
+                        "reward": {
+                            "relaxed": 2
+                        }
+                    },
+                    {
+                        "answer": "Ignore it and play.",
+                        "reward": {
+                            "impish": 2
+                        }
+                    }
+                ]
+            },
+            {
+                "question": "Can you focus on something you like?",
+                "answers": [
+                    {
+                        "answer": "Yes.",
+                        "reward": {
+                            "hardy": 2,
+                            "docile": 1
+                        }
+                    },
+                    {
+                        "answer": "No.",
+                        "reward": {
+                            "quirky": 2
+                        }
+                    }
+                ]
+            },
+            {
+                "question": "When the going gets tough, do you get going?",
+                "answers": [
+                    {
+                        "answer": "Yes.",
+                        "reward": {
+                            "hardy": 2,
+                            "brave": 2
+                        }
+                    },
+                    {
+                        "answer": "No.",
+                        "reward": {
+                            "sassy": 2,
+                            "quirky": 2
+                        }
+                    }
+                ]
+            },
+            {
+                "question": "There is a bucket. If you put water in it, how high will you fill it?",
+                "answers": [
+                    {
+                        "answer": "Full.",
+                        "reward": {
+                            "hardy": 2
+                        }
+                    },
+                    {
+                        "answer": "Half.",
+                        "reward": {
+                            "calm": 2
+                        }
+                    },
+                    {
+                        "answer": "A little.",
+                        "reward": {
+                            "quirky": 2
+                        }
+                    }
+                ]
+            }
+        ],
+        "docile": [
+            {
+                "question": "You are offered a choice of two gifts. Which one will you take?",
+                "answers": [
+                    {
+                        "answer": "Big box.",
+                        "reward": {
+                            "docile": 2,
+                            "naive": 1
+                        }
+                    },
+                    {
+                        "answer": "Small box.",
+                        "reward": {
+                            "timid": 2,
+                            "calm": 1
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
