@@ -490,7 +490,7 @@ export default async (interaction, messageFlags) => {
             if (cardInput.toLowerCase() == "random") cardData = await tcgdex.random.card();
             if (!cardData || cardData.error) return sendMessage(cardFailMessageObject);
             const cardSetData = await tcgdex.fetch("sets", cardData.set.id);
-            const cardImage = `${cardData.image}.png`;
+            const cardImage = `${cardData.image}/high.png`;
             switch (imageType) {
                 case "only":
                     pokemonEmbed.setImage(cardImage);
