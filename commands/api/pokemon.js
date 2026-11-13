@@ -516,6 +516,8 @@ export default async (interaction, messageFlags) => {
                         if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
                         cardFooter += `${cardData.legal.standard ? "✅" : "❌"} Standard | ${cardData.legal.expanded ? "✅" : "❌"} Expanded`;
                     };
+                    // Didn't add tcgplayer because the object structure is nonsensical, cardmarket 
+                    if (cardData.pricing.cardmarket) cardFooter += `\nPricing: €${cardData.pricing.cardmarket.trend.toFixed(2)}`;
                     if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.effect, inline: false }]));
                     if (cardData.attacks) cardData.attacks.forEach(attack => {
                         let attackName = attack.name;
