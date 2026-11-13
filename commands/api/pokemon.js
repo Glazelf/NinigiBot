@@ -493,7 +493,11 @@ export default async (interaction, messageFlags) => {
             const cardImage = `${cardData.image}/high.png`;
             switch (imageType) {
                 case "only":
-                    pokemonEmbed.setImage(cardImage);
+                    if (cardData.image) {
+                        pokemonEmbed.setImage(cardImage);
+                    } else {
+                        pokemonEmbed.setDescription("No image could be found for this card.");
+                    };
                     break;
                 default:
                     let cardTitle = cardData.name; // Space for fomatting with emojis below
@@ -530,7 +534,7 @@ export default async (interaction, messageFlags) => {
                     if (cardData.retreat && cardData.retreat > 0) {
                         const colorlessString = "Colorless";
                         let retreatCostString = "";
-                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString).toString() || colorlessString;
+                        let colorlessEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + colorlessString)?.toString() || colorlessString;
                         for (let i = 0; i < cardData.retreat; i++) {
                             retreatCostString += colorlessEmoji;
                         };
@@ -547,10 +551,12 @@ export default async (interaction, messageFlags) => {
                     } else if (cardData.effect) {
                         pokemonEmbed.setDescription(cardData.effect);
                     };
-                    if (imageType == "large") {
-                        pokemonEmbed.setImage(cardImage);
-                    } else if (imageType == "small") {
-                        pokemonEmbed.setThumbnail(cardImage);
+                    if (cardData.image) {
+                        if (imageType == "large") {
+                            pokemonEmbed.setImage(cardImage);
+                        } else if (imageType == "small") {
+                            pokemonEmbed.setThumbnail(cardImage);
+                        };
                     };
                     break;
             };
