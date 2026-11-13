@@ -536,11 +536,17 @@ export default async (interaction, messageFlags) => {
                         };
                         if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
                     };
+                    let cardCategory = cardData.category;
+                    if (cardCategory == "Trainer") cardCategory += ` (${cardData.trainerType})`;
                     pokemonEmbed
-                        .setAuthor({ name: cardData.category })
+                        .setAuthor({ name: cardCategory })
                         .setTitle(cardTitle)
                         .setFooter({ text: cardFooter });
-                    if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
+                    if (cardData.rules) {
+                        pokemonEmbed.setDescription(cardData.rules.join("\n"));
+                    } else if (cardData.effect) {
+                        pokemonEmbed.setDescription(cardData.effect);
+                    };
                     if (imageType == "large") {
                         pokemonEmbed.setImage(cardImage);
                     } else if (imageType == "small") {
