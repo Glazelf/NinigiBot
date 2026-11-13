@@ -1,0 +1,5309 @@
+{
+    "pmd1": {
+        "hardy-1": {
+            "question": "A test is coming up. How do you study for it?",
+            "answers": [
+                {
+                    "answer": "Study hard.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "At the last second.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it and play.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "hardy-2": {
+            "question": "Can you focus on something you like?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 2,
+                        "docile": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hardy-3": {
+            "question": "When the going gets tough, do you get going?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 2,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hardy-4": {
+            "question": "There is a bucket. If you put water in it, how high will you fill it?",
+            "answers": [
+                {
+                    "answer": "Full.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Half.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "A little.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "docile-1": {
+            "question": "You are offered a choice of two gifts. Which one will you take?",
+            "answers": [
+                {
+                    "answer": "Big box.",
+                    "reward": {
+                        "docile": 2,
+                        "naive": 1
+                    }
+                },
+                {
+                    "answer": "Small box.",
+                    "reward": {
+                        "timid": 2,
+                        "calm": 1
+                    }
+                }
+            ]
+        },
+        "docile-2": {
+            "question": "You broke a rotten egg in your room! What will you do?",
+            "answers": [
+                {
+                    "answer": "Open a window right away.",
+                    "reward": {
+                        "docile": 2,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "Take a sniff first.",
+                    "reward": {
+                        "naive": 2,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "docile-3": {
+            "question": "A friend brought over something you'd forgotten. How do you thank your friend?",
+            "answers": [
+                {
+                    "answer": "Say thank you regularly.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Say thanks with a joke.",
+                    "reward": {
+                        "naive": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Say thanks, but be cool.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "docile-4": {
+            "question": "There is a wallet at the side of a road.",
+            "answers": [
+                {
+                    "answer": "Turn it in to the police!",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Yay! Yay!",
+                    "reward": {
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Is anyone watching...?",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "brave-1": {
+            "question": "You're going bungee jumping for the first time. Since it's scary, you decide to test the jump with a doll... And the bungee cord snaps! Will you still try to make a jump anyway?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "brave": 3,
+                        "impish": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 2,
+                        "timid": 1
+                    }
+                }
+            ]
+        },
+        "brave-2": {
+            "question": "There is an alien invasion! What will you do?",
+            "answers": [
+                {
+                    "answer": "Fight.",
+                    "reward": {}
+                },
+                {
+                    "answer": "Run.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "brave-2b": {
+            "question": "You valiantly fight the aliens... But, you are defeated... An alien says to you... \"YOU HAVE IMPRESSED US. IT WAS A PLEASURE TO SEE. JOIN US, AND TOGETHER WE SHALL RULE THE WORLD.\" What will you do?",
+            "answers": [
+                {
+                    "answer": "Rule with the aliens.",
+                    "reward": {
+                        "sassy": 1,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "Refuse.",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "brave-3": {
+            "question": "There is a scream from behind a door! How will you react?",
+            "answers": [
+                {
+                    "answer": "Yank open the door.",
+                    "reward": {
+                        "hardy": 1,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Scream in unison.",
+                    "reward": {
+                        "naive": 2
+                    }
+                }
+            ]
+        },
+        "brave-4": {
+            "question": "A delinquent is hassling a girl on a busy city street! What will you do?",
+            "answers": [
+                {
+                    "answer": "Help without hesitation.",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Help, even if scared.",
+                    "reward": {
+                        "hardy": 2,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Call the police.",
+                    "reward": {
+                        "docile": 1,
+                        "timid": 1,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "Do nothing out of fear.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "jolly-1": {
+            "question": "Are you a cheerful personality?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 2,
+                        "naive": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "jolly-2": {
+            "question": "Do you like to noisily enjoy yourself with others?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "timid": 1
+                    }
+                }
+            ]
+        },
+        "jolly-3": {
+            "question": "It's the summer holidays! Where would you like to go?",
+            "answers": [
+                {
+                    "answer": "The beach!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Spas.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Anywhere.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "jolly-4": {
+            "question": "A foreign person has started up a conversation with you. To be honest, you don't have a clue what this fellow is saying. How do you reply?",
+            "answers": [
+                {
+                    "answer": "Haha! Yes. Very funny!",
+                    "reward": {
+                        "jolly": 3
+                    }
+                },
+                {
+                    "answer": "Um... Could you say that again?",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Right... Well, I gotta go.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "impish-1": {
+            "question": "Have you ever made a pitfall trap?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "impish-2": {
+            "question": "Do you like pranks?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 1,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "impish-3": {
+            "question": "Are there many things that you would like to do?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 1,
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "impish-4": {
+            "question": "Your friend is being bullied! What do you do?",
+            "answers": [
+                {
+                    "answer": "Face up to the bully.",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Caution the bully from afar.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Heckle the bully from behind.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "naive-1": {
+            "question": "Do you like groan-inducing puns?",
+            "answers": [
+                {
+                    "answer": "Love them!",
+                    "reward": {
+                        "impish": 1,
+                        "naive": 3
+                    }
+                },
+                {
+                    "answer": "A little.",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Spare me.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "naive-2": {
+            "question": "Do you tend to laugh a lot?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "docile": 1,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "naive-3": {
+            "question": "Do others often call you childish?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 1,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "naive-4": {
+            "question": "Do you like to imagine things for your amusement?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "timid-1": {
+            "question": "A human hand extends out of a toilet! What would you do?",
+            "answers": [
+                {
+                    "answer": "Scream and run.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Close the lid without a word.",
+                    "reward": {
+                        "hardy": 1,
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Shake hands with it.",
+                    "reward": {
+                        "brave": 2,
+                        "impish": 1,
+                        "naive": 1
+                    }
+                }
+            ]
+        },
+        "timid-2": {
+            "question": "Grab any digit on your left hand with your right hand. Which digit did you grab?",
+            "answers": [
+                {
+                    "answer": "Thumb.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Index finger.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Middle finger.",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Ring finger.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Little finger.",
+                    "reward": {
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "timid-3": {
+            "question": "You are suddenly locked inside a pitch-black room! What do you do?",
+            "answers": [
+                {
+                    "answer": "Kick the door.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Cry.",
+                    "reward": {
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Clean it.",
+                    "reward": {
+                        "impish": 2,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "timid-4": {
+            "question": "Can you go into a haunted house?",
+            "answers": [
+                {
+                    "answer": "No problem!",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Uh... N-no...",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "With someone I like.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "hasty-1": {
+            "question": "You receive a gift! But you don't know what's in it. You're curious, so what do you do?",
+            "answers": [
+                {
+                    "answer": "Open it now.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Open it later.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Get someone to open it.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "hasty-2": {
+            "question": "You win a lottery! What do you do with the money?",
+            "answers": [
+                {
+                    "answer": "Spend it now.",
+                    "reward": {
+                        "jolly": 2,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "Save it.",
+                    "reward": {
+                        "hardy": 1,
+                        "calm": 1
+                    }
+                },
+                {
+                    "answer": "Give it away.",
+                    "reward": {
+                        "brave": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hasty-3": {
+            "question": "You come across a treasure chest! What do you do?",
+            "answers": [
+                {
+                    "answer": "Open it right away!",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "No... Could be a trap...",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "It's going to be empty...",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "hasty-4": {
+            "question": "Your friend fails to show up for a meeting at the promised time. What do you do?",
+            "answers": [
+                {
+                    "answer": "Become irritated.",
+                    "reward": {
+                        "docile": 1,
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Wait patiently.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Get angry and bail.",
+                    "reward": {
+                        "hasty": 3
+                    }
+                }
+            ]
+        },
+        "sassy-1": {
+            "question": "Your country's leader is in front of you. How do you speak to him or her?",
+            "answers": [
+                {
+                    "answer": "Speak calmly.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Speak nervously.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "WHATEVER!!",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "sassy-2": {
+            "question": "Do others tell you to watch what you say?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 1,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "sassy-3": {
+            "question": "Do you think you are cool? Be honest.",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "sassy-4": {
+            "question": "Can you sincerely thank someone when you feel grateful?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "docile": 2,
+                        "calm": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "calm-1": {
+            "question": "Do you occasionally consider yourself dull and overly cautious?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "calm-2": {
+            "question": "Do you dream of lounging around idly without much excitement?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "calm-3": {
+            "question": "Do you like to fight?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 1,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2,
+                        "lonely": 1
+                    }
+                }
+            ]
+        },
+        "calm-4": {
+            "question": "Do you often yawn?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 1,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-1": {
+            "question": "Are you often late for school or meetings?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "sassy": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2,
+                        "hasty": 1
+                    }
+                }
+            ]
+        },
+        "relaxed-2": {
+            "question": "Do you get the feeling that you've slowed down lately?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "impish": 1,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-3": {
+            "question": "It is a pleasant day at the beach. How do you feel?",
+            "answers": [
+                {
+                    "answer": "This feels great!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Snore...",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "I want to go home soon!",
+                    "reward": {
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-4": {
+            "question": "Do you fall asleep without noticing?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "lonely-1": {
+            "question": "Do you feel lonesome when you are alone?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "lonely-2": {
+            "question": "Do you hate to be the last person to leave class at the end of a school day?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "brave": 3,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "lonely-3": {
+            "question": "What do you do with your room's light when you're going to bed at night?",
+            "answers": [
+                {
+                    "answer": "Leave it on.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Turn it off.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "lonely-4": {
+            "question": "It's a weekend, but no one will play with you... What do you do?",
+            "answers": [
+                {
+                    "answer": "Go on a trip.",
+                    "reward": {
+                        "jolly": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Hang around vacantly.",
+                    "reward": {
+                        "calm": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Huddle in a corner.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 3
+                    }
+                }
+            ]
+        },
+        "quirky-1": {
+            "question": "Do you sometimes run out of things to do all of a sudden?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "quirky-2": {
+            "question": "How quickly do you respond to an e-mail?",
+            "answers": [
+                {
+                    "answer": "Reply right away.",
+                    "reward": {
+                        "hardy": 1,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "May reply, may not.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Too much trouble.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "quirky-3": {
+            "question": "There is a person you like... But there's no opportunity to get close. What do you do?",
+            "answers": [
+                {
+                    "answer": "Bravely declare my love.",
+                    "reward": {
+                        "hardy": 1,
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Might say hello...",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Pull a prank to get attention.",
+                    "reward": {
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "Look from afar.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "quirky-4": {
+            "question": "The road forks to the right and left. You are told there is a treasure on the right side. What do you do?",
+            "answers": [
+                {
+                    "answer": "Instantly go right.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "It's a trap! Go left.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Choose either side.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "misc-1": {
+            "question": "On vacation outings, you want to...",
+            "answers": [
+                {
+                    "answer": "Go alone.",
+                    "reward": {
+                        "hasty": 1,
+                        "quirky": 1
+                    }
+                },
+                {
+                    "answer": "Go with others.",
+                    "reward": {
+                        "jolly": 1,
+                        "lonely": 1
+                    }
+                }
+            ]
+        },
+        "misc-2": {
+            "question": "It's the summer festival! Do you like carnivals?",
+            "answers": [
+                {
+                    "answer": "Love them!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Don't care.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "misc-3": {
+            "question": "Somebody calls you \"weird but funny.\" How does that make you feel?",
+            "answers": [
+                {
+                    "answer": "Happy!",
+                    "reward": {
+                        "naive": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Not happy.",
+                    "reward": {
+                        "hasty": 1,
+                        "sassy": 1
+                    }
+                }
+            ]
+        },
+        "final": {
+            "question": "Are you a boy or a girl?",
+            "answers": [
+                {
+                    "answer": "Boy.",
+                    "reward": {}
+                },
+                {
+                    "answer": "Girl.",
+                    "reward": {}
+                }
+            ]
+        }
+    },
+    "pmd2": {
+        "hardy-1": {
+            "question": "You're in the final mile of a marathon, but the last stretch is exhausting! What will you do?",
+            "answers": [
+                {
+                    "answer": "Hang in there and finish!",
+                    "reward": {
+                        "hardy": 4,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Stop running.",
+                    "reward": {
+                        "quirky": 4
+                    }
+                },
+                {
+                    "answer": "Find a shortcut.",
+                    "reward": {
+                        "bold": 4,
+                        "rash": 2
+                    }
+                }
+            ]
+        },
+        "hardy-2": {
+            "question": "Would you ever consider sticking to a plan to do ten sit-ups a day?",
+            "answers": [
+                {
+                    "answer": "Yes! That's easy!",
+                    "reward": {
+                        "impish": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Yes. Hard work, though.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "No! Who'd want to do that?!",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "hardy-3": {
+            "question": "What do you do with your allowance?",
+            "answers": [
+                {
+                    "answer": "Save it!",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "Spend it!",
+                    "reward": {
+                        "quirky": 4,
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Spend half, save half.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "I don't get an allowance!",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "hardy-4": {
+            "question": "You have to move a heavy suitcase. What will you do?",
+            "answers": [
+                {
+                    "answer": "Carry it by myself.",
+                    "reward": {
+                        "hardy": 4,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Ask someone to help.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Make someone else do it!",
+                    "reward": {
+                        "bold": 4,
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "docile-1": {
+            "question": "If you don't know something, do you come clean and admit it?",
+            "answers": [
+                {
+                    "answer": "Of course.",
+                    "reward": {
+                        "docile": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "That's not easy to admit!",
+                    "reward": {
+                        "timid": 4,
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "docile-2": {
+            "question": "You're on a walk when you smell something delicious. What do you do?",
+            "answers": [
+                {
+                    "answer": "Try to imagine what it is.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Find out what it is!",
+                    "reward": {
+                        "naive": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Think about how hungry I am...",
+                    "reward": {
+                        "impish": 4
+                    }
+                }
+            ]
+        },
+        "docile-3": {
+            "question": "A fortune-teller says that you have a bad future ahead of you. How do you react?",
+            "answers": [
+                {
+                    "answer": "Worry about it!",
+                    "reward": {
+                        "docile": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Forget about it.",
+                    "reward": {
+                        "jolly": 4,
+                        "relaxed": 2,
+                        "bold": 2
+                    }
+                }
+            ]
+        },
+        "docile-4": {
+            "question": "You hear a rumor that might make you rich! What do you do?",
+            "answers": [
+                {
+                    "answer": "Keep it all to myself.",
+                    "reward": {
+                        "bold": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Share it with friends.",
+                    "reward": {
+                        "docile": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "Spread a different rumor!",
+                    "reward": {
+                        "impish": 4
+                    }
+                }
+            ]
+        },
+        "brave-1": {
+            "question": "How do you blow up a balloon?",
+            "answers": [
+                {
+                    "answer": "As close to breaking as possible!",
+                    "reward": {
+                        "brave": 4,
+                        "impish": 4
+                    }
+                },
+                {
+                    "answer": "Big...but not too big!",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "I don't... It could pop!",
+                    "reward": {
+                        "timid": 4,
+                        "docile": 2
+                    }
+                }
+            ]
+        },
+        "brave-2": {
+            "question": "Do you state your opinion even when it's not what everyone else thinks?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "brave": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "lonely": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "It depends on the situation.",
+                    "reward": {
+                        "quiet": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "brave-3": {
+            "question": "You want to reveal that you like someone a whole bunch! What do you do?",
+            "answers": [
+                {
+                    "answer": "Show it a little by playing together.",
+                    "reward": {
+                        "jolly": 4,
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Make it obvious...by playing a prank!",
+                    "reward": {
+                        "lonely": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "State it clearly for all to hear!",
+                    "reward": {
+                        "brave": 4,
+                        "impish": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "Keep it to myself! It's too risky!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "brave-4": {
+            "question": "You're on a stroll when a TV crew pounces on you for an interview. What do you do?",
+            "answers": [
+                {
+                    "answer": "Run away! How embarrassing!",
+                    "reward": {
+                        "timid": 4
+                    }
+                },
+                {
+                    "answer": "Answer questions properly.",
+                    "reward": {
+                        "brave": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Yuck it up! Woo-hoo! I'm on TV!",
+                    "reward": {
+                        "naive": 4,
+                        "bold": 2
+                    }
+                }
+            ]
+        },
+        "jolly-1": {
+            "question": "You feel a burst of happiness! How about expressing it with a little dance?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "jolly-2": {
+            "question": "You see a parade coming down the street. What do you do?",
+            "answers": [
+                {
+                    "answer": "Stay on the sidelines.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Join the parade!",
+                    "reward": {
+                        "jolly": 4,
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Walk away.",
+                    "reward": {
+                        "sassy": 4,
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "jolly-3": {
+            "question": "Your friend tells a joke that's horribly corny! How do you react?",
+            "answers": [
+                {
+                    "answer": "Roll around the floor laughing!",
+                    "reward": {
+                        "jolly": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Just let it go by...",
+                    "reward": {
+                        "impish": 2,
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Slap my forehead and groan.",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "jolly-4": {
+            "question": "Can you strike up conversations with new people easily?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 4,
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "timid": 2,
+                        "docile": 2
+                    }
+                }
+            ]
+        },
+        "impish-1": {
+            "question": "Do you get injured a lot?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "impish-2": {
+            "question": "You see a ball on the ground. What do you do?",
+            "answers": [
+                {
+                    "answer": "Kick it!",
+                    "reward": {
+                        "hasty": 2,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Throw it!",
+                    "reward": {
+                        "impish": 4
+                    }
+                },
+                {
+                    "answer": "Spiff it up, shiny and new!",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "impish-3": {
+            "question": "What do you think of jungle exploration?",
+            "answers": [
+                {
+                    "answer": "Sounds fun!",
+                    "reward": {
+                        "impish": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Not interested.",
+                    "reward": {
+                        "quirky": 4,
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "impish-4": {
+            "question": "You discover a secret passage in a basement. What do you do?",
+            "answers": [
+                {
+                    "answer": "Go through it!",
+                    "reward": {
+                        "impish": 4,
+                        "brave": 4,
+                        "rash": 2,
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Stay away from it.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "naive-1": {
+            "question": "Your friend takes a spectacular fall! What do you do?",
+            "answers": [
+                {
+                    "answer": "Help my friend up!",
+                    "reward": {
+                        "brave": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Laugh! It's too funny!",
+                    "reward": {
+                        "naive": 4,
+                        "impish": 4,
+                        "rash": 2
+                    }
+                }
+            ]
+        },
+        "naive-2": {
+            "question": "You're daydreaming...when your friend sprays you with water! What do you do?",
+            "answers": [
+                {
+                    "answer": "Get mad!",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Get sad.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Woo-hoo! Water fight!",
+                    "reward": {
+                        "jolly": 4,
+                        "naive": 4,
+                        "impish": 4
+                    }
+                }
+            ]
+        },
+        "naive-3": {
+            "question": "Have you ever wanted to communicate with aliens from another planet?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "naive-4": {
+            "question": "Have you ever upset a friend when you were just kidding around?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 4,
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 4
+                    }
+                }
+            ]
+        },
+        "timid-1": {
+            "question": "Hey, what's that? There's someone behind you! So...did you look just now?",
+            "answers": [
+                {
+                    "answer": "Don't do that! It scared me!",
+                    "reward": {
+                        "timid": 4
+                    }
+                },
+                {
+                    "answer": "OK, I admit it. You tricked me.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "No way, I didn't fall for it.",
+                    "reward": {
+                        "sassy": 4,
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Huh? What?",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                }
+            ]
+        },
+        "timid-2": {
+            "question": "Someone who works at a store suggests an item that isn't quite what you're looking for. But you like this person. What do you do?",
+            "answers": [
+                {
+                    "answer": "Say you don't want it.",
+                    "reward": {
+                        "brave": 2,
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Say thanks...but say no.",
+                    "reward": {
+                        "calm": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Cave in and buy it.",
+                    "reward": {
+                        "rash": 2,
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "timid-3": {
+            "question": "You run into a new person that you haven't talked to very much before. What do you do?",
+            "answers": [
+                {
+                    "answer": "Make small talk.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Say nothing!",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Make an excuse to get away!",
+                    "reward": {
+                        "timid": 4
+                    }
+                }
+            ]
+        },
+        "timid-4": {
+            "question": "You think you hear someone call your name. But no one's around...so what was it?",
+            "answers": [
+                {
+                    "answer": "Just my imagination.",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "Someone fooling around.",
+                    "reward": {
+                        "naive": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "A ghost!",
+                    "reward": {
+                        "timid": 4
+                    }
+                }
+            ]
+        },
+        "hasty-1": {
+            "question": "Do you find yourself jumping to the wrong conclusion a lot of the time?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hasty": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 2,
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "hasty-2": {
+            "question": "Do you change the channels often while watching TV?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "hasty-3": {
+            "question": "You find something at a great bargain! What do you do?",
+            "answers": [
+                {
+                    "answer": "Buy it right away!",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Think about whether you need it.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Demand an even bigger discount!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "hasty-4": {
+            "question": "You're packing your classroom's snacks for a picnic when you get hungry. What do you do?",
+            "answers": [
+                {
+                    "answer": "Eat just a tiny bit.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Hold myself back and pack it all up.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "What snacks? They're in my belly!",
+                    "reward": {
+                        "rash": 4
+                    }
+                }
+            ]
+        },
+        "sassy-1": {
+            "question": "Are you a rebel at heart?",
+            "answers": [
+                {
+                    "answer": "Totally!",
+                    "reward": {
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Of course not.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "sassy-2": {
+            "question": "When walking in a group, do you tend to be the one at the front?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "sassy": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 4,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "sassy-3": {
+            "question": "Do you think that you might be a genius?",
+            "answers": [
+                {
+                    "answer": "Certainly!",
+                    "reward": {
+                        "sassy": 4,
+                        "naive": 2,
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Well, not really...",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "sassy-4": {
+            "question": "Would you feel comfortable stating your opinion to a very important person?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "sassy": 4,
+                        "brave": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "Not really.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "calm-1": {
+            "question": "Are you a city person or a country person?",
+            "answers": [
+                {
+                    "answer": "I like the city!",
+                    "reward": {
+                        "lonely": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "I like the country!",
+                    "reward": {
+                        "calm": 4
+                    }
+                },
+                {
+                    "answer": "I like them both!",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "calm-2": {
+            "question": "You're about to take the last cookie when your friend wolfs it down! What do you do?",
+            "answers": [
+                {
+                    "answer": "Whatever. It's just a cookie.",
+                    "reward": {
+                        "calm": 4
+                    }
+                },
+                {
+                    "answer": "I unleash my cookie fury!",
+                    "reward": {
+                        "relaxed": 4,
+                        "jolly": 4
+                    }
+                },
+                {
+                    "answer": "I weep for my lost cookie.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "calm-3": {
+            "question": "You've spent forever stacking dominoes...One more and you're done...OH, NO! You knocked them over! What do you do?",
+            "answers": [
+                {
+                    "answer": "I'm too crushed to start again.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "I unleash my full fury!",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "I set up the dominoes again...",
+                    "reward": {
+                        "calm": 4,
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-1": {
+            "question": "You don't get bothered by noise and ruckus nearby, do you?",
+            "answers": [
+                {
+                    "answer": "Yes!",
+                    "reward": {
+                        "bold": 4,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Not at all.",
+                    "reward": {
+                        "lonely": 4,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-2": {
+            "question": "You've just stuffed yourself with a good meal when a great dessert arrives. What do you do?",
+            "answers": [
+                {
+                    "answer": "Eat it. Who cares if I'm stuffed?",
+                    "reward": {
+                        "hasty": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Turn it down. It's too fattening!",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Yummy! I love dessert the most!",
+                    "reward": {
+                        "bold": 4,
+                        "jolly": 4,
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-3": {
+            "question": "You have a really important test tomorrow! What do you do?",
+            "answers": [
+                {
+                    "answer": "Study all night long.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "Wing it! I'm sure it will be fine!",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "Test?! I think I have a fever...",
+                    "reward": {
+                        "naive": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-4": {
+            "question": "You're eating at a restaurant when you abruptly realize that everyone's gone! What do you do?",
+            "answers": [
+                {
+                    "answer": "Alone?! I look for an employee!",
+                    "reward": {
+                        "lonely": 4,
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Who's worried? I keep eating.",
+                    "reward": {
+                        "jolly": 4,
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "I swipe food from other tables!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-5": {
+            "question": "Do you find yourself humming or singing often?",
+            "answers": [
+                {
+                    "answer": "All the time!",
+                    "reward": {
+                        "relaxed": 4,
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Never.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "lonely-1": {
+            "question": "The phone's ringing! What do you do?",
+            "answers": [
+                {
+                    "answer": "Answer right away!",
+                    "reward": {
+                        "hasty": 4,
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Wait a bit before answering.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it and let it ring.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "lonely-2": {
+            "question": "Your friends seem to be having a fun chat out of earshot. What do you do?",
+            "answers": [
+                {
+                    "answer": "Join them and chat along!",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Nothing...I'm not interested.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Eavesdrop from a distance!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "lonely-3": {
+            "question": "Do you like being the center of attention?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "lonely": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "lonely-4": {
+            "question": "You're told to wait in a big, empty room. What do you do?",
+            "answers": [
+                {
+                    "answer": "Wait quietly.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Search for something to do.",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Wander outside.",
+                    "reward": {
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "Cradle my knees and sit in the corner!",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "quirky-1": {
+            "question": "Do you have lots of stuff you bought, thinking it was all cool, but don't use anymore?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 4,
+                        "rash": 2,
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "quirky-2": {
+            "question": "Have you had any hobbies for a long time?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quirky": 4,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "quirky-3": {
+            "question": "Do you often cancel plans to meet others at the last second?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "quirky-4": {
+            "question": "Do you like to do things according to plan?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "I'm not good at planning.",
+                    "reward": {
+                        "quirky": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Plans? Who needs plans?",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                }
+            ]
+        },
+        "quiet-1": {
+            "question": "Do you think that lies are sometimes necessary?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quiet": 4,
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "brave": 4
+                    }
+                },
+                {
+                    "answer": "I don't know.",
+                    "reward": {
+                        "docile": 4
+                    }
+                }
+            ]
+        },
+        "quiet-2": {
+            "question": "You spot a deserted ship on the high seas! What do you think the ship holds?",
+            "answers": [
+                {
+                    "answer": "Precious loot!",
+                    "reward": {
+                        "naive": 4,
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Ghosts!",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Nothing! The ship is merely a mirage!",
+                    "reward": {
+                        "quiet": 4
+                    }
+                }
+            ]
+        },
+        "quiet-3": {
+            "question": "Do you think that anything goes when it comes to winning?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "quiet": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "No way!",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "quiet-4": {
+            "question": "Your friend is crying right in front of you! What made that happen?",
+            "answers": [
+                {
+                    "answer": "Someone bullied my friend!",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "My friend fell down, no doubt!",
+                    "reward": {
+                        "quiet": 4
+                    }
+                },
+                {
+                    "answer": "I wonder if it's my fault?",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "rash-1": {
+            "question": "Your friend says that your shirt is inside out. What do you do?",
+            "answers": [
+                {
+                    "answer": "Get embarrassed!",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Laugh out loud!",
+                    "reward": {
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "Say that it's the latest fashion!",
+                    "reward": {
+                        "jolly": 4
+                    }
+                }
+            ]
+        },
+        "rash-2": {
+            "question": "You muster your courage and go to a graveyard at night...and see a woman soaked to the skin just standing there! What do you do?",
+            "answers": [
+                {
+                    "answer": "Run away at full speed!",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "So what? It's just a lady.",
+                    "reward": {
+                        "naive": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Drop down and play dead!",
+                    "reward": {
+                        "rash": 4
+                    }
+                }
+            ]
+        },
+        "rash-3": {
+            "question": "Do you often forget to lock the door when you go out?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "rash": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "rash-4": {
+            "question": "Have you ever accidentally revealed a personal secret that someone shared with you?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "rash": 4,
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "bold-1": {
+            "question": "You're in class when you realize that you really have to go to the restroom! What do you do?",
+            "answers": [
+                {
+                    "answer": "Ask for permission to leave.",
+                    "reward": {
+                        "brave": 4,
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "Sneak out.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Hold on until class ends!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "bold-2": {
+            "question": "You're in a play with friends. What kind of role do you prefer?",
+            "answers": [
+                {
+                    "answer": "Starring role!",
+                    "reward": {
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "Supporting role.",
+                    "reward": {
+                        "jolly": 4
+                    }
+                },
+                {
+                    "answer": "Just a bit part.",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "bold-3": {
+            "question": "You see a cake that is past its expiration date, but only by one day. What do you do?",
+            "answers": [
+                {
+                    "answer": "Not a problem! Chow time!",
+                    "reward": {
+                        "brave": 4,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Think about it briefly, then decide.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Get someone to try it first.",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "bold-4": {
+            "question": "You attend a fine dinner at a friend's house. How do you behave?",
+            "answers": [
+                {
+                    "answer": "Devour the food heartily!",
+                    "reward": {
+                        "impish": 4,
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Enjoy the meal in polite moderation.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Ask to take the leftovers home!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "final": {
+            "question": "Are you male or female?",
+            "answers": [
+                {
+                    "answer": "Male",
+                    "reward-time": {
+                        "jolly": 1,
+                        "impish": 1,
+                        "quirky": 1,
+                        "rash": 1
+                    },
+                    "reward-darkness": {
+                        "hardy": 1,
+                        "docile": 1,
+                        "naive": 1,
+                        "timid": 1
+                    }
+                },
+                {
+                    "answer": "Female",
+                    "reward-time": {
+                        "sassy": 1,
+                        "lonely": 1,
+                        "quirky": 1,
+                        "bold": 1
+                    },
+                    "reward-darkness": {
+                        "brave": 1,
+                        "impish": 1,
+                        "calm": 1,
+                        "rash": 1
+                    }
+                }
+            ]
+        }
+    },
+    "pmd2s": {
+        "hardy-1": {
+            "question": "You're running a marathon, and at the start you fall flat on your face! What will you do?",
+            "answers": [
+                {
+                    "answer": "I'm not giving up yet!",
+                    "reward": {
+                        "hardy": 4,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Just give up.",
+                    "reward": {
+                        "quirky": 4
+                    }
+                },
+                {
+                    "answer": "Shout, \"START OVER!\"",
+                    "reward": {
+                        "bold": 4,
+                        "rash": 2
+                    }
+                }
+            ]
+        },
+        "hardy-2": {
+            "question": "You're at a movie theater. What are you there to see?",
+            "answers": [
+                {
+                    "answer": "An action movie.",
+                    "reward": {
+                        "impish": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "A drama.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "A romantic movie.",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "hardy-3": {
+            "question": "What's your studying style?",
+            "answers": [
+                {
+                    "answer": "Working hard, every day.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "If I remember to...",
+                    "reward": {
+                        "quirky": 4,
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "I just cover what I need to.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "I can't really do it alone...",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "hardy-4": {
+            "question": "You've been asked to do a difficult task. What will you do?",
+            "answers": [
+                {
+                    "answer": "Do it myself.",
+                    "reward": {
+                        "hardy": 4,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Ask someone to help.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Make someone else do it!",
+                    "reward": {
+                        "bold": 4,
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "docile-1": {
+            "question": "Are you truly sincere when you apologize?",
+            "answers": [
+                {
+                    "answer": "Of course.",
+                    "reward": {
+                        "docile": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "That's not easy to admit!",
+                    "reward": {
+                        "timid": 4,
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "docile-2": {
+            "question": "Do you think you have good study habits?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "naive": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Well, I never lose at sports!",
+                    "reward": {
+                        "impish": 4
+                    }
+                }
+            ]
+        },
+        "docile-3": {
+            "question": "There's a rumor around about a ghost haunting the school bathrooms! What do you do?",
+            "answers": [
+                {
+                    "answer": "Scary...bathrooms!",
+                    "reward": {
+                        "docile": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Go in there anyway.",
+                    "reward": {
+                        "jolly": 4,
+                        "relaxed": 2,
+                        "bold": 2
+                    }
+                }
+            ]
+        },
+        "docile-4": {
+            "question": "Everyone's sharing a dessert, and there's an extra piece. What do you do?",
+            "answers": [
+                {
+                    "answer": "Don't tell anyone.",
+                    "reward": {
+                        "bold": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Let everyone know.",
+                    "reward": {
+                        "rash": 4,
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "First come, first served!",
+                    "reward": {
+                        "impish": 4
+                    }
+                }
+            ]
+        },
+        "brave-1": {
+            "question": "How are your mornings?",
+            "answers": [
+                {
+                    "answer": "Always in a rush!",
+                    "reward": {
+                        "brave": 4,
+                        "impish": 4
+                    }
+                },
+                {
+                    "answer": "Always perfect.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "They are OK.",
+                    "reward": {
+                        "timid": 4,
+                        "docile": 2
+                    }
+                }
+            ]
+        },
+        "brave-2": {
+            "question": "Everyone around you is laughing hard at something you think is pretty boring. What do you do?",
+            "answers": [
+                {
+                    "answer": "Nothing, really.",
+                    "reward": {
+                        "brave": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "Laugh along.",
+                    "reward": {
+                        "lonely": 4,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "It depends on the situation.",
+                    "reward": {
+                        "quiet": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "brave-3": {
+            "question": "You want to reveal that you like someone a whole bunch! What do you do?",
+            "answers": [
+                {
+                    "answer": "Show it a little by playing together.",
+                    "reward": {
+                        "jolly": 4,
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Make it obvious by...playing a prank!",
+                    "reward": {
+                        "lonely": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "State it clearly for all to hear!",
+                    "reward": {
+                        "brave": 4,
+                        "impish": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "Keep it to myself! It's too risky!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "brave-4": {
+            "question": "You're on a stroll when a TV crew pounces on you for an interview. What do you do?",
+            "answers": [
+                {
+                    "answer": "Run away! How embarrassing!",
+                    "reward": {
+                        "timid": 4
+                    }
+                },
+                {
+                    "answer": "Answer questions properly.",
+                    "reward": {
+                        "brave": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Yuck it up! Woo-hoo! I'm on TV!",
+                    "reward": {
+                        "naive": 4,
+                        "bold": 2
+                    }
+                }
+            ]
+        },
+        "jolly-1": {
+            "question": "Do you like lively parties?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "jolly-2": {
+            "question": "The people at the next table are singing for someone's birthday. What do you do?",
+            "answers": [
+                {
+                    "answer": "Stay on the sidelines.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Sing along!",
+                    "reward": {
+                        "jolly": 4,
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Walk away.",
+                    "reward": {
+                        "sassy": 4,
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "jolly-3": {
+            "question": "You're in a completely silent assembly when you suddenly hear someone pass gas! How do you react?",
+            "answers": [
+                {
+                    "answer": "Roll on the floor laughing!",
+                    "reward": {
+                        "jolly": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Just let it go by...",
+                    "reward": {
+                        "impish": 2,
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Who was that?!",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "jolly-4": {
+            "question": "Do you like karaoke?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 4,
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 2,
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "impish-1": {
+            "question": "Do you prefer to play outside rather than inside?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "impish-2": {
+            "question": "You see a big and comfortable bed. Your first reaction is to...",
+            "answers": [
+                {
+                    "answer": "Jump on it!",
+                    "reward": {
+                        "hasty": 2,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Belly flop!",
+                    "reward": {
+                        "impish": 4
+                    }
+                },
+                {
+                    "answer": "Curl up.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "impish-3": {
+            "question": "You're hiking up a mountain when you reach diverging paths. Which kind do you take?",
+            "answers": [
+                {
+                    "answer": "Narrow.",
+                    "reward": {
+                        "impish": 4,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Wide.",
+                    "reward": {
+                        "quirky": 4,
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "impish-4": {
+            "question": "You discover a beat-up-looking treasure chest in some ruins. What do you do?",
+            "answers": [
+                {
+                    "answer": "Open it!",
+                    "reward": {
+                        "brave": 4,
+                        "impish": 4,
+                        "hasty": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Get help opening it.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "naive-1": {
+            "question": "Your friend takes a spectacular fall! What do you do?",
+            "answers": [
+                {
+                    "answer": "Help my friend up!",
+                    "reward": {
+                        "brave": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Laugh! It's too funny!",
+                    "reward": {
+                        "impish": 4,
+                        "naive": 4,
+                        "rash": 2
+                    }
+                }
+            ]
+        },
+        "naive-2": {
+            "question": "You're daydreaming...when your friend sprays you with water! What do you do?",
+            "answers": [
+                {
+                    "answer": "Get mad.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Get sad.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Woo-hoo! Water fight!",
+                    "reward": {
+                        "impish": 4,
+                        "jolly": 4,
+                        "naive": 4
+                    }
+                }
+            ]
+        },
+        "naive-3": {
+            "question": "Have you ever thought that if you dug in your backyard you could find buried treasure?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "naive-4": {
+            "question": "Have you ever told a joke that just completely fell flat?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 4,
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 4
+                    }
+                }
+            ]
+        },
+        "timid-1": {
+            "question": "Hey, what's that? There's someone behind you! So...did you look just now?",
+            "answers": [
+                {
+                    "answer": "Don't do that! It scared me!",
+                    "reward": {
+                        "timid": 4
+                    }
+                },
+                {
+                    "answer": "OK, I admit it. You tricked me.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "No way. I didn't fall for it.",
+                    "reward": {
+                        "lonely": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Huh? What?",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                }
+            ]
+        },
+        "timid-2": {
+            "question": "Your friend has made a meal that tastes terrible. They ask, \"How is it?\" You say...?",
+            "answers": [
+                {
+                    "answer": "\"Terrible!\"",
+                    "reward": {
+                        "brave": 2,
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Just smile.",
+                    "reward": {
+                        "calm": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "\"Um, it's...good.\"",
+                    "reward": {
+                        "rash": 2,
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "timid-3": {
+            "question": "You run into a new person that you haven't talked to very much before. What do you do?",
+            "answers": [
+                {
+                    "answer": "Make small talk.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Say nothing!",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Make an excuse to get away!",
+                    "reward": {
+                        "timid": 4
+                    }
+                }
+            ]
+        },
+        "timid-4": {
+            "question": "Good news and bad news... Which one do you want to hear first?",
+            "answers": [
+                {
+                    "answer": "The good news.",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "The bad news.",
+                    "reward": {
+                        "naive": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "I don't want either.",
+                    "reward": {
+                        "timid": 4
+                    }
+                }
+            ]
+        },
+        "hasty-1": {
+            "question": "Have you ever realized you were hogging the conversation?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hasty": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 2,
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "hasty-2": {
+            "question": "When you see a switch, do you feel an overwhelming urge to flip it?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "hasty-3": {
+            "question": "You find something at a great bargain price! What do you do?",
+            "answers": [
+                {
+                    "answer": "Buy it right away!",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Think about whether you need it.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Demand an even bigger discount!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "hasty-4": {
+            "question": "You're packing your classroom's snacks for a picnic when you get hungry. What do you do?",
+            "answers": [
+                {
+                    "answer": "Eat just a tiny bit.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "Hold myself back and pack it all up.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "What snacks? They're in my belly!",
+                    "reward": {
+                        "rash": 4
+                    }
+                }
+            ]
+        },
+        "sassy-1": {
+            "question": "Do you want to be taller someday?",
+            "answers": [
+                {
+                    "answer": "Totally!",
+                    "reward": {
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Of course not.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "sassy-2": {
+            "question": "Do you think it's important to always aim to be the best?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "sassy": 4,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 4,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "sassy-3": {
+            "question": "Have you ever looked at your reflection in a mirror and thought, \"What a cool person\"?",
+            "answers": [
+                {
+                    "answer": "Certainly!",
+                    "reward": {
+                        "sassy": 4,
+                        "jolly": 2,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Well, not really...",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "sassy-4": {
+            "question": "If you saw someone doing something bad, could you scold them?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "brave": 4,
+                        "sassy": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "Not really.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "calm-1": {
+            "question": "Do you prefer to be busy or to have a lot of free time?",
+            "answers": [
+                {
+                    "answer": "Being busy.",
+                    "reward": {
+                        "lonely": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Free time!",
+                    "reward": {
+                        "calm": 4
+                    }
+                },
+                {
+                    "answer": "In between.",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "calm-2": {
+            "question": "You're about to buy a popular game when someone else gets the last copy! How do you feel?",
+            "answers": [
+                {
+                    "answer": "Whatever.",
+                    "reward": {
+                        "calm": 4
+                    }
+                },
+                {
+                    "answer": "Annoyed. I was here first!",
+                    "reward": {
+                        "jolly": 4,
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "I shed a few tears.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "calm-3": {
+            "question": "You notice that a toy you bought for full price yesterday is marked down to half price today! How do you feel?",
+            "answers": [
+                {
+                    "answer": "Heartbroken...",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "Aaaargh!",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Bad timing, I guess...",
+                    "reward": {
+                        "bold": 4,
+                        "calm": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-1": {
+            "question": "Your friend is running a little late to meet you. Is that OK?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "bold": 4,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Not at all!",
+                    "reward": {
+                        "lonely": 4,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-2": {
+            "question": "You've just stuffed yourself with a good meal when a great dessert arrives. What do you do?",
+            "answers": [
+                {
+                    "answer": "Eat it. Who cares if I'm stuffed?",
+                    "reward": {
+                        "hasty": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "Turn it down. It's too fattening!",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Yum! I love dessert the most! ♪",
+                    "reward": {
+                        "bold": 4,
+                        "jolly": 4,
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-3": {
+            "question": "You have a really important test tomorrow! What do you do?",
+            "answers": [
+                {
+                    "answer": "Study all night long.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "Wing it! I'm sure it will be fine!",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "Test?! I think I have a fever...",
+                    "reward": {
+                        "naive": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-4": {
+            "question": "You've been invited to a wonderful party. It's time for the party to start, but there's nobody there! You think...?",
+            "answers": [
+                {
+                    "answer": "Did something happen?",
+                    "reward": {
+                        "lonely": 4,
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Maybe I have the day wrong?",
+                    "reward": {
+                        "jolly": 4,
+                        "relaxed": 4
+                    }
+                },
+                {
+                    "answer": "Let's get this party started!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "relaxed-5": {
+            "question": "Do you think that, no matter what, life goes on?",
+            "answers": [
+                {
+                    "answer": "All the time!",
+                    "reward": {
+                        "relaxed": 4,
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Never.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "lonely-1": {
+            "question": "The phone's ringing! What do you do?",
+            "answers": [
+                {
+                    "answer": "Answer right away!",
+                    "reward": {
+                        "hasty": 4,
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Wait a bit before answering.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it and let it ring.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "lonely-2": {
+            "question": "Your friends seem to be making plans to hang out, just out of earshot. You think...",
+            "answers": [
+                {
+                    "answer": "I want to go too!",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "No big deal.",
+                    "reward": {
+                        "lonely": 4
+                    }
+                },
+                {
+                    "answer": "Will they invite me?",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "lonely-3": {
+            "question": "Do you want to be famous?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "lonely": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "lonely-4": {
+            "question": "You've been handed a large bag as a souvenir. What do you do?",
+            "answers": [
+                {
+                    "answer": "Wait until I get home to open it.",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Shake it!",
+                    "reward": {
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Open it!",
+                    "reward": {
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "It's smaller than everyone else's...",
+                    "reward": {
+                        "lonely": 4
+                    }
+                }
+            ]
+        },
+        "quirky-1": {
+            "question": "Have you ever forgotten you bought something and bought another one?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 4,
+                        "hasty": 2,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "quirky-2": {
+            "question": "Once you've decided something, do you see it through to the end?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hasty": 2,
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "quirky-3": {
+            "question": "Have you ever said \"nice to meet you\" to someone you've met previously?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "quirky-4": {
+            "question": "Did you make any New Year's resolutions?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "hardy": 4
+                    }
+                },
+                {
+                    "answer": "Nope.",
+                    "reward": {
+                        "quirky": 4,
+                        "rash": 2
+                    }
+                },
+                {
+                    "answer": "What are those?",
+                    "reward": {
+                        "relaxed": 4
+                    }
+                }
+            ]
+        },
+        "quiet-1": {
+            "question": "Do you think it's important to be fashionably late?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "bold": 4,
+                        "quiet": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "brave": 4
+                    }
+                },
+                {
+                    "answer": "I don't know.",
+                    "reward": {
+                        "docile": 4
+                    }
+                }
+            ]
+        },
+        "quiet-2": {
+            "question": "You've won big on a raffle ticket! You say...",
+            "answers": [
+                {
+                    "answer": "Woo-hoo!",
+                    "reward": {
+                        "naive": 4,
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "I can't believe it...",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "This is my little secret.",
+                    "reward": {
+                        "quiet": 4
+                    }
+                }
+            ]
+        },
+        "quiet-3": {
+            "question": "Do you think blaming something you did on someone else is sometimes necessary?",
+            "answers": [
+                {
+                    "answer": "Of course!",
+                    "reward": {
+                        "quiet": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "No way!",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "quiet-4": {
+            "question": "Your friend suddenly won't listen to you, when everything was fine yesterday. What happened?",
+            "answers": [
+                {
+                    "answer": "Maybe they're sick.",
+                    "reward": {
+                        "hasty": 4
+                    }
+                },
+                {
+                    "answer": "They're lost in thought.",
+                    "reward": {
+                        "quiet": 4
+                    }
+                },
+                {
+                    "answer": "What?! Why?!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "rash-1": {
+            "question": "You take off your shoes to realize your socks are two different colors! What do you do?",
+            "answers": [
+                {
+                    "answer": "Get embarrassed!",
+                    "reward": {
+                        "docile": 4
+                    }
+                },
+                {
+                    "answer": "Again?!",
+                    "reward": {
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "I meant to do that!",
+                    "reward": {
+                        "jolly": 4
+                    }
+                }
+            ]
+        },
+        "rash-2": {
+            "question": "You fail miserably! Everyone found out, and they're disappointed in you... What do you do?",
+            "answers": [
+                {
+                    "answer": "Try and hide.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Think of an excuse.",
+                    "reward": {
+                        "naive": 4,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Drop down and play dead!",
+                    "reward": {
+                        "rash": 4
+                    }
+                }
+            ]
+        },
+        "rash-3": {
+            "question": "Have you ever accidentally called a teacher \"Mom\" or \"Dad\"?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "rash": 4,
+                        "bold": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quiet": 2
+                    }
+                }
+            ]
+        },
+        "rash-4": {
+            "question": "Have you ever blurted something out without thinking about the consequences first?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "lonely": 4,
+                        "rash": 4
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "bold-1": {
+            "question": "You're in class when you realize that you really have to go to the restroom! What do you do?",
+            "answers": [
+                {
+                    "answer": "Ask for permission to leave.",
+                    "reward": {
+                        "brave": 4,
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "Sneak out.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Hold on until class ends!",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "bold-2": {
+            "question": "Your friend offers to treat you to dinner. What do you do?",
+            "answers": [
+                {
+                    "answer": "I'm there!",
+                    "reward": {
+                        "bold": 4
+                    }
+                },
+                {
+                    "answer": "Allow me.",
+                    "reward": {
+                        "jolly": 4
+                    }
+                },
+                {
+                    "answer": "Thanks...",
+                    "reward": {
+                        "quirky": 4
+                    }
+                }
+            ]
+        },
+        "bold-3": {
+            "question": "You see a cake that is past its expiration date, but only by one day. What do you do?",
+            "answers": [
+                {
+                    "answer": "Not a problem! Chow time!",
+                    "reward": {
+                        "brave": 4,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Think about it briefly, then decide.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Get someone to try it first.",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "bold-4": {
+            "question": "You're eating at a very fancy restaurant known for its food. Which course do you select?",
+            "answers": [
+                {
+                    "answer": "Seared steak.",
+                    "reward": {
+                        "impish": 4,
+                        "naive": 4
+                    }
+                },
+                {
+                    "answer": "Healthy fish.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Anything! It's all good!",
+                    "reward": {
+                        "bold": 4
+                    }
+                }
+            ]
+        },
+        "final": {
+            "question": "Are you male or female?",
+            "answers": [
+                {
+                    "answer": "Male.",
+                    "reward": {
+                        "relaxed": 4,
+                        "hasty": 4,
+                        "sassy": 4
+                    }
+                },
+                {
+                    "answer": "Female.",
+                    "reward": {
+                        "relaxed": 4,
+                        "jolly": 4
+                    }
+                }
+            ]
+        }
+    },
+    "pmd4": {},
+    "pmd1dx": {
+        "hardy-1": {
+            "question": "A test is coming up. How do you study for it?",
+            "answers": [
+                {
+                    "answer": "Study hard.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "At the last second.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it and play.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "hardy-2": {
+            "question": "Can you focus on something you like?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 2,
+                        "docile": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hardy-3": {
+            "question": "When the going gets tough, do you get going?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 2,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hardy-4": {
+            "question": "There is a bucket. If you put water in it, how high will you fill it?",
+            "answers": [
+                {
+                    "answer": "Full.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Half.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "A little.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "docile-1": {
+            "question": "You are offered a choice of two gifts. Which one will you take?",
+            "answers": [
+                {
+                    "answer": "Big box.",
+                    "reward": {
+                        "docile": 2,
+                        "naive": 1
+                    }
+                },
+                {
+                    "answer": "Small box.",
+                    "reward": {
+                        "timid": 2,
+                        "calm": 1
+                    }
+                }
+            ]
+        },
+        "docile-2": {
+            "question": "You broke a rotten egg in your room! What will you do?",
+            "answers": [
+                {
+                    "answer": "Open a window right away.",
+                    "reward": {
+                        "docile": 2,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "Take a sniff first.",
+                    "reward": {
+                        "naive": 2,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "docile-3": {
+            "question": "A friend brought over something you'd forgotten. How do you thank your friend?",
+            "answers": [
+                {
+                    "answer": "Say thank you regularly.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Say thanks with a joke.",
+                    "reward": {
+                        "naive": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Say thanks, but be cool.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "docile-4": {
+            "question": "There is a wallet at the side of a road.",
+            "answers": [
+                {
+                    "answer": "Turn it in to the police!",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "Yay! Yay!",
+                    "reward": {
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "Is anyone watching?",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "brave-1": {
+            "question": "You're going bungee jumping for the first time. Since it's scary, you decide to test the jump with a doll... The bungee cord snaps! Will you still try to make a jump anyway?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "brave": 3,
+                        "impish": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 2,
+                        "timid": 1
+                    }
+                }
+            ]
+        },
+        "brave-2": {
+            "question": "There is an alien invasion! What will you do?",
+            "answers": [
+                {
+                    "answer": "Fight.",
+                    "reward": {},
+                    "nextQuestion": "brave-2b"
+                },
+                {
+                    "answer": "Run.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Ignore it.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "brave-2b": {
+            "question": "You valiantly fight the aliens... But you are defeated... An alien says to you... \"YOU HAVE IMPRESSED US. IT WAS A PLEASURE TO SEE. JOIN US, AND TOGETHER WE SHALL RULE THE WORLD.\" What will you do?",
+            "answers": [
+                {
+                    "answer": "Rule with the aliens.",
+                    "reward": {
+                        "sassy": 1,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "Refuse.",
+                    "reward": {
+                        "brave": 4
+                    }
+                }
+            ]
+        },
+        "brave-3": {
+            "question": "There is a scream from behind a door! How will you react?",
+            "answers": [
+                {
+                    "answer": "Yank open the door.",
+                    "reward": {
+                        "hardy": 1,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Scream in unison.",
+                    "reward": {
+                        "naive": 2
+                    }
+                }
+            ]
+        },
+        "brave-4": {
+            "question": "A delinquent is hassling someone on a busy city street! What will you do?",
+            "answers": [
+                {
+                    "answer": "Help without hesitation.",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Help, even if scared.",
+                    "reward": {
+                        "hardy": 2,
+                        "brave": 2
+                    }
+                },
+                {
+                    "answer": "Call the police.",
+                    "reward": {
+                        "docile": 1,
+                        "timid": 1,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "Do nothing out of fear.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "jolly-1": {
+            "question": "Are you a cheerful personality?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 2,
+                        "naive": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "jolly-2": {
+            "question": "Do you like to noisily enjoy yourself with others?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "timid": 1
+                    }
+                }
+            ]
+        },
+        "jolly-3": {
+            "question": "It's the summer holidays! Where would you like to go?",
+            "answers": [
+                {
+                    "answer": "The beach!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Spas.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Anywhere.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "jolly-4": {
+            "question": "A foreign person has started up a conversation with you. To be honest, you don't have a clue what this fellow is saying. How do you reply?",
+            "answers": [
+                {
+                    "answer": "\"Haha! Yes. Very funny!\"",
+                    "reward": {
+                        "jolly": 3
+                    }
+                },
+                {
+                    "answer": "\"Um... Could you say that again?\"",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "\"Right... Well, I gotta go.\"",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "impish-1": {
+            "question": "Have you ever made a pitfall trap?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "impish-2": {
+            "question": "Do you like pranks?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "docile": 1,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "impish-3": {
+            "question": "Are there many things that you would like to do?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "hardy": 1,
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "impish-4": {
+            "question": "Your friend is being bullied! What do you do?",
+            "answers": [
+                {
+                    "answer": "Face up to the bully.",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Caution the bully from afar.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Heckle the bully from behind.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "naive-1": {
+            "question": "Do you like groan-inducing puns?",
+            "answers": [
+                {
+                    "answer": "Love them!",
+                    "reward": {
+                        "impish": 1,
+                        "naive": 3
+                    }
+                },
+                {
+                    "answer": "A little.",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Spare me.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "naive-2": {
+            "question": "Do you tend to laugh a lot?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "docile": 1,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "naive-3": {
+            "question": "Do others often call you childish?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "jolly": 1,
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "naive-4": {
+            "question": "Do you like to imagine things for your amusement?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "naive": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "timid-1": {
+            "question": "A human hand extends out of a toilet! What would you do?",
+            "answers": [
+                {
+                    "answer": "Scream and run.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Close the lid without a word.",
+                    "reward": {
+                        "hardy": 1,
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Shake hands with it.",
+                    "reward": {
+                        "brave": 2,
+                        "impish": 1,
+                        "naive": 1
+                    }
+                }
+            ]
+        },
+        "timid-2": {
+            "question": "Grab any digit on your left hand with your right hand. Which digit did you grab?",
+            "answers": [
+                {
+                    "answer": "Thumb.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Index finger.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Middle finger.",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Ring finger.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Little finger.",
+                    "reward": {
+                        "lonely": 2
+                    }
+                }
+            ]
+        },
+        "timid-3": {
+            "question": "You are suddenly locked inside a pitch-black room! What do you do?",
+            "answers": [
+                {
+                    "answer": "Kick the door.",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "Cry.",
+                    "reward": {
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Clean it.",
+                    "reward": {
+                        "impish": 2,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "timid-4": {
+            "question": "Can you go into a haunted house?",
+            "answers": [
+                {
+                    "answer": "No problem!",
+                    "reward": {
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Uh... N-no...",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "With someone I like.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "hasty-1": {
+            "question": "You receive a gift! But you don't know what's in it. You're curious, so what do you do?",
+            "answers": [
+                {
+                    "answer": "Open it now.",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Open it later.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "Get someone to open it.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "hasty-2": {
+            "question": "You win a lottery! What do you do with the money?",
+            "answers": [
+                {
+                    "answer": "Spend it now.",
+                    "reward": {
+                        "jolly": 2,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "Save it.",
+                    "reward": {
+                        "hardy": 1,
+                        "calm": 1
+                    }
+                },
+                {
+                    "answer": "Give it away.",
+                    "reward": {
+                        "brave": 2,
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "hasty-3": {
+            "question": "You come across a treasure chest! What do you do?",
+            "answers": [
+                {
+                    "answer": "Open it right away!",
+                    "reward": {
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "No... Could be a trap...",
+                    "reward": {
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "It's going to be empty...",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "hasty-4": {
+            "question": "Your friend fails to show up for a meeting at the promised time. What do you do?",
+            "answers": [
+                {
+                    "answer": "Become irritated.",
+                    "reward": {
+                        "docile": 1,
+                        "hasty": 2
+                    }
+                },
+                {
+                    "answer": "Wait patiently.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Get angry and bail.",
+                    "reward": {
+                        "hasty": 3
+                    }
+                }
+            ]
+        },
+        "sassy-1": {
+            "question": "Your country's leader is in front of you. How do you speak to him or her?",
+            "answers": [
+                {
+                    "answer": "Speak calmly.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                },
+                {
+                    "answer": "Speak nervously.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "WHATEVER!!",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "sassy-2": {
+            "question": "Do others tell you to watch what you say?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 1,
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "sassy-3": {
+            "question": "Do you think you are cool? Be honest.",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                }
+            ]
+        },
+        "sassy-4": {
+            "question": "Can you sincerely thank someone when you feel grateful?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "docile": 2,
+                        "calm": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "calm-1": {
+            "question": "Do you occasionally consider yourself dull and overly cautious?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "calm-2": {
+            "question": "Do you dream of lounging around idly without much excitement?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "impish": 2
+                    }
+                }
+            ]
+        },
+        "calm-3": {
+            "question": "Do you like to fight?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "impish": 1,
+                        "timid": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "calm": 2,
+                        "lonely": 1
+                    }
+                }
+            ]
+        },
+        "calm-4": {
+            "question": "Do you often yawn?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 2,
+                        "relaxed": 1
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 1,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-1": {
+            "question": "Are you often late for school or meetings?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "sassy": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2,
+                        "hasty": 1
+                    }
+                }
+            ]
+        },
+        "relaxed-2": {
+            "question": "Do you get the feeling that you've slowed down lately?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "impish": 1,
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-3": {
+            "question": "It is a pleasant day at the beach. How do you feel?",
+            "answers": [
+                {
+                    "answer": "This feels great!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "*snore*",
+                    "reward": {
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "I want to go home soon!",
+                    "reward": {
+                        "hasty": 2
+                    }
+                }
+            ]
+        },
+        "relaxed-4": {
+            "question": "Do you fall asleep without noticing?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "calm": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "lonely-1": {
+            "question": "Do you feel lonesome when you are alone?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "lonely-2": {
+            "question": "Do you hate to be the last person to leave class at the end of a school day?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "brave": 3,
+                        "relaxed": 1
+                    }
+                }
+            ]
+        },
+        "lonely-3": {
+            "question": "What do you do with your room's light when you're going to bed at night?",
+            "answers": [
+                {
+                    "answer": "Leave it on.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 2
+                    }
+                },
+                {
+                    "answer": "Turn it off.",
+                    "reward": {
+                        "calm": 2
+                    }
+                }
+            ]
+        },
+        "lonely-4": {
+            "question": "It's a weekend, but no one will play with you... What do you do?",
+            "answers": [
+                {
+                    "answer": "Go on a trip.",
+                    "reward": {
+                        "jolly": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Hang around vacantly.",
+                    "reward": {
+                        "calm": 1,
+                        "relaxed": 2
+                    }
+                },
+                {
+                    "answer": "Huddle in a corner.",
+                    "reward": {
+                        "timid": 1,
+                        "lonely": 3
+                    }
+                }
+            ]
+        },
+        "quirky-1": {
+            "question": "Do you sometimes run out of things to do all of a sudden?",
+            "answers": [
+                {
+                    "answer": "Yes.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "No.",
+                    "reward": {
+                        "hardy": 2
+                    }
+                }
+            ]
+        },
+        "quirky-2": {
+            "question": "How quickly do you respond to a text?",
+            "answers": [
+                {
+                    "answer": "Reply right away.",
+                    "reward": {
+                        "hardy": 1,
+                        "hasty": 1
+                    }
+                },
+                {
+                    "answer": "May reply, may not.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Too much trouble.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                }
+            ]
+        },
+        "quirky-3": {
+            "question": "There is a person you like... But there's no opportunity to get close. What do you do?",
+            "answers": [
+                {
+                    "answer": "Bravely declare my love.",
+                    "reward": {
+                        "hardy": 1,
+                        "brave": 3
+                    }
+                },
+                {
+                    "answer": "Might say hello...",
+                    "reward": {
+                        "quirky": 2
+                    }
+                },
+                {
+                    "answer": "Pull a prank to get attention.",
+                    "reward": {
+                        "impish": 2
+                    }
+                },
+                {
+                    "answer": "Look from afar.",
+                    "reward": {
+                        "timid": 2
+                    }
+                }
+            ]
+        },
+        "quirky-4": {
+            "question": "The road forks to the right and left. You are told there is a treasure on the right side. What do you do?",
+            "answers": [
+                {
+                    "answer": "Instantly go right.",
+                    "reward": {
+                        "docile": 2
+                    }
+                },
+                {
+                    "answer": "It's a trap! Go left.",
+                    "reward": {
+                        "sassy": 2
+                    }
+                },
+                {
+                    "answer": "Whichever! Choose on a whim.",
+                    "reward": {
+                        "quirky": 2
+                    }
+                }
+            ]
+        },
+        "misc-1": {
+            "question": "On vacation outings, you want to...",
+            "answers": [
+                {
+                    "answer": "Go alone.",
+                    "reward": {
+                        "hasty": 1,
+                        "quirky": 1
+                    }
+                },
+                {
+                    "answer": "Go with others.",
+                    "reward": {
+                        "jolly": 1,
+                        "lonely": 1
+                    }
+                }
+            ]
+        },
+        "misc-2": {
+            "question": "It's the summer festival! Do you like carnivals?",
+            "answers": [
+                {
+                    "answer": "Love them!",
+                    "reward": {
+                        "jolly": 2
+                    }
+                },
+                {
+                    "answer": "Don't care.",
+                    "reward": {
+                        "sassy": 1,
+                        "quirky": 1
+                    }
+                }
+            ]
+        },
+        "misc-3": {
+            "question": "Somebody calls you \"weird but funny.\" How does that make you feel?",
+            "answers": [
+                {
+                    "answer": "Happy!",
+                    "reward": {
+                        "naive": 1,
+                        "lonely": 1
+                    }
+                },
+                {
+                    "answer": "Not happy.",
+                    "reward": {
+                        "hasty": 1,
+                        "sassy": 1
+                    }
+                }
+            ]
+        },
+        "final": {
+            "question": "Do you want to play as a boy or a girl?",
+            "answers": [
+                {
+                    "answer": "Boy.",
+                    "reward": {}
+                },
+                {
+                    "answer": "Girl.",
+                    "reward": {}
+                }
+            ]
+        }
+    }
+}
