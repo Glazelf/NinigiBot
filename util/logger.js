@@ -27,7 +27,7 @@ export default async ({ exception, client, interaction = null }) => {
                    // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
                    exceptionString.includes("ETIMEDOUT") || 
                    exceptionString.includes("ECONNREFUSED") || 
-                   exceptionString.includes("ECONNRESET")) ||
+                   exceptionString.includes("ECONNRESET") ||
                    // Invalid response for ptcg
                    exceptionString.includes("TCGdex Server responded with an invalid error")) {
             return; 
