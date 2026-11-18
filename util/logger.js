@@ -23,10 +23,14 @@ export default async ({ exception, client, interaction = null }) => {
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
             return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", flags: messageFlags.add(MessageFlags.Ephemeral) });
-        } else if (exceptionString.includes("Unknown interaction")) {
-            return; // Expired interaction, can't reply to said interaction
-        } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
-            return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
+        } else if (exceptionString.includes("Unknown interaction") || // Expired interaction, can't reply to said interaction
+                   // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
+                   exceptionString.includes("ETIMEDOUT") || 
+                   exceptionString.includes("ECONNREFUSED") || 
+                   exceptionString.includes("ECONNRESET")) ||
+                   // Invalid response for ptcg
+                   exceptionString.includes("TCGdex Server responded with an invalid error") {
+            return; 
         } else if (exceptionString.includes("AxiosError") || exceptionString.includes("socket hang up")) {
             // console.log(exception);
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
