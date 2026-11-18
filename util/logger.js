@@ -29,7 +29,7 @@ export default async ({ exception, client, interaction = null }) => {
                    exceptionString.includes("ECONNREFUSED") || 
                    exceptionString.includes("ECONNRESET")) ||
                    // Invalid response for ptcg
-                   exceptionString.includes("TCGdex Server responded with an invalid error") {
+                   exceptionString.includes("TCGdex Server responded with an invalid error")) {
             return; 
         } else if (exceptionString.includes("AxiosError") || exceptionString.includes("socket hang up")) {
             // console.log(exception);
