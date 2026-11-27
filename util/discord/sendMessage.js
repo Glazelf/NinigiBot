@@ -41,6 +41,7 @@ export default async ({ interaction, content = "", embeds = [], files = [], comp
         return interaction.reply(messageObject);
     } catch (e) {
         // console.log(e);
+        if (!interaction.channel) return; // On rare occassions there is no interaction.channel? This crashes the bot, investigate further
         return interaction.channel.send(messageObject);
     };
 };
